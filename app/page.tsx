@@ -1,11 +1,11 @@
 "use client";
 import React, { useState, useRef, useEffect, useCallback, memo } from "react";
-import { motion, useMotionValue, useSpring } from "framer-motion";
+import { motion, useMotionValue, useSpring, AnimatePresence } from "framer-motion";
 import { throttle } from "lodash";
 import AuroraBlob from "./AuroraBlob";
 import InteractiveIframe from "./components/InteractiveIframe";
 import Image from "next/image";
-import { SiTypescript, SiTailwindcss } from "react-icons/si";
+import { SiTypescript, SiTailwindcss, SiHtml5, SiCss3, SiJavascript, SiGoogle, SiPhp } from "react-icons/si";
 
 // Define prop types for the NavItem component
 interface NavItemProps {
@@ -60,6 +60,7 @@ const Portfolio = () => {
 
   const [activeSection, setActiveSection] = useState<SectionKey>("about");
   const containerRef = useRef<HTMLDivElement>(null);
+  const [fullLeafMessageState, setFullLeafMessageState] = useState<"hidden" | "first" | "second">("hidden");
 
   // Define section keys type for type safety
   type SectionKey = "about" | "projects" | "contact";
@@ -124,6 +125,18 @@ const Portfolio = () => {
       handleScroll.cancel(); // Cancel any pending throttled calls
     };
   }, [activeSection, sectionRefs]);
+
+  const handleFullLeafMouseEnter = () => {
+    if (fullLeafMessageState === "hidden") {
+      setFullLeafMessageState("first");
+    }
+  };
+
+  const handleFullLeafClick = () => {
+    if (fullLeafMessageState === "first") {
+      setFullLeafMessageState("second");
+    }
+  };
 
   // Common blob props to reduce duplication
   const blobProps = {
@@ -285,7 +298,6 @@ const Portfolio = () => {
                     display: "flex",
                     alignItems: "center",
                     gap: "8px",
-                    width: "calc(50% - 8px)",
                     fontSize: "clamp(0.75rem, 2vw, 1rem)",
                   }}
                 >
@@ -304,7 +316,6 @@ const Portfolio = () => {
                     display: "flex",
                     alignItems: "center",
                     gap: "8px",
-                    width: "calc(50% - 8px)",
                     fontSize: "clamp(0.75rem, 2vw, 1rem)",
                   }}
                 >
@@ -323,7 +334,6 @@ const Portfolio = () => {
                     display: "flex",
                     alignItems: "center",
                     gap: "8px",
-                    width: "calc(50% - 8px)",
                     fontSize: "clamp(0.75rem, 2vw, 1rem)",
                   }}
                 >
@@ -339,7 +349,6 @@ const Portfolio = () => {
                     display: "flex",
                     alignItems: "center",
                     gap: "8px",
-                    width: "calc(50% - 8px)",
                     fontSize: "clamp(0.75rem, 2vw, 1rem)",
                   }}
                 >
@@ -382,8 +391,189 @@ const Portfolio = () => {
                 <strong>Full Leaf Tea Company</strong>
               </a>
               <p>
-                FullLeafTeaCompany.com – E-commerce site for premium loose leaf
-                tea.
+                Multi-million dollar ecommerce business for premium loose leaf tea.
+              </p>
+              <br />
+              <p>
+                Designed/developed by yours truly.
+              </p>
+              <br />
+              <div
+                className="tech-stack"
+                style={{
+                  display: "flex",
+                  flexDirection: "row",
+                  flexWrap: "wrap",
+                  gap: "16px",
+                  alignItems: "center",
+                  justifyContent: "flex-start",
+                }}
+              >
+                <span
+                  className="tech-item"
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    gap: "8px",
+                    fontSize: "clamp(0.75rem, 2vw, 1rem)",
+                  }}
+                >
+                  <SiHtml5 className="tech-icon html5" style={{ width: "32px", height: "32px" }} /> HTML
+                </span>
+                <span
+                  className="tech-item"
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    gap: "8px",
+                    fontSize: "clamp(0.75rem, 2vw, 1rem)",
+                  }}
+                >
+                  <SiCss3 className="tech-icon css3" style={{ width: "32px", height: "32px" }} /> CSS
+                </span>
+                <span
+                  className="tech-item"
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    gap: "8px",
+                    fontSize: "clamp(0.75rem, 2vw, 1rem)",
+                  }}
+                >
+                  <SiJavascript className="tech-icon javascript" style={{ width: "32px", height: "32px" }} /> JavaScript
+                </span>
+                <span
+                  className="tech-item"
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    gap: "8px",
+                    fontSize: "clamp(0.75rem, 2vw, 1rem)",
+                  }}
+                >
+                  APIs
+                </span>
+                <span
+                  className="tech-item"
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    gap: "8px",
+                    fontSize: "clamp(0.75rem, 2vw, 1rem)",
+                    minHeight: "32px"
+                  }}
+                >
+                  <Image src="/klaviyo.png" alt="Klaviyo" width={32} height={32} className="tech-icon klaviyo" style={{ width: "32px", height: "32px" }} /> Klaviyo
+                </span>
+                <span
+                  className="tech-item"
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    gap: "8px",
+                    fontSize: "clamp(0.75rem, 2vw, 1rem)",
+                    minHeight: "32px"
+                  }}
+                >
+                  <SiGoogle className="tech-icon google" style={{ width: "32px", height: "32px" }} /> Google Ads
+                </span>
+                <span
+                  className="tech-item"
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    gap: "8px",
+                    fontSize: "clamp(0.75rem, 2vw, 1rem)",
+                    minHeight: "32px"
+                  }}
+                >
+                  Microsoft Ads
+                </span>
+              </div>
+            </div>
+            <div
+              className="phone-mockup"
+              style={{ position: 'relative', cursor: 'pointer' }}
+              onMouseEnter={handleFullLeafMouseEnter}
+              onClick={handleFullLeafClick}
+            >
+              <Image
+                src="/full-leaf.jpg"
+                alt="Screenshot of Full Leaf Tea Company website"
+                title="Full Leaf Tea Company Website Screenshot"
+                width={300}
+                height={600}
+                className="fullleaf-screenshot"
+                style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '1.5rem', boxShadow: '0 4px 24px rgba(0,0,0,0.12)' }}
+              />
+              <AnimatePresence>
+                {fullLeafMessageState !== "hidden" && (
+                  <motion.div
+                    className="iframe-message fullleaf-message"
+                    style={{ pointerEvents: fullLeafMessageState === "second" ? "auto" : "none" }}
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -20 }}
+                    transition={{ duration: 0.3 }}
+                  >
+                    <div className="message-content">
+                      <div className="message-icon">🫖</div>
+                      <p>Try tapping harder.</p>
+                      <AnimatePresence>
+                        {fullLeafMessageState === "second" && (
+                          <motion.p
+                            key="second-message"
+                            initial={{ opacity: 0, y: 10 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            exit={{ opacity: 0, y: 10 }}
+                            transition={{ duration: 0.3 }}
+                            style={{ marginTop: 8 }}
+                          >
+                            Just kidding, it's just a picture.<br />
+                            <a href="https://fullleafteacompany.com" target="_blank" rel="noopener noreferrer">
+                              Click to visit the website
+                            </a>
+                          </motion.p>
+                        )}
+                      </AnimatePresence>
+                    </div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </div>
+          </div>
+          <div className="project-card">
+            <strong>Full Leaf App</strong>
+            <p>A Flutter-based, WebView app for Full Leaf Tea Company.</p>
+          </div>
+          <div className="project-card">
+            <strong>Quailmail</strong>
+            <p>An autonomous AI email agent.</p>
+          </div>
+          <div
+            className="project-card shopdowntown-card vinscribe-card"
+            style={{
+              display: "flex",
+              flexDirection: "row-reverse",
+              alignItems: "center",
+              justifyContent: "space-between",
+              gap: "2rem",
+              flexBasis: "100%",
+              maxWidth: "100%",
+              padding: "1.5rem",
+              minHeight: "400px",
+            }}
+          >
+            <div className="project-info">
+              <a
+                href="https://shopdowntown.org/"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <strong>Shop Downtown</strong>
+              </a>
+              <p>
+                Community-driven online marketplace for local businesses.
               </p>
               <div
                 className="tech-stack"
@@ -402,7 +592,88 @@ const Portfolio = () => {
                     display: "flex",
                     alignItems: "center",
                     gap: "8px",
-                    width: "calc(50% - 8px)",
+                    fontSize: "clamp(0.75rem, 2vw, 1rem)",
+                  }}
+                >
+                  <SiHtml5 className="tech-icon html5" style={{ width: "32px", height: "32px" }} /> HTML
+                </span>
+                <span
+                  className="tech-item"
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    gap: "8px",
+                    fontSize: "clamp(0.75rem, 2vw, 1rem)",
+                  }}
+                >
+                  <SiTailwindcss
+                    className="tech-icon tailwind"
+                    style={{ width: "32px", height: "32px" }}
+                  />{" "}
+                  TailwindCSS
+                </span>
+                <span
+                  className="tech-item"
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    gap: "8px",
+                    fontSize: "clamp(0.75rem, 2vw, 1rem)",
+                  }}
+                >
+                  <SiPhp className="tech-icon php" style={{ width: "32px", height: "32px" }} /> PHP
+                </span>
+                <span
+                  className="tech-item"
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    gap: "8px",
+                    fontSize: "clamp(0.75rem, 2vw, 1rem)",
+                  }}
+                >
+                  <SiJavascript className="tech-icon javascript" style={{ width: "32px", height: "32px" }} /> JavaScript
+                </span>
+              </div>
+            </div>
+            <div className="phone-mockup">
+              <InteractiveIframe
+                src="https://shopdowntown.org/"
+                title="Shop Downtown Mobile Preview"
+                className="shopdowntown-iframe vinscribe-iframe"
+              />
+            </div>
+          </div>
+          <div className="project-card carlypsphoto-card">
+            <div className="project-info">
+              <a
+                href="https://carlypsphoto.com"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <strong>Carly Pearl-Sacks Photography</strong>
+              </a>
+              <p>
+                Portfolio site for a professional photographer.<br />
+                Built with Next.js and TailwindCSS.
+              </p>
+              <div
+                className="tech-stack"
+                style={{
+                  display: "flex",
+                  flexDirection: "row",
+                  flexWrap: "wrap",
+                  gap: "16px",
+                  alignItems: "center",
+                  justifyContent: "flex-start",
+                }}
+              >
+                <span
+                  className="tech-item"
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    gap: "8px",
                     fontSize: "clamp(0.75rem, 2vw, 1rem)",
                   }}
                 >
@@ -421,42 +692,6 @@ const Portfolio = () => {
                     display: "flex",
                     alignItems: "center",
                     gap: "8px",
-                    width: "calc(50% - 8px)",
-                    fontSize: "clamp(0.75rem, 2vw, 1rem)",
-                  }}
-                >
-                  <Image
-                    src="/firebase-logo.png"
-                    alt="Firebase"
-                    width={32}
-                    height={32}
-                    className="tech-icon firebase"
-                  />{" "}
-                  Firebase
-                </span>
-                <span
-                  className="tech-item"
-                  style={{
-                    display: "flex",
-                    alignItems: "center",
-                    gap: "8px",
-                    width: "calc(50% - 8px)",
-                    fontSize: "clamp(0.75rem, 2vw, 1rem)",
-                  }}
-                >
-                  <SiTypescript
-                    className="tech-icon typescript"
-                    style={{ width: "32px", height: "32px" }}
-                  />{" "}
-                  TypeScript
-                </span>
-                <span
-                  className="tech-item"
-                  style={{
-                    display: "flex",
-                    alignItems: "center",
-                    gap: "8px",
-                    width: "calc(50% - 8px)",
                     fontSize: "clamp(0.75rem, 2vw, 1rem)",
                   }}
                 >
@@ -470,31 +705,11 @@ const Portfolio = () => {
             </div>
             <div className="phone-mockup">
               <InteractiveIframe
-                src="https://fullleafteacompany.com"
-                title="Full Leaf Tea Company Mobile Preview"
-                className="vinscribe-iframe"
+                src="https://carlypsphoto.com"
+                title="Carly Pearl-Sacks Photography Mobile Preview"
+                className="carlypsphoto-iframe"
               />
             </div>
-          </div>
-          <div className="project-card">
-            <strong>Full Leaf App</strong>
-            <p>A Flutter-based, WebView app for Full Leaf Tea Company.</p>
-          </div>
-          <div className="project-card">
-            <strong>Quailmail</strong>
-            <p>An autonomous AI email agent.</p>
-          </div>
-          <div className="project-card">
-            <a
-              href="https://carlypsphoto.com"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              <strong>Carly Pearl-Sacks Photography</strong>
-            </a>
-            <p>
-              Carlypsphoto.com – Portfolio site for a professional photographer.
-            </p>
           </div>
         </div>
       </section>
