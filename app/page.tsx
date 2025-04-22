@@ -5,7 +5,8 @@ import { throttle } from "lodash";
 import AuroraBlob from "./AuroraBlob";
 import InteractiveIframe from "./components/InteractiveIframe";
 import Image from "next/image";
-import { SiTypescript, SiTailwindcss, SiHtml5, SiCss3, SiJavascript, SiGoogle, SiPhp } from "react-icons/si";
+import { SiTypescript, SiTailwindcss, SiHtml5, SiCss3, SiJavascript, SiGoogle, SiPhp, SiFirebase, SiNextdotjs } from "react-icons/si";
+import ModernWindowsIcon from "./components/ModernWindowsIcon";
 
 // Define prop types for the NavItem component
 interface NavItemProps {
@@ -251,6 +252,27 @@ const Portfolio = () => {
         ))}
       </nav>
 
+      {/* AuroraBlob between About and Projects */}
+      <AuroraBlob
+        className="blob5"
+        initial={{ opacity: 0.32, scale: 1.05, x: -120, y: 400 }}
+        animate={{
+          opacity: [0.32, 0.42, 0.32],
+          scale: [1.05, 1.12, 1.05],
+          x: [-120, -80, -120],
+          y: [400, 480, 400],
+        }}
+        transition={{
+          duration: 19,
+          repeat: Infinity,
+          ease: "easeInOut",
+          repeatType: "mirror",
+        }}
+        style={{
+          zIndex: 0,
+        }}
+      />
+
       {/* About Section - Reduced duplicate blobs */}
       <section
         ref={sectionRefs.about}
@@ -301,14 +323,7 @@ const Portfolio = () => {
                     fontSize: "clamp(0.75rem, 2vw, 1rem)",
                   }}
                 >
-                  <Image
-                    src="/next-alternative.svg"
-                    alt="Next.js"
-                    width={32}
-                    height={32}
-                    className="tech-icon nextjs"
-                  />{" "}
-                  Next.js
+                  <Image src="/next.svg" alt="Next.js" width={32} height={32} className="tech-icon nextjs" /> Next.js
                 </span>
                 <span
                   className="tech-item"
@@ -319,14 +334,7 @@ const Portfolio = () => {
                     fontSize: "clamp(0.75rem, 2vw, 1rem)",
                   }}
                 >
-                  <Image
-                    src="/firebase-logo.png"
-                    alt="Firebase"
-                    width={32}
-                    height={32}
-                    className="tech-icon firebase"
-                  />{" "}
-                  Firebase
+                  <SiFirebase className="tech-icon firebase" style={{ width: "32px", height: "32px" }} color="#fff" /> Firebase
                 </span>
                 <span
                   className="tech-item"
@@ -340,6 +348,7 @@ const Portfolio = () => {
                   <SiTypescript
                     className="tech-icon typescript"
                     style={{ width: "32px", height: "32px" }}
+                    color="#fff"
                   />{" "}
                   TypeScript
                 </span>
@@ -355,6 +364,7 @@ const Portfolio = () => {
                   <SiTailwindcss
                     className="tech-icon tailwind"
                     style={{ width: "32px", height: "32px" }}
+                    color="#fff"
                   />{" "}
                   TailwindCSS
                 </span>
@@ -429,7 +439,7 @@ const Portfolio = () => {
                     fontSize: "clamp(0.75rem, 2vw, 1rem)",
                   }}
                 >
-                  <SiCss3 className="tech-icon css3" style={{ width: "32px", height: "32px" }} /> CSS
+                  <SiCss3 className="tech-icon css3" style={{ width: "32px", height: "32px" }} color="#fff" /> CSS
                 </span>
                 <span
                   className="tech-item"
@@ -440,18 +450,7 @@ const Portfolio = () => {
                     fontSize: "clamp(0.75rem, 2vw, 1rem)",
                   }}
                 >
-                  <SiJavascript className="tech-icon javascript" style={{ width: "32px", height: "32px" }} /> JavaScript
-                </span>
-                <span
-                  className="tech-item"
-                  style={{
-                    display: "flex",
-                    alignItems: "center",
-                    gap: "8px",
-                    fontSize: "clamp(0.75rem, 2vw, 1rem)",
-                  }}
-                >
-                  APIs
+                  <SiJavascript className="tech-icon javascript" style={{ width: "32px", height: "32px" }} color="#fff" /> JavaScript
                 </span>
                 <span
                   className="tech-item"
@@ -463,7 +462,7 @@ const Portfolio = () => {
                     minHeight: "32px"
                   }}
                 >
-                  <Image src="/klaviyo.png" alt="Klaviyo" width={32} height={32} className="tech-icon klaviyo" style={{ width: "32px", height: "32px" }} /> Klaviyo
+                  <Image src="/klaviyo.png" alt="Klaviyo" width={38} height={38} className="tech-icon klaviyo" /> Klaviyo
                 </span>
                 <span
                   className="tech-item"
@@ -487,7 +486,7 @@ const Portfolio = () => {
                     minHeight: "32px"
                   }}
                 >
-                  Microsoft Ads
+                  <ModernWindowsIcon className="tech-icon windows" style={{ width: "32px", height: "32px" }} /> Microsoft Ads
                 </span>
               </div>
             </div>
@@ -609,6 +608,7 @@ const Portfolio = () => {
                   <SiTailwindcss
                     className="tech-icon tailwind"
                     style={{ width: "32px", height: "32px" }}
+                    color="#fff"
                   />{" "}
                   TailwindCSS
                 </span>
@@ -632,7 +632,7 @@ const Portfolio = () => {
                     fontSize: "clamp(0.75rem, 2vw, 1rem)",
                   }}
                 >
-                  <SiJavascript className="tech-icon javascript" style={{ width: "32px", height: "32px" }} /> JavaScript
+                  <SiJavascript className="tech-icon javascript" style={{ width: "32px", height: "32px" }} color="#fff" /> JavaScript
                 </span>
               </div>
             </div>
@@ -644,7 +644,20 @@ const Portfolio = () => {
               />
             </div>
           </div>
-          <div className="project-card carlypsphoto-card">
+          <div
+            className="project-card carlypsphoto-card"
+            style={{
+              display: "flex",
+              flexDirection: "row-reverse",
+              alignItems: "center",
+              justifyContent: "space-between",
+              gap: "2rem",
+              flexBasis: "100%",
+              maxWidth: "100%",
+              padding: "1.5rem",
+              minHeight: "400px",
+            }}
+          >
             <div className="project-info">
               <a
                 href="https://carlypsphoto.com"
@@ -677,14 +690,7 @@ const Portfolio = () => {
                     fontSize: "clamp(0.75rem, 2vw, 1rem)",
                   }}
                 >
-                  <Image
-                    src="/next-alternative.svg"
-                    alt="Next.js"
-                    width={32}
-                    height={32}
-                    className="tech-icon nextjs"
-                  />{" "}
-                  Next.js
+                  <Image src="/next.svg" alt="Next.js" width={32} height={32} className="tech-icon nextjs" /> Next.js
                 </span>
                 <span
                   className="tech-item"
@@ -698,6 +704,7 @@ const Portfolio = () => {
                   <SiTailwindcss
                     className="tech-icon tailwind"
                     style={{ width: "32px", height: "32px" }}
+                    color="#fff"
                   />{" "}
                   TailwindCSS
                 </span>
@@ -713,6 +720,27 @@ const Portfolio = () => {
           </div>
         </div>
       </section>
+
+      {/* AuroraBlob between Projects and Contact */}
+      <AuroraBlob
+        className="blob6"
+        initial={{ opacity: 0.26, scale: 1.18, x: 300, y: 1300 }}
+        animate={{
+          opacity: [0.26, 0.36, 0.26],
+          scale: [1.18, 1.26, 1.18],
+          x: [300, 340, 300],
+          y: [1300, 1380, 1300],
+        }}
+        transition={{
+          duration: 23,
+          repeat: Infinity,
+          ease: "easeInOut",
+          repeatType: "mirror",
+        }}
+        style={{
+          zIndex: 0,
+        }}
+      />
 
       {/* Contact Section */}
       <section

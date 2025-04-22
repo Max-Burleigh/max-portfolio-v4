@@ -63,12 +63,26 @@ body {
   pointer-events: none;
   z-index: 1;
   border-radius: 50%;
-  filter: blur(70px);
+  filter: blur(80px);
   opacity: 0.5;
-  width: 500px;
-  height: 400px;
+  width: 700px;
+  height: 550px;
   mix-blend-mode: lighten;
   transform: translateZ(0);
+  transition: width 0.6s, height 0.6s, left 0.6s, right 0.6s, top 0.6s, bottom 0.6s;
+}
+
+@media (max-width: 900px) {
+  .aurora-blob {
+    width: 350px;
+    height: 220px;
+    filter: blur(50px);
+  }
+  .blob5,
+  .blob6 {
+    width: 220px;
+    height: 120px;
+  }
 }
 .blob1 {
   background: radial-gradient(
@@ -77,8 +91,8 @@ body {
     #0e1e4a 80%,
     transparent 100%
   );
-  left: -200px;
-  top: -100px;
+  left: -60px;
+  top: -40px;
 }
 .blob2 {
   background: radial-gradient(
@@ -87,8 +101,8 @@ body {
     #1e215d 80%,
     transparent 100%
   );
-  right: -150px;
-  top: 0px;
+  right: -30px;
+  top: 40px;
 }
 .blob3 {
   background: radial-gradient(
@@ -97,8 +111,8 @@ body {
     #2f3f72 80%,
     transparent 100%
   );
-  left: 200px;
-  bottom: -100px;
+  left: 120px;
+  bottom: 30px;
 }
 .blob4 {
   background: radial-gradient(
@@ -107,8 +121,32 @@ body {
     #415a77 80%,
     transparent 100%
   );
-  right: 100px;
-  top: -150px;
+  right: 60px;
+  top: 20px;
+}
+.blob5 {
+  background: radial-gradient(
+    circle at 40% 60%,
+    #8affff 0%,
+    #7b2ff2 70%,
+    transparent 100%
+  );
+  left: -110px;
+  top: 900px;
+  width: 420px;
+  height: 320px;
+}
+.blob6 {
+  background: radial-gradient(
+    circle at 60% 80%,
+    #ffb347 0%,
+    #ff5ce6 70%,
+    transparent 100%
+  );
+  right: -80px;
+  top: 1750px;
+  width: 420px;
+  height: 320px;
 }
 @keyframes aurora {
   0% {
@@ -541,9 +579,9 @@ a {
 }
 .tech-icon.nextjs {
   color: #fff;
-  background: #000;
-  border-radius: 50%;
-  padding: 0.15em;
+  background: none;
+  border-radius: 0;
+  padding: 0;
 }
 .tech-icon.firebase {
   color: #ffa611;
