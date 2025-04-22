@@ -7,6 +7,7 @@ import InteractiveIframe from "./components/InteractiveIframe";
 import Image from "next/image";
 import { SiTypescript, SiTailwindcss, SiHtml5, SiCss3, SiJavascript, SiGoogle, SiPhp, SiFirebase, SiNextdotjs } from "react-icons/si";
 import ModernWindowsIcon from "./components/ModernWindowsIcon";
+import TechStack, { TechItem } from "./components/TechStack";
 
 // Define prop types for the NavItem component
 interface NavItemProps {
@@ -241,72 +242,15 @@ const Portfolio = () => {
                 <strong>VINSCRIBE</strong>
               </a>
               <p>AI-driven vehicle history reports and automotive tools.</p>
-              <div
-                className="tech-stack"
-                style={{
-                  display: "flex",
-                  flexDirection: "row",
-                  flexWrap: "wrap",
-                  gap: "16px",
-                  alignItems: "center",
-                  justifyContent: "flex-start",
-                }}
-              >
-                <span
-                  className="tech-item"
-                  style={{
-                    display: "flex",
-                    alignItems: "center",
-                    gap: "8px",
-                    fontSize: "clamp(0.75rem, 2vw, 1rem)",
-                  }}
-                >
-                  <Image src="/next.svg" alt="Next.js" width={32} height={32} className="tech-icon nextjs" /> Next.js
-                </span>
-                <span
-                  className="tech-item"
-                  style={{
-                    display: "flex",
-                    alignItems: "center",
-                    gap: "8px",
-                    fontSize: "clamp(0.75rem, 2vw, 1rem)",
-                  }}
-                >
-                  <SiFirebase className="tech-icon firebase" style={{ width: "32px", height: "32px" }} color="#fff" /> Firebase
-                </span>
-                <span
-                  className="tech-item"
-                  style={{
-                    display: "flex",
-                    alignItems: "center",
-                    gap: "8px",
-                    fontSize: "clamp(0.75rem, 2vw, 1rem)",
-                  }}
-                >
-                  <SiTypescript
-                    className="tech-icon typescript"
-                    style={{ width: "32px", height: "32px" }}
-                    color="#fff"
-                  />{" "}
-                  TypeScript
-                </span>
-                <span
-                  className="tech-item"
-                  style={{
-                    display: "flex",
-                    alignItems: "center",
-                    gap: "8px",
-                    fontSize: "clamp(0.75rem, 2vw, 1rem)",
-                  }}
-                >
-                  <SiTailwindcss
-                    className="tech-icon tailwind"
-                    style={{ width: "32px", height: "32px" }}
-                    color="#fff"
-                  />{" "}
-                  TailwindCSS
-                </span>
-              </div>
+              <TechStack
+                items={[
+                  { icon: <Image src="/next.svg" alt="Next.js" width={32} height={32} className="tech-icon nextjs" />, label: "Next.js" },
+                  { icon: <SiFirebase className="tech-icon firebase" style={{ width: "32px", height: "32px" }} color="#fff" />, label: "Firebase" },
+                  { icon: <SiTypescript className="tech-icon typescript" style={{ width: "32px", height: "32px" }} color="#fff" />, label: "TypeScript" },
+                  { icon: <SiTailwindcss className="tech-icon tailwind" style={{ width: "32px", height: "32px" }} color="#fff" />, label: "TailwindCSS" },
+                ]}
+                style={{ flexDirection: "row" }}
+              />
             </div>
             <div className="phone-mockup">
               <InteractiveIframe
@@ -346,87 +290,17 @@ const Portfolio = () => {
                 Designed/developed by yours truly.
               </p>
               <br />
-              <div
-                className="tech-stack"
-                style={{
-                  display: "flex",
-                  flexDirection: "row",
-                  flexWrap: "wrap",
-                  gap: "16px",
-                  alignItems: "center",
-                  justifyContent: "flex-start",
-                }}
-              >
-                <span
-                  className="tech-item"
-                  style={{
-                    display: "flex",
-                    alignItems: "center",
-                    gap: "8px",
-                    fontSize: "clamp(0.75rem, 2vw, 1rem)",
-                  }}
-                >
-                  <SiHtml5 className="tech-icon html5" style={{ width: "32px", height: "32px" }} /> HTML
-                </span>
-                <span
-                  className="tech-item"
-                  style={{
-                    display: "flex",
-                    alignItems: "center",
-                    gap: "8px",
-                    fontSize: "clamp(0.75rem, 2vw, 1rem)",
-                  }}
-                >
-                  <SiCss3 className="tech-icon css3" style={{ width: "32px", height: "32px" }} color="#fff" /> CSS
-                </span>
-                <span
-                  className="tech-item"
-                  style={{
-                    display: "flex",
-                    alignItems: "center",
-                    gap: "8px",
-                    fontSize: "clamp(0.75rem, 2vw, 1rem)",
-                  }}
-                >
-                  <SiJavascript className="tech-icon javascript" style={{ width: "32px", height: "32px" }} color="#fff" /> JavaScript
-                </span>
-                <span
-                  className="tech-item"
-                  style={{
-                    display: "flex",
-                    alignItems: "center",
-                    gap: "8px",
-                    fontSize: "clamp(0.75rem, 2vw, 1rem)",
-                    minHeight: "32px"
-                  }}
-                >
-                  <Image src="/klaviyo.png" alt="Klaviyo" width={38} height={38} className="tech-icon klaviyo" /> Klaviyo
-                </span>
-                <span
-                  className="tech-item"
-                  style={{
-                    display: "flex",
-                    alignItems: "center",
-                    gap: "8px",
-                    fontSize: "clamp(0.75rem, 2vw, 1rem)",
-                    minHeight: "32px"
-                  }}
-                >
-                  <SiGoogle className="tech-icon google" style={{ width: "32px", height: "32px" }} /> Google Ads
-                </span>
-                <span
-                  className="tech-item"
-                  style={{
-                    display: "flex",
-                    alignItems: "center",
-                    gap: "8px",
-                    fontSize: "clamp(0.75rem, 2vw, 1rem)",
-                    minHeight: "32px"
-                  }}
-                >
-                  <ModernWindowsIcon className="tech-icon windows" style={{ width: "32px", height: "32px" }} /> Microsoft Ads
-                </span>
-              </div>
+              <TechStack
+                items={[
+                  { icon: <SiHtml5 className="tech-icon html5" style={{ width: "32px", height: "32px" }} />, label: "HTML" },
+                  { icon: <SiCss3 className="tech-icon css3" style={{ width: "32px", height: "32px" }} color="#fff" />, label: "CSS" },
+                  { icon: <SiJavascript className="tech-icon javascript" style={{ width: "32px", height: "32px" }} color="#fff" />, label: "JavaScript" },
+                  { icon: <Image src="/klaviyo.png" alt="Klaviyo" width={38} height={38} className="tech-icon klaviyo" />, label: "Klaviyo" },
+                  { icon: <SiGoogle className="tech-icon google" style={{ width: "32px", height: "32px" }} />, label: "Google Ads" },
+                  { icon: <ModernWindowsIcon className="tech-icon windows" style={{ width: "32px", height: "32px" }} />, label: "Microsoft Ads" },
+                ]}
+                style={{ flexDirection: "row" }}
+              />
             </div>
             <div
               className="phone-mockup"
@@ -512,67 +386,14 @@ const Portfolio = () => {
               <p>
                 Community-driven online marketplace for local businesses.
               </p>
-              <div
-                className="tech-stack"
-                style={{
-                  display: "flex",
-                  flexDirection: "row",
-                  flexWrap: "wrap",
-                  gap: "16px",
-                  alignItems: "center",
-                  justifyContent: "flex-start",
-                }}
-              >
-                <span
-                  className="tech-item"
-                  style={{
-                    display: "flex",
-                    alignItems: "center",
-                    gap: "8px",
-                    fontSize: "clamp(0.75rem, 2vw, 1rem)",
-                  }}
-                >
-                  <SiHtml5 className="tech-icon html5" style={{ width: "32px", height: "32px" }} /> HTML
-                </span>
-                <span
-                  className="tech-item"
-                  style={{
-                    display: "flex",
-                    alignItems: "center",
-                    gap: "8px",
-                    fontSize: "clamp(0.75rem, 2vw, 1rem)",
-                  }}
-                >
-                  <SiTailwindcss
-                    className="tech-icon tailwind"
-                    style={{ width: "32px", height: "32px" }}
-                    color="#fff"
-                  />{" "}
-                  TailwindCSS
-                </span>
-                <span
-                  className="tech-item"
-                  style={{
-                    display: "flex",
-                    alignItems: "center",
-                    gap: "8px",
-                    fontSize: "clamp(0.75rem, 2vw, 1rem)",
-                  }}
-                >
-                  <SiPhp className="tech-icon php" style={{ width: "32px", height: "32px" }} /> PHP
-                </span>
-                <span
-                  className="tech-item"
-                  style={{
-                    display: "flex",
-                    alignItems: "center",
-                    gap: "8px",
-                    fontSize: "clamp(0.75rem, 2vw, 1rem)",
-                  }}
-                >
-                  <SiJavascript className="tech-icon javascript" style={{ width: "32px", height: "32px" }} color="#fff" /> JavaScript
-                </span>
-              </div>
+              <TechStack
+                items={[
+                  { icon: <SiHtml5 className="tech-icon html5" style={{ width: "32px", height: "32px" }} />, label: "HTML" },
+                  { icon: <SiCss3 className="tech-icon css3" style={{ width: "32px", height: "32px" }} color="#fff" />, label: "CSS" },
+                  { icon: <SiJavascript className="tech-icon javascript" style={{ width: "32px", height: "32px" }} color="#fff" />, label: "JavaScript" },
+                ]}
+                style={{ flexDirection: "row" }}
+              />
             </div>
             <div className="phone-mockup">
               <InteractiveIframe
@@ -608,45 +429,13 @@ const Portfolio = () => {
                 Portfolio site for a professional photographer.<br />
                 Built with Next.js and TailwindCSS.
               </p>
-              <div
-                className="tech-stack"
-                style={{
-                  display: "flex",
-                  flexDirection: "row",
-                  flexWrap: "wrap",
-                  gap: "16px",
-                  alignItems: "center",
-                  justifyContent: "flex-start",
-                }}
-              >
-                <span
-                  className="tech-item"
-                  style={{
-                    display: "flex",
-                    alignItems: "center",
-                    gap: "8px",
-                    fontSize: "clamp(0.75rem, 2vw, 1rem)",
-                  }}
-                >
-                  <Image src="/next.svg" alt="Next.js" width={32} height={32} className="tech-icon nextjs" /> Next.js
-                </span>
-                <span
-                  className="tech-item"
-                  style={{
-                    display: "flex",
-                    alignItems: "center",
-                    gap: "8px",
-                    fontSize: "clamp(0.75rem, 2vw, 1rem)",
-                  }}
-                >
-                  <SiTailwindcss
-                    className="tech-icon tailwind"
-                    style={{ width: "32px", height: "32px" }}
-                    color="#fff"
-                  />{" "}
-                  TailwindCSS
-                </span>
-              </div>
+              <TechStack
+                items={[
+                  { icon: <Image src="/next.svg" alt="Next.js" width={32} height={32} className="tech-icon nextjs" />, label: "Next.js" },
+                  { icon: <SiTailwindcss className="tech-icon tailwind" style={{ width: "32px", height: "32px" }} color="#fff" />, label: "TailwindCSS" },
+                ]}
+                style={{ flexDirection: "row" }}
+              />
             </div>
             <div className="phone-mockup">
               <InteractiveIframe
