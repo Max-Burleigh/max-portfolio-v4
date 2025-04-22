@@ -91,8 +91,11 @@ body {
     #0e1e4a 80%,
     transparent 100%
   );
-  left: -60px;
-  top: -40px;
+  left: 10vw;
+  top: -500px;
+  width: 900px;
+  height: 900px;
+  transform: translate(-50%, -50%);
 }
 .blob2 {
   background: radial-gradient(
@@ -101,18 +104,43 @@ body {
     #1e215d 80%,
     transparent 100%
   );
-  right: -30px;
-  top: 40px;
+  right: 10vw;
+  top: -500px;
+  width: 800px;
+  height: 800px;
+  transform: translate(50%, -50%);
+}
+
+.blob-center {
+  background: radial-gradient(
+    circle at 50% 50%,
+    rgba(0,255,255,0.45) 0%,
+    rgba(0,160,255,0.32) 40%,
+    rgba(0,80,200,0.16) 70%,
+    rgba(20,35,80,0.0) 100%
+  );
+  left: 50%;
+  top: 120px;
+  width: 500px;
+  height: 500px;
+  transform: translateX(-50%);
+  z-index: 2;
+  opacity: 0.85;
+  filter: blur(60px);
+  pointer-events: none;
+  position: absolute;
 }
 .blob3 {
   background: radial-gradient(
     circle at 50% 70%,
-    #ffeb3b 0%,
+    #00ff9d 0%,
     #2f3f72 80%,
     transparent 100%
   );
-  left: 120px;
-  bottom: 30px;
+  left: 50%;
+  top: 50px;
+  width: 900px;
+  height: 900px;
 }
 .blob4 {
   background: radial-gradient(
@@ -147,6 +175,20 @@ body {
   top: 1750px;
   width: 420px;
   height: 320px;
+}
+.blob7 {
+  background: radial-gradient(circle at 20% 50%, #ff9a9e 0%, #fad0c4 70%, transparent 100%);
+  width: 500px;
+  height: 400px;
+  left: 20px;
+  top: 2200px;
+}
+.blob8 {
+  background: radial-gradient(circle at 80% 50%, #a18cd1 0%, #fbc2eb 70%, transparent 100%);
+  width: 500px;
+  height: 400px;
+  right: 20px;
+  top: 2600px;
 }
 @keyframes aurora {
   0% {
@@ -621,4 +663,50 @@ a {
 
 .carlypsphoto-card .phone-mockup {
   margin-top: 2rem;
+}
+
+.glass-card {
+  /* Reusing some styles from project-card for consistency */
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px; /* Slightly larger radius than project-card */
+  padding: 2rem; /* More padding */
+  backdrop-filter: blur(10px); /* Apply blur effect */
+  -webkit-backdrop-filter: blur(10px); /* Safari support */
+  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.1);
+  transition: background 0.3s, box-shadow 0.3s;
+  width: fit-content; /* Size to content */
+  max-width: 90%; /* Prevent overflow */
+  margin: 1rem auto; /* Center the card within the section */
+}
+
+.about-card {
+  /* Specific adjustments for about card if needed */
+  text-align: center;
+  background: rgba(255, 255, 255, 0.02); /* Less opaque background */
+  max-width: 550px; /* Make it narrower */
+  padding: 3rem 2rem; /* Increase vertical padding, keep horizontal */
+}
+
+.contact-card {
+  /* Specific adjustments for contact card if needed */
+  text-align: center;
+  background: rgba(255, 255, 255, 0.02); /* Less opaque background */
+  max-width: 550px; /* Make it narrower */
+  padding: 3rem 2rem; /* Increase vertical padding, keep horizontal */
+}
+
+.glass-card:hover {
+  background: rgba(255, 255, 255, 0.06);
+  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.15);
+}
+
+.about-card:hover,
+.contact-card:hover {
+  background: rgba(255, 255, 255, 0.04); /* Less opaque hover background */
+}
+
+.project-card:hover {
+  transform: translateY(-5px);
+  background: rgba(255, 255, 255, 0.06);
 }

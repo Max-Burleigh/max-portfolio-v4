@@ -185,50 +185,6 @@ const Portfolio = () => {
         }}
         {...blobProps}
       />
-      <AuroraBlob
-        className="blob3"
-        initial={{ opacity: 0.28, scale: 1.15, x: 60, y: 80 }}
-        animate={{
-          opacity: [0.28, 0.38, 0.28],
-          scale: [1.15, 1.22, 1.15],
-          x: [60, 160, 60],
-          y: [80, 140, 80],
-        }}
-        transition={{
-          duration: 20,
-          repeat: Infinity,
-          ease: "easeInOut",
-          repeatType: "mirror",
-        }}
-        {...blobProps}
-        style={{
-          background:
-            "radial-gradient(circle, rgba(20,35,80,0.50) 0%, rgba(20,35,80,0.0) 80%)",
-          ...blobProps?.style,
-        }}
-      />
-      <AuroraBlob
-        className="blob4"
-        initial={{ opacity: 0.28, scale: 1.1, x: 200, y: 0 }}
-        animate={{
-          opacity: [0.28, 0.38, 0.28],
-          scale: [1.1, 1.18, 1.1],
-          x: [200, 150, 200],
-          y: [0, 80, 0],
-        }}
-        transition={{
-          duration: 22,
-          repeat: Infinity,
-          ease: "easeInOut",
-          repeatType: "mirror",
-        }}
-        {...blobProps}
-        style={{
-          background:
-            "radial-gradient(circle, rgba(40,70,120,0.45) 0%, rgba(40,70,120,0.0) 80%)",
-          ...blobProps?.style,
-        }}
-      />
 
       {/* Optimized cursor circle with useSpring for smoother motion */}
       <motion.div
@@ -252,26 +208,6 @@ const Portfolio = () => {
         ))}
       </nav>
 
-      {/* AuroraBlob between About and Projects */}
-      <AuroraBlob
-        className="blob5"
-        initial={{ opacity: 0.32, scale: 1.05, x: -120, y: 400 }}
-        animate={{
-          opacity: [0.32, 0.42, 0.32],
-          scale: [1.05, 1.12, 1.05],
-          x: [-120, -80, -120],
-          y: [400, 480, 400],
-        }}
-        transition={{
-          duration: 19,
-          repeat: Infinity,
-          ease: "easeInOut",
-          repeatType: "mirror",
-        }}
-        style={{
-          zIndex: 0,
-        }}
-      />
 
       {/* About Section - Reduced duplicate blobs */}
       <section
@@ -279,10 +215,12 @@ const Portfolio = () => {
         id="about"
         className="section about-section"
       >
-        <h1>Hey, I&apos;m Max Burleigh</h1>
-        <p>
-          web developer, project manager, solopreneur based in Medford, Oregon.
-        </p>
+        <div className="glass-card about-card">
+          <h1>Hey, I&apos;m Max Burleigh</h1>
+          <p>
+            web developer, project manager, solopreneur based in Medford, Oregon.
+          </p>
+        </div>
       </section>
 
       {/* Projects Section */}
@@ -379,7 +317,7 @@ const Portfolio = () => {
             </div>
           </div>
           <div
-            className="project-card fullleaf-card"
+            className="project-card fullleaf-card vinscribe-card"
             style={{
               display: "flex",
               flexDirection: "row-reverse",
@@ -721,26 +659,6 @@ const Portfolio = () => {
         </div>
       </section>
 
-      {/* AuroraBlob between Projects and Contact */}
-      <AuroraBlob
-        className="blob6"
-        initial={{ opacity: 0.26, scale: 1.18, x: 300, y: 1300 }}
-        animate={{
-          opacity: [0.26, 0.36, 0.26],
-          scale: [1.18, 1.26, 1.18],
-          x: [300, 340, 300],
-          y: [1300, 1380, 1300],
-        }}
-        transition={{
-          duration: 23,
-          repeat: Infinity,
-          ease: "easeInOut",
-          repeatType: "mirror",
-        }}
-        style={{
-          zIndex: 0,
-        }}
-      />
 
       {/* Contact Section */}
       <section
@@ -748,12 +666,14 @@ const Portfolio = () => {
         id="contact"
         className="section contact-section"
       >
-        <h2>Contact</h2>
-        <p>
-          Feel free to reach out if you have a project in mind or just want to
-          chat!
-        </p>
-        <a href="mailto:webwavebuilding@yahoo.com">webwavebuilding@yahoo.com</a>
+        <div className="glass-card contact-card">
+          <h2>Contact</h2>
+          <p>
+            Feel free to reach out if you have a project in mind or just want to
+            chat!
+          </p>
+          <a href="mailto:webwavebuilding@yahoo.com">webwavebuilding@yahoo.com</a>
+        </div>
       </section>
     </div>
   );
