@@ -2,7 +2,7 @@
 import React, { useState, useRef, useEffect, useCallback, memo } from "react";
 import { motion, useMotionValue, useSpring, AnimatePresence } from "framer-motion";
 import { throttle } from "lodash";
-import AuroraBlob from "./AuroraBlob";
+import AuroraBlob from "./components/AuroraBlob";
 import InteractiveIframe from "./components/InteractiveIframe";
 import Image from "next/image";
 import { SiTypescript, SiTailwindcss, SiHtml5, SiCss3, SiJavascript, SiGoogle, SiPhp, SiFirebase, SiNextdotjs } from "react-icons/si";
