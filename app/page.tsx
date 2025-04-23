@@ -1,53 +1,18 @@
 "use client";
-import React, { useState, useRef, useEffect, useCallback, memo } from "react";
-import { motion, useMotionValue, useSpring, AnimatePresence } from "framer-motion";
+import React, { useState, useRef, useEffect, useCallback } from "react";
+import { motion, useMotionValue, useSpring } from "framer-motion";
 import { throttle } from "lodash";
 import AuroraBlob from "./components/AuroraBlob";
-import InteractiveIframe from "./components/InteractiveIframe";
-import Image from "next/image";
-import { SiTypescript, SiTailwindcss, SiHtml5, SiCss3, SiJavascript, SiGoogle, SiPhp, SiFirebase, SiNextdotjs } from "react-icons/si";
-import ModernWindowsIcon from "./components/ModernWindowsIcon";
-import TechStack, { TechItem } from "./components/TechStack";
-
-// Define prop types for the NavItem component
-interface NavItemProps {
-  section: string;
-  activeSection: string;
-  onClick: () => void;
-}
-
-// Memoized NavItem component
-const NavItem = memo(({ section, activeSection, onClick }: NavItemProps) => {
-  const isActive = section === activeSection;
-
-  // Underline variants for the elastic effect
-  const underlineVariants = {
-    inactive: { scaleX: 0 },
-    active: {
-      scaleX: 1,
-      transition: {
-        type: "spring",
-        stiffness: 400,
-        damping: 20,
-      },
-    },
-  };
-
-  return (
-    <div className="nav-item">
-      <button className={isActive ? "active" : ""} onClick={onClick}>
-        {section.charAt(0).toUpperCase() + section.slice(1)}
-      </button>
-      <motion.div
-        className="elastic-underline"
-        variants={underlineVariants}
-        initial="inactive"
-        animate={isActive ? "active" : "inactive"}
-      />
-    </div>
-  );
-});
-NavItem.displayName = "NavItem";
+import Navigation from "./components/Navigation";
+// Import modularized project components
+import {
+  Vinscribe,
+  FullLeafTea,
+  FullLeafApp,
+  Quailmail,
+  ShopDowntown,
+  CarlyPhotography
+} from "./components/projects";
 
 // Main Portfolio component
 const Portfolio = () => {
@@ -66,6 +31,7 @@ const Portfolio = () => {
 
   // Define section keys type for type safety
   type SectionKey = "about" | "projects" | "contact";
+  const sectionKeys: SectionKey[] = ["about", "projects", "contact"];
 
   // Create properly typed section refs
   const sectionRefs: Record<
@@ -197,18 +163,12 @@ const Portfolio = () => {
         }}
       />
 
-      {/* Navigation with memoized components */}
-      <nav className="side-nav">
-        {["about", "projects", "contact"].map((section) => (
-          <NavItem
-            key={section}
-            section={section}
-            activeSection={activeSection}
-            onClick={() => scrollToSection(section as SectionKey)}
-          />
-        ))}
-      </nav>
-
+      {/* Use the new Navigation component */}
+      <Navigation
+        activeSection={activeSection}
+        scrollToSection={scrollToSection}
+        sections={sectionKeys}
+      />
 
       {/* About Section - Reduced duplicate blobs */}
       <section
@@ -232,222 +192,18 @@ const Portfolio = () => {
       >
         <h2>Projects</h2>
         <div className="project-grid">
-          <div className="project-card vinscribe-card">
-            <div className="project-info">
-              <a
-                href="https://www.vinscribe.com"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                <strong>VINSCRIBE</strong>
-              </a>
-              <p>AI-driven vehicle history reports and automotive tools.</p>
-              <TechStack
-                items={[
-                  { icon: <Image src="/next.svg" alt="Next.js" width={32} height={32} className="tech-icon nextjs" />, label: "Next.js" },
-                  { icon: <SiFirebase className="tech-icon firebase" style={{ width: "32px", height: "32px" }} color="#fff" />, label: "Firebase" },
-                  { icon: <SiTypescript className="tech-icon typescript" style={{ width: "32px", height: "32px" }} color="#fff" />, label: "TypeScript" },
-                  { icon: <SiTailwindcss className="tech-icon tailwind" style={{ width: "32px", height: "32px" }} color="#fff" />, label: "TailwindCSS" },
-                ]}
-                style={{ flexDirection: "row" }}
-              />
-            </div>
-            <div className="phone-mockup">
-              <InteractiveIframe
-                src="https://www.vinscribe.com"
-                title="VINSCRIBE Mobile Preview"
-                className="vinscribe-iframe"
-              />
-            </div>
-          </div>
-          <div
-            className="project-card fullleaf-card vinscribe-card"
-            style={{
-              display: "flex",
-              flexDirection: "row-reverse",
-              alignItems: "center",
-              justifyContent: "space-between",
-              gap: "2rem",
-              flexBasis: "100%",
-              maxWidth: "100%",
-              padding: "1.5rem",
-              minHeight: "400px",
-            }}
-          >
-            <div className="project-info">
-              <a
-                href="https://fullleafteacompany.com"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                <strong>Full Leaf Tea Company</strong>
-              </a>
-              <p>
-                Multi-million dollar ecommerce business for premium loose leaf tea.
-              </p>
-              <br />
-              <p>
-                Designed/developed by yours truly.
-              </p>
-              <br />
-              <TechStack
-                items={[
-                  { icon: <SiHtml5 className="tech-icon html5" style={{ width: "32px", height: "32px" }} />, label: "HTML" },
-                  { icon: <SiCss3 className="tech-icon css3" style={{ width: "32px", height: "32px" }} color="#fff" />, label: "CSS" },
-                  { icon: <SiJavascript className="tech-icon javascript" style={{ width: "32px", height: "32px" }} color="#fff" />, label: "JavaScript" },
-                  { icon: <Image src="/klaviyo.png" alt="Klaviyo" width={38} height={38} className="tech-icon klaviyo" />, label: "Klaviyo" },
-                  { icon: <SiGoogle className="tech-icon google" style={{ width: "32px", height: "32px" }} />, label: "Google Ads" },
-                  { icon: <ModernWindowsIcon className="tech-icon windows" style={{ width: "32px", height: "32px" }} />, label: "Microsoft Ads" },
-                ]}
-                style={{ flexDirection: "row" }}
-              />
-            </div>
-            <div
-              className="phone-mockup"
-              style={{ position: 'relative', cursor: 'pointer' }}
-              onMouseEnter={handleFullLeafMouseEnter}
-              onClick={handleFullLeafClick}
-            >
-              <Image
-                src="/full-leaf.jpg"
-                alt="Screenshot of Full Leaf Tea Company website"
-                title="Full Leaf Tea Company Website Screenshot"
-                width={300}
-                height={600}
-                className="fullleaf-screenshot"
-                style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '1.5rem', boxShadow: '0 4px 24px rgba(0,0,0,0.12)' }}
-              />
-              <AnimatePresence>
-                {fullLeafMessageState !== "hidden" && (
-                  <motion.div
-                    className="iframe-message fullleaf-message"
-                    style={{ pointerEvents: fullLeafMessageState === "second" ? "auto" : "none" }}
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: -20 }}
-                    transition={{ duration: 0.3 }}
-                  >
-                    <div className="message-content">
-                      <div className="message-icon">🫖</div>
-                      <p>Try tapping harder.</p>
-                      <AnimatePresence>
-                        {fullLeafMessageState === "second" && (
-                          <motion.p
-                            key="second-message"
-                            initial={{ opacity: 0, y: 10 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            exit={{ opacity: 0, y: 10 }}
-                            transition={{ duration: 0.3 }}
-                            style={{ marginTop: 8 }}
-                          >
-                            Just kidding, it's just a picture.<br />
-                            <a href="https://fullleafteacompany.com" target="_blank" rel="noopener noreferrer">
-                              Click to visit the website
-                            </a>
-                          </motion.p>
-                        )}
-                      </AnimatePresence>
-                    </div>
-                  </motion.div>
-                )}
-              </AnimatePresence>
-            </div>
-          </div>
-          <div className="project-card">
-            <strong>Full Leaf App</strong>
-            <p>A Flutter-based, WebView app for Full Leaf Tea Company.</p>
-          </div>
-          <div className="project-card">
-            <strong>Quailmail</strong>
-            <p>An autonomous AI email agent.</p>
-          </div>
-          <div
-            className="project-card shopdowntown-card vinscribe-card"
-            style={{
-              display: "flex",
-              flexDirection: "row-reverse",
-              alignItems: "center",
-              justifyContent: "space-between",
-              gap: "2rem",
-              flexBasis: "100%",
-              maxWidth: "100%",
-              padding: "1.5rem",
-              minHeight: "400px",
-            }}
-          >
-            <div className="project-info">
-              <a
-                href="https://shopdowntown.org/"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                <strong>Shop Downtown</strong>
-              </a>
-              <p>
-                Community-driven online marketplace for local businesses.
-              </p>
-              <TechStack
-                items={[
-                  { icon: <SiHtml5 className="tech-icon html5" style={{ width: "32px", height: "32px" }} />, label: "HTML" },
-                  { icon: <SiCss3 className="tech-icon css3" style={{ width: "32px", height: "32px" }} color="#fff" />, label: "CSS" },
-                  { icon: <SiJavascript className="tech-icon javascript" style={{ width: "32px", height: "32px" }} color="#fff" />, label: "JavaScript" },
-                ]}
-                style={{ flexDirection: "row" }}
-              />
-            </div>
-            <div className="phone-mockup">
-              <InteractiveIframe
-                src="https://shopdowntown.org/"
-                title="Shop Downtown Mobile Preview"
-                className="shopdowntown-iframe vinscribe-iframe"
-              />
-            </div>
-          </div>
-          <div
-            className="project-card carlypsphoto-card"
-            style={{
-              display: "flex",
-              flexDirection: "row-reverse",
-              alignItems: "center",
-              justifyContent: "space-between",
-              gap: "2rem",
-              flexBasis: "100%",
-              maxWidth: "100%",
-              padding: "1.5rem",
-              minHeight: "400px",
-            }}
-          >
-            <div className="project-info">
-              <a
-                href="https://carlypsphoto.com"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                <strong>Carly Pearl-Sacks Photography</strong>
-              </a>
-              <p>
-                Portfolio site for a professional photographer.<br />
-                Built with Next.js and TailwindCSS.
-              </p>
-              <TechStack
-                items={[
-                  { icon: <Image src="/next.svg" alt="Next.js" width={32} height={32} className="tech-icon nextjs" />, label: "Next.js" },
-                  { icon: <SiTailwindcss className="tech-icon tailwind" style={{ width: "32px", height: "32px" }} color="#fff" />, label: "TailwindCSS" },
-                ]}
-                style={{ flexDirection: "row" }}
-              />
-            </div>
-            <div className="phone-mockup">
-              <InteractiveIframe
-                src="https://carlypsphoto.com"
-                title="Carly Pearl-Sacks Photography Mobile Preview"
-                className="carlypsphoto-iframe"
-              />
-            </div>
-          </div>
+          <Vinscribe />
+          <FullLeafTea 
+            fullLeafMessageState={fullLeafMessageState}
+            onMouseEnter={handleFullLeafMouseEnter}
+            onClick={handleFullLeafClick}
+          />
+          <FullLeafApp />
+          <Quailmail />
+          <ShopDowntown />
+          <CarlyPhotography />
         </div>
       </section>
-
 
       {/* Contact Section */}
       <section
