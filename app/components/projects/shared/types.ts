@@ -15,6 +15,7 @@ export interface ProjectCardProps {
   imageAlt?: string;
   imageTitle?: string;
   reverseLayout?: boolean;
+  disablePhoneMockup?: boolean;
   className?: string;
   style?: CSSProperties;
   children?: ReactNode;

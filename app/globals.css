@@ -69,7 +69,8 @@ body {
   height: 550px;
   mix-blend-mode: lighten;
   transform: translateZ(0);
-  transition: width 0.6s, height 0.6s, left 0.6s, right 0.6s, top 0.6s, bottom 0.6s;
+  transition: width 0.6s, height 0.6s, left 0.6s, right 0.6s, top 0.6s,
+    bottom 0.6s;
 }
 
 @media (max-width: 900px) {
@@ -114,10 +115,10 @@ body {
 .blob-center {
   background: radial-gradient(
     circle at 50% 50%,
-    rgba(0,255,255,0.45) 0%,
-    rgba(0,160,255,0.32) 40%,
-    rgba(0,80,200,0.16) 70%,
-    rgba(20,35,80,0.0) 100%
+    rgba(0, 255, 255, 0.45) 0%,
+    rgba(0, 160, 255, 0.32) 40%,
+    rgba(0, 80, 200, 0.16) 70%,
+    rgba(20, 35, 80, 0) 100%
   );
   left: 50%;
   top: 120px;
@@ -177,14 +178,24 @@ body {
   height: 320px;
 }
 .blob7 {
-  background: radial-gradient(circle at 20% 50%, #ff9a9e 0%, #fad0c4 70%, transparent 100%);
+  background: radial-gradient(
+    circle at 20% 50%,
+    #ff9a9e 0%,
+    #fad0c4 70%,
+    transparent 100%
+  );
   width: 500px;
   height: 400px;
   left: 20px;
   top: 2200px;
 }
 .blob8 {
-  background: radial-gradient(circle at 80% 50%, #a18cd1 0%, #fbc2eb 70%, transparent 100%);
+  background: radial-gradient(
+    circle at 80% 50%,
+    #a18cd1 0%,
+    #fbc2eb 70%,
+    transparent 100%
+  );
   width: 500px;
   height: 400px;
   right: 20px;
@@ -280,7 +291,7 @@ body {
   );
   filter: blur(30px);
   pointer-events: none;
-  z-index: 0;
+  z-index: 999;
   transform: translateZ(0);
 }
 .side-nav {
@@ -419,88 +430,7 @@ a {
     width: 350px;
   }
 }
-.phone-mockup {
-  position: relative;
-  width: 100%;
-  max-width: 370px;
-  min-width: 210px;
-  aspect-ratio: 350/600;
-  background: #181c23;
-  border-radius: 38px;
-  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.18), 0 1.5px 6px 0 rgba(0, 0, 0, 0.1);
-  border: 3px solid #23252e;
-  margin: 0 auto;
-  padding: 24px 8px 28px 8px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: flex-start;
-}
-.phone-mockup::before {
-  content: "";
-  display: block;
-  position: absolute;
-  top: 10px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 60px;
-  height: 7px;
-  background: #d1d5db;
-  border-radius: 4px;
-  z-index: 2;
-}
-.phone-mockup::after {
-  content: "";
-  display: block;
-  position: absolute;
-  top: 10px;
-  right: 32px;
-  width: 10px;
-  height: 10px;
-  background: #bbb;
-  border-radius: 50%;
-  z-index: 2;
-}
-.phone-mockup .vinscribe-iframe {
-  position: relative;
-  width: 100%;
-  height: 100%;
-  max-width: 350px;
-  max-height: 600px;
-  min-width: 200px;
-  min-height: 250px;
-  aspect-ratio: 350/600;
-  border-radius: 24px;
-  box-shadow: none;
-  background: #191c23;
-  border: none;
-  margin: 0;
-}
-.phone-mockup .carlypsphoto-iframe {
-  position: relative;
-  width: 100%;
-  height: 100%;
-  max-width: 350px;
-  max-height: 600px;
-  min-width: 200px;
-  min-height: 250px;
-  aspect-ratio: 350/600;
-  border-radius: 24px;
-  box-shadow: none;
-  background: #191c23;
-  border: none;
-  margin: 0;
-}
-@media (min-width: 600px) {
-  .phone-mockup {
-    max-width: 370px;
-    padding: 28px 12px 32px 12px;
-  }
-  .phone-mockup .vinscribe-iframe {
-    max-width: 350px;
-    max-height: 600px;
-  }
-}
+/* Phone mockup styles moved to app/components/PhoneMockup.css */
 
 /* Interactive Iframe Component Styles */
 .interactive-iframe-container {
@@ -561,7 +491,7 @@ a {
   bottom: -2px;
   left: 0;
   width: 100%;
-  height: 1px;
+  height: 2px;
   background-color: #00ffd5;
   transform: scaleX(0);
   transform-origin: right;
@@ -682,9 +612,9 @@ a {
 
 .about-card {
   /* Specific adjustments for about card if needed */
-  text-align: center;
+  text-align: left;
   background: rgba(255, 255, 255, 0.02); /* Less opaque background */
-  max-width: 550px; /* Make it narrower */
+  max-width: 700px; /* Increased width for image */
   padding: 3rem 2rem; /* Increase vertical padding, keep horizontal */
 }
 
@@ -710,3 +640,23 @@ a {
   transform: translateY(-5px);
   background: rgba(255, 255, 255, 0.06);
 }
+
+/* Full Leaf App specific styling moved to app/components/PhoneMockup.css */
+
+.project-card.full-leaf-app-card {
+  flex-basis: 100%;
+  max-width: 100%;
+  min-height: 400px;
+}
+
+.full-leaf-app-card img {
+  border-radius: 16px;
+  height: 340px !important;
+  max-width: 190px !important;
+  width: auto !important;
+  object-fit: contain;
+  box-shadow: 0 6px 24px 0 rgba(0, 0, 0, 0.14);
+  margin-right: 2rem !important;
+}
+
+/* Full Leaf App specific styling moved to app/components/PhoneMockup.css */

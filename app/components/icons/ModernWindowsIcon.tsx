@@ -1,7 +1,11 @@
 "use client";
 import React from "react";
 
-const ModernWindowsIcon: React.FC<React.SVGProps<SVGSVGElement>> = ({ style, className, ...props }) => (
+const ModernWindowsIcon: React.FC<React.SVGProps<SVGSVGElement>> = ({
+  style,
+  className,
+  ...props
+}) => (
   <svg
     viewBox="0 0 32 32"
     width={32}

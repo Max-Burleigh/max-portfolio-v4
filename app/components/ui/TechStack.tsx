@@ -11,7 +11,11 @@ export interface TechStackProps {
   style?: React.CSSProperties;
 }
 
-const TechStack: React.FC<TechStackProps> = ({ items, className = "", style = {} }) => (
+const TechStack: React.FC<TechStackProps> = ({
+  items,
+  className = "",
+  style = {},
+}) => (
   <div
     className={`tech-stack ${className}`}
     style={{

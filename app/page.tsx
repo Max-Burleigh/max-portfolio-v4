@@ -1,9 +1,10 @@
 "use client";
 import React, { useState, useRef, useEffect, useCallback } from "react";
-import { motion, useMotionValue, useSpring } from "framer-motion";
+import { motion, useMotionValue, useSpring, useTransform } from "framer-motion";
 import { throttle } from "lodash";
-import AuroraBlob from "./components/AuroraBlob";
-import Navigation from "./components/Navigation";
+import Image from "next/image";
+import { AuroraBlob } from "./components/aurora";
+import { Navigation } from "./components/navigation";
 // Import modularized project components
 import {
   Vinscribe,
@@ -11,8 +12,17 @@ import {
   FullLeafApp,
   Quailmail,
   ShopDowntown,
-  CarlyPhotography
+  CarlyPhotography,
 } from "./components/projects";
+
+// Helper functions for tilt calculations
+const round = (num: number, fix = 2) => {
+  return parseFloat(num.toFixed(fix));
+};
+
+const distance = (x1: number, y1: number, x2: number, y2: number) => {
+  return Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2));
+};
 
 // Main Portfolio component
 const Portfolio = () => {
@@ -25,9 +35,23 @@ const Portfolio = () => {
   const cursorX = useSpring(mouseX, springConfig);
   const cursorY = useSpring(mouseY, springConfig);
 
+  // For portrait tilt effect
+  const portraitRef = useRef<HTMLDivElement>(null);
+  const [rotations, setRotations] = useState({ x: 0, y: 0, z: 2 });
+  const [isAnimating, setAnimating] = useState(false);
+  const isAnimatingRef = useRef(isAnimating);
+  const [glare, setGlare] = useState({ x: 50, y: 50, opacity: 0 });
+
+  // Set the ref value whenever isAnimating changes
+  useEffect(() => {
+    isAnimatingRef.current = isAnimating;
+  }, [isAnimating]);
+
   const [activeSection, setActiveSection] = useState<SectionKey>("about");
   const containerRef = useRef<HTMLDivElement>(null);
-  const [fullLeafMessageState, setFullLeafMessageState] = useState<"hidden" | "first" | "second">("hidden");
+  const [fullLeafMessageState, setFullLeafMessageState] = useState<
+    "hidden" | "first" | "second"
+  >("hidden");
 
   // Define section keys type for type safety
   type SectionKey = "about" | "projects" | "contact";
@@ -51,6 +75,59 @@ const Portfolio = () => {
     }, 10),
     [mouseX, mouseY]
   );
+
+  // Handler for portrait tilting with advanced glare effect
+  const handlePortraitMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    setAnimating(true);
+
+    if (!portraitRef.current) return;
+
+    const rect = portraitRef.current.getBoundingClientRect();
+
+    // Get absolute mouse position relative to the card
+    const absolute = {
+      x: e.clientX - rect.left,
+      y: e.clientY - rect.top,
+    };
+
+    // Calculate percentage position (0-100%)
+    const percent = {
+      x: round((100 / rect.width) * absolute.x),
+      y: round((100 / rect.height) * absolute.y),
+    };
+
+    // Calculate center-relative position (-50 to 50%)
+    const center = {
+      x: percent.x - 50,
+      y: percent.y - 50,
+    };
+
+    // Set rotation values based on mouse position
+    setRotations({
+      x: round(center.x / 12), // X-axis rotation (reversed for intuitive mapping)
+      y: round(-center.y / 16), // Y-axis rotation
+      z: round(distance(percent.x, percent.y, 50, 50) / 20), // Z-rotation based on distance from center
+    });
+
+    // Update glare position to follow mouse
+    setGlare({
+      x: percent.x,
+      y: percent.y,
+      opacity: 0.25,
+    });
+  };
+
+  // Reset tilt and glare when mouse leaves
+  const handlePortraitMouseLeave = () => {
+    setAnimating(false);
+
+    setTimeout(() => {
+      if (isAnimatingRef.current) return;
+
+      setRotations({ x: 0, y: 0, z: 2 });
+      setGlare({ x: 50, y: 50, opacity: 0 });
+    }, 100);
+  };
 
   // Memoized scroll section function
   const scrollToSection = useCallback(
@@ -177,10 +254,68 @@ const Portfolio = () => {
         className="section about-section"
       >
         <div className="glass-card about-card">
-          <h1>Hey, I&apos;m Max Burleigh</h1>
-          <p>
-            web developer, project manager, solopreneur based in Medford, Oregon.
-          </p>
+          <div className="flex flex-col md:flex-row items-center gap-6">
+            <div className="flex flex-col">
+              <h1>Hey, I&apos;m Max Burleigh</h1>
+              <p>
+                web developer, project manager, solopreneur based in Medford,
+                Oregon.
+              </p>
+            </div>
+            <motion.div
+              ref={portraitRef}
+              className="w-72 h-72 relative rounded-lg overflow-hidden shadow-lg"
+              animate={{
+                rotateY: rotations.x,
+                rotateX: rotations.y,
+                transformPerspective: rotations.z * 100,
+              }}
+              style={{
+                transformStyle: "preserve-3d",
+                transformOrigin: "center",
+                perspective: "800px",
+              }}
+              whileHover={{
+                scale: 1.05,
+                transition: { duration: 0.2 },
+              }}
+              onMouseMove={handlePortraitMouseMove}
+              onMouseLeave={handlePortraitMouseLeave}
+            >
+              {/* Glare overlay */}
+              <motion.div
+                style={{
+                  zIndex: 2,
+                  mixBlendMode: "overlay",
+                  position: "absolute",
+                  transform: "translateZ(1px)",
+                  width: "100%",
+                  height: "100%",
+                  borderRadius: "0.5rem",
+                  transformStyle: "preserve-3d",
+                }}
+                animate={{
+                  background: `radial-gradient(
+                    farthest-corner circle at ${glare.x}% ${glare.y}%,
+                    rgba(255, 255, 255, 0.7) 10%,
+                    rgba(255, 255, 255, 0.5) 24%,
+                    rgba(0, 0, 0, 0.8) 82%
+                  )`,
+                  opacity: glare.opacity,
+                }}
+              />
+              <Image
+                src="/candidate-2.webp"
+                alt="Max Burleigh"
+                fill
+                style={{
+                  objectFit: "cover",
+                  transform: "translateZ(20px)", // Add slight depth
+                }}
+                priority
+              />
+            </motion.div>
+          </div>
         </div>
       </section>
 
@@ -193,7 +328,7 @@ const Portfolio = () => {
         <h2>Projects</h2>
         <div className="project-grid">
           <Vinscribe />
-          <FullLeafTea 
+          <FullLeafTea
             fullLeafMessageState={fullLeafMessageState}
             onMouseEnter={handleFullLeafMouseEnter}
             onClick={handleFullLeafClick}
@@ -217,7 +352,9 @@ const Portfolio = () => {
             Feel free to reach out if you have a project in mind or just want to
             chat!
           </p>
-          <a href="mailto:webwavebuilding@yahoo.com">webwavebuilding@yahoo.com</a>
+          <a href="mailto:webwavebuilding@yahoo.com">
+            webwavebuilding@yahoo.com
+          </a>
         </div>
       </section>
     </div>
