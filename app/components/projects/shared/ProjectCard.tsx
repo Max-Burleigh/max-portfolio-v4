@@ -27,6 +27,7 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
   children,
   onMouseEnter,
   onClick,
+  imageClassName,
 }) => {
   // Determine if this is a fullleaf app card for variant purposes
   const isFullLeafApp = className?.includes("full-leaf-app-card");
@@ -83,11 +84,11 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
                 src={imageUrl}
                 alt={imageAlt || `Screenshot of ${title}`}
                 title={imageTitle}
-                width={300}
-                height={600}
+                width={600}
+                height={1200}
                 className={`${title
                   .toLowerCase()
-                  .replace(/\s+/g, "-")}-screenshot`}
+                  .replace(/\s+/g, "-")}-screenshot ${imageClassName || ""}`}
                 style={{
                   width: "100%",
                   height: "100%",

@@ -1,6 +1,12 @@
 "use client";
 import React, { useState, useRef, useEffect, useCallback } from "react";
-import { motion, useMotionValue, useSpring, useTransform } from "framer-motion";
+import {
+  motion,
+  useMotionValue,
+  useSpring,
+  useTransform,
+  AnimatePresence,
+} from "framer-motion";
 import { throttle } from "lodash";
 import Image from "next/image";
 import { AuroraBlob } from "./components/aurora";
@@ -41,6 +47,9 @@ const Portfolio = () => {
   const [isAnimating, setAnimating] = useState(false);
   const isAnimatingRef = useRef(isAnimating);
   const [glare, setGlare] = useState({ x: 50, y: 50, opacity: 0 });
+
+  // For the expanding "spiel" section
+  const [spielOpen, setSpielOpen] = useState(false);
 
   // Set the ref value whenever isAnimating changes
   useEffect(() => {
@@ -255,16 +264,80 @@ const Portfolio = () => {
       >
         <div className="glass-card about-card">
           <div className="flex flex-col md:flex-row items-center gap-6">
-            <div className="flex flex-col">
-              <h1>Hey, I&apos;m Max Burleigh</h1>
+            <div className="flex flex-col max-w-md flex-1 min-w-0">
+              <h1>Hey, I'm Max Burleigh</h1>
               <p>
                 web developer, project manager, solopreneur based in Medford,
                 Oregon.
               </p>
+
+              <motion.button
+                onClick={() => setSpielOpen(!spielOpen)}
+                className="mt-4 px-5 py-2.5 bg-gradient-to-r from-blue-400 via-purple-400 to-pink-300 rounded-full text-white font-semibold text-shadow-sm self-start overflow-hidden relative"
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+              >
+                <span className="relative z-10">
+                  {spielOpen
+                    ? "That's enough about me..."
+                    : "Click for a detailed spiel ✨"}
+                </span>
+                <motion.div
+                  className="absolute inset-0 bg-gradient-to-r from-pink-300 via-purple-400 to-blue-400"
+                  style={{ opacity: 0 }}
+                  whileHover={{ opacity: 1 }}
+                  transition={{ duration: 0.3 }}
+                />
+              </motion.button>
+
+              <AnimatePresence>
+                {spielOpen && (
+                  <motion.div
+                    initial={{ opacity: 0, height: 0 }}
+                    animate={{
+                      opacity: 1,
+                      height: "auto",
+                      transition: {
+                        height: { type: "spring", stiffness: 100, damping: 15 },
+                        opacity: { duration: 0.4, delay: 0.2 },
+                      },
+                    }}
+                    exit={{
+                      opacity: 0,
+                      height: 0,
+                      transition: {
+                        height: { duration: 0.3 },
+                        opacity: { duration: 0.2 },
+                      },
+                    }}
+                    className="overflow-hidden"
+                  >
+                    <div className="pt-4 space-y-3 text-base">
+                      <p>
+                        I'm 30 years old, I have 2 amazing children who are my
+                        world, and I reside in Southern Oregon!
+                      </p>
+                      <p>
+                        I consider myself highly detail-oriented, but I have a
+                        ferocious appetite for getting things done. This is an
+                        important set of traits that I have found to be useful
+                        in my career.
+                      </p>
+                      <p>
+                        I believe as we head towards a world where AI is writing
+                        more and more of our code, we will need forward-thinking
+                        individuals like myself that can think critically and
+                        creatively to solve problems. Hopefully you'll find me
+                        best to do this!
+                      </p>
+                    </div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
             </div>
             <motion.div
               ref={portraitRef}
-              className="w-72 h-72 relative rounded-lg overflow-hidden shadow-lg"
+              className="w-80 h-96 relative rounded-lg overflow-hidden shadow-lg flex-shrink-0" // MODIFIED: w-96 to w-80
               animate={{
                 rotateY: rotations.x,
                 rotateX: rotations.y,
