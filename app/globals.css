@@ -54,7 +54,6 @@ body {
   );
   background-size: 300% 300%;
   animation: aurora 30s ease-in-out infinite;
-  transform: translateZ(0);
 }
 .portfolio-container {
   width: 100%;
