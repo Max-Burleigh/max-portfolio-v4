@@ -69,6 +69,33 @@ const Portfolio = () => {
     return () => mediaQuery.removeEventListener("change", handler);
   }, []);
 
+  // Set portfolio container height to exact viewport height (for iOS Safari overscroll fix)
+  useEffect(() => {
+    const portfolioContainer = containerRef.current;
+
+    const setRealViewportHeight = () => {
+      if (portfolioContainer) {
+        // Use innerHeight for the viewport height excluding URL bar when it's dynamic
+        portfolioContainer.style.height = `${window.innerHeight}px`;
+      }
+    };
+
+    if (typeof window !== "undefined") {
+      window.addEventListener("resize", setRealViewportHeight);
+      window.addEventListener("orientationchange", setRealViewportHeight);
+      setRealViewportHeight(); // Set initial height
+
+      // Safari might need a slight delay to report correct innerHeight after load/orientation change
+      const timeoutId = setTimeout(setRealViewportHeight, 100);
+
+      return () => {
+        window.removeEventListener("resize", setRealViewportHeight);
+        window.removeEventListener("orientationchange", setRealViewportHeight);
+        clearTimeout(timeoutId);
+      };
+    }
+  }, []);
+
   // Set the ref value whenever isAnimating changes
   useEffect(() => {
     isAnimatingRef.current = isAnimating;
