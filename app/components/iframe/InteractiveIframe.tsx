@@ -35,14 +35,24 @@ const InteractiveIframe: React.FC<InteractiveIframeProps> = ({
     const iframe = iframeRef.current;
     if (!iframe) return;
 
-    // Use mouse events to detect interaction
+    // Use mouse and touch events to detect interaction
     iframe.addEventListener("mouseover", handleIframeInteraction);
+    iframe.addEventListener("touchstart", handleIframeInteraction, { passive: true });
+    
+    // Show message automatically on mobile after a short delay
+    const autoShowTimeout = setTimeout(() => {
+      if (!hasInteracted && window.innerWidth < 768) {
+        handleIframeInteraction();
+      }
+    }, 1500);
 
     return () => {
       iframe.removeEventListener("mouseover", handleIframeInteraction);
+      iframe.removeEventListener("touchstart", handleIframeInteraction);
       if (timeoutRef.current) {
         clearTimeout(timeoutRef.current);
       }
+      clearTimeout(autoShowTimeout);
     };
   }, [hasInteracted]);
 

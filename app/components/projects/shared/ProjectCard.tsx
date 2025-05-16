@@ -36,20 +36,8 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
     <div
       className={`project-card ${className}`}
       style={{
-        display: "flex",
         flexDirection: reverseLayout ? "row-reverse" : "row",
-        alignItems: "center",
-        justifyContent: "space-between",
-        gap: "2rem",
-        flexBasis: "100%",
-        maxWidth: "100%",
-        padding: "1.5rem",
-        minHeight: "400px",
         ...style,
-        "@media (max-width: 768px)": {
-          flexDirection: "column",
-          gap: "1.5rem",
-        },
       }}
     >
       <div className="project-info">
@@ -68,6 +56,7 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
       {(iframeUrl || imageUrl) &&
         (disablePhoneMockup ? (
           <div
+            className="project-media"
             style={
               onClick || onMouseEnter
                 ? { position: "relative", cursor: "pointer" }
@@ -105,12 +94,13 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
             {children}
           </div>
         ) : (
-          <PhoneMockup
-            variant={isFullLeafApp ? "fullleaf" : "default"}
-            className={onClick || onMouseEnter ? "clickable" : ""}
-            onMouseEnter={onMouseEnter}
-            onClick={onClick}
-          >
+          <div className="project-media">
+            <PhoneMockup
+              variant={isFullLeafApp ? "fullleaf" : "default"}
+              className={onClick || onMouseEnter ? "clickable" : ""}
+              onMouseEnter={onMouseEnter}
+              onClick={onClick}
+            >
             {iframeUrl && (
               <PhoneContent
                 type="iframe"
@@ -134,7 +124,8 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
               />
             )}
             {children}
-          </PhoneMockup>
+            </PhoneMockup>
+          </div>
         ))}
     </div>
   );

@@ -52,16 +52,26 @@ const PhoneContent: React.FC<PhoneContentProps> = ({
     const iframe = iframeRef.current;
     if (!iframe || type !== "iframe") return;
 
-    // Use mouse events to detect interaction
+    // Use mouse and touch events to detect interaction
     iframe.addEventListener("mouseover", handleIframeInteraction);
+    iframe.addEventListener("touchstart", handleIframeInteraction, { passive: true });
+    
+    // Show message automatically on mobile after a short delay
+    const autoShowTimeout = setTimeout(() => {
+      if (!hasInteracted && window.innerWidth < 768 && type === "iframe" && src) {
+        handleIframeInteraction();
+      }
+    }, 1500);
 
     return () => {
       iframe.removeEventListener("mouseover", handleIframeInteraction);
+      iframe.removeEventListener("touchstart", handleIframeInteraction);
       if (timeoutRef.current) {
         clearTimeout(timeoutRef.current);
       }
+      clearTimeout(autoShowTimeout);
     };
-  }, [hasInteracted, type]);
+  }, [hasInteracted, type, src]);
 
   // Render appropriate content based on type
   if (type === "image" && src) {
