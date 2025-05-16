@@ -71,8 +71,8 @@ body {
     #415a77 75%,
     #23252e 100%
   );
-  background-size: 300% 300%;
-  animation: aurora 30s ease-in-out infinite;
+  background-size: 100% 100%;
+  /* animation: aurora 30s ease-in-out infinite; */
 }
 
 .portfolio-container {
