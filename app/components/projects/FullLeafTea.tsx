@@ -126,7 +126,7 @@ const FullLeafTea: React.FC<FullLeafTeaProps> = ({
                     transition={{ duration: 0.3 }}
                     style={{ marginTop: 8 }}
                   >
-                    Just kidding, it&apos;s just a picture.
+                    Just kidding, it's just a picture.
                     <br />
                     <a
                       href="https://fullleafteacompany.com"

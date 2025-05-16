@@ -291,7 +291,7 @@ const Portfolio = () => {
         <div className="glass-card about-card">
           <div className="flex flex-col md:flex-row items-center md:items-start md:gap-6">
             <div className="flex flex-col max-w-md flex-1 min-w-0">
-              <h1>Hey, I&apos;m Max Burleigh</h1>
+              <h1>Hey, I'm Max Burleigh</h1>
               <p>
                 web developer, project manager, solopreneur based in Medford,
                 Oregon.
@@ -305,7 +305,7 @@ const Portfolio = () => {
               >
                 <span className="relative z-10">
                   {spielOpen
-                    ? "That&apos;s enough about me..."
+                    ? "That's enough about me..."
                     : "Click for a detailed spiel ✨"}
                 </span>
                 <motion.div
@@ -340,8 +340,8 @@ const Portfolio = () => {
                   >
                     <div className="pt-4 space-y-3 spiel-detail">
                       <p className="text-xs md:text-sm">
-                        I&apos;m 30 years old, I have 2 amazing children who are
-                        my world, and I reside in Southern Oregon!
+                        I'm 30 years old, I have 2 amazing children who are my
+                        world, and I reside in Southern Oregon!
                       </p>
                       <p className="text-xs md:text-sm">
                         I consider myself highly detail-oriented, but I have a
@@ -353,8 +353,8 @@ const Portfolio = () => {
                         I believe as we head towards a world where AI is writing
                         more and more of our code, we will need forward-thinking
                         individuals like myself that can think critically and
-                        creatively to solve problems. Hopefully you&apos;ll find
-                        me best to do this!
+                        creatively to solve problems. Hopefully you'll find me
+                        best to do this!
                       </p>
                     </div>
                   </motion.div>
