@@ -13,10 +13,10 @@ const InteractiveIframe: React.FC<InteractiveIframeProps> = ({
   title,
   className,
 }) => {
-  const [isMessageVisible, setIsMessageVisible] = useState(false);
-  const [hasInteracted, setHasInteracted] = useState(false);
+  const [isMessageVisible, setIsMessageVisible] = useState<boolean>(false);
+  const [hasInteracted, setHasInteracted] = useState<boolean>(false);
   const iframeRef = useRef<HTMLIFrameElement>(null);
-  const timeoutRef = useRef<NodeJS.Timeout>();
+  const timeoutRef = useRef<NodeJS.Timeout | undefined>(undefined);
 
   // Show message when user interacts with iframe
   const handleIframeInteraction = () => {
@@ -37,8 +37,10 @@ const InteractiveIframe: React.FC<InteractiveIframeProps> = ({
 
     // Use mouse and touch events to detect interaction
     iframe.addEventListener("mouseover", handleIframeInteraction);
-    iframe.addEventListener("touchstart", handleIframeInteraction, { passive: true });
-    
+    iframe.addEventListener("touchstart", handleIframeInteraction, {
+      passive: true,
+    });
+
     // Show message automatically on mobile after a short delay
     const autoShowTimeout = setTimeout(() => {
       if (!hasInteracted && window.innerWidth < 768) {
@@ -67,7 +69,7 @@ const InteractiveIframe: React.FC<InteractiveIframeProps> = ({
         allow="clipboard-write; encrypted-media; fullscreen; picture-in-picture"
       />
 
-      <AnimatePresence>
+      <AnimatePresence mode="wait">
         {isMessageVisible && (
           <motion.div
             className="iframe-message"
