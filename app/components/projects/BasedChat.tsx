@@ -82,7 +82,12 @@ const BasedChat: React.FC = () => {
           </div>
           <div className="tech-item">
             <div
-              style={{ width: "32px", height: "32px", position: "relative" }}
+              style={{
+                width: "32px",
+                height: "32px",
+                position: "relative",
+                marginRight: "8px",
+              }}
             >
               <Image
                 src="/Anthropic/Anthropic_Symbol_0.svg"
