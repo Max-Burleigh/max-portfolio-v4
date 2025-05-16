@@ -19,15 +19,34 @@
     flex: 1;
     max-width: 50%;
   }
-  
+
   .project-card .project-media {
     flex: 1;
     display: flex;
     justify-content: center;
     align-items: center;
   }
-}
 
+  /* Expand left column for Full Leaf App card on desktop */
+  .project-card.full-leaf-app-card .project-info {
+    flex: 2;
+    max-width: 65%;
+  }
+
+  .project-card.full-leaf-app-card .project-media {
+    flex: 1;
+    max-width: 35%;
+  }
+
+  /* Increase neon banner height on desktop */
+  .project-card.full-leaf-app-card
+    .project-info
+    > .flex.justify-center.items-center
+    > .inline-block {
+    padding-top: 1rem !important;
+    padding-bottom: 1rem !important;
+  }
+}
 
 /* Mobile responsive styles */
 @media (max-width: 768px) {
@@ -43,13 +62,13 @@
     z-index: 100 !important;
     background: rgba(0, 0, 0, 0.9) !important;
   }
-  
+
   .iframe-message p {
     font-size: 0.85rem !important;
     line-height: 1.3 !important;
     margin: 0 !important;
   }
-  
+
   .message-icon {
     font-size: 18px !important;
     margin-bottom: 5px !important;
@@ -73,21 +92,21 @@
     width: 100%;
     max-width: 100%;
   }
-  
+
   .project-card .project-info strong {
     font-size: 1.4rem;
     margin-bottom: 0.75rem;
     display: block;
     text-align: center;
   }
-  
+
   .project-card .project-info p {
     font-size: 0.95rem;
     line-height: 1.4;
     margin-bottom: 1rem;
     text-align: center;
   }
-  
+
   .tech-stack {
     flex-wrap: wrap;
     justify-content: center !important;
@@ -104,7 +123,7 @@
     padding: 0.25em 0.6em 0.25em 0.4em;
     margin-bottom: 0.15em;
   }
-  
+
   .tech-icon {
     font-size: 1.2em !important;
     margin-right: 0.35em !important;
@@ -115,7 +134,7 @@
     transform: scale(0.9);
     margin: 0 auto;
   }
-  
+
   /* Phone content message */
   .phone-content-container .iframe-message {
     bottom: 10px !important;
@@ -135,13 +154,13 @@
   .project-card.vinscribe-card {
     flex-direction: column !important;
   }
-  
+
   .project-card.vinscribe-card .project-info {
     order: 1;
     text-align: center;
     margin-top: 1rem;
   }
-  
+
   .project-card.vinscribe-card .vinscribe-iframe {
     order: 0;
     width: 280px !important;
@@ -154,8 +173,7 @@
   }
 
   .project-card.full-leaf-app-card img {
-    margin-right: 0 !important;
-    margin: 0 auto;
+    margin: 0 auto !important;
     max-width: 170px !important;
     height: 320px !important;
   }
@@ -163,37 +181,37 @@
   .project-card.based-chat-card {
     flex-direction: column-reverse !important;
   }
-  
+
   .project-card.based-chat-card video {
     width: 100% !important;
     max-width: 350px;
     margin: 0 auto;
   }
-  
+
   .project-card.based-chat-card .project-info {
     margin-top: 1rem;
     text-align: center;
   }
-  
+
   .project-card.based-chat-card .tech-stack {
     justify-content: center;
   }
-  
+
   .project-card.full-leaf-tea-card {
     flex-direction: column !important;
   }
-  
+
   .project-card.full-leaf-tea-card .project-info {
     order: 1;
     text-align: center;
     margin-top: 1rem;
   }
-  
+
   .project-card.full-leaf-tea-card .project-media {
     order: 0;
     margin: 0 auto;
   }
-  
+
   .fullleaf-message {
     bottom: 10px !important;
     left: 50% !important;
@@ -211,7 +229,7 @@
   .project-card {
     gap: 1.5rem;
   }
-  
+
   .project-card .project-info {
     max-width: 50%;
   }
