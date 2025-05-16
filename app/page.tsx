@@ -75,11 +75,8 @@ const Portfolio = () => {
 
     const setRealViewportHeight = () => {
       if (portfolioContainer) {
-        // Use CSS variable for viewport height instead of direct setting
-        const vh = window.innerHeight;
-        document.documentElement.style.setProperty("--vh", `${vh}px`);
-        // Apply the height using the CSS variable
-        portfolioContainer.style.height = `var(--vh)`;
+        // Use innerHeight for the viewport height excluding URL bar when it's dynamic
+        portfolioContainer.style.height = `${window.innerHeight}px`;
       }
     };
 
@@ -88,24 +85,13 @@ const Portfolio = () => {
       window.addEventListener("orientationchange", setRealViewportHeight);
       setRealViewportHeight(); // Set initial height
 
-      // Add scroll handler to recalculate height when scrolling stops
-      let scrollTimeout: NodeJS.Timeout;
-      const handleScroll = () => {
-        clearTimeout(scrollTimeout);
-        scrollTimeout = setTimeout(setRealViewportHeight, 100);
-      };
-
-      portfolioContainer?.addEventListener("scroll", handleScroll);
-
       // Safari might need a slight delay to report correct innerHeight after load/orientation change
       const timeoutId = setTimeout(setRealViewportHeight, 100);
 
       return () => {
         window.removeEventListener("resize", setRealViewportHeight);
         window.removeEventListener("orientationchange", setRealViewportHeight);
-        portfolioContainer?.removeEventListener("scroll", handleScroll);
         clearTimeout(timeoutId);
-        clearTimeout(scrollTimeout);
       };
     }
   }, []);
@@ -273,6 +259,9 @@ const Portfolio = () => {
       className="portfolio-container"
       onMouseMove={throttledMouseMove}
     >
+      {/* Fixed aurora background element */}
+      <div className="aurora-bg" />
+
       {/* Aurora Animated Blobs - Reduced number and optimized */}
       <AuroraBlob
         className="blob1"
