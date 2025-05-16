@@ -1,4 +1,4 @@
-import { CSSProperties, ReactNode } from 'react';
+import { CSSProperties, ReactNode } from "react";
 
 export interface ProjectCardProps {
   title: string;
@@ -14,6 +14,7 @@ export interface ProjectCardProps {
   imageUrl?: string;
   imageAlt?: string;
   imageTitle?: string;
+  imageClassName?: string;
   reverseLayout?: boolean;
   disablePhoneMockup?: boolean;
   className?: string;

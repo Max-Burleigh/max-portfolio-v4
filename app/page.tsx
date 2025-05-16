@@ -19,6 +19,7 @@ import {
   Quailmail,
   ShopDowntown,
   CarlyPhotography,
+  BasedChat,
 } from "./components/projects";
 
 // Helper functions for tilt calculations
@@ -50,6 +51,15 @@ const Portfolio = () => {
 
   // For the expanding "spiel" section
   const [spielOpen, setSpielOpen] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const mediaQuery = window.matchMedia("(max-width: 767px)");
+    setIsMobile(mediaQuery.matches);
+    const handler = (e: MediaQueryListEvent) => setIsMobile(e.matches);
+    mediaQuery.addEventListener("change", handler);
+    return () => mediaQuery.removeEventListener("change", handler);
+  }, []);
 
   // Set the ref value whenever isAnimating changes
   useEffect(() => {
@@ -263,7 +273,7 @@ const Portfolio = () => {
         className="section about-section"
       >
         <div className="glass-card about-card">
-          <div className="flex flex-col md:flex-row items-center gap-6">
+          <div className="flex flex-col md:flex-row items-center md:items-start md:gap-6">
             <div className="flex flex-col max-w-md flex-1 min-w-0">
               <h1>Hey, I'm Max Burleigh</h1>
               <p>
@@ -273,7 +283,7 @@ const Portfolio = () => {
 
               <motion.button
                 onClick={() => setSpielOpen(!spielOpen)}
-                className="mt-4 px-5 py-2.5 bg-gradient-to-r from-blue-400 via-purple-400 to-pink-300 rounded-full text-white font-semibold text-shadow-sm self-start overflow-hidden relative"
+                className="mt-4 px-4 md:px-5 py-2 md:py-2.5 bg-gradient-to-r from-blue-400 via-purple-400 to-pink-300 rounded-full text-white font-semibold text-shadow-sm self-start overflow-hidden relative text-sm md:text-base"
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
               >
@@ -312,18 +322,18 @@ const Portfolio = () => {
                     }}
                     className="overflow-hidden"
                   >
-                    <div className="pt-4 space-y-3 text-base">
-                      <p>
+                    <div className="pt-4 space-y-3 spiel-detail">
+                      <p className="text-xs md:text-sm">
                         I'm 30 years old, I have 2 amazing children who are my
                         world, and I reside in Southern Oregon!
                       </p>
-                      <p>
+                      <p className="text-xs md:text-sm">
                         I consider myself highly detail-oriented, but I have a
                         ferocious appetite for getting things done. This is an
                         important set of traits that I have found to be useful
                         in my career.
                       </p>
-                      <p>
+                      <p className="text-xs md:text-sm">
                         I believe as we head towards a world where AI is writing
                         more and more of our code, we will need forward-thinking
                         individuals like myself that can think critically and
@@ -337,12 +347,16 @@ const Portfolio = () => {
             </div>
             <motion.div
               ref={portraitRef}
-              className="w-80 h-96 relative rounded-lg overflow-hidden shadow-lg flex-shrink-0" // MODIFIED: w-96 to w-80
+              className={`w-64 h-80 md:w-80 md:h-96 relative rounded-lg overflow-hidden shadow-lg flex-shrink-0 ${
+                spielOpen ? "" : "mt-4 md:mt-0"
+              }`}
               animate={{
                 rotateY: rotations.x,
                 rotateX: rotations.y,
                 transformPerspective: rotations.z * 100,
+                scale: isMobile && spielOpen ? 0.8 : 1,
               }}
+              transition={{ duration: 0.5 }}
               style={{
                 transformStyle: "preserve-3d",
                 transformOrigin: "center",
@@ -410,6 +424,7 @@ const Portfolio = () => {
           <Quailmail />
           <ShopDowntown />
           <CarlyPhotography />
+          <BasedChat />
         </div>
       </section>
 

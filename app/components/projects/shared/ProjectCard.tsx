@@ -46,6 +46,10 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
         padding: "1.5rem",
         minHeight: "400px",
         ...style,
+        "@media (max-width: 768px)": {
+          flexDirection: "column",
+          gap: "1.5rem",
+        },
       }}
     >
       <div className="project-info">

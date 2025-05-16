@@ -8,7 +8,13 @@ const CarlyPhotography: React.FC = () => {
   return (
     <ProjectCard
       title="Carly Pearl-Sacks Photography"
-      description="Portfolio site for a professional photographer.\nBuilt with Next.js and TailwindCSS."
+      description={
+        <>
+          Portfolio site for a professional photographer.
+          <br />
+          Built with Next.js and TailwindCSS.
+        </>
+      }
       websiteUrl="https://carlypsphoto.com"
       className="carlypsphoto-card"
       reverseLayout={true}

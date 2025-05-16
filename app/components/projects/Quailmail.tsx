@@ -33,7 +33,15 @@ const Quailmail: React.FC = () => {
   return (
     <ProjectCard
       title="Quailmail"
-      description="An autonomous AI email agent."
+      description={
+        <>
+          An autonomous AI email agent.
+          <br />
+          <span className="italic text-sm text-[#00ffd5]">
+            (Under construction, preview link coming soon)
+          </span>
+        </>
+      }
       className="quailmail-card"
       imageUrl="/quailmail.png" // Image from public folder
       imageAlt="Quailmail application screenshot"

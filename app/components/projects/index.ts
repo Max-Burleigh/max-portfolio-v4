@@ -5,4 +5,5 @@ export { default as FullLeafApp } from "./FullLeafApp";
 export { default as Quailmail } from "./Quailmail";
 export { default as ShopDowntown } from "./ShopDowntown";
 export { default as CarlyPhotography } from "./CarlyPhotography";
+export { default as BasedChat } from "./BasedChat";
 export type { ProjectCardProps } from "./shared/types";

@@ -89,6 +89,12 @@ body {
     width: 220px;
     height: 120px;
   }
+  .side-nav {
+    display: none !important;
+  }
+  .hamburger-btn {
+    display: flex !important;
+  }
 }
 .blob1 {
   background: radial-gradient(
@@ -372,14 +378,9 @@ h2 {
 .side-nav,
 .side-nav button,
 .section,
-p,
 a,
 .project-card {
   font-family: "Manrope", sans-serif;
-}
-p {
-  font-size: 1.1rem;
-  line-height: 1.6;
 }
 a {
   color: #00ffd5;
@@ -623,6 +624,27 @@ a {
   padding: 3rem 2rem; /* Increase vertical padding, keep horizontal */
 }
 
+/* Add mobile-specific styles for about card */
+@media (max-width: 768px) {
+  .about-card {
+    padding: 2rem 1.5rem;
+    max-width: 90%;
+  }
+
+  .about-card h1 {
+    font-size: 1.75rem;
+    line-height: 1.2;
+  }
+
+  .about-card p {
+    font-size: 0.95rem;
+  }
+
+  .spiel-detail p {
+    font-size: 0.85rem;
+  }
+}
+
 .contact-card {
   /* Specific adjustments for contact card if needed */
   text-align: center;
@@ -686,4 +708,26 @@ a {
 
 .full-leaf-app-card {
   /* Specific styles if needed */
+}
+
+.spiel-detail p {
+  font-size: 0.92rem;
+}
+
+.hamburger-btn {
+  display: none;
+  transition: box-shadow 0.2s, background 0.2s;
+}
+
+/* Overlay menu animation handled by Framer Motion, but add fallback */
+.mobile-nav-overlay {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  position: fixed;
+  inset: 0;
+  z-index: 99;
+  background: linear-gradient(135deg, #1e215d 0%, #7b2ff2 100%);
+  backdrop-filter: blur(16px);
 }
