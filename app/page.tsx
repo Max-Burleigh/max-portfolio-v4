@@ -459,6 +459,10 @@ const Portfolio = () => {
           <a href="mailto:webwavebuilding@yahoo.com">
             webwavebuilding@yahoo.com
           </a>
+          <p className="text-xs mt-4 opacity-70 font-mono">
+            Note: Site uploaded 3-16-2025 - still under construction,
+            performance may be buggy.
+          </p>
         </div>
       </section>
     </div>
