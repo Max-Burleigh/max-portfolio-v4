@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useRef, useEffect, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 
 interface InteractiveIframeProps {
@@ -19,7 +19,7 @@ const InteractiveIframe: React.FC<InteractiveIframeProps> = ({
   const timeoutRef = useRef<NodeJS.Timeout | undefined>(undefined);
 
   // Show message when user interacts with iframe
-  const handleIframeInteraction = () => {
+  const handleIframeInteraction = useCallback(() => {
     if (!hasInteracted) {
       setIsMessageVisible(true);
       setHasInteracted(true);
@@ -29,7 +29,7 @@ const InteractiveIframe: React.FC<InteractiveIframeProps> = ({
         setIsMessageVisible(false);
       }, 5000);
     }
-  };
+  }, [hasInteracted]);
 
   useEffect(() => {
     const iframe = iframeRef.current;
@@ -56,7 +56,7 @@ const InteractiveIframe: React.FC<InteractiveIframeProps> = ({
       }
       clearTimeout(autoShowTimeout);
     };
-  }, [hasInteracted]);
+  }, [hasInteracted, handleIframeInteraction]);
 
   return (
     <div className="interactive-iframe-container">

@@ -4,7 +4,7 @@ import "./PhoneMockup.css";
 interface PhoneMockupProps {
   children: React.ReactNode;
   className?: string;
-  variant?: "default" | "fullleaf";
+  variant?: "default" | "fullleaf" | "fullleaf-tea";
   onMouseEnter?: () => void;
   onClick?: () => void;
 }
@@ -18,11 +18,16 @@ const PhoneMockup: React.FC<PhoneMockupProps> = ({
 }) => {
   const interactiveStyle = onClick || onMouseEnter ? { cursor: "pointer" } : {};
 
+  const variantClass =
+    variant === "fullleaf"
+      ? "fullleaf-mockup"
+      : variant === "fullleaf-tea"
+      ? "fullleaf-tea-mockup"
+      : "";
+
   return (
     <div
-      className={`phone-mockup ${
-        variant === "fullleaf" ? "fullleaf-mockup" : ""
-      } ${className}`}
+      className={`phone-mockup ${variantClass} ${className}`}
       onMouseEnter={onMouseEnter}
       onClick={onClick}
       style={interactiveStyle}

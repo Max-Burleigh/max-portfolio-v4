@@ -31,6 +31,7 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
 }) => {
   // Determine if this is a fullleaf app card for variant purposes
   const isFullLeafApp = className?.includes("full-leaf-app-card");
+  const isFullLeafTea = className?.includes("fullleaf-card");
 
   return (
     <div
@@ -101,29 +102,37 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
               onMouseEnter={onMouseEnter}
               onClick={onClick}
             >
-            {iframeUrl && (
-              <PhoneContent
-                type="iframe"
-                src={iframeUrl}
-                variant={
-                  title.toLowerCase().includes("carlyps")
-                    ? "carlypsphoto"
-                    : "vinscribe"
-                }
-                alt={iframeTitle || `${title} Mobile Preview`}
-                className={iframeClassName || ""}
-              />
-            )}
-            {imageUrl && (
-              <PhoneContent
-                type="image"
-                src={imageUrl}
-                variant={isFullLeafApp ? "fullleaf" : undefined}
-                alt={imageAlt || `Screenshot of ${title}`}
-                className={title.toLowerCase().replace(/\s+/g, "-")}
-              />
-            )}
-            {children}
+              {iframeUrl && (
+                <PhoneContent
+                  type="iframe"
+                  src={iframeUrl}
+                  variant={
+                    title.toLowerCase().includes("carlyps")
+                      ? "carlypsphoto"
+                      : "vinscribe"
+                  }
+                  alt={iframeTitle || `${title} Mobile Preview`}
+                  className={iframeClassName || ""}
+                />
+              )}
+              {imageUrl && (
+                <PhoneContent
+                  type="image"
+                  src={imageUrl}
+                  variant={
+                    isFullLeafApp
+                      ? "fullleaf"
+                      : isFullLeafTea
+                      ? "fullleaf-tea"
+                      : undefined
+                  }
+                  alt={imageAlt || `Screenshot of ${title}`}
+                  className={
+                    imageClassName || title.toLowerCase().replace(/\s+/g, "-")
+                  }
+                />
+              )}
+              {children}
             </PhoneMockup>
           </div>
         ))}

@@ -30,7 +30,7 @@ const FullLeafTea: React.FC<FullLeafTeaProps> = ({
         </>
       }
       websiteUrl="https://fullleafteacompany.com"
-      className="fullleaf-card vinscribe-card"
+      className="fullleaf-card full-leaf-tea-card"
       reverseLayout={true}
       techStack={[
         {
@@ -96,6 +96,7 @@ const FullLeafTea: React.FC<FullLeafTeaProps> = ({
       imageUrl="/full-leaf.jpg"
       imageAlt="Screenshot of Full Leaf Tea Company website"
       imageTitle="Full Leaf Tea Company Website Screenshot"
+      imageClassName="fullleaf-tea"
       onMouseEnter={onMouseEnter}
       onClick={onClick}
     >
@@ -125,7 +126,7 @@ const FullLeafTea: React.FC<FullLeafTeaProps> = ({
                     transition={{ duration: 0.3 }}
                     style={{ marginTop: 8 }}
                   >
-                    Just kidding, it's just a picture.
+                    Just kidding, it&apos;s just a picture.
                     <br />
                     <a
                       href="https://fullleafteacompany.com"

@@ -1,13 +1,13 @@
 "use client";
 import React, { memo } from "react";
-import { motion } from "framer-motion";
+import { motion, TargetAndTransition, VariantLabels } from "framer-motion";
 
 interface AuroraBlobProps {
   className?: string;
   style?: React.CSSProperties;
-  initial?: any; // Using 'any' for Framer Motion props; refine as needed.
-  animate?: any;
-  transition?: any;
+  initial?: boolean | TargetAndTransition | VariantLabels;
+  animate?: boolean | TargetAndTransition | VariantLabels;
+  transition?: Record<string, unknown>;
 }
 
 const AuroraBlob = memo(

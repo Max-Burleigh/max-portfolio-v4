@@ -8,7 +8,6 @@ import {
   SiOpenai,
   SiGoogle,
 } from "react-icons/si";
-import ProjectCard from "./shared/ProjectCard";
 // Assuming an Anthropic icon might be a simple text or a generic AI icon if a specific one isn't readily available
 // For now, we can use a placeholder or omit it if no suitable icon is found.
 // import { AnthropicIcon } from "../icons"; // Example if you have a custom icon

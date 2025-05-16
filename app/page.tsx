@@ -1,10 +1,15 @@
 "use client";
-import React, { useState, useRef, useEffect, useCallback } from "react";
+import React, {
+  useState,
+  useRef,
+  useEffect,
+  useCallback,
+  useMemo,
+} from "react";
 import {
   motion,
   useMotionValue,
   useSpring,
-  useTransform,
   AnimatePresence,
 } from "framer-motion";
 import { throttle } from "lodash";
@@ -76,23 +81,34 @@ const Portfolio = () => {
   type SectionKey = "about" | "projects" | "contact";
   const sectionKeys: SectionKey[] = ["about", "projects", "contact"];
 
-  // Create properly typed section refs
-  const sectionRefs: Record<
-    SectionKey,
-    React.RefObject<HTMLDivElement | null>
-  > = {
-    about: useRef<HTMLDivElement>(null),
-    projects: useRef<HTMLDivElement>(null),
-    contact: useRef<HTMLDivElement>(null),
-  };
+  // Create section refs outside useMemo to fix React hooks rule
+  const aboutSectionRef = useRef<HTMLDivElement>(null);
+  const projectsSectionRef = useRef<HTMLDivElement>(null);
+  const contactSectionRef = useRef<HTMLDivElement>(null);
+
+  // Create properly typed section refs object using useMemo
+  const sectionRefs = useMemo(
+    () => ({
+      about: aboutSectionRef,
+      projects: projectsSectionRef,
+      contact: contactSectionRef,
+    }),
+    [aboutSectionRef, projectsSectionRef, contactSectionRef]
+  );
 
   // Optimized mouse move handler with throttling
   const handleMouseMove = useCallback(
-    throttle((e: React.MouseEvent<HTMLDivElement>) => {
+    (e: React.MouseEvent<HTMLDivElement>) => {
       mouseX.set(e.clientX - 50);
       mouseY.set(e.clientY - 50);
-    }, 10),
+    },
     [mouseX, mouseY]
+  );
+
+  // Apply throttling to the handler
+  const throttledMouseMove = useMemo(
+    () => throttle(handleMouseMove, 10),
+    [handleMouseMove]
   );
 
   // Handler for portrait tilting with advanced glare effect
@@ -211,7 +227,7 @@ const Portfolio = () => {
     <div
       ref={containerRef}
       className="portfolio-container"
-      onMouseMove={handleMouseMove}
+      onMouseMove={throttledMouseMove}
     >
       {/* Aurora Animated Blobs - Reduced number and optimized */}
       <AuroraBlob
@@ -275,7 +291,7 @@ const Portfolio = () => {
         <div className="glass-card about-card">
           <div className="flex flex-col md:flex-row items-center md:items-start md:gap-6">
             <div className="flex flex-col max-w-md flex-1 min-w-0">
-              <h1>Hey, I'm Max Burleigh</h1>
+              <h1>Hey, I&apos;m Max Burleigh</h1>
               <p>
                 web developer, project manager, solopreneur based in Medford,
                 Oregon.
@@ -289,7 +305,7 @@ const Portfolio = () => {
               >
                 <span className="relative z-10">
                   {spielOpen
-                    ? "That's enough about me..."
+                    ? "That&apos;s enough about me..."
                     : "Click for a detailed spiel ✨"}
                 </span>
                 <motion.div
@@ -324,8 +340,8 @@ const Portfolio = () => {
                   >
                     <div className="pt-4 space-y-3 spiel-detail">
                       <p className="text-xs md:text-sm">
-                        I'm 30 years old, I have 2 amazing children who are my
-                        world, and I reside in Southern Oregon!
+                        I&apos;m 30 years old, I have 2 amazing children who are
+                        my world, and I reside in Southern Oregon!
                       </p>
                       <p className="text-xs md:text-sm">
                         I consider myself highly detail-oriented, but I have a
@@ -337,8 +353,8 @@ const Portfolio = () => {
                         I believe as we head towards a world where AI is writing
                         more and more of our code, we will need forward-thinking
                         individuals like myself that can think critically and
-                        creatively to solve problems. Hopefully you'll find me
-                        best to do this!
+                        creatively to solve problems. Hopefully you&apos;ll find
+                        me best to do this!
                       </p>
                     </div>
                   </motion.div>

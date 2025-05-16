@@ -1,6 +1,7 @@
 "use client";
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useRef, useEffect, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import Image from "next/image";
 import "./PhoneMockup.css";
 
 interface PhoneContentProps {
@@ -8,7 +9,7 @@ interface PhoneContentProps {
   src?: string;
   type?: "iframe" | "image";
   className?: string;
-  variant?: "vinscribe" | "carlypsphoto" | "fullleaf";
+  variant?: "vinscribe" | "carlypsphoto" | "fullleaf" | "fullleaf-tea";
   alt?: string; // For image type
 }
 
@@ -23,7 +24,7 @@ const PhoneContent: React.FC<PhoneContentProps> = ({
   const [isMessageVisible, setIsMessageVisible] = useState(false);
   const [hasInteracted, setHasInteracted] = useState(false);
   const iframeRef = useRef<HTMLIFrameElement>(null);
-  const timeoutRef = useRef<NodeJS.Timeout>();
+  const timeoutRef = useRef<NodeJS.Timeout | undefined>(undefined);
 
   // Determine the content class based on variant
   const contentClass =
@@ -33,10 +34,12 @@ const PhoneContent: React.FC<PhoneContentProps> = ({
       ? "carlypsphoto-iframe"
       : variant === "fullleaf"
       ? "full-leaf-app-screenshot"
+      : variant === "fullleaf-tea"
+      ? "fullleaf-tea"
       : "";
 
   // Show message when user interacts with iframe
-  const handleIframeInteraction = () => {
+  const handleIframeInteraction = useCallback(() => {
     if (!hasInteracted && type === "iframe" && src) {
       setIsMessageVisible(true);
       setHasInteracted(true);
@@ -46,7 +49,7 @@ const PhoneContent: React.FC<PhoneContentProps> = ({
         setIsMessageVisible(false);
       }, 5000);
     }
-  };
+  }, [hasInteracted, type, src]);
 
   useEffect(() => {
     const iframe = iframeRef.current;
@@ -54,11 +57,18 @@ const PhoneContent: React.FC<PhoneContentProps> = ({
 
     // Use mouse and touch events to detect interaction
     iframe.addEventListener("mouseover", handleIframeInteraction);
-    iframe.addEventListener("touchstart", handleIframeInteraction, { passive: true });
-    
+    iframe.addEventListener("touchstart", handleIframeInteraction, {
+      passive: true,
+    });
+
     // Show message automatically on mobile after a short delay
     const autoShowTimeout = setTimeout(() => {
-      if (!hasInteracted && window.innerWidth < 768 && type === "iframe" && src) {
+      if (
+        !hasInteracted &&
+        window.innerWidth < 768 &&
+        type === "iframe" &&
+        src
+      ) {
         handleIframeInteraction();
       }
     }, 1500);
@@ -71,12 +81,24 @@ const PhoneContent: React.FC<PhoneContentProps> = ({
       }
       clearTimeout(autoShowTimeout);
     };
-  }, [hasInteracted, type, src]);
+  }, [hasInteracted, type, src, handleIframeInteraction]);
 
   // Render appropriate content based on type
   if (type === "image" && src) {
     return (
-      <img src={src} alt={alt} className={`${contentClass} ${className}`} />
+      <div className="phone-content-container">
+        <Image
+          src={src}
+          alt={alt}
+          className={`${contentClass} ${className}`}
+          fill
+          sizes="(max-width: 768px) 100vw, 50vw"
+          style={{
+            objectFit: variant === "fullleaf-tea" ? "contain" : "cover",
+            borderRadius: variant === "fullleaf-tea" ? "20px" : "24px",
+          }}
+        />
+      </div>
     );
   }
 
