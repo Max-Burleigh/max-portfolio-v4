@@ -8,6 +8,9 @@ const nextConfig: NextConfig = {
     },
   },
   poweredByHeader: false,
+  telemetry: {
+    disabled: true,
+  },
 };
 
 export default nextConfig;
