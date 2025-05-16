@@ -6,7 +6,7 @@ import { motion, AnimatePresence } from "framer-motion";
 // Define section keys type - needed for props
 type SectionKey = "about" | "projects" | "contact"; // Or import from a shared types file if you have one
 
-// --- NavItem Component --- (Moved from app/page.tsx)
+// --- NavItem Component ---
 interface NavItemProps {
   section: string;
   activeSection: string;
