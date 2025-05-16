@@ -8,9 +8,9 @@ const nextConfig: NextConfig = {
     },
   },
   poweredByHeader: false,
-  telemetry: {
-    disabled: true,
-  },
 };
+
+// Disable telemetry during the build
+process.env.NEXT_TELEMETRY_DISABLED = "1";
 
 export default nextConfig;
