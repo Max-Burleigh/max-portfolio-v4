@@ -15,7 +15,6 @@
     "@typescript-eslint/eslint-plugin": "8.32.1",
     "@typescript-eslint/parser": "8.32.1",
     "autoprefixer": "^10.4.19",
-    "eslint-plugin-next": "0.0.0",
     "framer-motion": "^12.7.2",
     "lodash": "^4.17.21",
     "lodash.throttle": "^4.1.1",
