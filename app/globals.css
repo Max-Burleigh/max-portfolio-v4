@@ -41,6 +41,8 @@ html {
   padding: 0;
   overscroll-behavior: none;
   -webkit-overflow-scrolling: touch;
+  overflow: hidden; /* Prevent any rubber-band scroll of the root */
+  background-color: #23252e; /* Fallback color matching the dark end of gradient */
 }
 
 body {
@@ -53,6 +55,7 @@ body {
   background: transparent; /* Let aurora-bg show through body */
   /* Prevent iOS overscroll effects */
   overscroll-behavior: none;
+  overflow: hidden; /* Prevent any rubber-band scroll of the root */
 }
 
 /* Fixed background gradient element */
@@ -75,6 +78,7 @@ body {
 .portfolio-container {
   width: 100%;
   min-height: 100vh; /* Fallback if JS fails or before it runs */
+  height: -webkit-fill-available; /* iOS Safari: use available space */
   overflow-y: auto;
   overflow-x: hidden;
   scroll-behavior: smooth;
