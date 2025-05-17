@@ -60,6 +60,7 @@ const Portfolio = () => {
   // For the expanding "spiel" section
   const [spielOpen, setSpielOpen] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
 
   // For the construction notice popup
   const [showNotice, setShowNotice] = useState(true);
@@ -243,10 +244,19 @@ const Portfolio = () => {
   return (
     <>
       <PlatformDetector />
-      <div
+      <Navigation
+        activeSection={activeSection}
+        scrollToSection={scrollToSection}
+        sections={sectionKeys}
+        menuOpen={menuOpen}
+        setMenuOpen={setMenuOpen}
+      />
+      <motion.div
         ref={containerRef}
         className="portfolio-container"
         onMouseMove={throttledMouseMove}
+        animate={{ x: menuOpen && isMobile ? "-280px" : "0px" }}
+        transition={{ type: "spring", damping: 30, stiffness: 220 }}
       >
         <div className="aurora-bg" />
 
@@ -301,12 +311,6 @@ const Portfolio = () => {
             }}
           />
         )}
-
-        <Navigation
-          activeSection={activeSection}
-          scrollToSection={scrollToSection}
-          sections={sectionKeys}
-        />
 
         <section
           ref={sectionRefs.about}
@@ -536,7 +540,7 @@ const Portfolio = () => {
             </motion.div>
           )}
         </AnimatePresence>
-      </div>
+      </motion.div>
     </>
   );
 };
