@@ -3,197 +3,122 @@ description:
 globs: 
 alwaysApply: true
 ---
-## Welcome to the Portfolio Project!
+## Portfolio Global Styles & Structure Guide
 
-This project is a Next.js 14+ (App Router) application built with React and TypeScript. It showcases various web development projects. Key technologies include:
-
-*   **Framework:** Next.js, React
-*   **Language:** TypeScript
-*   **Styling:** TailwindCSS, Global CSS (`app/globals.css`), CSS Modules (e.g., `app/components/phone/PhoneMockup.css`)
-*   **Animation:** Framer Motion
-*   **Linting/Formatting:** (Assumed, good practice to add rules if ESLint/Prettier configs exist)
-
-This guide will help you understand the codebase structure and how to effectively contribute.
+This document outlines the global styling architecture, layout principles, font usage, and significant global effects like the Aurora background and cursor light for the portfolio application.
 
 ---
 
-### 1. Directory Structure
+### 1. File Structure & Core Imports
 
-The project follows a standard Next.js App Router structure with some conventions:
+*   **`app/globals.css`:**
+    *   Serves as the central hub for global styles.
+    *   Imports TailwindCSS base, components, and utilities.
+    *   Imports modular CSS files for specific components/features:
+        *   `./styles/components/aurora.css` (Aurora background, blobs, cursor light)
+        *   `./styles/components/navigation.css` (Desktop and mobile navigation)
+        *   `./styles/components/tech-stack.css` (Tech stack display component)
+        *   `./styles/components/project-card.css` (Project card layouts and specific project card styles)
+        *   `./styles/components/interactive-iframe.css` (Standalone interactive iframe messages)
+    *   Defines root CSS variables (e.g., `--background`, `--foreground`) and theme variables for Tailwind.
 
-THIS DIRECTORY STRUCTURE IS SET TO CHANGE. IF YOU MAKE ANY CHANGES TO THIS OR CREATE NEW FILES IT IS IMPERATIVE TO UPDATE THIS PARTICULAR CURSOR RULE FILE TO ACCOMODATE. 
-
-*   `app/`: Contains all routes, layouts, and pages.
-    *   `layout.tsx`: The root layout for the entire application. @app/layout.tsx
-    *   `page.tsx`: The main landing page component orchestrating the portfolio sections. @app/page.tsx
-    *   `globals.css`: Global styles, TailwindCSS configuration, and font imports. @app/globals.css
-    *   `components/`: Houses all reusable React components.
-        *   `index.ts`: Barrel file for exporting components from `app/components/`. @app/components/index.ts
-        *   `projects/`: Contains individual components for each showcased project (e.g., `Vinscribe.tsx`, `FullLeafTea.tsx`). @app/components/projects/
-            *   `ProjectCard.tsx`: A crucial reusable component for displaying project information. @app/components/projects/ProjectCard.tsx
-            *   `types.ts`: TypeScript type definitions for project-related components, like `ProjectCardProps`. @app/components/projects/types.ts
-            *   `index.ts`: Barrel file for exporting project components. @app/components/projects/index.ts
-        *   `phone/`: Components related to the phone mockup UI. @app/components/phone/
-            *   `PhoneMockup.tsx`: The main phone frame component. @app/components/phone/PhoneMockup.tsx
-            *   `PhoneContent.tsx`: Component to render content (image or iframe) inside the phone mockup. @app/components/phone/PhoneContent.tsx
-            *   `PhoneMockup.css`: Styles for the phone mockup. @app/components/phone/PhoneMockup.css
-            *   `index.ts`: Barrel file for phone components. @app/components/phone/index.ts
-*   `public/`: Static assets like images (`next.svg`, `klaviyo.png`, project images like `app.jpeg`, `full-leaf.jpg`, `quailmail.png`).
+*   **`app/layout.tsx`:**
+    *   The root layout component for Next.js.
+    *   **Font Setup:** Initializes and provides font families (Geist Sans, Geist Mono, Manrope, Space Grotesk) as CSS variables available globally.
+    *   **CSS Imports:** Imports `app/globals.css`. It also directly imports `app/components/phone/PhoneMockup.css` and `app/styles/components/project-card.css`. While `project-card.css` is also imported in `globals.css`, this direct import ensures its availability. `PhoneMockup.css` is specific to phone components but loaded globally here.
+    *   Sets up basic HTML and body structure.
 
 ---
 
-### 2. Key Components & Usage
+### 2. Fonts
 
-Understanding these components will help you navigate the project:
+The portfolio utilizes a combination of modern fonts for optimal readability and aesthetic appeal:
 
-*   **`app/page.tsx` (@app/page.tsx):**
-    *   This is the heart of the portfolio, rendering all sections (About, Projects, Contact).
-    *   Manages global state for the page like `activeSection` for navigation and `fullLeafMessageState` for specific project interactions.
-    *   Handles mouse-based animations (`AuroraBlob`, cursor follower) using Framer Motion.
-    *   Integrates all individual project components within the `.project-grid`.
+*   **Primary Body Font:** `Manrope` (Variable: `--font-manrope`)
+    *   Used for general text content, descriptions, and UI elements.
+    *   Weights: 400, 600, 700.
+*   **Primary Headings Font:** `Space Grotesk` (Variable: `--font-space-grotesk`)
+    *   Used for `<h1>`, `<h2>` tags, and prominent titles.
+    *   Weights: 400, 700.
+*   **Supporting Fonts (from Geist):**
+    *   `Geist Sans` (Variable: `--font-geist-sans`): Used as `--font-sans` for Tailwind.
+    *   `Geist Mono` (Variable: `--font-geist-mono`): Used as `--font-mono` for Tailwind, suitable for code-like text or specific accents (e.g., construction notice).
 
-*   **`app/components/projects/ProjectCard.tsx` (@app/components/projects/ProjectCard.tsx):**
-    *   The standard component for displaying each project.
-    *   **Key Props:** `title`, `description`, `websiteUrl`, `techStack` (see `app/components/TechStack.tsx`), `iframeUrl` (for live preview), `imageUrl` (for static image), `reverseLayout`, `disablePhoneMockup`.
-    *   Refer to `app/components/projects/types.ts` for the full `ProjectCardProps` interface.
-    *   It can display content either directly (if `disablePhoneMockup` is true) or within a `PhoneMockup`.
-    *   Special interactions (like `onMouseEnter`, `onClick` for `FullLeafTea.tsx`) can be passed.
-
-*   **`app/components/Navigation.tsx` (@app/components/Navigation.tsx):**
-    *   Provides the side navigation bar.
-    *   Uses Framer Motion for the active item's elastic underline.
-    *   Dynamically generates navigation items based on `sections` passed from `page.tsx`.
-
-*   **`app/components/phone/PhoneMockup.tsx` & `app/components/phone/PhoneContent.tsx`:**
-    *   `PhoneMockup.tsx`: Renders the visual frame of a smartphone. @app/components/phone/PhoneMockup.tsx
-    *   `PhoneContent.tsx`: Renders an `iframe` or `img` tag within the phone mockup. Supports different `variant` styles. @app/components/phone/PhoneContent.tsx
-    *   Used by `ProjectCard` by default unless `disablePhoneMockup={true}`.
-
-*   **`app/components/TechStack.tsx` (@app/components/TechStack.tsx):**
-    *   Displays a list of technologies with their icons and labels.
-    *   Accepts an array of `TechItem` objects.
-
-*   **`app/components/AuroraBlob.tsx` (@app/components/AuroraBlob.tsx):**
-    *   Creates the animated gradient blob effects in the background.
-    *   Uses Framer Motion for complex animations.
-
-*   **`app/components/InteractiveIframe.tsx` (@app/components/InteractiveIframe.tsx):**
-    *   A wrapper for `iframe` elements that shows a message on user interaction, prompting them to visit the actual website.
-    *   Used by `ProjectCard` when `disablePhoneMockup={true}` and an `iframeUrl` is provided.
+These fonts are configured in `app/layout.tsx` using `next/font` and their corresponding CSS variables are applied in `app/globals.css` (e.g., `body { font-family: var(--font-manrope), var(--font-fallback); }`).
 
 ---
 
-### 3. Adding a New Project
+### 3. Layout & Core Structure
 
-Follow these steps to add a new project to the portfolio:
-1.  **Create the Project Component:**
-    *   Add a new `.tsx` file in `app/components/projects/`, for example, `MyNewProject.tsx`.
-    *   This component should return a `<ProjectCard />` component.
-    *   Example:
-        ```tsx
-        // app/components/projects/MyNewProject.tsx
-        "use client"; // If using hooks or event handlers
-        import React from "react";
-        import ProjectCard from "./ProjectCard";
-        // Import icons if needed, e.g., import { SiReact } from "react-icons/si";
-
-        const MyNewProject: React.FC = () => {
-          return (
-            <ProjectCard
-              title="My New Awesome Project"
-              description="A brief description of this fantastic project."
-              techStack={[
-                // { icon: <SiReact style={{ width: "32px", height: "32px" }} />, label: "React" },
-                { icon: null, label: "Next.js" }, // Or use <Image src="/next.svg" ... />
-              ]}
-              // iframeUrl="https://example.com" // Optional: for live preview
-              imageUrl="/path-to-your-project-image.jpg" // In /public folder
-              imageAlt="Screenshot of My New Awesome Project"
-              // websiteUrl="https://example.com" // Optional: link to live site
-              // reverseLayout={false} // Optional
-              // disablePhoneMockup={false} // Optional
-            />
-          );
-        };
-
-        export default MyNewProject;
-        ```
-
-2.  **Export the Component:**
-    *   Open `app/components/projects/index.ts` (@app/components/projects/index.ts).
-    *   Export your new component: `export { default as MyNewProject } from './MyNewProject';`
-
-3.  **Add Images/Assets:**
-    *   Place any images for your project (e.g., `imageUrl` for `ProjectCard`) in the `public/` directory.
-
-4.  **Integrate into the Main Page:**
-    *   Open `app/page.tsx` (@app/page.tsx).
-    *   Import your new project component: `import { MyNewProject } from "./components/projects";`
-    *   Add it to the `project-grid` JSX:
-        ```tsx
-        <div className="project-grid">
-          <Vinscribe />
-          <FullLeafTea {/* ...props */} />
-          <FullLeafApp />
-          <Quailmail />
-          <ShopDowntown />
-          <CarlyPhotography />
-          <MyNewProject /> {/* Add your new project here */}
-        </div>
-        ```
+*   **`html`, `body`:**
+    *   Configured for full viewport height (`100%`, `min-height: 100%`).
+    *   `overscroll-behavior: none;` and `overflow: hidden;` on `html` and `body` to prevent rubber-band scrolling, especially on mobile.
+    *   Background is transparent to allow the `.aurora-bg` to be visible.
+*   **`.portfolio-container` (in `app/page.tsx`):**
+    *   The main scrollable container for all page content.
+    *   Takes full viewport height (`min-height: 100vh`, JS-enhanced `height: window.innerHeight` for iOS).
+    *   `overflow-y: auto; overflow-x: hidden;` to enable vertical scrolling.
+    *   `scroll-behavior: smooth;` for navigation.
+    *   `overscroll-behavior-y: none;` to prevent bounce effect on iOS Safari.
+*   **`.section` (defined in `app/globals.css`):**
+    *   Base styling for main content sections (About, Projects, Contact).
+    *   `min-height: 100vh` (to fill the viewport vertically).
+    *   Centered with `max-width: 1000px` and `margin: 0 auto`.
+    *   `display: flex; flex-direction: column; justify-content: center;` for content alignment.
+    *   Responsive padding (`padding-left: 3vw; padding-right: 3vw;`).
+*   **Typography:**
+    *   `h1`: Styled with `Space Grotesk`, `2.5rem`.
+    *   `h2`: Styled with `Space Grotesk`, `2rem`.
+    *   `a`: Default link color is `#00ffd5` with `font-weight: 600`.
 
 ---
 
-### 4. Styling Approach
+### 4. Color Scheme & Theming
 
-*   **Global Styles (`app/globals.css` @app/globals.css):**
-    *   Contains base styles, TailwindCSS `@import` and `@theme`, font definitions, and the main aurora background animation.
-    *   Modify with care as these affect the entire application.
-*   **TailwindCSS:**
-    *   Used extensively for utility-first styling directly within components.
-    *   Many components (e.g., `Vinscribe.tsx`, `CarlyPhotography.tsx`) use Tailwind classes via the `className` prop.
-    *   Tech stack icons often have Tailwind classes for sizing or color.
-*   **Component-Specific CSS (`.css` files):**
-    *   Some components have dedicated CSS files, like `PhoneMockup.css` (@app/components/phone/PhoneMockup.css). While not strictly CSS Modules by naming in this case, they serve a similar purpose of styling a specific component.
-    *   When adding new component-specific styles, consider co-locating them or using styled-components/CSS-in-JS if that's a project preference for new additions (though the current pattern is mostly global CSS, Tailwind, and specific .css files).
-*   **`TechStack.tsx` Styling:**
-    *   The `TechStack` component has inline styles for its flex container and items, but also applies classes like `tech-stack` and `tech-item` which are styled in `app/globals.css`.
+*   The primary color scheme is dark, dominated by the animated aurora background.
+*   **CSS Variables (`app/globals.css`):**
+    *   `--background: #0a0a0a;` (Dark mode default)
+    *   `--foreground: #ededed;`
+*   A `@media (prefers-color-scheme: light)` block exists but is minimal, as the design heavily relies on the dark, gradient-rich aurora.
+*   Key accent color (e.g., links, active navigation): `#00ffd5` (cyan/teal).
 
 ---
 
-### 5. State Management & Logic (`app/page.tsx`)
+### 5. Background Effects (Aurora)
 
-*   The primary state for the portfolio page (active section, animations, specific component interactions) is managed within `app/page.tsx` using React hooks:
-    *   `useState`: For managing `activeSection`, `fullLeafMessageState`.
-    *   `useRef`: For `containerRef` and `sectionRefs` (to enable smooth scrolling and track section visibility).
-    *   `useEffect`: For setting up and tearing down scroll event listeners and other side effects.
-    *   `useCallback`: For memoizing functions like `handleMouseMove` and `scrollToSection`.
-*   **Framer Motion:** `useMotionValue` and `useSpring` are used for the smooth cursor-following animation.
-*   Event handlers for interactions (e.g., `handleFullLeafMouseEnter`, `handleFullLeafClick`) are defined here and passed down to relevant components.
+Managed by `app/styles/components/aurora.css` and `app/components/aurora/AuroraBlob.tsx`.
 
----
-
-### 6. Client vs. Server Components (Next.js App Router)
-
-*   Remember that any component using React hooks (`useState`, `useEffect`, `useRef`, etc.) or browser-only APIs/event handlers **must** be a Client Component.
-*   To designate a component as a Client Component, add the `"use client";` directive at the very top of the file.
-*   Most interactive UI components in this project (e.g., `page.tsx`, `ProjectCard.tsx`, `Navigation.tsx`, individual project components) are Client Components.
-*   `layout.tsx` is a Server Component by default.
+*   **`.aurora-bg`:**
+    *   A `position: fixed` element providing a static CSS gradient background covering the entire viewport.
+    *   `z-index: -1` to sit behind all content.
+*   **`.aurora-blob` & `AuroraBlob.tsx`:**
+    *   Multiple `motion.div` components styled as blurred, colored blobs.
+    *   Animated using `framer-motion` for subtle, continuous movement and opacity changes.
+    *   `mix-blend-mode: lighten;` to interact with the background and each other.
+    *   Responsive: Blobs are smaller and have less blur on smaller screens.
+*   **iOS Specific Handling (`app/page.tsx`):**
+    *   If iOS is detected, the animated `AuroraBlob` components are not rendered.
+    *   The `.aurora-bg` has its `background` style potentially overridden to a simpler `#2d174d` if `isIOS` is true (as per logic in `app/page.tsx`). This is to improve performance on iOS devices.
 
 ---
 
-### 7. Code Conventions & Best Practices
+### 6. Cursor Light Effect
 
-*   **TypeScript:** Use TypeScript for all new components and leverage the existing types in `app/components/projects/types.ts`.
-*   **Barrel Files:** Utilize the `index.ts` files in component directories for cleaner imports (e.g., `import { Vinscribe, FullLeafTea } from "./components/projects";`).
-*   **Memoization:** `React.memo` is used for some components like `NavItem` in `Navigation.tsx` and `AuroraBlob.tsx` to prevent unnecessary re-renders. Consider this for complex components.
-*   **Accessibility (A11y):** Ensure appropriate `alt` text for images, `title` attributes for iframes, and semantic HTML.
-*   **Performance:**
-    *   `throttle` (from `lodash`) is used for scroll and mouse move handlers to improve performance.
-    *   Framer Motion's `willChange` CSS property is used as a hint for hardware acceleration on animated elements.
-    *   `next/image` is used for image optimization in some places (e.g., `Vinscribe.tsx`, `CarlyPhotography.tsx`, `FullLeafTea.tsx`). Prefer it for new images.
-    *   `loading="lazy"` is used on iframes like in `InteractiveIframe.tsx`.
+Provides a subtle light effect that follows the mouse cursor.
+
+*   **Logic (`app/page.tsx`):**
+    *   Uses `framer-motion`'s `useMotionValue` and `useSpring` to create smooth X and Y coordinates for the light effect.
+    *   The `handleMouseMove` event (throttled using `lodash.throttle`) updates these motion values.
+*   **Styling (`app/styles/components/aurora.css` - `.cursor-circle`):**
+    *   A `position: fixed` div.
+    *   Styled as a radial gradient, blurred, to create a soft light spot.
+    *   `pointer-events: none;` so it doesn't interfere with mouse interactions.
+    *   `z-index: 999` to be above most content but below critical UI like modals if any.
+*   **Mobile:** The cursor effect is not rendered on mobile devices (checked via `isMobile` state in `app/page.tsx`).
 
 ---
 
-This guide should provide a solid foundation for working with the codebase. If you have questions about a specific part, try asking the AI by referencing the relevant file(s) (e.g., "Explain the `onClick` prop in @app/components/projects/FullLeafTea.tsx").
+### 7. Global CSS Organization & TailwindCSS
+
+*   The project heavily utilizes **TailwindCSS** for utility-first styling. Tailwind is configured in `tailwind.config.js` (not provided, but assumed) and its directives are imported in `app/globals.css`.
+*   **Modular CSS:** Custom styles are organized into separate CSS files (e.g., `aurora.css`, `navigation.css`, etc.) and imported into `app/globals.css`. This promotes better organization than having all custom styles directly in `globals.css`.
