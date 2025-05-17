@@ -9,8 +9,52 @@ const FullLeafApp: React.FC = () => {
   const playStoreUrl =
     "https://play.google.com/store/apps/details?id=fullleafteacompany.android.app&hl=en_US&pli=1";
 
-  const neonBanner = (
-    <div className="flex justify-center items-center my-4 px-2">
+  // Store link styles for consistent appearance on mobile and desktop
+  const storeLinkStyle = {
+    textShadow:
+      "0 0 5px #fff, " +
+      "0 0 10px #67e8f9, " +
+      "0 0 15px #22d3ee, " +
+      "0 0 20px #22d3ee, " +
+      "0 0 25px #06b6d4, " +
+      "0 0 30px #06b6d4",
+  };
+
+  // Mobile version (simplified with just links)
+  const mobileBanner = (
+    <div className="flex md:hidden justify-center items-center my-4 px-2">
+      <div className="flex flex-row justify-center items-center text-base font-bold uppercase tracking-wider"
+        style={{
+          fontFamily:
+            "'Brush Script MT', 'Brush Script Std', 'Lucida Calligraphy', 'Lucida Handwriting', cursive",
+        }}
+      >
+        <a
+          href={appStoreUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="mx-1.5 text-cyan-400 hover:text-cyan-300 hover:brightness-150 transition-all duration-200 underline"
+          style={storeLinkStyle}
+        >
+          App&nbsp;Store
+        </a>
+        <span className="mx-1 text-pink-400">&amp;</span>
+        <a
+          href={playStoreUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="mx-1.5 text-cyan-400 hover:text-cyan-300 hover:brightness-150 transition-all duration-200 underline"
+          style={storeLinkStyle}
+        >
+          Play&nbsp;Store
+        </a>
+      </div>
+    </div>
+  );
+
+  // Desktop version (full neon banner)
+  const desktopBanner = (
+    <div className="hidden md:flex justify-center items-center my-4 px-2">
       <div
         className="inline-block px-2 sm:px-4 py-2 rounded-lg border-4 border-pink-400 w-full max-w-xs sm:max-w-none"
         style={{
@@ -23,7 +67,7 @@ const FullLeafApp: React.FC = () => {
         }}
       >
         <div
-          className="text-base sm:text-lg md:text-xl font-bold uppercase tracking-wider text-pink-400 flex flex-col sm:flex-row justify-center items-center"
+          className="text-base sm:text-lg md:text-xl font-bold uppercase tracking-wider text-pink-400 flex flex-row justify-center items-center"
           style={{
             fontFamily:
               "'Brush Script MT', 'Brush Script Std', 'Lucida Calligraphy', 'Lucida Handwriting', cursive",
@@ -37,22 +81,14 @@ const FullLeafApp: React.FC = () => {
               "0 0 35px #db2777",
           }}
         >
-          <span className="mx-1 mb-1 sm:mb-0">Live on the</span>
+          <span className="mx-1">Live on the</span>
           <div className="flex flex-row flex-wrap justify-center">
             <a
               href={appStoreUrl}
               target="_blank"
               rel="noopener noreferrer"
               className="mx-1.5 text-cyan-400 hover:text-cyan-300 hover:brightness-150 transition-all duration-200 underline"
-              style={{
-                textShadow:
-                  "0 0 5px #fff, " +
-                  "0 0 10px #67e8f9, " +
-                  "0 0 15px #22d3ee, " +
-                  "0 0 20px #22d3ee, " +
-                  "0 0 25px #06b6d4, " +
-                  "0 0 30px #06b6d4",
-              }}
+              style={storeLinkStyle}
             >
               App&nbsp;Store
             </a>
@@ -62,15 +98,7 @@ const FullLeafApp: React.FC = () => {
               target="_blank"
               rel="noopener noreferrer"
               className="mx-1.5 text-cyan-400 hover:text-cyan-300 hover:brightness-150 transition-all duration-200 underline"
-              style={{
-                textShadow:
-                  "0 0 5px #fff, " +
-                  "0 0 10px #67e8f9, " +
-                  "0 0 15px #22d3ee, " +
-                  "0 0 20px #22d3ee, " +
-                  "0 0 25px #06b6d4, " +
-                  "0 0 30px #06b6d4",
-              }}
+              style={storeLinkStyle}
             >
               Play&nbsp;Store
             </a>
@@ -86,7 +114,8 @@ const FullLeafApp: React.FC = () => {
       description={
         <>
           A Flutter-based, WebView app for Full Leaf Tea Company.
-          {neonBanner}
+          {mobileBanner}
+          {desktopBanner}
         </>
       }
       techStack={[
@@ -105,6 +134,7 @@ const FullLeafApp: React.FC = () => {
       imageUrl="/app.jpeg"
       imageAlt="Portrait screenshot of Full Leaf App"
       imageTitle="Full Leaf App Screenshot"
+      imageBlurDataURL="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAwIiBoZWlnaHQ9IjEyMDAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGRlZnM+PGxpbmVhckdyYWRpZW50IGlkPSJnIiB4MT0iMCUiIHkxPSIwJSIgeDI9IjAlIiB5Mj0iMTAwJSI+PHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iIzEwODMxMCIgLz48c3RvcCBvZmZzZXQ9IjEwMCUiIHN0b3AtY29sb3I9IiMwODYyMDgiIC8+PC9saW5lYXJHcmFkaWVudD48L2RlZnM+PHJlY3Qgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgZmlsbD0idXJsKCNnKSIvPjwvc3ZnPg=="
       className="full-leaf-app-card flex flex-col items-center"
       disablePhoneMockup={true}
     />

@@ -20,6 +20,7 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
   imageUrl,
   imageAlt,
   imageTitle,
+  imageBlurDataURL,
   reverseLayout = false,
   disablePhoneMockup = false,
   className = "",
@@ -80,6 +81,9 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
                 title={imageTitle}
                 width={600}
                 height={1200}
+                loading="lazy"
+                placeholder="blur"
+                blurDataURL={imageBlurDataURL || "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAwIiBoZWlnaHQ9IjEyMDAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHJlY3Qgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgZmlsbD0iIzIwMjAyMCIvPjwvc3ZnPg=="}
                 className={`${title
                   .toLowerCase()
                   .replace(/\s+/g, "-")}-screenshot ${imageClassName || ""}`}
@@ -130,6 +134,7 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
                   className={
                     imageClassName || title.toLowerCase().replace(/\s+/g, "-")
                   }
+                  blurDataURL={imageBlurDataURL}
                 />
               )}
               {children}

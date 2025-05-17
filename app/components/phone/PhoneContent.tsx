@@ -11,6 +11,7 @@ interface PhoneContentProps {
   className?: string;
   variant?: "vinscribe" | "carlypsphoto" | "fullleaf" | "fullleaf-tea";
   alt?: string; // For image type
+  blurDataURL?: string; // Custom blur placeholder for image loading
 }
 
 const PhoneContent: React.FC<PhoneContentProps> = ({
@@ -20,6 +21,7 @@ const PhoneContent: React.FC<PhoneContentProps> = ({
   className = "",
   variant = "vinscribe",
   alt = "Phone content",
+  blurDataURL = "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAwIiBoZWlnaHQ9IjEyMDAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHJlY3Qgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgZmlsbD0iIzIwMjAyMCIvPjwvc3ZnPg==",
 }) => {
   const [isMessageVisible, setIsMessageVisible] = useState(false);
   const [hasInteracted, setHasInteracted] = useState(false);
@@ -93,6 +95,9 @@ const PhoneContent: React.FC<PhoneContentProps> = ({
           className={`${contentClass} ${className}`}
           fill
           sizes="(max-width: 768px) 100vw, 50vw"
+          loading="lazy"
+          placeholder="blur"
+          blurDataURL={blurDataURL}
           style={{
             objectFit: variant === "fullleaf-tea" ? "contain" : "cover",
             borderRadius: variant === "fullleaf-tea" ? "20px" : "24px",

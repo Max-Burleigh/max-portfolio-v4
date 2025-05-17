@@ -15,6 +15,7 @@ export interface ProjectCardProps {
   imageAlt?: string;
   imageTitle?: string;
   imageClassName?: string;
+  imageBlurDataURL?: string; // Custom blur placeholder for image loading
   reverseLayout?: boolean;
   disablePhoneMockup?: boolean;
   className?: string;
