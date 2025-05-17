@@ -27,6 +27,7 @@ import {
   CarlyPhotography,
   BasedChat,
 } from "./components/projects";
+import { SiLinkedin } from "react-icons/si";
 
 // Helper functions for tilt calculations
 const round = (num: number, fix = 2) => {
@@ -475,9 +476,23 @@ const Portfolio = () => {
             Feel free to reach out if you have a project in mind or just want to
             chat!
           </p>
-          <a href="mailto:webwavebuilding@yahoo.com">
-            webwavebuilding@yahoo.com
-          </a>
+          <div className="mt-4">
+            <a href="mailto:webwavebuilding@yahoo.com">
+              webwavebuilding@yahoo.com
+            </a>
+            <div className="flex justify-center w-full">
+              <a
+                href="https://www.linkedin.com/in/max-burleigh/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center gap-2 mt-2 text-blue-500 hover:text-blue-700 transition-colors font-medium"
+                style={{ width: "fit-content" }}
+              >
+                <SiLinkedin style={{ width: 22, height: 22 }} />
+                <span>LinkedIn</span>
+              </a>
+            </div>
+          </div>
         </div>
       </section>
 
