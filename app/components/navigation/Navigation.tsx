@@ -176,37 +176,6 @@ const Navigation: React.FC<NavigationProps> = ({
     },
   };
 
-  // Item variants with more refined and fluid animations
-  const itemVariants = {
-    hidden: {
-      opacity: 0,
-      y: 30,
-      scale: 0.95,
-    },
-    visible: {
-      opacity: 1,
-      y: 0,
-      scale: 1,
-      transition: {
-        type: "spring",
-        stiffness: 350, // Less stiff for a smoother feel
-        damping: 25, // More damping for less oscillation
-        mass: 0.5, // Lower mass for quicker response
-      },
-    },
-    exit: {
-      opacity: 0,
-      y: 20, // Exit with a slight upward movement
-      scale: 0.9, // Slightly more scale change on exit for emphasis
-      transition: {
-        type: "spring",
-        stiffness: 500, // Higher stiffness for quick exit
-        damping: 25,
-        mass: 0.8,
-      },
-    },
-  };
-
   // Mobile menu overlay (fullscreen slide-in panel)
   const MobileMenu = () => (
     <motion.div
@@ -325,7 +294,7 @@ const Navigation: React.FC<NavigationProps> = ({
                 transition: { type: "spring", stiffness: 800, damping: 20 },
               }}
               // Add subtle hover indicator with animation
-              onHoverStart={(e) => {
+              onHoverStart={() => {
                 // Create subtle audio feedback if not active section
                 if (section !== activeSection) {
                   const audio = new Audio();
