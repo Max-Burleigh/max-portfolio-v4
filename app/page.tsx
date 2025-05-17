@@ -14,6 +14,7 @@ import {
 } from "framer-motion";
 import { throttle } from "lodash";
 import Image from "next/image";
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { AuroraBlob } from "./components/aurora";
 import { Navigation } from "./components/navigation";
 // Import modularized project components
@@ -248,7 +249,7 @@ const Portfolio = () => {
     }
   };
 
-  // Common blob props to reduce duplication
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const blobProps = {
     style: { zIndex: 0, willChange: "transform, opacity" },
   };
