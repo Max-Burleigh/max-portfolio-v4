@@ -260,9 +260,10 @@ const Portfolio = () => {
       onMouseMove={throttledMouseMove}
     >
       {/* Fixed aurora background element */}
-      <div className="aurora-bg" />
+      <div className="aurora-bg" style={{ background: "#2d174d" }} />
 
       {/* Aurora Animated Blobs - Reduced number and optimized */}
+      {/**
       <AuroraBlob
         className="blob1"
         initial={{ opacity: 0.5, scale: 1, x: -50, y: -50 }}
@@ -297,6 +298,7 @@ const Portfolio = () => {
         }}
         {...blobProps}
       />
+      */}
 
       {/* Optimized cursor circle with useSpring for smoother motion */}
       <motion.div
