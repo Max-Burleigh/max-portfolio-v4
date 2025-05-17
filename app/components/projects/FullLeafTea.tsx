@@ -25,7 +25,6 @@ const FullLeafTea: React.FC<FullLeafTeaProps> = ({
           <p>
             Multi-million dollar ecommerce business for premium loose leaf tea.
           </p>
-          <br />
           <p>Designed/developed by yours truly.</p>
         </>
       }

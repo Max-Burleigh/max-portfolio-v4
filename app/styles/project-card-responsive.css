@@ -82,7 +82,7 @@
 
   .project-card {
     flex-direction: column !important;
-    gap: 1.5rem;
+    gap: 0 !important;
     padding: 1.25rem;
     min-height: auto;
   }

@@ -259,7 +259,7 @@ const Navigation: React.FC<NavigationProps> = ({
           {sections.map((section, i) => (
             <motion.button
               key={section}
-              className={`relative text-2xl font-bold mb-9 last:mb-0 text-white tracking-wide flex items-center ${
+              className={`relative text-2xl font-bold mb-9 last:mb-0 text-white tracking-wide flex items-center w-full justify-start ${
                 section === activeSection ? "text-pink-300" : ""
               }`}
               onClick={() => {
@@ -268,11 +268,11 @@ const Navigation: React.FC<NavigationProps> = ({
               }}
               custom={i}
               variants={{
-                open: (i) => ({
+                open: (idx) => ({
                   opacity: 1,
                   y: 0,
                   transition: {
-                    delay: i * 0.08,
+                    delay: idx * 0.08,
                     type: "spring",
                     stiffness: 400,
                     damping: 20,
@@ -305,46 +305,52 @@ const Navigation: React.FC<NavigationProps> = ({
                 }
               }}
             >
-              {/* Indicator comes FIRST now */}
-              {section === activeSection && (
-                <motion.div
-                  // This div is the container for the dot and glow.
-                  // It will be a flex item in the button.
-                  // Add margin to its right for spacing from text.
-                  // It needs to be relative for its children if they are absolute to it.
-                  className="relative w-5 h-5 mr-4" // w-5 h-5 for the dot size. mr-4 for spacing.
-                >
-                  {/* Main active indicator span - now absolute to the w-5 h-5 parent div */}
-                  <motion.span
-                    className="absolute inset-0 rounded-full bg-gradient-to-br from-blue-400 to-pink-400"
-                    layoutId="activeNavIndicator"
-                    initial={{ scale: 0.8, opacity: 0.5 }}
-                    animate={{ scale: 1, opacity: 1 }}
-                    transition={{ type: "spring", stiffness: 500, damping: 20 }}
-                  />
-                  {/* Decorative glow effect span - also absolute to the w-5 h-5 parent div */}
-                  <motion.span
-                    className="absolute inset-0 rounded-full bg-cyan-400"
-                    layoutId="activeNavGlow"
-                    initial={{ scale: 0.8, opacity: 0.2 }}
-                    animate={{
-                      scale: [1, 2, 1], // Glow animates scale
-                      opacity: [0.2, 0.5, 0.2],
-                    }}
-                    transition={{
-                      repeat: Infinity,
-                      duration: 2,
-                      ease: "easeInOut",
-                    }}
-                    style={{
-                      filter: "blur(8px)", // Glow blur
-                      zIndex: -1, // Glow behind main dot
-                    }}
-                  />
-                </motion.div>
-              )}
-              {/* Text comes AFTER the indicator div */}
-              {section.charAt(0).toUpperCase() + section.slice(1)}
+              {/* Container for indicator/placeholder - ensures consistent spacing */}
+              <div className="w-9 h-5 flex-shrink-0 flex items-center">
+                {" "}
+                {/* w-9 = w-5 (dot) + w-4 (1rem spacing) */}
+                {section === activeSection && (
+                  <motion.div
+                    // This div is the container for the dot and glow.
+                    // It's now inside the placeholder div.
+                    // The placeholder div handles the mr-4 equivalent spacing via its width.
+                    className="relative w-5 h-5" // Dot itself, no margin here.
+                  >
+                    {/* Main active indicator span */}
+                    <motion.span
+                      className="absolute inset-0 rounded-full bg-gradient-to-br from-blue-400 to-pink-400"
+                      layoutId="activeNavIndicator" // Keep original ID, it's unique to mobile menu dot
+                      initial={{ scale: 0.8, opacity: 0.5 }}
+                      animate={{ scale: 1, opacity: 1 }}
+                      transition={{
+                        type: "spring",
+                        stiffness: 500,
+                        damping: 20,
+                      }}
+                    />
+                    {/* Decorative glow effect span */}
+                    <motion.span
+                      className="absolute inset-0 rounded-full bg-cyan-400"
+                      layoutId="activeNavGlow" // Keep original ID
+                      initial={{ scale: 0.8, opacity: 0.2 }}
+                      animate={{
+                        scale: [1, 2, 1], // Glow animates scale
+                        opacity: [0.2, 0.5, 0.2],
+                      }}
+                      transition={{
+                        duration: 2,
+                        ease: "easeInOut",
+                      }}
+                      style={{
+                        filter: "blur(8px)", // Glow blur
+                        zIndex: -1, // Glow behind main dot
+                      }}
+                    />
+                  </motion.div>
+                )}
+              </div>
+              {/* Text comes AFTER the indicator placeholder div */}
+              <span>{section.charAt(0).toUpperCase() + section.slice(1)}</span>
             </motion.button>
           ))}
         </motion.div>
