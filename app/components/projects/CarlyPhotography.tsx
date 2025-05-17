@@ -5,16 +5,12 @@ import { SiTailwindcss } from "react-icons/si";
 import ProjectCard from "./shared/ProjectCard";
 
 const CarlyPhotography: React.FC = () => {
+  const iconStyle = { width: "32px", height: "32px" };
+
   return (
     <ProjectCard
       title="Carly Pearl-Sacks Photography"
-      description={
-        <>
-          Portfolio site for a professional photographer.
-          <br />
-          Built with Next.js and TailwindCSS.
-        </>
-      }
+      description="Portfolio site for a professional photographer. Built with Next.js and TailwindCSS."
       websiteUrl="https://carlypsphoto.com"
       className="carlypsphoto-card"
       reverseLayout={true}
@@ -35,7 +31,7 @@ const CarlyPhotography: React.FC = () => {
           icon: (
             <SiTailwindcss
               className="tech-icon tailwind"
-              style={{ width: "32px", height: "32px" }}
+              style={iconStyle}
               color="#fff"
             />
           ),
