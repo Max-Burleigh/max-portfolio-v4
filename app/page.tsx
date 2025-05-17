@@ -290,14 +290,16 @@ const Portfolio = () => {
         </>
       )}
 
-      <motion.div
-        className="cursor-circle"
-        style={{
-          x: cursorX,
-          y: cursorY,
-          willChange: "transform",
-        }}
-      />
+      {!isMobile && (
+        <motion.div
+          className="cursor-circle"
+          style={{
+            x: cursorX,
+            y: cursorY,
+            willChange: "transform",
+          }}
+        />
+      )}
 
       <Navigation
         activeSection={activeSection}
