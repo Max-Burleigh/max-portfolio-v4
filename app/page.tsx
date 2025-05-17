@@ -186,11 +186,9 @@ const Portfolio = () => {
 
   const handlePortraitMouseLeave = () => {
     setAnimating(false);
-    setTimeout(() => {
-      if (isAnimatingRef.current) return;
-      setRotations({ x: 0, y: 0, z: 2 });
-      setGlare({ x: 50, y: 50, opacity: 0 });
-    }, 100);
+    isAnimatingRef.current = false;
+    setRotations({ x: 0, y: 0, z: 2 });
+    setGlare({ x: 50, y: 50, opacity: 0 });
   };
 
   const scrollToSection = useCallback(

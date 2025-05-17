@@ -1,6 +1,6 @@
 "use client";
 
-import React, { memo, useState, useEffect } from "react";
+import React, { memo, useEffect } from "react";
 import {
   motion,
   AnimatePresence,
@@ -183,13 +183,9 @@ const Navigation: React.FC<NavigationProps> = ({
   const MobileMenu = () => (
     <motion.div
       className="fixed top-0 right-0 h-full w-[280px] bg-gradient-to-br from-blue-900/90 via-purple-900/90 to-pink-900/90 backdrop-blur-xl flex flex-col justify-center items-center shadow-2xl border-l border-white/10 z-[99] md:hidden"
-      initial="closed"
-      animate="open"
-      exit="closed"
-      variants={{
-        open: { x: 0, opacity: 1 },
-        closed: { x: "100%", opacity: 0 },
-      }}
+      initial={{ x: "100%", opacity: 0 }}
+      animate={{ x: 0, opacity: 1 }}
+      exit={{ x: "100%", opacity: 0 }}
       transition={{
         type: "spring",
         damping: 30,
@@ -334,7 +330,7 @@ const Navigation: React.FC<NavigationProps> = ({
       {/* Hamburger for mobile */}
       <Hamburger />
       {/* Mobile menu overlay with improved animation mode */}
-      <AnimatePresence mode="sync">
+      <AnimatePresence mode="wait">
         {menuOpen && <MobileMenu />}
       </AnimatePresence>
     </>
