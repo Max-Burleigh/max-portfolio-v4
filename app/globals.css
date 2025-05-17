@@ -1,5 +1,10 @@
 @import "tailwindcss";
 
+/* Import modular CSS files */
+@import "./styles/components/aurora.css";
+@import "./styles/components/navigation.css";
+@import "./styles/components/tech-stack.css";
+
 :root {
   --background: #0a0a0a; /* Dark mode default */
   --foreground: #ededed;
@@ -58,22 +63,7 @@ body {
   overflow: hidden; /* Prevent any rubber-band scroll of the root */
 }
 
-/* Fixed background gradient element */
-.aurora-bg {
-  position: fixed;
-  inset: 0;
-  z-index: -1;
-  background: linear-gradient(
-    120deg,
-    #091236 0%,
-    #1e215d 25%,
-    #2f3f72 50%,
-    #415a77 75%,
-    #23252e 100%
-  );
-  background-size: 100% 100%;
-  /* animation: aurora 30s ease-in-out infinite; */
-}
+/* Aurora background styles moved to app/styles/components/aurora.css */
 
 .portfolio-container {
   width: 100%;
@@ -89,200 +79,16 @@ body {
   overscroll-behavior-y: none;
 }
 
-.aurora-blob {
-  position: absolute;
-  pointer-events: none;
-  z-index: 1;
-  border-radius: 50%;
-  filter: blur(80px);
-  opacity: 0.5;
-  width: 700px;
-  height: 550px;
-  mix-blend-mode: lighten;
-  transform: translateZ(0);
-  transition: width 0.6s, height 0.6s, left 0.6s, right 0.6s, top 0.6s,
-    bottom 0.6s;
-}
+/* Aurora blob styles moved to app/styles/components/aurora.css */
 
-@media (max-width: 900px) {
-  .aurora-blob {
-    width: 350px;
-    height: 220px;
-    filter: blur(50px);
-  }
-  .blob5,
-  .blob6 {
-    width: 220px;
-    height: 120px;
-  }
-  .side-nav {
-    display: none !important;
-  }
-  .hamburger-btn {
-    display: flex !important;
-  }
-}
+/* Navigation styles moved to app/styles/components/navigation.css */
 
-@media (max-width: 640px) {
-  .hamburger-btn {
-    width: 42px !important;
-    height: 42px !important;
-    top: 12px;
-    right: 12px;
-  }
-}
+/* Mobile hamburger button styles moved to navigation.css */
 
-@media (min-width: 641px) and (max-width: 900px) {
-  .hamburger-btn {
-    width: 48px !important;
-    height: 48px !important;
-    top: 14px;
-    right: 14px;
-  }
-}
+/* Tablet hamburger button styles moved to navigation.css */
 
-/* Mobile menu animations enhancement */
-@media (prefers-reduced-motion: no-preference) {
-  .hamburger-btn {
-    transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1),
-      box-shadow 0.3s cubic-bezier(0.22, 1, 0.36, 1),
-      background 0.3s cubic-bezier(0.22, 1, 0.36, 1), width 0.3s ease,
-      height 0.3s ease;
-  }
-}
-.blob1 {
-  background: radial-gradient(
-    circle at 30% 40%,
-    #00ffd5 0%,
-    #0e1e4a 80%,
-    transparent 100%
-  );
-  left: 10vw;
-  top: -500px;
-  width: 900px;
-  height: 900px;
-  transform: translate(-50%, -50%);
-}
-.blob2 {
-  background: radial-gradient(
-    circle at 60% 30%,
-    #ff5ce6 0%,
-    #1e215d 80%,
-    transparent 100%
-  );
-  right: 10vw;
-  top: -500px;
-  width: 800px;
-  height: 800px;
-  transform: translate(50%, -50%);
-}
-
-.blob-center {
-  background: radial-gradient(
-    circle at 50% 50%,
-    rgba(0, 255, 255, 0.45) 0%,
-    rgba(0, 160, 255, 0.32) 40%,
-    rgba(0, 80, 200, 0.16) 70%,
-    rgba(20, 35, 80, 0) 100%
-  );
-  left: 50%;
-  top: 120px;
-  width: 500px;
-  height: 500px;
-  transform: translateX(-50%);
-  z-index: 2;
-  opacity: 0.85;
-  filter: blur(60px);
-  pointer-events: none;
-  position: absolute;
-}
-.blob3 {
-  background: radial-gradient(
-    circle at 50% 70%,
-    #00ff9d 0%,
-    #2f3f72 80%,
-    transparent 100%
-  );
-  left: 50%;
-  top: 50px;
-  width: 900px;
-  height: 900px;
-}
-.blob4 {
-  background: radial-gradient(
-    circle at 70% 60%,
-    #00aaff 0%,
-    #415a77 80%,
-    transparent 100%
-  );
-  right: 60px;
-  top: 20px;
-}
-.blob5 {
-  background: radial-gradient(
-    circle at 40% 60%,
-    #8affff 0%,
-    #7b2ff2 70%,
-    transparent 100%
-  );
-  left: -110px;
-  top: 900px;
-  width: 420px;
-  height: 320px;
-}
-.blob6 {
-  background: radial-gradient(
-    circle at 60% 80%,
-    #ffb347 0%,
-    #ff5ce6 70%,
-    transparent 100%
-  );
-  right: -80px;
-  top: 1750px;
-  width: 420px;
-  height: 320px;
-}
-.blob7 {
-  background: radial-gradient(
-    circle at 20% 50%,
-    #ff9a9e 0%,
-    #fad0c4 70%,
-    transparent 100%
-  );
-  width: 500px;
-  height: 400px;
-  left: 20px;
-  top: 2200px;
-}
-.blob8 {
-  background: radial-gradient(
-    circle at 80% 50%,
-    #a18cd1 0%,
-    #fbc2eb 70%,
-    transparent 100%
-  );
-  width: 500px;
-  height: 400px;
-  right: 20px;
-  top: 2600px;
-}
-@keyframes aurora {
-  0% {
-    background-position: 0% 50%;
-  }
-  25% {
-    background-position: 50% 50%;
-  }
-  50% {
-    background-position: 100% 50%;
-  }
-  75% {
-    background-position: 50% 50%;
-  }
-  100% {
-    background-position: 0% 50%;
-  }
-}
+/* Mobile menu animations moved to navigation.css */
+/* Individual blob styles moved to app/styles/components/aurora.css */
 .project-card.vinscribe-card {
   display: flex;
   flex-direction: row;
@@ -342,67 +148,8 @@ body {
     flex: 0 0 160px;
   }
 }
-.cursor-circle {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100px;
-  height: 100px;
-  border-radius: 50%;
-  background: radial-gradient(
-    circle at center,
-    rgba(255, 255, 255, 0.4),
-    rgba(255, 255, 255, 0)
-  );
-  filter: blur(30px);
-  pointer-events: none;
-  z-index: 999;
-  transform: translateZ(0);
-}
-.side-nav {
-  position: fixed;
-  left: 2rem;
-  top: 50%;
-  transform: translateY(-50%);
-  z-index: 20;
-  display: flex;
-  flex-direction: column;
-}
-.nav-item {
-  position: relative;
-  margin-bottom: 1rem;
-}
-.side-nav button {
-  background: none;
-  color: #ffffff;
-  cursor: pointer;
-  border: none;
-  font-size: 1.1rem;
-  text-align: left;
-  opacity: 0.7;
-  transition: opacity 0.3s, color 0.3s, transform 0.3s;
-}
-.side-nav button.active {
-  opacity: 1;
-  color: #00ffd5;
-  font-weight: 600;
-}
-.side-nav button:hover,
-.side-nav button:focus {
-  opacity: 1;
-  transform: translateX(3px);
-}
-.elastic-underline {
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  height: 2px;
-  width: 100%;
-  background-color: #00ffd5;
-  transform: scaleX(0);
-  transform-origin: left center;
-  will-change: transform;
-}
+/* Cursor circle effect moved to app/styles/components/aurora.css */
+/* Side navigation styles moved to app/styles/components/navigation.css */
 .section {
   position: relative;
   width: 100vw;
@@ -588,63 +335,7 @@ a {
   }
 }
 
-.tech-stack {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.75rem 1.5rem;
-  margin-top: 0.75rem;
-  align-items: center;
-}
-.tech-item {
-  display: flex;
-  align-items: center;
-  font-size: 1rem;
-  color: #ededed;
-  background: rgba(0, 0, 0, 0.1);
-  border-radius: 8px;
-  padding: 0.35em 0.8em 0.35em 0.5em;
-  margin-bottom: 0.25em;
-  font-weight: 500;
-  box-shadow: 0 1px 4px 0 rgba(0, 0, 0, 0.08);
-  transition: background 0.2s;
-}
-.tech-item:hover {
-  background: rgba(0, 255, 213, 0.1);
-}
-.tech-icon {
-  font-size: 1.5em;
-  margin-right: 0.5em;
-  vertical-align: middle;
-  filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.1));
-}
-.tech-icon.nextjs {
-  color: #fff;
-  background: none;
-  border-radius: 0;
-  padding: 0;
-}
-.tech-icon.firebase {
-  color: #ffa611;
-}
-.tech-icon.typescript {
-  color: #3178c6;
-}
-.tech-icon.tailwind {
-  color: #38bdf8;
-}
-@media (min-width: 600px) {
-  .tech-stack {
-    gap: 1rem 2.5rem;
-    margin-top: 1rem;
-  }
-  .tech-item {
-    font-size: 1.08rem;
-    padding: 0.45em 1.1em 0.45em 0.7em;
-  }
-  .tech-icon {
-    font-size: 1.8em;
-  }
-}
+/* Tech stack styles moved to app/styles/components/tech-stack.css */
 
 .fullleaf-message {
   left: auto;
@@ -776,60 +467,4 @@ a {
   font-size: 0.92rem;
 }
 
-.hamburger-btn {
-  display: none;
-  transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1),
-    box-shadow 0.3s cubic-bezier(0.22, 1, 0.36, 1),
-    background 0.3s cubic-bezier(0.22, 1, 0.36, 1);
-  filter: drop-shadow(0 0 12px rgba(79, 70, 229, 0.25));
-}
-
-/* Enhanced button hover effects */
-.hamburger-btn:hover {
-  filter: drop-shadow(0 0 16px rgba(79, 70, 229, 0.4));
-}
-
-/* Overlay menu animation handled by Framer Motion, but add fallback */
-.mobile-nav-overlay {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  position: fixed;
-  inset: 0;
-  z-index: 99;
-  background: linear-gradient(
-    135deg,
-    rgba(30, 33, 93, 0.9) 0%,
-    rgba(123, 47, 242, 0.9) 100%
-  );
-  backdrop-filter: blur(16px);
-}
-
-/* Add a subtle glow effect to active menu items */
-.mobile-nav-overlay button.active::before {
-  content: "";
-  position: absolute;
-  inset: -10px;
-  background: radial-gradient(
-    circle at center,
-    rgba(0, 255, 213, 0.2),
-    transparent 70%
-  );
-  border-radius: 50%;
-  z-index: -1;
-  opacity: 0.8;
-  filter: blur(15px);
-  animation: pulse 2s infinite alternate;
-}
-
-@keyframes pulse {
-  0% {
-    transform: scale(0.95);
-    opacity: 0.7;
-  }
-  100% {
-    transform: scale(1.05);
-    opacity: 0.9;
-  }
-}
+/* Mobile navigation and overlay styles moved to app/styles/components/navigation.css */
