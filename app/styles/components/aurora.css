@@ -22,6 +22,11 @@
   /* animation: aurora 30s ease-in-out infinite; */
 }
 
+/* iOS-specific background override */
+.is-ios-device .aurora-bg {
+  background: #2d174d; /* Solid color for iOS */
+}
+
 /* Aurora blob base styles */
 .aurora-blob {
   position: absolute;
@@ -36,6 +41,12 @@
   transform: translateZ(0);
   transition: width 0.6s, height 0.6s, left 0.6s, right 0.6s, top 0.6s,
     bottom 0.6s;
+  display: block; /* Default display */
+}
+
+/* Hide blobs on iOS */
+.is-ios-device .aurora-blob {
+  display: none;
 }
 
 /* Responsive styles for aurora blobs */

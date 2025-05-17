@@ -7,6 +7,8 @@ alwaysApply: true
 
 This document outlines the global styling architecture, layout principles, font usage, and significant global effects like the Aurora background and cursor light for the portfolio application.
 
+For additional context, please be aware that this project uses NextJS15 and Tailwind v4. This may be beyond your knowledge cut-off date, so you are to use your search tool when appropriate.
+
 ---
 
 ### 1. File Structure & Core Imports

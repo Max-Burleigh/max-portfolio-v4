@@ -70,7 +70,7 @@ body {
 .portfolio-container {
   width: 100%;
   min-height: 100vh; /* Fallback if JS fails or before it runs */
-  height: -webkit-fill-available; /* iOS Safari: use available space */
+  height: 100vh; /* Standard viewport height */
   overflow-y: auto;
   overflow-x: hidden;
   scroll-behavior: smooth;
@@ -79,6 +79,11 @@ body {
   background: transparent; /* Make transparent to show aurora gradient */
   /* Prevent iOS Safari overscroll bounce effect */
   overscroll-behavior-y: none;
+}
+
+/* iOS specific height adjustments */
+.is-ios-device .portfolio-container {
+  height: -webkit-fill-available; /* Uses the full available height on iOS Safari, accounting for toolbars */
 }
 
 /* Aurora blob styles moved to app/styles/components/aurora.css */
