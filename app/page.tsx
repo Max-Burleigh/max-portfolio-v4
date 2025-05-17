@@ -253,16 +253,21 @@ const Portfolio = () => {
         ref={containerRef}
         className="portfolio-container"
         onMouseMove={throttledMouseMove}
-        animate={{ x: menuOpen && isMobile ? "-280px" : "0px" }}
-        transition={{ type: "spring", damping: 30, stiffness: 220 }}
       >
-        <div
-          className="aurora-bg"
-          style={{
-            width: menuOpen && isMobile ? "calc(100% + 280px)" : "100%",
-            right: menuOpen && isMobile ? "-280px" : "0",
-          }}
-        />
+        <div className="aurora-bg" />
+
+        {/* Add overlay when mobile menu is open */}
+        <AnimatePresence>
+          {menuOpen && isMobile && (
+            <motion.div
+              className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={() => setMenuOpen(false)}
+            />
+          )}
+        </AnimatePresence>
 
         {/* AuroraBlobs will be shown/hidden via CSS based on body.is-ios-device class */}
         {/* Keeping the !isIOS condition as a secondary check for optimization */}
@@ -511,7 +516,7 @@ const Portfolio = () => {
         <AnimatePresence>
           {showNotice && (
             <motion.div
-              className="fixed bottom-4 left-0 right-0 mx-auto w-11/12 sm:w-96 bg-black/70 backdrop-blur-md p-3 rounded-lg shadow-lg z-50 border border-purple-500/30"
+              className="fixed bottom-4 left-0 right-0 mx-auto w-11/12 sm:w-96 bg-black/70 backdrop-blur-md p-3 rounded-lg shadow-lg z-20 border border-purple-500/30"
               initial={{ y: 100, opacity: 0 }}
               animate={{ y: 0, opacity: 1 }}
               exit={{ y: 100, opacity: 0 }}

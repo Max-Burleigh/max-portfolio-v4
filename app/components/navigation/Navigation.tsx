@@ -84,7 +84,7 @@ const Navigation: React.FC<NavigationProps> = ({
 
     return (
       <motion.button
-        className="hamburger-btn md:hidden fixed top-5 right-5 z-[100] flex flex-col justify-center items-center w-12 h-12 bg-gradient-to-br from-blue-400 via-purple-400 to-pink-400 rounded-full shadow-xl focus:outline-none overflow-hidden"
+        className="hamburger-btn md:hidden fixed top-5 right-5 z-[102] flex flex-col justify-center items-center w-12 h-12 bg-gradient-to-br from-blue-400 via-purple-400 to-pink-400 rounded-full shadow-xl focus:outline-none overflow-hidden"
         aria-label={menuOpen ? "Close menu" : "Open menu"}
         onClick={() => setMenuOpen(!menuOpen)} // Use prop
         onMouseMove={handleMouseMove}
@@ -182,7 +182,7 @@ const Navigation: React.FC<NavigationProps> = ({
   // Mobile menu panel (slides in from right)
   const MobileMenu = () => (
     <motion.div
-      className="fixed top-0 right-0 h-full w-[280px] bg-gradient-to-br from-blue-900/90 via-purple-900/90 to-pink-900/90 backdrop-blur-xl flex flex-col justify-center items-center shadow-2xl border-l border-white/10 z-[99] md:hidden overflow-hidden"
+      className="fixed top-0 right-0 h-full w-[280px] bg-gradient-to-br from-blue-900/90 via-purple-900/90 to-pink-900/90 backdrop-blur-xl flex flex-col justify-center items-center shadow-2xl border-l border-white/10 z-[101] md:hidden"
       initial={{ x: "100%", opacity: 0 }}
       animate={{ x: 0, opacity: 1 }}
       exit={{ x: "100%", opacity: 0 }}
@@ -192,11 +192,8 @@ const Navigation: React.FC<NavigationProps> = ({
         stiffness: 220,
       }}
     >
-      {/* Background overlay to prevent any grey areas */}
-      <div className="absolute inset-0 bg-black/20 z-0" />
-
       <motion.div
-        className="w-full flex flex-col items-center px-12 py-10 relative z-10" // Adjusted padding if needed, px-8 or px-10 might be better for 280px width
+        className="w-full flex flex-col items-center px-12 py-10" // Adjusted padding if needed, px-8 or px-10 might be better for 280px width
         variants={containerVariants}
         initial="hidden"
         animate="visible"

@@ -20,30 +20,11 @@
   );
   background-size: 100% 100%;
   /* animation: aurora 30s ease-in-out infinite; */
-  transition: width 0.3s ease, right 0.3s ease;
-  will-change: width, right;
 }
 
 /* iOS-specific background override */
 .is-ios-device .aurora-bg {
   background: #2d174d; /* Solid color for iOS */
-  transition: width 0.3s ease, right 0.3s ease;
-  will-change: width, right;
-}
-
-/* For mobile menu open state, ensure background covers shifted area */
-@media (max-width: 767px) {
-  body::before {
-    content: "";
-    position: fixed;
-    inset: 0;
-    z-index: -2;
-    background: #091236; /* Fallback color matching aurora gradient start */
-  }
-
-  .is-ios-device body::before {
-    background: #2d174d; /* Match iOS background */
-  }
 }
 
 /* Aurora blob base styles */
