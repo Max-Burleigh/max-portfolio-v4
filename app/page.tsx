@@ -37,6 +37,11 @@ const distance = (x1: number, y1: number, x2: number, y2: number) => {
   return Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2));
 };
 
+// Define an interface for window that includes the MSStream property
+interface WindowWithMSStream extends Window {
+  MSStream?: unknown; // Use unknown for better type safety than any, or a more specific type if known
+}
+
 // Main Portfolio component
 const Portfolio = () => {
   // For optimized cursor following
@@ -78,9 +83,10 @@ const Portfolio = () => {
     // Ensure this code runs only on the client-side
     if (typeof window !== "undefined") {
       const userAgent = window.navigator.userAgent;
-      // Basic iOS detection.
+      // Basic iOS detection, using the extended Window type
+      const typedWindow = window as WindowWithMSStream;
       const iosCheck =
-        /iPad|iPhone|iPod/.test(userAgent) && !(window as any).MSStream;
+        /iPad|iPhone|iPod/.test(userAgent) && !typedWindow.MSStream;
       setIsIOS(iosCheck);
     }
   }, []); // Empty dependency array means this runs once on mount
@@ -91,7 +97,6 @@ const Portfolio = () => {
 
     const setRealViewportHeight = () => {
       if (portfolioContainer) {
-        // Use innerHeight for the viewport height excluding URL bar when it's dynamic
         portfolioContainer.style.height = `${window.innerHeight}px`;
       }
     };
@@ -99,9 +104,8 @@ const Portfolio = () => {
     if (typeof window !== "undefined") {
       window.addEventListener("resize", setRealViewportHeight);
       window.addEventListener("orientationchange", setRealViewportHeight);
-      setRealViewportHeight(); // Set initial height
+      setRealViewportHeight();
 
-      // Safari might need a slight delay to report correct innerHeight after load/orientation change
       const timeoutId = setTimeout(setRealViewportHeight, 100);
 
       return () => {
@@ -112,7 +116,6 @@ const Portfolio = () => {
     }
   }, []);
 
-  // Set the ref value whenever isAnimating changes
   useEffect(() => {
     isAnimatingRef.current = isAnimating;
   }, [isAnimating]);
@@ -123,16 +126,13 @@ const Portfolio = () => {
     "hidden" | "first" | "second"
   >("hidden");
 
-  // Define section keys type for type safety
   type SectionKey = "about" | "projects" | "contact";
   const sectionKeys: SectionKey[] = ["about", "projects", "contact"];
 
-  // Create section refs outside useMemo to fix React hooks rule
   const aboutSectionRef = useRef<HTMLDivElement>(null);
   const projectsSectionRef = useRef<HTMLDivElement>(null);
   const contactSectionRef = useRef<HTMLDivElement>(null);
 
-  // Create properly typed section refs object using useMemo
   const sectionRefs = useMemo(
     () => ({
       about: aboutSectionRef,
@@ -142,7 +142,6 @@ const Portfolio = () => {
     [aboutSectionRef, projectsSectionRef, contactSectionRef]
   );
 
-  // Optimized mouse move handler with throttling
   const handleMouseMove = useCallback(
     (e: React.MouseEvent<HTMLDivElement>) => {
       mouseX.set(e.clientX - 50);
@@ -151,46 +150,32 @@ const Portfolio = () => {
     [mouseX, mouseY]
   );
 
-  // Apply throttling to the handler
   const throttledMouseMove = useMemo(
     () => throttle(handleMouseMove, 10),
     [handleMouseMove]
   );
 
-  // Handler for portrait tilting with advanced glare effect
   const handlePortraitMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
     setAnimating(true);
-
     if (!portraitRef.current) return;
-
     const rect = portraitRef.current.getBoundingClientRect();
-
-    // Get absolute mouse position relative to the card
     const absolute = {
       x: e.clientX - rect.left,
       y: e.clientY - rect.top,
     };
-
-    // Calculate percentage position (0-100%)
     const percent = {
       x: round((100 / rect.width) * absolute.x),
       y: round((100 / rect.height) * absolute.y),
     };
-
-    // Calculate center-relative position (-50 to 50%)
     const center = {
       x: percent.x - 50,
       y: percent.y - 50,
     };
-
-    // Set rotation values based on mouse position
     setRotations({
-      x: round(center.x / 12), // X-axis rotation (reversed for intuitive mapping)
-      y: round(-center.y / 16), // Y-axis rotation
-      z: round(distance(percent.x, percent.y, 50, 50) / 20), // Z-rotation based on distance from center
+      x: round(center.x / 12),
+      y: round(-center.y / 16),
+      z: round(distance(percent.x, percent.y, 50, 50) / 20),
     });
-
-    // Update glare position to follow mouse
     setGlare({
       x: percent.x,
       y: percent.y,
@@ -198,19 +183,15 @@ const Portfolio = () => {
     });
   };
 
-  // Reset tilt and glare when mouse leaves
   const handlePortraitMouseLeave = () => {
     setAnimating(false);
-
     setTimeout(() => {
       if (isAnimatingRef.current) return;
-
       setRotations({ x: 0, y: 0, z: 2 });
       setGlare({ x: 50, y: 50, opacity: 0 });
     }, 100);
   };
 
-  // Memoized scroll section function
   const scrollToSection = useCallback(
     (section: SectionKey) => {
       sectionRefs[section]?.current?.scrollIntoView({ behavior: "smooth" });
@@ -218,37 +199,28 @@ const Portfolio = () => {
     [sectionRefs]
   );
 
-  // Throttled scroll handler for better performance
   useEffect(() => {
     const container = containerRef.current;
     if (!container) return;
-
     const handleScroll = throttle(() => {
       const scrollY = container.scrollTop;
       const viewportHeight = container.clientHeight;
-
       const offsets = Object.entries(sectionRefs).map(([key, ref]) => ({
         key: key as SectionKey,
         offset: ref.current ? ref.current.offsetTop : 0,
       }));
-
-      // Find which section is most visible in the viewport
       const current = offsets.reduce<SectionKey>((acc, curr) => {
         return scrollY >= curr.offset - viewportHeight / 3 ? curr.key : acc;
       }, "about");
-
       if (current !== activeSection) {
         setActiveSection(current);
       }
-    }, 100); // Throttle to run at most every 100ms
-
+    }, 100);
     container.addEventListener("scroll", handleScroll);
-    // Initial check
-    setTimeout(handleScroll, 100); // Small delay to ensure refs are populated
-
+    setTimeout(handleScroll, 100);
     return () => {
       container.removeEventListener("scroll", handleScroll);
-      handleScroll.cancel(); // Cancel any pending throttled calls
+      handleScroll.cancel();
     };
   }, [activeSection, sectionRefs]);
 
@@ -274,14 +246,11 @@ const Portfolio = () => {
       className="portfolio-container"
       onMouseMove={throttledMouseMove}
     >
-      {/* Conditionally set background style for iOS */}
       <div
         className="aurora-bg"
-        // Apply solid purple for iOS, otherwise rely on CSS class for desktop
         style={isIOS ? { background: "#2d174d" } : {}}
       />
 
-      {/* Conditionally render Aurora Blobs if NOT iOS */}
       {!isIOS && (
         <>
           <AuroraBlob
@@ -321,7 +290,6 @@ const Portfolio = () => {
         </>
       )}
 
-      {/* Optimized cursor circle with useSpring for smoother motion */}
       <motion.div
         className="cursor-circle"
         style={{
@@ -331,14 +299,12 @@ const Portfolio = () => {
         }}
       />
 
-      {/* Use the new Navigation component */}
       <Navigation
         activeSection={activeSection}
         scrollToSection={scrollToSection}
         sections={sectionKeys}
       />
 
-      {/* About Section */}
       <section
         ref={sectionRefs.about}
         id="about"
@@ -352,7 +318,6 @@ const Portfolio = () => {
                 web developer, project manager, solopreneur based in Medford,
                 Oregon.
               </p>
-
               <motion.button
                 onClick={() => setSpielOpen(!spielOpen)}
                 className="mt-4 px-4 md:px-5 py-2 md:py-2.5 bg-gradient-to-r from-blue-400 via-purple-400 to-pink-300 rounded-full text-white font-semibold text-shadow-sm self-start overflow-hidden relative text-sm md:text-base"
@@ -371,7 +336,6 @@ const Portfolio = () => {
                   transition={{ duration: 0.3 }}
                 />
               </motion.button>
-
               <AnimatePresence>
                 {spielOpen && (
                   <motion.div
@@ -441,7 +405,6 @@ const Portfolio = () => {
               onMouseMove={handlePortraitMouseMove}
               onMouseLeave={handlePortraitMouseLeave}
             >
-              {/* Glare overlay */}
               <motion.div
                 style={{
                   zIndex: 2,
@@ -469,7 +432,7 @@ const Portfolio = () => {
                 fill
                 style={{
                   objectFit: "cover",
-                  transform: "translateZ(20px)", // Add slight depth
+                  transform: "translateZ(20px)",
                 }}
                 priority
               />
@@ -478,7 +441,6 @@ const Portfolio = () => {
         </div>
       </section>
 
-      {/* Projects Section */}
       <section
         ref={sectionRefs.projects}
         id="projects"
@@ -500,7 +462,6 @@ const Portfolio = () => {
         </div>
       </section>
 
-      {/* Contact Section */}
       <section
         ref={sectionRefs.contact}
         id="contact"
@@ -518,7 +479,6 @@ const Portfolio = () => {
         </div>
       </section>
 
-      {/* Construction Notice Popup */}
       <AnimatePresence>
         {showNotice && (
           <motion.div
