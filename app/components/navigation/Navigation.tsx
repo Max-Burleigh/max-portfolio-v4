@@ -155,22 +155,22 @@ const Navigation: React.FC<NavigationProps> = ({
     );
   };
 
-  // Container variants with staggered children animation
+  // Container variants - smoother appearance
   const containerVariants = {
-    hidden: { opacity: 0 },
+    hidden: { opacity: 1 },
     visible: {
       opacity: 1,
       transition: {
         when: "beforeChildren",
-        staggerChildren: 0.08,
-        delayChildren: 0.1,
+        staggerChildren: 0.04, // Slightly increased from 0.02
+        delayChildren: 0.05, // Added a very small delay
       },
     },
     exit: {
-      opacity: 0,
+      opacity: 1,
       transition: {
         when: "afterChildren",
-        staggerChildren: 0.05,
+        staggerChildren: 0.03, // Slightly increased
         staggerDirection: -1,
       },
     },
@@ -236,7 +236,7 @@ const Navigation: React.FC<NavigationProps> = ({
         </motion.div>
       </motion.div>
 
-      {/* Menu panel - slide in from right */}
+      {/* Menu panel - slide in with smoother animation */}
       <motion.div
         className="absolute inset-y-0 right-0 w-full max-w-xs sm:max-w-sm bg-gradient-to-br from-blue-900/90 via-purple-900/90 to-pink-900/90 backdrop-blur-xl flex flex-col justify-center items-center shadow-2xl border-l border-white/10"
         variants={{
@@ -245,16 +245,17 @@ const Navigation: React.FC<NavigationProps> = ({
         }}
         transition={{
           type: "spring",
-          damping: 20,
-          stiffness: 300,
-          mass: 0.8,
+          damping: 22, // Increased from 15 for smoother animation
+          stiffness: 300, // Reduced from 400 to be less snappy
+          mass: 0.8, // Increased from 0.6 for less jarring motion
           when: "beforeChildren",
-          staggerChildren: 0.08,
+          staggerChildren: 0.04, // Slightly increased
         }}
       >
         <motion.div
           className="w-full flex flex-col items-center px-12 py-10"
           variants={containerVariants}
+          initial="visible" // Changed from default initial="hidden" behavior
         >
           {sections.map((section, i) => (
             <motion.button
@@ -272,15 +273,15 @@ const Navigation: React.FC<NavigationProps> = ({
                   opacity: 1,
                   y: 0,
                   transition: {
-                    delay: idx * 0.08,
+                    delay: idx * 0.03, // Small delay added back
                     type: "spring",
-                    stiffness: 400,
-                    damping: 20,
+                    stiffness: 400, // Reduced from 500
+                    damping: 22, // Increased from 15
                   },
                 }),
                 closed: {
-                  opacity: 0,
-                  y: 50,
+                  opacity: 1,
+                  y: 30, // Reduced from 50 for less dramatic movement
                 },
               }}
               whileHover={{
@@ -331,19 +332,24 @@ const Navigation: React.FC<NavigationProps> = ({
                     {/* Decorative glow effect span */}
                     <motion.span
                       className="absolute inset-0 rounded-full bg-cyan-400"
-                      layoutId="activeNavGlow" // Keep original ID
-                      initial={{ scale: 0.8, opacity: 0.2 }}
+                      layoutId="activeNavGlow"
+                      initial={{ scale: 1, opacity: 0.3 }}
                       animate={{
-                        scale: [1, 2, 1], // Glow animates scale
-                        opacity: [0.2, 0.5, 0.2],
+                        scale: [1, 1.5, 1],
+                        opacity: [0.3, 0.5, 0.3],
                       }}
                       transition={{
-                        duration: 2,
+                        duration: 1.2,
                         ease: "easeInOut",
+                        layout: {
+                          type: "spring",
+                          stiffness: 350,
+                          damping: 20,
+                        },
                       }}
                       style={{
-                        filter: "blur(8px)", // Glow blur
-                        zIndex: -1, // Glow behind main dot
+                        filter: "blur(8px)",
+                        zIndex: -1,
                       }}
                     />
                   </motion.div>
