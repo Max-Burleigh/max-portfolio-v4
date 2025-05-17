@@ -74,7 +74,7 @@
   }
 }
 
-/* Mobile responsive styles from project-card-responsive.css */
+/* Mobile responsive styles from project-card.css */
 @media (max-width: 768px) {
   .tech-stack {
     flex-wrap: wrap;
