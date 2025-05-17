@@ -15,7 +15,7 @@ import {
 import { throttle } from "lodash";
 import Image from "next/image";
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-import { AuroraBlob } from "./components/aurora";
+import { AuroraBlob } from "./components/aurora"; // Keep this import
 import { Navigation } from "./components/navigation";
 // Import modularized project components
 import {
@@ -62,6 +62,9 @@ const Portfolio = () => {
   // For the construction notice popup
   const [showNotice, setShowNotice] = useState(true);
 
+  // New state for iOS detection
+  const [isIOS, setIsIOS] = useState(false);
+
   useEffect(() => {
     const mediaQuery = window.matchMedia("(max-width: 767px)");
     setIsMobile(mediaQuery.matches);
@@ -69,6 +72,18 @@ const Portfolio = () => {
     mediaQuery.addEventListener("change", handler);
     return () => mediaQuery.removeEventListener("change", handler);
   }, []);
+
+  // useEffect for iOS detection
+  useEffect(() => {
+    // Ensure this code runs only on the client-side
+    if (typeof window !== "undefined") {
+      const userAgent = window.navigator.userAgent;
+      // Basic iOS detection.
+      const iosCheck =
+        /iPad|iPhone|iPod/.test(userAgent) && !(window as any).MSStream;
+      setIsIOS(iosCheck);
+    }
+  }, []); // Empty dependency array means this runs once on mount
 
   // Set portfolio container height to exact viewport height (for iOS Safari overscroll fix)
   useEffect(() => {
@@ -249,7 +264,6 @@ const Portfolio = () => {
     }
   };
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const blobProps = {
     style: { zIndex: 0, willChange: "transform, opacity" },
   };
@@ -260,46 +274,52 @@ const Portfolio = () => {
       className="portfolio-container"
       onMouseMove={throttledMouseMove}
     >
-      {/* Fixed aurora background element */}
-      <div className="aurora-bg" style={{ background: "#2d174d" }} />
+      {/* Conditionally set background style for iOS */}
+      <div
+        className="aurora-bg"
+        // Apply solid purple for iOS, otherwise rely on CSS class for desktop
+        style={isIOS ? { background: "#2d174d" } : {}}
+      />
 
-      {/* Aurora Animated Blobs - Reduced number and optimized */}
-      {/**
-      <AuroraBlob
-        className="blob1"
-        initial={{ opacity: 0.5, scale: 1, x: -50, y: -50 }}
-        animate={{
-          opacity: [0.5, 0.8, 0.5],
-          scale: [1, 1.2, 1],
-          x: [-50, 0, -50],
-          y: [-50, 50, -50],
-        }}
-        transition={{
-          duration: 14,
-          repeat: Infinity,
-          ease: "easeInOut",
-          repeatType: "mirror",
-        }}
-        {...blobProps}
-      />
-      <AuroraBlob
-        className="blob2"
-        initial={{ opacity: 0.4, scale: 1, x: 150, y: 50 }}
-        animate={{
-          opacity: [0.4, 0.7, 0.4],
-          scale: [1, 1.3, 1],
-          x: [150, 200, 150],
-          y: [50, 150, 50],
-        }}
-        transition={{
-          duration: 18,
-          repeat: Infinity,
-          ease: "easeInOut",
-          repeatType: "mirror",
-        }}
-        {...blobProps}
-      />
-      */}
+      {/* Conditionally render Aurora Blobs if NOT iOS */}
+      {!isIOS && (
+        <>
+          <AuroraBlob
+            className="blob1"
+            initial={{ opacity: 0.5, scale: 1, x: -50, y: -50 }}
+            animate={{
+              opacity: [0.5, 0.8, 0.5],
+              scale: [1, 1.2, 1],
+              x: [-50, 0, -50],
+              y: [-50, 50, -50],
+            }}
+            transition={{
+              duration: 14,
+              repeat: Infinity,
+              ease: "easeInOut",
+              repeatType: "mirror",
+            }}
+            {...blobProps}
+          />
+          <AuroraBlob
+            className="blob2"
+            initial={{ opacity: 0.4, scale: 1, x: 150, y: 50 }}
+            animate={{
+              opacity: [0.4, 0.7, 0.4],
+              scale: [1, 1.3, 1],
+              x: [150, 200, 150],
+              y: [50, 150, 50],
+            }}
+            transition={{
+              duration: 18,
+              repeat: Infinity,
+              ease: "easeInOut",
+              repeatType: "mirror",
+            }}
+            {...blobProps}
+          />
+        </>
+      )}
 
       {/* Optimized cursor circle with useSpring for smoother motion */}
       <motion.div
@@ -318,7 +338,7 @@ const Portfolio = () => {
         sections={sectionKeys}
       />
 
-      {/* About Section - Reduced duplicate blobs */}
+      {/* About Section */}
       <section
         ref={sectionRefs.about}
         id="about"
