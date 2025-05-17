@@ -256,7 +256,13 @@ const Portfolio = () => {
         animate={{ x: menuOpen && isMobile ? "-280px" : "0px" }}
         transition={{ type: "spring", damping: 30, stiffness: 220 }}
       >
-        <div className="aurora-bg" />
+        <div
+          className="aurora-bg"
+          style={{
+            width: menuOpen && isMobile ? "calc(100% + 280px)" : "100%",
+            right: menuOpen && isMobile ? "-280px" : "0",
+          }}
+        />
 
         {/* AuroraBlobs will be shown/hidden via CSS based on body.is-ios-device class */}
         {/* Keeping the !isIOS condition as a secondary check for optimization */}
