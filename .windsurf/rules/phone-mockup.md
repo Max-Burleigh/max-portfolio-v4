@@ -1,6 +1,6 @@
 ---
 trigger: model_decision
-description: You will read this file whenever you are working on anything related to the phone mockup UI in the project cards
+description: You will read this file whenever you are working on anything related to the phone mockup UI
 ---
 
 ## Condensed Phone UI Components Guide (`app/components/phone/`)

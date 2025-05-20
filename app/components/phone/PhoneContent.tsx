@@ -115,6 +115,12 @@ const PhoneContent: React.FC<PhoneContentProps> = ({
   // Render appropriate content based on type
   const [isVisible, setIsVisible] = useState(false);
 
+  useEffect(() => {
+    if (type === "iframe" && loadIframe) {
+      setIsVisible(true);
+    }
+  }, [type, loadIframe]);
+
   if (type === "image" && src) {
     return (
       <div className={`phone-content-container${isVisible ? " fade-in" : ""}`}>
@@ -136,13 +142,6 @@ const PhoneContent: React.FC<PhoneContentProps> = ({
       </div>
     );
   }
-
-  useEffect(() => {
-    if (type === "iframe" && loadIframe) {
-      setIsVisible(true);
-    }
-  }, [type, loadIframe]);
-
   if (type === "iframe" && src) {
     return (
       <div

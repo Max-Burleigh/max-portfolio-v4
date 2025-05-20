@@ -52,7 +52,15 @@ const Portfolio = () => {
 
   // For portrait tilt effect
   const portraitRef = useRef<HTMLDivElement>(null);
-  const [rotations, setRotations] = useState({ x: 0, y: 0, z: 2 });
+  // Use motion values instead of state for better performance
+  const rotateY = useMotionValue(0);
+  const rotateX = useMotionValue(0);
+  const transformPerspective = useMotionValue(200); // z * 100
+  // Add springs for smoother rotation
+  const rotateYSpring = useSpring(rotateY, { damping: 25, stiffness: 400 });
+  const rotateXSpring = useSpring(rotateX, { damping: 25, stiffness: 400 });
+  const transformPerspectiveSpring = useSpring(transformPerspective, { damping: 25, stiffness: 400 });
+  
   const [isAnimating, setAnimating] = useState(false);
   const isAnimatingRef = useRef(isAnimating);
   const [glare, setGlare] = useState({ x: 50, y: 50, opacity: 0 });
@@ -172,11 +180,12 @@ const Portfolio = () => {
       x: percent.x - 50,
       y: percent.y - 50,
     };
-    setRotations({
-      x: round(center.x / 12),
-      y: round(-center.y / 16),
-      z: round(distance(percent.x, percent.y, 50, 50) / 20),
-    });
+    
+    // Update motion values directly instead of setting state
+    rotateY.set(round(center.x / 12));
+    rotateX.set(round(-center.y / 16));
+    transformPerspective.set(round(distance(percent.x, percent.y, 50, 50) / 20) * 100);
+    
     setGlare({
       x: percent.x,
       y: percent.y,
@@ -187,7 +196,10 @@ const Portfolio = () => {
   const handlePortraitMouseLeave = () => {
     setAnimating(false);
     isAnimatingRef.current = false;
-    setRotations({ x: 0, y: 0, z: 2 });
+    // Reset motion values directly
+    rotateY.set(0);
+    rotateX.set(0);
+    transformPerspective.set(200); // z(2) * 100
     setGlare({ x: 50, y: 50, opacity: 0 });
   };
 
@@ -403,21 +415,17 @@ const Portfolio = () => {
               </div>
               <motion.div
                 ref={portraitRef}
-                className={`w-64 h-80 md:w-80 md:h-96 relative rounded-lg overflow-hidden shadow-lg flex-shrink-0 ${
-                  spielOpen ? "" : "mt-4 md:mt-0"
-                }`}
-                animate={{
-                  rotateY: rotations.x,
-                  rotateX: rotations.y,
-                  transformPerspective: rotations.z * 100,
-                  scale: isMobile && spielOpen ? 0.8 : 1,
-                }}
-                transition={{ duration: 0.5 }}
+                className={`w-64 h-80 md:w-80 md:h-96 relative rounded-lg overflow-hidden shadow-lg flex-shrink-0 ${spielOpen ? "" : "mt-4 md:mt-0"}`}
                 style={{
+                  rotateY: rotateYSpring,
+                  rotateX: rotateXSpring,
+                  transformPerspective: transformPerspectiveSpring,
+                  scale: isMobile && spielOpen ? 0.8 : 1,
                   transformStyle: "preserve-3d",
                   transformOrigin: "center",
                   perspective: "800px",
                 }}
+                transition={{ duration: 0.5 }}
                 whileHover={{
                   scale: 1.05,
                   transition: { duration: 0.2 },
