@@ -154,6 +154,16 @@
   line-height: 1.4;
 }
 
+/* Always visible static message */
+.phone-content-container .iframe-message.static-message {
+  opacity: 1;
+  transition: none;
+  /* More subtle box-shadow to be less distracting */
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+  /* Slightly reduced opacity background for less visual dominance */
+  background: rgba(0, 0, 0, 0.75);
+}
+
 .phone-content-container .message-content {
   display: flex;
   flex-direction: column;

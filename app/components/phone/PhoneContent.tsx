@@ -23,12 +23,9 @@ const PhoneContent: React.FC<PhoneContentProps> = ({
   alt = "Phone content",
   blurDataURL = "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAwIiBoZWlnaHQ9IjEyMDAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHJlY3Qgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgZmlsbD0iIzIwMjAyMCIvPjwvc3ZnPg==",
 }) => {
-  const [isMessageVisible, setIsMessageVisible] = useState(false);
-  const [hasInteracted, setHasInteracted] = useState(false);
   const [loadIframe, setLoadIframe] = useState(false);
   const iframeRef = useRef<HTMLIFrameElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
-  const timeoutRef = useRef<NodeJS.Timeout | undefined>(undefined);
 
   // Determine the content class based on variant
   const contentClass =
@@ -42,64 +39,16 @@ const PhoneContent: React.FC<PhoneContentProps> = ({
       ? "fullleaf-tea"
       : "";
 
-  // Show message when user interacts with iframe
-  const handleIframeInteraction = useCallback(() => {
-    if (!hasInteracted && type === "iframe" && src) {
-      setIsMessageVisible(true);
-      setHasInteracted(true);
+  // No more dynamic interaction handling required
 
-      // Hide message after 5 seconds
-      timeoutRef.current = setTimeout(() => {
-        setIsMessageVisible(false);
-      }, 5000);
-    }
-  }, [hasInteracted, type, src]);
-  
-  // Auto-trigger message on initial load
-  useEffect(() => {
-    if (type === "iframe" && src && loadIframe) {
-      // Short delay before showing message
-      const autoShowTimeout = setTimeout(() => {
-        setIsMessageVisible(true);
-        
-        // Hide message after 5 seconds
-        timeoutRef.current = setTimeout(() => {
-          setIsMessageVisible(false);
-        }, 5000);
-      }, 1000);
-      
-      return () => {
-        clearTimeout(autoShowTimeout);
-        if (timeoutRef.current) {
-          clearTimeout(timeoutRef.current);
-        }
-      };
-    }
-  }, [type, src, loadIframe]);
-
-  useEffect(() => {
-    const iframe = iframeRef.current;
-    if (!iframe || type !== "iframe") return;
-
-    // Use mouse and touch events to detect interaction
-    iframe.addEventListener("mouseover", handleIframeInteraction);
-    iframe.addEventListener("touchstart", handleIframeInteraction, {
-      passive: true,
-    });
-
-    return () => {
-      iframe.removeEventListener("mouseover", handleIframeInteraction);
-      iframe.removeEventListener("touchstart", handleIframeInteraction);
-    };
-  }, [handleIframeInteraction, type]);
+  // No more event listeners needed since the message is always visible
 
   // Deferred loading: load iframe only after user interaction or when scrolled into view
   const handleLoadIframe = useCallback(() => {
     if (!loadIframe) {
       setLoadIframe(true);
-      handleIframeInteraction();
     }
-  }, [loadIframe, handleIframeInteraction]);
+  }, [loadIframe]);
 
   useEffect(() => {
     if (type !== "iframe" || loadIframe || !containerRef.current) return;
@@ -166,27 +115,17 @@ const PhoneContent: React.FC<PhoneContentProps> = ({
               loading="lazy"
             />
 
-            <AnimatePresence>
-              {isMessageVisible && (
-                <motion.div
-                  className="iframe-message"
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -20 }}
-                  transition={{ duration: 0.3 }}
-                >
-                  <div className="message-content">
-                    <div className="message-icon">✨</div>
-                    <p>
-                      For the full experience, visit{" "}
-                      <a href={src} target="_blank" rel="noopener noreferrer">
-                        the website
-                      </a>
-                    </p>
-                  </div>
-                </motion.div>
-              )}
-            </AnimatePresence>
+            <div className="iframe-message static-message">
+              <div className="message-content">
+                <div className="message-icon">✨</div>
+                <p>
+                  For the full experience, visit{" "}
+                  <a href={src} target="_blank" rel="noopener noreferrer">
+                    the website
+                  </a>
+                </p>
+              </div>
+            </div>
           </>
         )}
       </div>
