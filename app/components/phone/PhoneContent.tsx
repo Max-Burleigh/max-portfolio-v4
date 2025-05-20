@@ -69,11 +69,8 @@ const PhoneContent: React.FC<PhoneContentProps> = ({
   // Render appropriate content based on type
   const [isVisible, setIsVisible] = useState(false);
 
-  useEffect(() => {
-    if (type === "iframe" && loadIframe) {
-      setIsVisible(true);
-    }
-  }, [type, loadIframe]);
+  // We'll no longer immediately set isVisible when loadIframe becomes true
+  // Instead, we'll set it when the iframe actually loads its content
 
   if (type === "image" && src) {
     return (
@@ -112,6 +109,7 @@ const PhoneContent: React.FC<PhoneContentProps> = ({
               frameBorder="0"
               title={alt}
               loading="lazy"
+              onLoad={() => setIsVisible(true)}
             />
 
             <div className="iframe-message static-message">
