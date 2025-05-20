@@ -57,6 +57,7 @@
   background: #191c23;
   border: none;
   margin: 0;
+  overflow-x: hidden;
 }
 
 .phone-mockup .carlypsphoto-iframe {
@@ -73,6 +74,7 @@
   background: #191c23;
   border: none;
   margin: 0;
+  overflow-x: hidden;
 }
 
 /* Full Leaf App specific styling */
