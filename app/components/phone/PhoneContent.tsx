@@ -25,7 +25,9 @@ const PhoneContent: React.FC<PhoneContentProps> = ({
 }) => {
   const [isMessageVisible, setIsMessageVisible] = useState(false);
   const [hasInteracted, setHasInteracted] = useState(false);
+  const [loadIframe, setLoadIframe] = useState(false);
   const iframeRef = useRef<HTMLIFrameElement>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
   const timeoutRef = useRef<NodeJS.Timeout | undefined>(undefined);
 
   // Determine the content class based on variant
@@ -52,6 +54,28 @@ const PhoneContent: React.FC<PhoneContentProps> = ({
       }, 5000);
     }
   }, [hasInteracted, type, src]);
+  
+  // Auto-trigger message on initial load
+  useEffect(() => {
+    if (type === "iframe" && src && loadIframe) {
+      // Short delay before showing message
+      const autoShowTimeout = setTimeout(() => {
+        setIsMessageVisible(true);
+        
+        // Hide message after 5 seconds
+        timeoutRef.current = setTimeout(() => {
+          setIsMessageVisible(false);
+        }, 5000);
+      }, 1000);
+      
+      return () => {
+        clearTimeout(autoShowTimeout);
+        if (timeoutRef.current) {
+          clearTimeout(timeoutRef.current);
+        }
+      };
+    }
+  }, [type, src, loadIframe]);
 
   useEffect(() => {
     const iframe = iframeRef.current;
@@ -63,31 +87,13 @@ const PhoneContent: React.FC<PhoneContentProps> = ({
       passive: true,
     });
 
-    // Show message automatically on mobile after a short delay
-    const autoShowTimeout = setTimeout(() => {
-      if (
-        !hasInteracted &&
-        window.innerWidth < 768 &&
-        type === "iframe" &&
-        src
-      ) {
-        handleIframeInteraction();
-      }
-    }, 1500);
-
     return () => {
       iframe.removeEventListener("mouseover", handleIframeInteraction);
       iframe.removeEventListener("touchstart", handleIframeInteraction);
-      if (timeoutRef.current) {
-        clearTimeout(timeoutRef.current);
-      }
-      clearTimeout(autoShowTimeout);
     };
-  }, [hasInteracted, type, src, handleIframeInteraction]);
+  }, [handleIframeInteraction, type]);
 
   // Deferred loading: load iframe only after user interaction or when scrolled into view
-  const [loadIframe, setLoadIframe] = useState(false);
-  const containerRef = useRef<HTMLDivElement>(null);
   const handleLoadIframe = useCallback(() => {
     if (!loadIframe) {
       setLoadIframe(true);
