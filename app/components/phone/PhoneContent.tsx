@@ -85,10 +85,39 @@ const PhoneContent: React.FC<PhoneContentProps> = ({
     };
   }, [hasInteracted, type, src, handleIframeInteraction]);
 
+  // Deferred loading: load iframe only after user interaction or when scrolled into view
+  const [loadIframe, setLoadIframe] = useState(false);
+  const containerRef = useRef<HTMLDivElement>(null);
+  const handleLoadIframe = useCallback(() => {
+    if (!loadIframe) {
+      setLoadIframe(true);
+      handleIframeInteraction();
+    }
+  }, [loadIframe, handleIframeInteraction]);
+
+  useEffect(() => {
+    if (type !== "iframe" || loadIframe || !containerRef.current) return;
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setLoadIframe(true);
+          observer.disconnect();
+        }
+      },
+      { rootMargin: "200px" }
+    );
+    observer.observe(containerRef.current);
+    return () => {
+      observer.disconnect();
+    };
+  }, [loadIframe, type]);
+
   // Render appropriate content based on type
+  const [isVisible, setIsVisible] = useState(false);
+
   if (type === "image" && src) {
     return (
-      <div className="phone-content-container">
+      <div className={`phone-content-container${isVisible ? " fade-in" : ""}`}>
         <Image
           src={src}
           alt={alt}
@@ -102,44 +131,59 @@ const PhoneContent: React.FC<PhoneContentProps> = ({
             objectFit: variant === "fullleaf-tea" ? "contain" : "cover",
             borderRadius: variant === "fullleaf-tea" ? "20px" : "24px",
           }}
+          onLoad={() => setIsVisible(true)}
         />
       </div>
     );
   }
 
+  useEffect(() => {
+    if (type === "iframe" && loadIframe) {
+      setIsVisible(true);
+    }
+  }, [type, loadIframe]);
+
   if (type === "iframe" && src) {
     return (
-      <div className="phone-content-container">
-        <iframe
-          ref={iframeRef}
-          src={src}
-          className={`${contentClass} ${className}`}
-          frameBorder="0"
-          title={alt}
-          loading="lazy"
-        />
+      <div
+        ref={containerRef}
+        className={`phone-content-container${isVisible ? " fade-in" : ""}`}
+        onClick={handleLoadIframe}
+      >
+        {loadIframe && (
+          <>
+            <iframe
+              ref={iframeRef}
+              src={src}
+              className={`${contentClass} ${className}`}
+              frameBorder="0"
+              title={alt}
+              loading="lazy"
+            />
 
-        <AnimatePresence>
-          {isMessageVisible && (
-            <motion.div
-              className="iframe-message"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -20 }}
-              transition={{ duration: 0.3 }}
-            >
-              <div className="message-content">
-                <div className="message-icon">✨</div>
-                <p>
-                  For the full experience, visit{" "}
-                  <a href={src} target="_blank" rel="noopener noreferrer">
-                    the website
-                  </a>
-                </p>
-              </div>
-            </motion.div>
-          )}
-        </AnimatePresence>
+            <AnimatePresence>
+              {isMessageVisible && (
+                <motion.div
+                  className="iframe-message"
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -20 }}
+                  transition={{ duration: 0.3 }}
+                >
+                  <div className="message-content">
+                    <div className="message-icon">✨</div>
+                    <p>
+                      For the full experience, visit{" "}
+                      <a href={src} target="_blank" rel="noopener noreferrer">
+                        the website
+                      </a>
+                    </p>
+                  </div>
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </>
+        )}
       </div>
     );
   }

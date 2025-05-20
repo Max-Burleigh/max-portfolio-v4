@@ -40,7 +40,8 @@ This guide focuses on the reusable phone mockup UI, primarily composed of `Phone
     *   **Interaction Message (for iframes):**
         *   When `type="iframe"`, `PhoneContent` can display a message overlay (e.g., "For the full experience, visit the website").
         *   This message appears upon first interaction (mouseover/touchstart) with the iframe or automatically on mobile after a short delay.
-        *   The message is styled by `.phone-content-container .iframe-message` rules in `PhoneMockup.css`.
+    *   The message is styled by `.phone-content-container .iframe-message` rules in `PhoneMockup.css`.
+    *   **Deferred Loading (for iframes):** The iframe is only mounted after user interaction (click/tap) or when the phone content scrolls into view, reducing initial load costs.
     *   **Styling:** The `variant` prop links to specific classes in `app/components/phone/PhoneMockup.css` that style the iframe or image appropriately within the phone. For images, `fill` and `sizes` props are used for responsiveness with `next/image`.
 
 *   **`PhoneMockup.css` (@app/components/phone/PhoneMockup.css):**
