@@ -1,7 +1,7 @@
 "use client";
 import React from "react";
 import ProjectCard from "./shared/ProjectCard";
-import { SiFlutter } from "react-icons/si";
+import { SiFlutter, SiXcode, SiAndroidstudio } from "react-icons/si";
 
 const FullLeafApp: React.FC = () => {
   const appStoreUrl =
@@ -86,8 +86,24 @@ const FullLeafApp: React.FC = () => {
           ),
           label: "Flutter",
         },
-        { icon: null, label: "Xcode" },
-        { icon: null, label: "Android Studio" },
+        {
+          icon: (
+            <SiXcode
+              className="tech-icon xcode"
+              style={{ width: "32px", height: "32px" }}
+            />
+          ),
+          label: "Xcode",
+        },
+        {
+          icon: (
+            <SiAndroidstudio
+              className="tech-icon android-studio"
+              style={{ width: "32px", height: "32px" }}
+            />
+          ),
+          label: "Android Studio",
+        },
       ]}
       imageUrl="/webp/app.webp"
       imageAlt="Portrait screenshot of Full Leaf App"
