@@ -64,7 +64,7 @@ const FullLeafTea: React.FC<FullLeafTeaProps> = ({
         {
           icon: (
             <Image
-              src="/klaviyo.png"
+              src="/webp/klaviyo.webp"
               alt="Klaviyo"
               width={38}
               height={38}
@@ -92,7 +92,7 @@ const FullLeafTea: React.FC<FullLeafTeaProps> = ({
           label: "Microsoft Ads",
         },
       ]}
-      imageUrl="/full-leaf.jpg"
+      imageUrl="/webp/full-leaf.webp"
       imageAlt="Screenshot of Full Leaf Tea Company website"
       imageTitle="Full Leaf Tea Company Website Screenshot"
       imageClassName="fullleaf-tea"

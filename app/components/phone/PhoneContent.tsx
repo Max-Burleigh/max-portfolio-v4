@@ -116,6 +116,7 @@ const PhoneContent: React.FC<PhoneContentProps> = ({
           className={`${contentClass} ${className}`}
           frameBorder="0"
           title={alt}
+          loading="lazy"
         />
 
         <AnimatePresence>
