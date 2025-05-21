@@ -48,7 +48,6 @@ html {
   padding: 0;
   overscroll-behavior: none;
   -webkit-overflow-scrolling: touch;
-  overflow: hidden; /* Prevent any rubber-band scroll of the root */
   background-color: #23252e; /* Fallback color matching the dark end of gradient */
 }
 
@@ -62,7 +61,6 @@ body {
   background: transparent; /* Let aurora-bg show through body */
   /* Prevent iOS overscroll effects */
   overscroll-behavior: none;
-  overflow: hidden; /* Prevent any rubber-band scroll of the root */
 }
 
 /* Aurora background styles moved to app/styles/components/aurora.css */
@@ -70,8 +68,6 @@ body {
 .portfolio-container {
   width: 100%;
   min-height: 100vh; /* Fallback if JS fails or before it runs */
-  height: 100vh; /* Standard viewport height */
-  overflow-y: auto;
   overflow-x: hidden;
   scroll-behavior: smooth;
   position: relative;
