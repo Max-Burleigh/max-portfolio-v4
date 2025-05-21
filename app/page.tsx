@@ -14,8 +14,7 @@ import {
 } from "framer-motion";
 import { throttle } from "lodash";
 import Image from "next/image";
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-import { AuroraBlob } from "./components/aurora"; // Keep this import
+import { AuroraBlob, CanvasAurora } from "./components/aurora"; // Keep this import for non-iOS, CanvasAurora for iOS
 import { Navigation } from "./components/navigation";
 import PlatformDetector from "./components/PlatformDetector";
 // Import modularized project components
@@ -321,7 +320,16 @@ const Portfolio = () => {
             />
           </>
         )}
+        {isIOS && <CanvasAurora />}
 
+        {/* Navigation Menu */}
+        <Navigation
+          activeSection={activeSection} // Restored
+          scrollToSection={scrollToSection} // Restored
+          sections={Object.keys(sectionRefs) as SectionKey[]} // Restored
+          menuOpen={menuOpen} // Restored
+          setMenuOpen={setMenuOpen} // Restored
+        />
         {!isMobile && (
           <motion.div
             className="cursor-circle"
