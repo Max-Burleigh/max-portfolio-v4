@@ -46,8 +46,8 @@ html {
   width: 100%;
   margin: 0;
   padding: 0;
-  overscroll-behavior: none;
   -webkit-overflow-scrolling: touch;
+  /* Modified to allow iOS safari top bar interactions */
   overflow: hidden; /* Prevent any rubber-band scroll of the root */
   background-color: #23252e; /* Fallback color matching the dark end of gradient */
 }
@@ -60,8 +60,7 @@ body {
   color: #ffffff;
   font-family: var(--font-manrope), var(--font-fallback);
   background: transparent; /* Let aurora-bg show through body */
-  /* Prevent iOS overscroll effects */
-  overscroll-behavior: none;
+  /* Modified to allow iOS native interactions */
   overflow: hidden; /* Prevent any rubber-band scroll of the root */
 }
 
@@ -77,8 +76,7 @@ body {
   position: relative;
   -webkit-overflow-scrolling: touch;
   background: transparent; /* Make transparent to show aurora gradient */
-  /* Prevent iOS Safari overscroll bounce effect */
-  overscroll-behavior-y: none;
+  /* Allow iOS native pull-to-refresh */
 }
 
 /* iOS specific height adjustments */
