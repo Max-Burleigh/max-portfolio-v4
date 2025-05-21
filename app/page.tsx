@@ -322,14 +322,11 @@ const Portfolio = () => {
         )}
         {isIOS && <CanvasAurora />}
 
-        {/* Navigation Menu */}
-        <Navigation
-          activeSection={activeSection} // Restored
-          scrollToSection={scrollToSection} // Restored
-          sections={Object.keys(sectionRefs) as SectionKey[]} // Restored
-          menuOpen={menuOpen} // Restored
-          setMenuOpen={setMenuOpen} // Restored
-        />
+        {/* 
+          REMOVED THE DUPLICATE NAVIGATION COMPONENT FROM HERE.
+          The primary Navigation component is already rendered outside this scrollable container.
+        */}
+        
         {!isMobile && (
           <motion.div
             className="cursor-circle"

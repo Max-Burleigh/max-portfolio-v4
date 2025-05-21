@@ -261,8 +261,13 @@ const Navigation: React.FC<NavigationProps> = ({
                   <motion.span
                     className="absolute inset-0 rounded-full bg-gradient-to-br from-blue-400 to-pink-400"
                     layoutId="activeNavIndicator" // Keep original ID, it's unique to mobile menu dot
-                    // Removed initial, animate, and transition props
-                    // Let layout animation handle appearance and movement.
+                    initial={{ scale: 0.8, opacity: 0.5 }}
+                    animate={{ scale: 1, opacity: 1 }}
+                    transition={{
+                      type: "spring",
+                      stiffness: 500,
+                      damping: 20,
+                    }}
                   />
                   {/* Decorative glow effect span */}
                   <motion.span
