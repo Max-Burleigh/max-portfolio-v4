@@ -58,8 +58,11 @@ const Portfolio = () => {
   // Add springs for smoother rotation
   const rotateYSpring = useSpring(rotateY, { damping: 25, stiffness: 400 });
   const rotateXSpring = useSpring(rotateX, { damping: 25, stiffness: 400 });
-  const transformPerspectiveSpring = useSpring(transformPerspective, { damping: 25, stiffness: 400 });
-  
+  const transformPerspectiveSpring = useSpring(transformPerspective, {
+    damping: 25,
+    stiffness: 400,
+  });
+
   const [isAnimating, setAnimating] = useState(false);
   const isAnimatingRef = useRef(isAnimating);
   const [glare, setGlare] = useState({ x: 50, y: 50, opacity: 0 });
@@ -68,9 +71,6 @@ const Portfolio = () => {
   const [spielOpen, setSpielOpen] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
-
-  // For the construction notice popup
-  const [showNotice, setShowNotice] = useState(true);
 
   // State for iOS detection
   const [isIOS, setIsIOS] = useState(false);
@@ -179,12 +179,14 @@ const Portfolio = () => {
       x: percent.x - 50,
       y: percent.y - 50,
     };
-    
+
     // Update motion values directly instead of setting state
     rotateY.set(round(center.x / 12));
     rotateX.set(round(-center.y / 16));
-    transformPerspective.set(round(distance(percent.x, percent.y, 50, 50) / 20) * 100);
-    
+    transformPerspective.set(
+      round(distance(percent.x, percent.y, 50, 50) / 20) * 100
+    );
+
     setGlare({
       x: percent.x,
       y: percent.y,
@@ -326,7 +328,7 @@ const Portfolio = () => {
           REMOVED THE DUPLICATE NAVIGATION COMPONENT FROM HERE.
           The primary Navigation component is already rendered outside this scrollable container.
         */}
-        
+
         {!isMobile && (
           <motion.div
             className="cursor-circle"
@@ -420,7 +422,9 @@ const Portfolio = () => {
               </div>
               <motion.div
                 ref={portraitRef}
-                className={`w-64 h-80 md:w-80 md:h-96 relative rounded-lg overflow-hidden shadow-lg flex-shrink-0 ${spielOpen ? "" : "mt-4 md:mt-0"}`}
+                className={`w-64 h-80 md:w-80 md:h-96 relative rounded-lg overflow-hidden shadow-lg flex-shrink-0 ${
+                  spielOpen ? "" : "mt-4 md:mt-0"
+                }`}
                 style={{
                   rotateY: rotateYSpring,
                   rotateX: rotateXSpring,
@@ -525,43 +529,6 @@ const Portfolio = () => {
             </div>
           </div>
         </section>
-
-        <AnimatePresence>
-          {showNotice && (
-            <motion.div
-              className="fixed bottom-4 left-0 right-0 mx-auto w-11/12 sm:w-96 bg-black/70 backdrop-blur-md p-3 rounded-lg shadow-lg z-20 border border-purple-500/30"
-              initial={{ y: 100, opacity: 0 }}
-              animate={{ y: 0, opacity: 1 }}
-              exit={{ y: 100, opacity: 0 }}
-              transition={{ type: "spring", damping: 20 }}
-            >
-              <div className="flex items-center justify-between">
-                <p className="text-xs font-mono text-white/90">
-                  Site uploaded 3-16-2025 - still under construction,
-                  performance may be buggy.
-                </p>
-                <button
-                  onClick={() => setShowNotice(false)}
-                  className="ml-2 text-white/70 hover:text-white transition-colors"
-                  aria-label="Close notice"
-                >
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    className="h-4 w-4"
-                    viewBox="0 0 20 20"
-                    fill="currentColor"
-                  >
-                    <path
-                      fillRule="evenodd"
-                      d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
-                      clipRule="evenodd"
-                    />
-                  </svg>
-                </button>
-              </div>
-            </motion.div>
-          )}
-        </AnimatePresence>
       </motion.div>
     </>
   );
