@@ -56,11 +56,11 @@ const Portfolio = () => {
   const rotateX = useMotionValue(0);
   const transformPerspective = useMotionValue(200); // z * 100
   // Add springs for smoother rotation
-  const rotateYSpring = useSpring(rotateY, { damping: 25, stiffness: 400 });
-  const rotateXSpring = useSpring(rotateX, { damping: 25, stiffness: 400 });
+  const rotateYSpring = useSpring(rotateY, { damping: 30, stiffness: 300 });
+  const rotateXSpring = useSpring(rotateX, { damping: 30, stiffness: 300 });
   const transformPerspectiveSpring = useSpring(transformPerspective, {
-    damping: 25,
-    stiffness: 400,
+    damping: 28,
+    stiffness: 320,
   });
 
   const [isAnimating, setAnimating] = useState(false);
@@ -193,6 +193,11 @@ const Portfolio = () => {
       opacity: 0.25,
     });
   };
+
+  const throttledPortraitMouseMove = useMemo(
+    () => throttle(handlePortraitMouseMove, 16), // ~60fps
+    [rotateY, rotateX, transformPerspective]
+  );
 
   const handlePortraitMouseLeave = () => {
     setAnimating(false);
@@ -439,7 +444,7 @@ const Portfolio = () => {
                   scale: 1.05,
                   transition: { duration: 0.2 },
                 }}
-                onMouseMove={handlePortraitMouseMove}
+                onMouseMove={throttledPortraitMouseMove}
                 onMouseLeave={handlePortraitMouseLeave}
               >
                 <motion.div
