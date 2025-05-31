@@ -142,11 +142,6 @@
 /* Add a clickable styling for interactive phone mockups */
 .phone-mockup.clickable {
   cursor: pointer;
-  transition: transform 0.2s ease;
-}
-
-.phone-mockup.clickable:hover {
-  transform: translateY(-5px);
 }
 
 .phone-content-container {
