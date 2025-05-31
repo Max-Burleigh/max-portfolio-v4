@@ -1,6 +1,7 @@
 ---
 trigger: model_decision
 description: You will read this file whenever you are working on anything related to the phone mockup UI
+files: app/components/phone/**, app/components/projects/**, app/styles/components/project-card.css, app/components/projects/shared/**
 ---
 
 ## Condensed Phone UI Components Guide (`app/components/phone/`)
@@ -11,24 +12,24 @@ description: You will read this file whenever you are working on anything relate
 
 **PhoneMockup.tsx**
 
-* Renders the smartphone frame; acts as a container.
-* Key props: `children`, `className`, `variant` (`default`, `fullleaf`, `fullleaf-tea`), event handlers (`onMouseEnter`, `onClick`).
-* Styles: `.phone-mockup`, `.fullleaf-mockup`, `.fullleaf-tea-mockup` (in PhoneMockup.css).
+- Renders the smartphone frame; acts as a container.
+- Key props: `children`, `className`, `variant` (`default`, `fullleaf`, `fullleaf-tea`, `fullleaf-wholesale`), event handlers (`onMouseEnter`, `onClick`).
+- Styles: `.phone-mockup`, `.fullleaf-mockup`, `.fullleaf-tea-mockup`, `.fullleaf-wholesale-mockup` (in PhoneMockup.css).
 
 **PhoneContent.tsx**
 
-* Displays iframe or image inside the phone frame.
-* Key props: `src`, `type` (`iframe`/`image`), `className`, `variant` (controls styling), `alt`, `blurDataURL`.
-* For iframes: Shows an interaction message overlay on first hover/tap; only loads iframe after interaction or when in view.
-* Styles for content (`.vinscribe-iframe`, `.full-leaf-app-screenshot`, etc.) set in PhoneMockup.css, controlled via `variant` or direct class.
+- Displays iframe or image inside the phone frame.
+- Key props: `src`, `type` (`iframe`/`image`), `className`, `variant` (controls styling), `alt`, `blurDataURL`.
+- For iframes: Shows an interaction message overlay on first hover/tap; only loads iframe after interaction or when in view.
+- Styles for content (`.vinscribe-iframe`, `.full-leaf-app-screenshot`, etc.) set in PhoneMockup.css, controlled via `variant` or direct class.
 
 **PhoneMockup.css**
 
-* Holds all phone frame/content styles and variant rules. Check here when adding or updating styles.
+- Holds all phone frame/content styles and variant rules. Check here when adding or updating styles.
 
 **index.ts**
 
-* Barrel file to export PhoneMockup and PhoneContent for easy import.
+- Barrel file to export PhoneMockup and PhoneContent for easy import.
 
 ---
 
@@ -36,7 +37,12 @@ description: You will read this file whenever you are working on anything relate
 
 ```tsx
 <PhoneMockup variant="fullleaf">
-  <PhoneContent type="image" src="/full-leaf.jpg" variant="fullleaf-tea" alt="Screenshot" />
+  <PhoneContent
+    type="image"
+    src="/full-leaf.jpg"
+    variant="fullleaf-tea"
+    alt="Screenshot"
+  />
 </PhoneMockup>
 ```
 
@@ -44,23 +50,23 @@ description: You will read this file whenever you are working on anything relate
 
 ### Integration with ProjectCard
 
-* ProjectCard auto-wraps iframe/image previews in PhoneMockup/PhoneContent unless `disablePhoneMockup` is true.
-* Picks `variant` based on project type for styling.
+- ProjectCard auto-wraps iframe/image previews in PhoneMockup/PhoneContent unless `disablePhoneMockup` is true.
+- Picks `variant` based on project type for styling.
 
 ---
 
 ### Style/Feature Changes Checklist
 
-* When you add or modify variants, classes, or interactive logic in PhoneMockup or PhoneContent, update this guide and PhoneMockup.css.
+- When you add or modify variants, classes, or interactive logic in PhoneMockup or PhoneContent, update this guide and PhoneMockup.css.
 
 ---
 
 ### Key Points
 
-* **Aspect Ratio**: Phone frame keeps smartphone shape.
-* **Performance**: Iframes/images lazy load; images use blur placeholders.
-* **Interactivity**: Pass event handlers for clickable/hoverable phones. Iframe message handled by PhoneContent.
-* **Responsiveness**: Confirm styles work on all screen sizes.
+- **Aspect Ratio**: Phone frame keeps smartphone shape.
+- **Performance**: Iframes/images lazy load; images use blur placeholders.
+- **Interactivity**: Pass event handlers for clickable/hoverable phones. Iframe message handled by PhoneContent.
+- **Responsiveness**: Confirm styles work on all screen sizes.
 
 ---
 

@@ -1,6 +1,6 @@
 ---
-description: 
-globs: app/components/phone/**
+description: Phone mockup component variants, styling guidelines, and creation patterns for project cards
+globs: app/components/phone/**, app/components/projects/**, app/styles/components/project-card.css, app/components/projects/shared/**
 alwaysApply: false
 ---
 ## Phone UI Components Guide (`app/components/phone/`)
@@ -18,9 +18,10 @@ This guide focuses on the reusable phone mockup UI, primarily composed of `Phone
     *   **Key Props:**
         *   `children`: Expects `<PhoneContent />` or other elements to be displayed inside the phone.
         *   `className`: Allows for additional custom styling.
-        *   `variant`: Can be `"default"`, `"fullleaf"`, or `"fullleaf-tea"`.
+        *   `variant`: Can be `"default"`, `"fullleaf"`, `"fullleaf-tea"`, or `"fullleaf-wholesale"`.
             *   `"fullleaf"` applies `fullleaf-mockup` class for specific styles (e.g., for the `FullLeafApp` display).
-            *   `"fullleaf-tea"` applies `fullleaf-tea-mockup` class.
+            *   `"fullleaf-tea"` applies `fullleaf-tea-mockup` class (standard dimensions).
+            *   `"fullleaf-wholesale"` applies `fullleaf-wholesale-mockup` class (custom 375/812 aspect ratio, 280px max-width).
         *   `onMouseEnter`, `onClick`: Event handlers, often used to make the mockup interactive (e.g., trigger an animation or message when passed down from `ProjectCard`). If these are present, a `cursor: pointer` style is applied via inline styles and the `.clickable` class (though `.clickable` class is in `PhoneMockup.css` and not directly tied to these props in the TSX component's logic, the inline style handles the cursor).
     *   **Styling:** The base styles are in `app/components/phone/PhoneMockup.css`. Look for classes like `.phone-mockup`, `.fullleaf-mockup`, and `.fullleaf-tea-mockup`.
 

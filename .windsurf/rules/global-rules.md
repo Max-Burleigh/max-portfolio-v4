@@ -1,10 +1,38 @@
 ---
 trigger: always_on
+files: app/**/*.{tsx,ts,css,scss}, *.{js,ts,tsx,jsx,css,scss,json}, package.json, next.config.*, tsconfig.json, tailwind.config.*
 ---
 
 ## Portfolio Global Styles — Condensed Cheat Sheet
 
 **Framework:** NextJS 15 + Tailwind v4
+
+## Development Commands
+
+- `npm run dev` - Start development server with hot reload
+- `npm run build` - Create production build
+- `npm run start` - Start production server
+- `npm run lint` - Run ESLint checks
+
+## Key Technologies
+
+- **React 19** with TypeScript for type safety
+- **Framer Motion v12** for animations and gestures
+- **Platform detection** for iOS-specific optimizations
+- **Throttled event handlers** for 60fps performance
+
+## Performance Patterns
+
+- Use motion values for hardware-accelerated animations instead of state
+- Throttle mouse/scroll events to maintain smooth performance
+- Lazy load iframes and images on user interaction
+
+## Component Patterns
+
+- Each component directory exports via `index.ts` barrel files
+- Project cards use shared `ProjectCardProps` interface in `projects/shared/types.ts`
+- Interactive states handled through refs and motion values
+- **For project cards with phone mockups**: Always check screenshot dimensions first to determine if a custom aspect ratio variant is needed
 
 ---
 
