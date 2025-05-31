@@ -37,8 +37,8 @@
 
 /* Project grid layout */
 .project-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+  display: flex;
+  flex-direction: column;
   gap: 2.5rem;
   margin-top: 2rem;
   width: 100%;
@@ -46,6 +46,7 @@
 
 @media (min-width: 900px) {
   .project-grid {
+    display: grid;
     grid-template-columns: repeat(1, minmax(360px, 1fr));
     gap: 2.5rem;
   }
@@ -118,6 +119,12 @@
 
 /* Full Leaf specific styles */
 .fullleaf-message {
+  left: auto;
+  right: calc(100% - 150px);
+  transform: none;
+}
+
+.fullleaf-wholesale-message {
   left: auto;
   right: calc(100% - 150px);
   transform: none;
@@ -315,15 +322,6 @@
 @media (max-width: 768px) {
   /* All card layouts have standardized order now, so no need to specify for each card */
 
-  .project-card.vinscribe-card .vinscribe-iframe {
-    width: 280px !important;
-    height: 480px !important;
-    margin: 0 auto;
-  }
-
-  .vinscribe-iframe {
-    height: auto !important; /* Only on mobile */
-  }
 
   .project-card.full-leaf-app-card img {
     margin: 0 auto !important;
