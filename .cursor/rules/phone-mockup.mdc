@@ -9,7 +9,7 @@ alwaysApply: false
 
 This guide focuses on the reusable phone mockup UI, primarily composed of `PhoneMockup.tsx` and `PhoneContent.tsx`. These components are used to display project previews (either iframes or images) within a stylized phone frame.
 
----
+--
 
 ### 1. Core Phone Components
 

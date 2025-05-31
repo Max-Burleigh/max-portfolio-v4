@@ -4,7 +4,7 @@ import "./PhoneMockup.css";
 interface PhoneMockupProps {
   children: React.ReactNode;
   className?: string;
-  variant?: "default" | "fullleaf" | "fullleaf-tea";
+  variant?: "default" | "fullleaf" | "fullleaf-tea" | "fullleaf-wholesale";
   onMouseEnter?: () => void;
   onClick?: () => void;
 }
@@ -23,6 +23,8 @@ const PhoneMockup: React.FC<PhoneMockupProps> = ({
       ? "fullleaf-mockup"
       : variant === "fullleaf-tea"
       ? "fullleaf-tea-mockup"
+      : variant === "fullleaf-wholesale"
+      ? "fullleaf-wholesale-mockup"
       : "";
 
   return (

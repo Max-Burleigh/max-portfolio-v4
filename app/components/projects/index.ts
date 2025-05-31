@@ -1,6 +1,7 @@
 export { default as ProjectCard } from "./shared/ProjectCard";
 export { default as Vinscribe } from "./Vinscribe";
 export { default as FullLeafTea } from "./FullLeafTea";
+export { default as FullLeafWholesale } from "./FullLeafWholesale";
 export { default as FullLeafApp } from "./FullLeafApp";
 export { default as Quailmail } from "./Quailmail";
 export { default as ShopDowntown } from "./ShopDowntown";

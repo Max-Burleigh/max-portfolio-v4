@@ -1,3 +1,4 @@
+// File: app/components/phone/PhoneContent.tsx
 "use client";
 import React, { useState, useRef, useEffect, useCallback } from "react";
 import Image from "next/image";
@@ -8,7 +9,12 @@ interface PhoneContentProps {
   src?: string;
   type?: "iframe" | "image";
   className?: string;
-  variant?: "vinscribe" | "carlypsphoto" | "fullleaf" | "fullleaf-tea";
+  variant?:
+    | "vinscribe"
+    | "carlypsphoto"
+    | "fullleaf"
+    | "fullleaf-tea"
+    | "fullleaf-wholesale";
   alt?: string; // For image type
   blurDataURL?: string; // Custom blur placeholder for image loading
 }
@@ -26,7 +32,6 @@ const PhoneContent: React.FC<PhoneContentProps> = ({
   const iframeRef = useRef<HTMLIFrameElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
 
-  // Determine the content class based on variant
   const contentClass =
     variant === "vinscribe"
       ? "vinscribe-iframe"
@@ -36,13 +41,10 @@ const PhoneContent: React.FC<PhoneContentProps> = ({
       ? "full-leaf-app-screenshot"
       : variant === "fullleaf-tea"
       ? "fullleaf-tea"
+      : variant === "fullleaf-wholesale"
+      ? "fullleaf-wholesale"
       : "";
 
-  // No more dynamic interaction handling required
-
-  // No more event listeners needed since the message is always visible
-
-  // Deferred loading: load iframe only after user interaction or when scrolled into view
   const handleLoadIframe = useCallback(() => {
     if (!loadIframe) {
       setLoadIframe(true);
@@ -66,28 +68,39 @@ const PhoneContent: React.FC<PhoneContentProps> = ({
     };
   }, [loadIframe, type]);
 
-  // Render appropriate content based on type
   const [isVisible, setIsVisible] = useState(false);
 
-  // We'll no longer immediately set isVisible when loadIframe becomes true
-  // Instead, we'll set it when the iframe actually loads its content
-
   if (type === "image" && src) {
+    const imageStyle: React.CSSProperties = {
+      objectFit:
+        variant === "fullleaf-tea" || variant === "fullleaf-wholesale"
+          ? "contain"
+          : "cover",
+      backgroundColor: variant === "fullleaf-wholesale" ? "white" : undefined,
+    };
+
+    // Let CSS handle border-radius for specific variants if classes are applied.
+    // Apply a default radius only if no specific variant class is expected to handle it.
+    if (
+      variant !== "fullleaf-tea" &&
+      variant !== "fullleaf-wholesale" &&
+      variant !== "fullleaf" /* fullleaf (app) has its own CSS for radius */
+    ) {
+      imageStyle.borderRadius = "24px"; // Default for generic phone content
+    }
+
     return (
       <div className={`phone-content-container${isVisible ? " fade-in" : ""}`}>
         <Image
           src={src}
           alt={alt}
-          className={`${contentClass} ${className}`}
+          className={`${contentClass} ${className}`} // This applies .fullleaf-wholesale (or .fullleaf-tea etc.)
           fill
           sizes="(max-width: 768px) 100vw, 50vw"
           loading="lazy"
           placeholder="blur"
           blurDataURL={blurDataURL}
-          style={{
-            objectFit: variant === "fullleaf-tea" ? "contain" : "cover",
-            borderRadius: variant === "fullleaf-tea" ? "20px" : "24px",
-          }}
+          style={imageStyle}
           onLoad={() => setIsVisible(true)}
         />
       </div>

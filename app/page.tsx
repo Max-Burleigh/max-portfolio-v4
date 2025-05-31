@@ -21,6 +21,7 @@ import PlatformDetector from "./components/PlatformDetector";
 import {
   Vinscribe,
   FullLeafTea,
+  FullLeafWholesale,
   FullLeafApp,
   Quailmail,
   ShopDowntown,
@@ -131,6 +132,9 @@ const Portfolio = () => {
   const [activeSection, setActiveSection] = useState<SectionKey>("about");
   const containerRef = useRef<HTMLDivElement>(null);
   const [fullLeafMessageState, setFullLeafMessageState] = useState<
+    "hidden" | "first" | "second"
+  >("hidden");
+  const [fullLeafWholesaleMessageState, setFullLeafWholesaleMessageState] = useState<
     "hidden" | "first" | "second"
   >("hidden");
 
@@ -250,6 +254,18 @@ const Portfolio = () => {
   const handleFullLeafClick = () => {
     if (fullLeafMessageState === "first") {
       setFullLeafMessageState("second");
+    }
+  };
+
+  const handleFullLeafWholesaleMouseEnter = () => {
+    if (fullLeafWholesaleMessageState === "hidden") {
+      setFullLeafWholesaleMessageState("first");
+    }
+  };
+
+  const handleFullLeafWholesaleClick = () => {
+    if (fullLeafWholesaleMessageState === "first") {
+      setFullLeafWholesaleMessageState("second");
     }
   };
 
@@ -495,6 +511,11 @@ const Portfolio = () => {
               fullLeafMessageState={fullLeafMessageState}
               onMouseEnter={handleFullLeafMouseEnter}
               onClick={handleFullLeafClick}
+            />
+            <FullLeafWholesale
+              fullLeafWholesaleMessageState={fullLeafWholesaleMessageState}
+              onMouseEnter={handleFullLeafWholesaleMouseEnter}
+              onClick={handleFullLeafWholesaleClick}
             />
             <FullLeafApp />
             <Quailmail />

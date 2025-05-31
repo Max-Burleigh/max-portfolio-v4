@@ -33,6 +33,7 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
   // Determine if this is a fullleaf app card for variant purposes
   const isFullLeafApp = className?.includes("full-leaf-app-card");
   const isFullLeafTea = className?.includes("fullleaf-card");
+  const isFullLeafWholesale = className?.includes("fullleaf-wholesale-card");
 
   return (
     <div
@@ -101,7 +102,15 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
         ) : (
           <div className="project-media">
             <PhoneMockup
-              variant={isFullLeafApp ? "fullleaf" : "default"}
+              variant={
+                isFullLeafApp 
+                  ? "fullleaf" 
+                  : isFullLeafTea 
+                  ? "fullleaf-tea" 
+                  : isFullLeafWholesale 
+                  ? "fullleaf-wholesale" 
+                  : "default"
+              }
               className={onClick || onMouseEnter ? "clickable" : ""}
               onMouseEnter={onMouseEnter}
               onClick={onClick}
@@ -128,6 +137,8 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
                       ? "fullleaf"
                       : isFullLeafTea
                       ? "fullleaf-tea"
+                      : isFullLeafWholesale
+                      ? "fullleaf-wholesale"
                       : undefined
                   }
                   alt={imageAlt || `Screenshot of ${title}`}
