@@ -134,9 +134,8 @@ const Portfolio = () => {
   const [fullLeafMessageState, setFullLeafMessageState] = useState<
     "hidden" | "first" | "second"
   >("hidden");
-  const [fullLeafWholesaleMessageState, setFullLeafWholesaleMessageState] = useState<
-    "hidden" | "first" | "second"
-  >("hidden");
+  const [fullLeafWholesaleMessageState, setFullLeafWholesaleMessageState] =
+    useState<"hidden" | "first" | "second">("hidden");
 
   type SectionKey = "about" | "projects" | "contact";
   const sectionKeys: SectionKey[] = ["about", "projects", "contact"];
@@ -167,40 +166,43 @@ const Portfolio = () => {
     [handleMouseMove]
   );
 
-  const handlePortraitMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
-    setAnimating(true);
-    if (!portraitRef.current) return;
-    const rect = portraitRef.current.getBoundingClientRect();
-    const absolute = {
-      x: e.clientX - rect.left,
-      y: e.clientY - rect.top,
-    };
-    const percent = {
-      x: round((100 / rect.width) * absolute.x),
-      y: round((100 / rect.height) * absolute.y),
-    };
-    const center = {
-      x: percent.x - 50,
-      y: percent.y - 50,
-    };
+  const handlePortraitMouseMove = useCallback(
+    (e: React.MouseEvent<HTMLDivElement>) => {
+      setAnimating(true);
+      if (!portraitRef.current) return;
+      const rect = portraitRef.current.getBoundingClientRect();
+      const absolute = {
+        x: e.clientX - rect.left,
+        y: e.clientY - rect.top,
+      };
+      const percent = {
+        x: round((100 / rect.width) * absolute.x),
+        y: round((100 / rect.height) * absolute.y),
+      };
+      const center = {
+        x: percent.x - 50,
+        y: percent.y - 50,
+      };
 
-    // Update motion values directly instead of setting state
-    rotateY.set(round(center.x / 12));
-    rotateX.set(round(-center.y / 16));
-    transformPerspective.set(
-      round(distance(percent.x, percent.y, 50, 50) / 20) * 100
-    );
+      // Update motion values directly instead of setting state
+      rotateY.set(round(center.x / 12));
+      rotateX.set(round(-center.y / 16));
+      transformPerspective.set(
+        round(distance(percent.x, percent.y, 50, 50) / 20) * 100
+      );
 
-    setGlare({
-      x: percent.x,
-      y: percent.y,
-      opacity: 0.25,
-    });
-  };
+      setGlare({
+        x: percent.x,
+        y: percent.y,
+        opacity: 0.25,
+      });
+    },
+    [rotateY, rotateX, transformPerspective, setGlare]
+  );
 
   const throttledPortraitMouseMove = useMemo(
     () => throttle(handlePortraitMouseMove, 16), // ~60fps
-    [rotateY, rotateX, transformPerspective]
+    [handlePortraitMouseMove]
   );
 
   const handlePortraitMouseLeave = () => {

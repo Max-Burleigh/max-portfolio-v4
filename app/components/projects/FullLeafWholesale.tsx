@@ -3,7 +3,7 @@ import React from "react";
 import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
 import { SiHtml5, SiCss3, SiJavascript, SiShopify } from "react-icons/si";
-import { ModernWindowsIcon } from "../index";
+
 import ProjectCard from "./shared/ProjectCard";
 
 interface FullLeafWholesaleProps {
@@ -23,9 +23,12 @@ const FullLeafWholesale: React.FC<FullLeafWholesaleProps> = ({
       description={
         <>
           <p>
-            B2B wholesale platform for bulk tea orders and business partnerships.
+            B2B wholesale platform for bulk tea orders and business
+            partnerships.
           </p>
-          <p>Enabling cafes, restaurants, and retailers to source premium tea.</p>
+          <p>
+            Enabling cafes, restaurants, and retailers to source premium tea.
+          </p>
         </>
       }
       websiteUrl="https://wholesale.fullleafteacompany.com"
