@@ -130,6 +130,24 @@
   transform: none;
 }
 
+.vinscribe-message {
+  left: auto;
+  right: calc(100% - 150px);
+  transform: none;
+}
+
+.carly-message {
+  left: auto;
+  right: calc(100% - 150px);
+  transform: none;
+}
+
+.shopdowntown-message {
+  left: auto;
+  right: calc(100% - 150px);
+  transform: none;
+}
+
 .project-card.full-leaf-app-card {
   flex-basis: 100%;
   max-width: 100%;

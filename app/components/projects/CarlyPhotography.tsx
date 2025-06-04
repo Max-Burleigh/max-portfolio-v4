@@ -1,10 +1,21 @@
 "use client";
 import React from "react";
 import Image from "next/image";
+import { motion, AnimatePresence } from "framer-motion";
 import { SiTailwindcss } from "react-icons/si";
 import ProjectCard from "./shared/ProjectCard";
 
-const CarlyPhotography: React.FC = () => {
+interface CarlyPhotographyProps {
+  carlyMessageState: "hidden" | "first" | "second";
+  onMouseEnter: () => void;
+  onClick: () => void;
+}
+
+const CarlyPhotography: React.FC<CarlyPhotographyProps> = ({
+  carlyMessageState,
+  onMouseEnter,
+  onClick,
+}) => {
   const iconStyle = { width: "32px", height: "32px" };
 
   return (
@@ -38,10 +49,43 @@ const CarlyPhotography: React.FC = () => {
           label: "TailwindCSS",
         },
       ]}
-      iframeUrl="https://carlypsphoto.com"
-      iframeTitle="Carly Pearl-Sacks Photography Mobile Preview"
-      iframeClassName="carlypsphoto-iframe"
-    />
+      imageUrl="/project-images/carly-phone-mockup-corner-to-corner.png"
+      imageAlt="Screenshot of Carly Pearl-Sacks Photography website"
+      imageTitle="Carly Pearl-Sacks Photography Website Screenshot"
+      imageBlurDataURL="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNTkyIiBoZWlnaHQ9IjEyNDAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGRlZnM+PGxpbmVhckdyYWRpZW50IGlkPSJnIiB4MT0iMCUiIHkxPSIwJSIgeDI9IjAlIiB5Mj0iMTAwJSI+PHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iIzIwMjAyMCIgLz48c3RvcCBvZmZzZXQ9IjEwMCUiIHN0b3AtY29sb3I9IiMxMDEwMTAiIC8+PC9saW5lYXJHcmFkaWVudD48L2RlZnM+PHJlY3Qgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgZmlsbD0idXJsKCNnKSIvPjwvc3ZnPg=="
+      disablePhoneMockup={true}
+      onMouseEnter={onMouseEnter}
+      onClick={onClick}
+    >
+      <AnimatePresence>
+        {carlyMessageState !== "hidden" && (
+          <motion.div
+            className="iframe-message carly-message"
+            style={{
+              pointerEvents:
+                carlyMessageState === "second" ? "auto" : "none",
+            }}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -20 }}
+            transition={{ duration: 0.3 }}
+          >
+            <div className="message-content">
+              <div className="message-icon">📸</div>
+              <p>
+                <a
+                  href="https://carlypsphoto.com"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  Click to visit the website for the full experience
+                </a>
+              </p>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </ProjectCard>
   );
 };
 

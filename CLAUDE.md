@@ -123,6 +123,19 @@ When adding a new project card that includes a phone mockup with a screenshot:
 
 4. **Test on mobile** to ensure borders look consistent with other cards
 
+### Full Leaf Cards (Updated Implementation)
+
+The Full Leaf Tea Company and Full Leaf Tea Company Wholesale cards have been updated to bypass the phone mockup UI entirely:
+
+- **Images**: Use 592x1240 corner-to-corner phone mockup images from `public/project-images/`
+  - `full-leaf-tea-phone-mockup-corner-to-corner.png`
+  - `wholesale-full-leaf-phone-mockup-corner-to-corner.png`
+- **Phone Mockup**: Disabled via `disablePhoneMockup={true}` prop since images contain the phone UI
+- **Messaging**: Simplified to single direct link: "Click to visit the website for the full experience"
+- **Animation**: Retains sliding animation mechanism on scroll/interaction
+
+Other project cards will be updated to match this pattern in the future.
+
 ### TypeScript Configuration
 
 - Absolute imports configured with `@/*` path mapping

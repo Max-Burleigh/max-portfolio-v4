@@ -31,6 +31,7 @@ const FullLeafTea: React.FC<FullLeafTeaProps> = ({
       websiteUrl="https://fullleafteacompany.com"
       className="fullleaf-card full-leaf-tea-card"
       reverseLayout={true}
+      disablePhoneMockup={true}
       techStack={[
         {
           icon: (
@@ -92,7 +93,7 @@ const FullLeafTea: React.FC<FullLeafTeaProps> = ({
           label: "Microsoft Ads",
         },
       ]}
-      imageUrl="/webp/full-leaf.webp"
+      imageUrl="/project-images/full-leaf-tea-phone-mockup-corner-to-corner.png"
       imageAlt="Screenshot of Full Leaf Tea Company website"
       imageTitle="Full Leaf Tea Company Website Screenshot"
       imageClassName="fullleaf-tea"
@@ -115,29 +116,15 @@ const FullLeafTea: React.FC<FullLeafTeaProps> = ({
           >
             <div className="message-content">
               <div className="message-icon">🫖</div>
-              <p>Try tapping harder.</p>
-              <AnimatePresence>
-                {fullLeafMessageState === "second" && (
-                  <motion.p
-                    key="second-message"
-                    initial={{ opacity: 0, y: 10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: 10 }}
-                    transition={{ duration: 0.3 }}
-                    style={{ marginTop: 8 }}
-                  >
-                    Just kidding, it's just a picture.
-                    <br />
-                    <a
-                      href="https://fullleafteacompany.com"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                    >
-                      Click to visit the website
-                    </a>
-                  </motion.p>
-                )}
-              </AnimatePresence>
+              <p>
+                <a
+                  href="https://fullleafteacompany.com"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  Click to visit the website for the full experience
+                </a>
+              </p>
             </div>
           </motion.div>
         )}

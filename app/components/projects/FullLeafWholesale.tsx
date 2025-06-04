@@ -34,6 +34,7 @@ const FullLeafWholesale: React.FC<FullLeafWholesaleProps> = ({
       websiteUrl="https://wholesale.fullleafteacompany.com"
       className="fullleaf-wholesale-card full-leaf-wholesale-card"
       reverseLayout={false}
+      disablePhoneMockup={true}
       techStack={[
         {
           icon: (
@@ -87,7 +88,7 @@ const FullLeafWholesale: React.FC<FullLeafWholesaleProps> = ({
           label: "Klaviyo",
         },
       ]}
-      imageUrl="/webp/full-leaf-wholesale.webp"
+      imageUrl="/project-images/wholesale-full-leaf-phone-mockup-corner-to-corner.png"
       imageAlt="Screenshot of Full Leaf Tea Company Wholesale website"
       imageTitle="Full Leaf Tea Company Wholesale Website Screenshot"
       imageClassName="fullleaf-wholesale"
@@ -110,29 +111,15 @@ const FullLeafWholesale: React.FC<FullLeafWholesaleProps> = ({
           >
             <div className="message-content">
               <div className="message-icon">📦</div>
-              <p>Try ordering in bulk.</p>
-              <AnimatePresence>
-                {fullLeafWholesaleMessageState === "second" && (
-                  <motion.p
-                    key="second-message"
-                    initial={{ opacity: 0, y: 10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: 10 }}
-                    transition={{ duration: 0.3 }}
-                    style={{ marginTop: 8 }}
-                  >
-                    Just kidding, it's just a picture.
-                    <br />
-                    <a
-                      href="https://wholesale.fullleafteacompany.com"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                    >
-                      Click to visit the wholesale site
-                    </a>
-                  </motion.p>
-                )}
-              </AnimatePresence>
+              <p>
+                <a
+                  href="https://wholesale.fullleafteacompany.com"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  Click to visit the website for the full experience
+                </a>
+              </p>
             </div>
           </motion.div>
         )}

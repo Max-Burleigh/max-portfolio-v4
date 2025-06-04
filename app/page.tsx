@@ -136,6 +136,15 @@ const Portfolio = () => {
   >("hidden");
   const [fullLeafWholesaleMessageState, setFullLeafWholesaleMessageState] =
     useState<"hidden" | "first" | "second">("hidden");
+  const [vinscribeMessageState, setVinscribeMessageState] = useState<
+    "hidden" | "first" | "second"
+  >("hidden");
+  const [carlyMessageState, setCarlyMessageState] = useState<
+    "hidden" | "first" | "second"
+  >("hidden");
+  const [shopDowntownMessageState, setShopDowntownMessageState] = useState<
+    "hidden" | "first" | "second"
+  >("hidden");
 
   type SectionKey = "about" | "projects" | "contact";
   const sectionKeys: SectionKey[] = ["about", "projects", "contact"];
@@ -268,6 +277,42 @@ const Portfolio = () => {
   const handleFullLeafWholesaleClick = () => {
     if (fullLeafWholesaleMessageState === "first") {
       setFullLeafWholesaleMessageState("second");
+    }
+  };
+
+  const handleVinscribeMouseEnter = () => {
+    if (vinscribeMessageState === "hidden") {
+      setVinscribeMessageState("first");
+    }
+  };
+
+  const handleVinscribeClick = () => {
+    if (vinscribeMessageState === "first") {
+      setVinscribeMessageState("second");
+    }
+  };
+
+  const handleCarlyMouseEnter = () => {
+    if (carlyMessageState === "hidden") {
+      setCarlyMessageState("first");
+    }
+  };
+
+  const handleCarlyClick = () => {
+    if (carlyMessageState === "first") {
+      setCarlyMessageState("second");
+    }
+  };
+
+  const handleShopDowntownMouseEnter = () => {
+    if (shopDowntownMessageState === "hidden") {
+      setShopDowntownMessageState("first");
+    }
+  };
+
+  const handleShopDowntownClick = () => {
+    if (shopDowntownMessageState === "first") {
+      setShopDowntownMessageState("second");
     }
   };
 
@@ -508,7 +553,11 @@ const Portfolio = () => {
         >
           <h2>Projects</h2>
           <div className="project-grid">
-            <Vinscribe />
+            <Vinscribe
+              vinscribeMessageState={vinscribeMessageState}
+              onMouseEnter={handleVinscribeMouseEnter}
+              onClick={handleVinscribeClick}
+            />
             <FullLeafTea
               fullLeafMessageState={fullLeafMessageState}
               onMouseEnter={handleFullLeafMouseEnter}
@@ -521,8 +570,16 @@ const Portfolio = () => {
             />
             <FullLeafApp />
             <Quailmail />
-            <ShopDowntown />
-            <CarlyPhotography />
+            <ShopDowntown
+              shopDowntownMessageState={shopDowntownMessageState}
+              onMouseEnter={handleShopDowntownMouseEnter}
+              onClick={handleShopDowntownClick}
+            />
+            <CarlyPhotography
+              carlyMessageState={carlyMessageState}
+              onMouseEnter={handleCarlyMouseEnter}
+              onClick={handleCarlyClick}
+            />
             <BasedChat />
           </div>
         </section>
