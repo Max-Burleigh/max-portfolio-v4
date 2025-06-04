@@ -55,9 +55,10 @@ const Vinscribe: React.FC = () => {
           label: "TailwindCSS",
         },
       ]}
-      iframeUrl="https://www.vinscribe.com"
-      iframeTitle="VINSCRIBE Mobile Preview"
-      iframeClassName="vinscribe-iframe"
+      imageUrl="/webp/vinscribe.webp"
+      imageAlt="Screenshot of VINSCRIBE website"
+      imageTitle="VINSCRIBE Website Screenshot"
+      disablePhoneMockup={true}
     />
   );
 };
