@@ -92,11 +92,12 @@ const FullLeafTea: React.FC<FullLeafTeaProps> = ({
           label: "Microsoft Ads",
         },
       ]}
-      imageUrl="/webp/full-leaf.webp"
+      imageUrl="/webp/fullleaftea.webp"
       imageAlt="Screenshot of Full Leaf Tea Company website"
       imageTitle="Full Leaf Tea Company Website Screenshot"
       imageClassName="fullleaf-tea"
       imageBlurDataURL="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAwIiBoZWlnaHQ9IjEyMDAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGRlZnM+PGxpbmVhckdyYWRpZW50IGlkPSJnIiB4MT0iMCUiIHkxPSIwJSIgeDI9IjAlIiB5Mj0iMTAwJSI+PHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iIzIwNWUzYiIgLz48c3RvcCBvZmZzZXQ9IjEwMCUiIHN0b3AtY29sb3I9IiMxMDMwMjAiIC8+PC9saW5lYXJHcmFkaWVudD48L2RlZnM+PHJlY3Qgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgZmlsbD0idXJsKCNnKSIvPjwvc3ZnPg=="
+      disablePhoneMockup={true}
       onMouseEnter={onMouseEnter}
       onClick={onClick}
     >

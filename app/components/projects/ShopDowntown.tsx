@@ -62,9 +62,10 @@ const ShopDowntown: React.FC = () => {
           label: "MySQL",
         },
       ]}
-      iframeUrl="https://shopdowntown.org/"
-      iframeTitle="Shop Downtown Mobile Preview"
-      iframeClassName="shopdowntown-iframe vinscribe-iframe"
+      imageUrl="/webp/shopdowntown.webp"
+      imageAlt="Screenshot of Shop Downtown website"
+      imageTitle="Shop Downtown Website Screenshot"
+      disablePhoneMockup={true}
     />
   );
 };

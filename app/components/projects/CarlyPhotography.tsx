@@ -38,9 +38,10 @@ const CarlyPhotography: React.FC = () => {
           label: "TailwindCSS",
         },
       ]}
-      iframeUrl="https://carlypsphoto.com"
-      iframeTitle="Carly Pearl-Sacks Photography Mobile Preview"
-      iframeClassName="carlypsphoto-iframe"
+      imageUrl="/webp/carlypsphoto.webp"
+      imageAlt="Screenshot of Carly Pearl-Sacks Photography website"
+      imageTitle="Carly Pearl-Sacks Photography Website Screenshot"
+      disablePhoneMockup={true}
     />
   );
 };
