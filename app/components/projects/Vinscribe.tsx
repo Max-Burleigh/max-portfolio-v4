@@ -5,13 +5,11 @@ import { SiFirebase, SiTypescript, SiTailwindcss } from "react-icons/si";
 import ProjectCard from "./shared/ProjectCard";
 
 interface VinscribeProps {
-  vinscribeMessageState: "hidden" | "first" | "second";
   onMouseEnter: () => void;
   onClick: () => void;
 }
 
 const Vinscribe: React.FC<VinscribeProps> = ({
-  vinscribeMessageState,
   onMouseEnter,
   onClick,
 }) => {
