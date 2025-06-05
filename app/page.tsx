@@ -131,20 +131,6 @@ const Portfolio = () => {
 
   const [activeSection, setActiveSection] = useState<SectionKey>("about");
   const containerRef = useRef<HTMLDivElement>(null);
-  const [fullLeafMessageState, setFullLeafMessageState] = useState<
-    "hidden" | "first" | "second"
-  >("hidden");
-  const [fullLeafWholesaleMessageState, setFullLeafWholesaleMessageState] =
-    useState<"hidden" | "first" | "second">("hidden");
-  const [vinscribeMessageState, setVinscribeMessageState] = useState<
-    "hidden" | "first" | "second"
-  >("hidden");
-  const [carlyMessageState, setCarlyMessageState] = useState<
-    "hidden" | "first" | "second"
-  >("hidden");
-  const [shopDowntownMessageState, setShopDowntownMessageState] = useState<
-    "hidden" | "first" | "second"
-  >("hidden");
 
   type SectionKey = "about" | "projects" | "contact";
   const sectionKeys: SectionKey[] = ["about", "projects", "contact"];
@@ -256,65 +242,6 @@ const Portfolio = () => {
     };
   }, [activeSection, sectionRefs]);
 
-  const handleFullLeafMouseEnter = () => {
-    if (fullLeafMessageState === "hidden") {
-      setFullLeafMessageState("first");
-    }
-  };
-
-  const handleFullLeafClick = () => {
-    if (fullLeafMessageState === "first") {
-      setFullLeafMessageState("second");
-    }
-  };
-
-  const handleFullLeafWholesaleMouseEnter = () => {
-    if (fullLeafWholesaleMessageState === "hidden") {
-      setFullLeafWholesaleMessageState("first");
-    }
-  };
-
-  const handleFullLeafWholesaleClick = () => {
-    if (fullLeafWholesaleMessageState === "first") {
-      setFullLeafWholesaleMessageState("second");
-    }
-  };
-
-  const handleVinscribeMouseEnter = () => {
-    if (vinscribeMessageState === "hidden") {
-      setVinscribeMessageState("first");
-    }
-  };
-
-  const handleVinscribeClick = () => {
-    if (vinscribeMessageState === "first") {
-      setVinscribeMessageState("second");
-    }
-  };
-
-  const handleCarlyMouseEnter = () => {
-    if (carlyMessageState === "hidden") {
-      setCarlyMessageState("first");
-    }
-  };
-
-  const handleCarlyClick = () => {
-    if (carlyMessageState === "first") {
-      setCarlyMessageState("second");
-    }
-  };
-
-  const handleShopDowntownMouseEnter = () => {
-    if (shopDowntownMessageState === "hidden") {
-      setShopDowntownMessageState("first");
-    }
-  };
-
-  const handleShopDowntownClick = () => {
-    if (shopDowntownMessageState === "first") {
-      setShopDowntownMessageState("second");
-    }
-  };
 
   const blobProps = {
     style: { zIndex: 0, willChange: "transform, opacity" },
@@ -553,33 +480,13 @@ const Portfolio = () => {
         >
           <h2>Projects</h2>
           <div className="project-grid">
-            <Vinscribe
-              vinscribeMessageState={vinscribeMessageState}
-              onMouseEnter={handleVinscribeMouseEnter}
-              onClick={handleVinscribeClick}
-            />
-            <FullLeafTea
-              fullLeafMessageState={fullLeafMessageState}
-              onMouseEnter={handleFullLeafMouseEnter}
-              onClick={handleFullLeafClick}
-            />
-            <FullLeafWholesale
-              fullLeafWholesaleMessageState={fullLeafWholesaleMessageState}
-              onMouseEnter={handleFullLeafWholesaleMouseEnter}
-              onClick={handleFullLeafWholesaleClick}
-            />
+            <Vinscribe />
+            <FullLeafTea />
+            <FullLeafWholesale />
             <FullLeafApp />
             <Quailmail />
-            <ShopDowntown
-              shopDowntownMessageState={shopDowntownMessageState}
-              onMouseEnter={handleShopDowntownMouseEnter}
-              onClick={handleShopDowntownClick}
-            />
-            <CarlyPhotography
-              carlyMessageState={carlyMessageState}
-              onMouseEnter={handleCarlyMouseEnter}
-              onClick={handleCarlyClick}
-            />
+            <ShopDowntown />
+            <CarlyPhotography />
             <BasedChat />
           </div>
         </section>
