@@ -101,29 +101,29 @@ const Portfolio = () => {
   }, []);
 
   // Set portfolio container height to exact viewport height (for iOS Safari overscroll fix)
-  useEffect(() => {
-    const portfolioContainer = containerRef.current;
+  // useEffect(() => {
+  //   const portfolioContainer = containerRef.current;
 
-    const setRealViewportHeight = () => {
-      if (portfolioContainer) {
-        portfolioContainer.style.height = `${window.innerHeight}px`;
-      }
-    };
+  //   const setRealViewportHeight = () => {
+  //     if (portfolioContainer) {
+  //       portfolioContainer.style.height = `${window.innerHeight}px`;
+  //     }
+  //   };
 
-    if (typeof window !== "undefined") {
-      window.addEventListener("resize", setRealViewportHeight);
-      window.addEventListener("orientationchange", setRealViewportHeight);
-      setRealViewportHeight();
+  //   if (typeof window !== "undefined") {
+  //     window.addEventListener("resize", setRealViewportHeight);
+  //     window.addEventListener("orientationchange", setRealViewportHeight);
+  //     setRealViewportHeight();
 
-      const timeoutId = setTimeout(setRealViewportHeight, 100);
+  //     const timeoutId = setTimeout(setRealViewportHeight, 100);
 
-      return () => {
-        window.removeEventListener("resize", setRealViewportHeight);
-        window.removeEventListener("orientationchange", setRealViewportHeight);
-        clearTimeout(timeoutId);
-      };
-    }
-  }, []);
+  //     return () => {
+  //       window.removeEventListener("resize", setRealViewportHeight);
+  //       window.removeEventListener("orientationchange", setRealViewportHeight);
+  //       clearTimeout(timeoutId);
+  //     };
+  //   }
+  // }, []);
 
   useEffect(() => {
     isAnimatingRef.current = isAnimating;
@@ -235,8 +235,8 @@ const Portfolio = () => {
     const container = containerRef.current;
     if (!container) return;
     const handleScroll = throttle(() => {
-      const scrollY = container.scrollTop;
-      const viewportHeight = container.clientHeight;
+      const scrollY = window.scrollY;
+      const viewportHeight = window.innerHeight;
       const offsets = Object.entries(sectionRefs).map(([key, ref]) => ({
         key: key as SectionKey,
         offset: ref.current ? ref.current.offsetTop : 0,
@@ -248,10 +248,10 @@ const Portfolio = () => {
         setActiveSection(current);
       }
     }, 100);
-    container.addEventListener("scroll", handleScroll);
+    window.addEventListener("scroll", handleScroll);
     setTimeout(handleScroll, 100);
     return () => {
-      container.removeEventListener("scroll", handleScroll);
+      window.removeEventListener("scroll", handleScroll);
       handleScroll.cancel();
     };
   }, [activeSection, sectionRefs]);

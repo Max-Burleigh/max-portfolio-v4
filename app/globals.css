@@ -48,8 +48,8 @@ html {
   padding: 0;
   -webkit-overflow-scrolling: touch;
   /* Modified to allow iOS safari top bar interactions */
-  overflow: hidden; /* Prevent any rubber-band scroll of the root */
   background-color: #23252e; /* Fallback color matching the dark end of gradient */
+  scroll-behavior: smooth; /* Moved from .portfolio-container */
 }
 
 body {
@@ -61,7 +61,6 @@ body {
   font-family: var(--font-manrope), var(--font-fallback);
   background: transparent; /* Let aurora-bg show through body */
   /* Modified to allow iOS native interactions */
-  overflow: hidden; /* Prevent any rubber-band scroll of the root */
 }
 
 /* Aurora background styles moved to app/styles/components/aurora.css */
@@ -69,20 +68,18 @@ body {
 .portfolio-container {
   width: 100%;
   min-height: 100vh; /* Fallback if JS fails or before it runs */
-  height: 100vh; /* Standard viewport height */
-  overflow-y: auto;
-  overflow-x: hidden;
-  scroll-behavior: smooth;
   position: relative;
-  -webkit-overflow-scrolling: touch;
   background: transparent; /* Make transparent to show aurora gradient */
   /* Allow iOS native pull-to-refresh */
 }
 
 /* iOS specific height adjustments */
+/* This rule is no longer necessary as we are not setting a fixed height on the container anymore. */
+/*
 .is-ios-device .portfolio-container {
-  height: -webkit-fill-available; /* Uses the full available height on iOS Safari, accounting for toolbars */
+  height: -webkit-fill-available;
 }
+*/
 
 /* Aurora blob styles moved to app/styles/components/aurora.css */
 
