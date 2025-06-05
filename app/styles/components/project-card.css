@@ -118,34 +118,14 @@
 }
 
 /* Full Leaf specific styles */
-.fullleaf-message {
-  left: auto;
-  right: calc(100% - 150px);
-  transform: none;
-}
-
-.fullleaf-wholesale-message {
-  left: auto;
-  right: calc(100% - 150px);
-  transform: none;
-}
-
-.vinscribe-message {
-  left: auto;
-  right: calc(100% - 150px);
-  transform: none;
-}
-
-.carly-message {
-  left: auto;
-  right: calc(100% - 150px);
-  transform: none;
-}
-
+.fullleaf-message,
+.fullleaf-wholesale-message,
+.vinscribe-message,
+.carly-message,
 .shopdowntown-message {
-  left: auto;
-  right: calc(100% - 150px);
-  transform: none;
+  left: 50%;
+  right: auto;
+  transform: translateX(-50%);
 }
 
 .project-card.full-leaf-app-card {
