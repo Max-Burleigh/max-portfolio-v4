@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useState } from "react";
 import Image from "next/image";
 import {
   PhoneMockup,
@@ -34,6 +34,8 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
   const isFullLeafApp = className?.includes("full-leaf-app-card");
   const isFullLeafTea = className?.includes("fullleaf-card");
   const isFullLeafWholesale = className?.includes("fullleaf-wholesale-card");
+
+  const [imageLoaded, setImageLoaded] = useState(false);
 
   return (
     <div
@@ -76,26 +78,34 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
               />
             )}
             {imageUrl && (
-              <Image
-                src={imageUrl}
-                alt={imageAlt || `Screenshot of ${title}`}
-                title={imageTitle}
-                width={600}
-                height={1200}
-                loading="lazy"
-                placeholder="blur"
-                blurDataURL={imageBlurDataURL || "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAwIiBoZWlnaHQ9IjEyMDAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHJlY3Qgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgZmlsbD0iIzIwMjAyMCIvPjwvc3ZnPg=="}
-                className={`${title
-                  .toLowerCase()
-                  .replace(/\s+/g, "-")}-screenshot ${imageClassName || ""}`}
-                style={{
-                  width: "100%",
-                  height: "100%",
-                  objectFit: "cover",
-                  borderRadius: "1.5rem",
-                  boxShadow: "0 4px 24px rgba(0,0,0,0.12)",
-                }}
-              />
+              <div
+                className={`project-image-container${imageLoaded ? " fade-in" : ""}`}
+              >
+                <Image
+                  src={imageUrl}
+                  alt={imageAlt || `Screenshot of ${title}`}
+                  title={imageTitle}
+                  width={600}
+                  height={1200}
+                  loading="lazy"
+                  placeholder="blur"
+                  blurDataURL={
+                    imageBlurDataURL ||
+                    "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAwIiBoZWlnaHQ9IjEyMDAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHJlY3Qgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgZmlsbD0iIzIwMjAyMCIvPjwvc3ZnPg=="
+                  }
+                  className={`${title
+                    .toLowerCase()
+                    .replace(/\s+/g, "-")}-screenshot ${imageClassName || ""}`}
+                  style={{
+                    width: "100%",
+                    height: "100%",
+                    objectFit: "cover",
+                    borderRadius: "1.5rem",
+                    boxShadow: "0 4px 24px rgba(0,0,0,0.12)",
+                  }}
+                  onLoad={() => setImageLoaded(true)}
+                />
+              </div>
             )}
             {children}
           </div>
