@@ -117,36 +117,7 @@
   margin-top: 2rem;
 }
 
-/* Full Leaf specific styles */
-.fullleaf-message {
-  left: auto;
-  right: calc(100% - 150px);
-  transform: none;
-}
-
-.fullleaf-wholesale-message {
-  left: auto;
-  right: calc(100% - 150px);
-  transform: none;
-}
-
-.vinscribe-message {
-  left: auto;
-  right: calc(100% - 150px);
-  transform: none;
-}
-
-.carly-message {
-  left: auto;
-  right: calc(100% - 150px);
-  transform: none;
-}
-
-.shopdowntown-message {
-  left: auto;
-  right: calc(100% - 150px);
-  transform: none;
-}
+/* Project-specific message styles removed - now using centered positioning from interactive-iframe.css */
 
 .project-card.full-leaf-app-card {
   flex-basis: 100%;
@@ -220,18 +191,7 @@
 
 /* Mobile responsive styles */
 @media (max-width: 768px) {
-  /* Fix for 'for the full experience' notification */
-  .iframe-message {
-    bottom: 10px !important;
-    left: 50% !important;
-    right: auto !important;
-    transform: translateX(-50%) !important;
-    width: 80% !important;
-    padding: 10px !important;
-    max-width: 260px !important;
-    z-index: 100 !important;
-    background: rgba(0, 0, 0, 0.9) !important;
-  }
+  /* Message styles handled by interactive-iframe.css */
 
   .iframe-message p {
     font-size: 0.85rem !important;
@@ -311,18 +271,7 @@
     margin: 0 auto;
   }
 
-  /* Phone content message */
-  .phone-content-container .iframe-message {
-    bottom: 10px !important;
-    left: 50% !important;
-    right: auto !important;
-    transform: translateX(-50%) !important;
-    width: 85% !important;
-    padding: 8px 12px !important;
-    max-width: 240px !important;
-    z-index: 100 !important;
-    background: rgba(0, 0, 0, 0.85) !important;
-  }
+  /* Phone content message styles handled by interactive-iframe.css */
 
   /* Full Leaf Tea specific adjustments for mobile */
   .project-card.fullleaf-card .project-media {
@@ -360,16 +309,7 @@
     justify-content: center;
   }
 
-  .fullleaf-message {
-    bottom: 10px !important;
-    left: 50% !important;
-    right: auto !important;
-    transform: translateX(-50%) !important;
-    width: 85% !important;
-    padding: 8px 12px !important;
-    max-width: 240px !important;
-    z-index: 100 !important;
-  }
+  /* Fullleaf message styles handled by interactive-iframe.css */
 }
 
 /* Tablet specific adjustments */

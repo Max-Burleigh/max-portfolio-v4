@@ -1,7 +1,6 @@
 "use client";
 import React from "react";
 import Image from "next/image";
-import { motion, AnimatePresence } from "framer-motion";
 import { SiHtml5, SiCss3, SiJavascript, SiGoogle } from "react-icons/si";
 import { ModernWindowsIcon } from "../index";
 import ProjectCard from "./shared/ProjectCard";
@@ -101,34 +100,20 @@ const FullLeafTea: React.FC<FullLeafTeaProps> = ({
       onMouseEnter={onMouseEnter}
       onClick={onClick}
     >
-      <AnimatePresence>
-        {fullLeafMessageState !== "hidden" && (
-          <motion.div
-            className="iframe-message fullleaf-message"
-            style={{
-              pointerEvents:
-                fullLeafMessageState === "second" ? "auto" : "none",
-            }}
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -20 }}
-            transition={{ duration: 0.3 }}
-          >
-            <div className="message-content">
-              <div className="message-icon">🫖</div>
-              <p>
-                <a
-                  href="https://fullleafteacompany.com"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  Click to visit the website for the full experience
-                </a>
-              </p>
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+      <div className="iframe-message fullleaf-message">
+        <div className="message-content">
+          <div className="message-icon">🫖</div>
+          <p>
+            <a
+              href="https://fullleafteacompany.com"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Click to visit the website for the full experience
+            </a>
+          </p>
+        </div>
+      </div>
     </ProjectCard>
   );
 };

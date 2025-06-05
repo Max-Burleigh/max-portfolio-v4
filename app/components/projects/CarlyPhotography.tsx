@@ -1,7 +1,6 @@
 "use client";
 import React from "react";
 import Image from "next/image";
-import { motion, AnimatePresence } from "framer-motion";
 import { SiTailwindcss } from "react-icons/si";
 import ProjectCard from "./shared/ProjectCard";
 
@@ -57,34 +56,20 @@ const CarlyPhotography: React.FC<CarlyPhotographyProps> = ({
       onMouseEnter={onMouseEnter}
       onClick={onClick}
     >
-      <AnimatePresence>
-        {carlyMessageState !== "hidden" && (
-          <motion.div
-            className="iframe-message carly-message"
-            style={{
-              pointerEvents:
-                carlyMessageState === "second" ? "auto" : "none",
-            }}
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -20 }}
-            transition={{ duration: 0.3 }}
-          >
-            <div className="message-content">
-              <div className="message-icon">📸</div>
-              <p>
-                <a
-                  href="https://carlypsphoto.com"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  Click to visit the website for the full experience
-                </a>
-              </p>
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+      <div className="iframe-message carly-message">
+        <div className="message-content">
+          <div className="message-icon">📸</div>
+          <p>
+            <a
+              href="https://carlypsphoto.com"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Click to visit the website for the full experience
+            </a>
+          </p>
+        </div>
+      </div>
     </ProjectCard>
   );
 };

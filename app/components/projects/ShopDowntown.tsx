@@ -1,6 +1,5 @@
 "use client";
 import React from "react";
-import { motion, AnimatePresence } from "framer-motion";
 import { SiHtml5, SiCss3, SiJavascript, SiPhp, SiMysql } from "react-icons/si";
 import ProjectCard from "./shared/ProjectCard";
 
@@ -81,34 +80,20 @@ const ShopDowntown: React.FC<ShopDowntownProps> = ({
       onMouseEnter={onMouseEnter}
       onClick={onClick}
     >
-      <AnimatePresence>
-        {shopDowntownMessageState !== "hidden" && (
-          <motion.div
-            className="iframe-message shopdowntown-message"
-            style={{
-              pointerEvents:
-                shopDowntownMessageState === "second" ? "auto" : "none",
-            }}
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -20 }}
-            transition={{ duration: 0.3 }}
-          >
-            <div className="message-content">
-              <div className="message-icon">🏪</div>
-              <p>
-                <a
-                  href="https://shopdowntown.org/"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  Click to visit the website for the full experience
-                </a>
-              </p>
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+      <div className="iframe-message shopdowntown-message">
+        <div className="message-content">
+          <div className="message-icon">🏪</div>
+          <p>
+            <a
+              href="https://shopdowntown.org/"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Click to visit the website for the full experience
+            </a>
+          </p>
+        </div>
+      </div>
     </ProjectCard>
   );
 };

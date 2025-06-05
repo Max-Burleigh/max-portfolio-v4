@@ -1,7 +1,6 @@
 "use client";
 import React from "react";
 import Image from "next/image";
-import { motion, AnimatePresence } from "framer-motion";
 import { SiFirebase, SiTypescript, SiTailwindcss } from "react-icons/si";
 import ProjectCard from "./shared/ProjectCard";
 
@@ -74,34 +73,20 @@ const Vinscribe: React.FC<VinscribeProps> = ({
       onMouseEnter={onMouseEnter}
       onClick={onClick}
     >
-      <AnimatePresence>
-        {vinscribeMessageState !== "hidden" && (
-          <motion.div
-            className="iframe-message vinscribe-message"
-            style={{
-              pointerEvents:
-                vinscribeMessageState === "second" ? "auto" : "none",
-            }}
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -20 }}
-            transition={{ duration: 0.3 }}
-          >
-            <div className="message-content">
-              <div className="message-icon">🚗</div>
-              <p>
-                <a
-                  href="https://www.vinscribe.com"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  Click to visit the website for the full experience
-                </a>
-              </p>
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+      <div className="iframe-message vinscribe-message">
+        <div className="message-content">
+          <div className="message-icon">🚗</div>
+          <p>
+            <a
+              href="https://www.vinscribe.com"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Click to visit the website for the full experience
+            </a>
+          </p>
+        </div>
+      </div>
     </ProjectCard>
   );
 };

@@ -12,22 +12,23 @@
   height: 100%;
 }
 
-/* Iframe message overlay */
+/* Iframe message overlay - Always visible and positioned towards bottom */
 .iframe-message {
   position: absolute;
   bottom: 20px;
   left: 50%;
   transform: translateX(-50%);
-  background: rgba(10, 15, 30, 0.85);
+  background: rgba(10, 15, 30, 0.95);
   backdrop-filter: blur(12px);
   border-radius: 12px;
   padding: 12px 16px;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2), 0 0 0 1px rgba(255, 255, 255, 0.1);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3), 0 0 0 1px rgba(255, 255, 255, 0.1);
   width: 90%;
   max-width: 280px;
   z-index: 10;
   border: 1px solid rgba(255, 255, 255, 0.08);
-  pointer-events: none;
+  pointer-events: auto;
+  opacity: 1;
 }
 
 /* Message content layout */
@@ -85,8 +86,8 @@
 /* Mobile responsive styles */
 @media (max-width: 600px) {
   .iframe-message {
-    bottom: 15px;
     padding: 10px 14px;
+    max-width: 260px;
   }
 
   .message-icon {
