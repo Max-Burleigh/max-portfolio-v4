@@ -554,29 +554,24 @@ const Portfolio = () => {
           <h2>Projects</h2>
           <div className="project-grid">
             <Vinscribe
-              vinscribeMessageState={vinscribeMessageState}
               onMouseEnter={handleVinscribeMouseEnter}
               onClick={handleVinscribeClick}
             />
             <FullLeafTea
-              fullLeafMessageState={fullLeafMessageState}
               onMouseEnter={handleFullLeafMouseEnter}
               onClick={handleFullLeafClick}
             />
             <FullLeafWholesale
-              fullLeafWholesaleMessageState={fullLeafWholesaleMessageState}
               onMouseEnter={handleFullLeafWholesaleMouseEnter}
               onClick={handleFullLeafWholesaleClick}
             />
             <FullLeafApp />
             <Quailmail />
             <ShopDowntown
-              shopDowntownMessageState={shopDowntownMessageState}
               onMouseEnter={handleShopDowntownMouseEnter}
               onClick={handleShopDowntownClick}
             />
             <CarlyPhotography
-              carlyMessageState={carlyMessageState}
               onMouseEnter={handleCarlyMouseEnter}
               onClick={handleCarlyClick}
             />
