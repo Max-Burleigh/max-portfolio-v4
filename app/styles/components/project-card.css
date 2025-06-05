@@ -234,7 +234,7 @@
 
   .project-card .project-media {
     width: 100%;
-    max-width: 100%;
+    max-width: 280px;
     order: 1;
     margin: 0 auto;
   }
@@ -280,12 +280,7 @@
 
   /* Phone content message styles handled by interactive-iframe.css */
 
-  /* Full Leaf Tea specific adjustments for mobile */
-  .project-card.fullleaf-card .project-media {
-    max-width: 280px;
-    margin: 0 auto;
-  }
-
+  /* Full Leaf Tea phone mockup scale */
   .project-card.fullleaf-card .phone-mockup {
     transform: scale(0.9);
     margin: 0 auto;
