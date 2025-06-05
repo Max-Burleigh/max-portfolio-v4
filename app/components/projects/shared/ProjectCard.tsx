@@ -1,6 +1,7 @@
 "use client";
 import React from "react";
 import Image from "next/image";
+import { motion } from "framer-motion";
 import {
   PhoneMockup,
   PhoneContent,
@@ -76,26 +77,34 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
               />
             )}
             {imageUrl && (
-              <Image
-                src={imageUrl}
-                alt={imageAlt || `Screenshot of ${title}`}
-                title={imageTitle}
-                width={600}
-                height={1200}
-                loading="lazy"
-                placeholder="blur"
-                blurDataURL={imageBlurDataURL || "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAwIiBoZWlnaHQ9IjEyMDAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHJlY3Qgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgZmlsbD0iIzIwMjAyMCIvPjwvc3ZnPg=="}
-                className={`${title
-                  .toLowerCase()
-                  .replace(/\s+/g, "-")}-screenshot ${imageClassName || ""}`}
-                style={{
-                  width: "100%",
-                  height: "100%",
-                  objectFit: "cover",
-                  borderRadius: "1.5rem",
-                  boxShadow: "0 4px 24px rgba(0,0,0,0.12)",
-                }}
-              />
+              <motion.div
+                className="project-image-container"
+                initial={{ opacity: 0, y: 50 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, amount: 0.3 }}
+                transition={{ duration: 0.6, ease: "easeOut" }}
+              >
+                <Image
+                  src={imageUrl}
+                  alt={imageAlt || `Screenshot of ${title}`}
+                  title={imageTitle}
+                  width={600}
+                  height={1200}
+                  loading="lazy"
+                  placeholder="blur"
+                  blurDataURL={imageBlurDataURL || "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAwIiBoZWlnaHQ9IjEyMDAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHJlY3Qgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgZmlsbD0iIzIwMjAyMCIvPjwvc3ZnPg=="}
+                  className={`${title
+                    .toLowerCase()
+                    .replace(/\s+/g, "-")}-screenshot ${imageClassName || ""}`}
+                  style={{
+                    width: "100%",
+                    height: "100%",
+                    objectFit: "cover",
+                    borderRadius: "1.5rem",
+                    boxShadow: "0 4px 24px rgba(0,0,0,0.12)",
+                  }}
+                />
+              </motion.div>
             )}
             {children}
           </div>

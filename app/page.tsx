@@ -480,8 +480,9 @@ const Portfolio = () => {
                           I believe as we head towards a world where AI is
                           writing more and more of our code, we will need
                           forward-thinking individuals like myself that can
-                          think critically and creatively to solve problems.
-                          Hopefully you'll find me best to do this!
+                          think critically and creatively to solve problems. I'm
+                          excited about the opportunity to contribute my skills
+                          and passion to your organization (or project)!
                         </p>
                       </div>
                     </motion.div>
