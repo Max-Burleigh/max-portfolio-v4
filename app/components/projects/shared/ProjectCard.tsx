@@ -62,11 +62,10 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
         (disablePhoneMockup ? (
           <div
             className="project-media"
-            style={
-              onClick || onMouseEnter
-                ? { position: "relative", cursor: "pointer" }
-                : undefined
-            }
+            style={{
+              position: "relative",
+              cursor: onClick || onMouseEnter ? "pointer" : undefined,
+            }}
             onMouseEnter={onMouseEnter}
             onClick={onClick}
           >
@@ -110,10 +109,10 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
             {children}
           </div>
         ) : (
-          <div className="project-media">
+          <div className="project-media" style={{ position: "relative" }}>
             <PhoneMockup
               variant={
-                isFullLeafApp 
+                isFullLeafApp
                   ? "fullleaf" 
                   : isFullLeafTea 
                   ? "fullleaf-tea" 
