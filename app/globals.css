@@ -60,6 +60,7 @@ body {
   color: #ffffff;
   font-family: var(--font-manrope), var(--font-fallback);
   background: transparent; /* Let aurora-bg show through body */
+  overflow-x: hidden; /* Prevent horizontal scrolling from absolute elements */
   /* Modified to allow iOS native interactions */
 }
 
