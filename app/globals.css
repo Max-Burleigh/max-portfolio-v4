@@ -1,0 +1,157 @@
+@import "tailwindcss";
+
+/* Import modular CSS files */
+@import "./styles/components/aurora.css";
+@import "./styles/components/navigation.css";
+@import "./styles/components/tech-stack.css";
+@import "./styles/components/project-card.css";
+@import "./styles/components/interactive-iframe.css";
+
+:root {
+  --background: #0a0a0a; /* Dark mode default */
+  --foreground: #ededed;
+  --font-fallback: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+    Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+}
+
+@media (prefers-color-scheme: light) {
+  :root {
+    --background: #ffffff;
+    --foreground: #171717;
+  }
+}
+
+body {
+  color: var(--foreground);
+  font-family: var(--font-manrope), var(--font-fallback);
+}
+
+/* Text shadow utility class for better readability on gradients */
+.text-shadow-sm {
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+}
+
+/***********************************************
+ * Aurora Gradient Background (More Detailed)
+ ***********************************************/
+html {
+  height: 100%; /* Ensure html takes full height */
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  -webkit-overflow-scrolling: touch;
+  /* Modified to allow iOS safari top bar interactions */
+  background-color: #23252e; /* Fallback color matching the dark end of gradient */
+  scroll-behavior: smooth; /* Moved from .portfolio-container */
+}
+
+body {
+  min-height: 100%; /* Allow body to grow if needed, but cover viewport */
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  color: #ffffff;
+  font-family: var(--font-manrope), var(--font-fallback);
+  background: transparent; /* Let aurora-bg show through body */
+  overflow-x: hidden; /* Prevent horizontal scrolling from absolute elements */
+  /* Modified to allow iOS native interactions */
+}
+
+/* Aurora background styles moved to app/styles/components/aurora.css */
+
+.portfolio-container {
+  width: 100%;
+  min-height: 100vh; /* Fallback if JS fails or before it runs */
+  position: relative;
+  background: transparent; /* Make transparent to show aurora gradient */
+  /* Allow iOS native pull-to-refresh */
+}
+
+/* iOS specific height adjustments */
+/* This rule is no longer necessary as we are not setting a fixed height on the container anymore. */
+/*
+.is-ios-device .portfolio-container {
+  height: -webkit-fill-available;
+}
+*/
+
+/* Aurora blob styles moved to app/styles/components/aurora.css */
+
+/* Navigation styles moved to app/styles/components/navigation.css */
+
+/* Mobile hamburger button styles moved to navigation.css */
+
+/* Tablet hamburger button styles moved to navigation.css */
+
+/* Mobile menu animations moved to navigation.css */
+/* Individual blob styles moved to app/styles/components/aurora.css */
+
+/* Cursor circle effect moved to app/styles/components/aurora.css */
+/* Side navigation styles moved to app/styles/components/navigation.css */
+
+.section {
+  position: relative;
+  width: 100vw;
+  min-height: 100vh;
+  max-width: 1000px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  z-index: 2;
+  padding-left: 3vw;
+  padding-right: 3vw;
+}
+
+h1 {
+  font-family: var(--font-space-grotesk), var(--font-fallback);
+  font-size: 2.5rem;
+  margin-bottom: 1rem;
+  font-weight: 700;
+}
+
+h2 {
+  font-family: var(--font-space-grotesk), var(--font-fallback);
+  font-size: 2rem;
+  margin-bottom: 0.75rem;
+  font-weight: 700;
+}
+
+/* Mobile styles for h2 */
+@media (max-width: 768px) {
+  h2 {
+    margin-bottom: 0;
+  }
+}
+
+.side-nav,
+.side-nav button,
+.section,
+a,
+.project-card {
+  font-family: var(--font-manrope), var(--font-fallback);
+}
+
+a {
+  color: #00ffd5;
+  text-decoration: none;
+  font-weight: 600;
+}
+
+/* Phone mockup styles moved to app/components/PhoneMockup.css */
+
+/* Interactive Iframe Component Styles moved to app/styles/components/interactive-iframe.css */
+
+/* Tech stack styles moved to app/styles/components/tech-stack.css */
+
+/* Project card styles moved to app/styles/components/project-card.css */
+
+/* Mobile navigation and overlay styles moved to app/styles/components/navigation.css */

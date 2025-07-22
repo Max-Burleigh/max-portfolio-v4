@@ -1,0 +1,129 @@
+---
+description: Phone mockup component variants, styling guidelines, and creation patterns for project cards
+globs: app/components/phone/**, app/components/projects/**, app/styles/components/project-card.css, app/components/projects/shared/**
+alwaysApply: false
+---
+## Phone UI Components Guide (`app/components/phone/`)
+
+## IMPORTANT NOTE: If you make any changes that are related to the phone UI, you MUST update these rules and create a running checklist of the changes.
+
+This guide focuses on the reusable phone mockup UI, primarily composed of `PhoneMockup.tsx` and `PhoneContent.tsx`. These components are used to display project previews (either iframes or images) within a stylized phone frame.
+
+--
+
+### 1. Core Phone Components
+
+*   **`PhoneMockup.tsx` (@app/components/phone/PhoneMockup.tsx):**
+    *   **Purpose:** Renders the visual chrome/frame of a smartphone. It acts as a container for the content.
+    *   **Key Props:**
+        *   `children`: Expects `<PhoneContent />` or other elements to be displayed inside the phone.
+        *   `className`: Allows for additional custom styling.
+        *   `variant`: Can be `"default"`, `"fullleaf"`, `"fullleaf-tea"`, or `"fullleaf-wholesale"`.
+            *   `"fullleaf"` applies `fullleaf-mockup` class for specific styles (e.g., for the `FullLeafApp` display).
+            *   `"fullleaf-tea"` applies `fullleaf-tea-mockup` class (standard dimensions).
+            *   `"fullleaf-wholesale"` applies `fullleaf-wholesale-mockup` class (custom 375/812 aspect ratio, 280px max-width).
+        *   `onMouseEnter`, `onClick`: Event handlers, often used to make the mockup interactive (e.g., trigger an animation or message when passed down from `ProjectCard`). If these are present, a `cursor: pointer` style is applied via inline styles and the `.clickable` class (though `.clickable` class is in `PhoneMockup.css` and not directly tied to these props in the TSX component's logic, the inline style handles the cursor).
+    *   **Styling:** The base styles are in `app/components/phone/PhoneMockup.css`. Look for classes like `.phone-mockup`, `.fullleaf-mockup`, and `.fullleaf-tea-mockup`.
+
+*   **`PhoneContent.tsx` (@app/components/phone/PhoneContent.tsx):**
+    *   **Purpose:** Renders the actual content *inside* the `PhoneMockup`. This can be an iframe (for live website previews) or an image. It also handles an interaction message for iframes.
+    *   **Key Props:**
+        *   `src`: The URL for the iframe or image.
+        *   `type`: Specifies the content type, either `"iframe"` (default) or `"image"`.
+        *   `className`: Additional custom styling for the content area.
+        *   `variant`: Determines specific styling classes for the content.
+            *   `"vinscribe"`: Applies `.vinscribe-iframe` class.
+            *   `"carlypsphoto"`: Applies `.carlypsphoto-iframe` class.
+            *   `"fullleaf"`: Applies `.full-leaf-app-screenshot` class (typically for images).
+            *   `"fullleaf-tea"`: Applies `.fullleaf-tea` class to the image (typically for images). This variant also has specific image styling: `object-fit: "contain"` and `border-radius: "20px"`.
+        *   `alt`: Alt text, crucial for images and also used as the `title` for iframes.
+        *   `blurDataURL`: Custom blur placeholder for Next.js Image component.
+    *   **Interaction Message (for iframes):**
+        *   When `type="iframe"`, `PhoneContent` can display a message overlay (e.g., "For the full experience, visit the website").
+        *   This message appears upon first interaction (mouseover/touchstart) with the iframe or automatically on mobile after a short delay.
+    *   The message is styled by `.phone-content-container .iframe-message` rules in `PhoneMockup.css`.
+    *   **Deferred Loading (for iframes):** The iframe is only mounted after user interaction (click/tap) or when the phone content scrolls into view, reducing initial load costs.
+    *   **Styling:** The `variant` prop links to specific classes in `app/components/phone/PhoneMockup.css` that style the iframe or image appropriately within the phone. For images, `fill` and `sizes` props are used for responsiveness with `next/image`.
+
+*   **`PhoneMockup.css` (@app/components/phone/PhoneMockup.css):**
+    *   Contains all the CSS rules that style the phone frame, the screen area, and the different content variants.
+    *   Key classes to be aware of:
+        *   `.phone-mockup`: Main container for the phone.
+        *   `.fullleaf-mockup`: Specific styles for the `fullleaf` variant of the phone mockup.
+        *   `.vinscribe-iframe`, `.carlypsphoto-iframe`: Styles for iframe content within the phone.
+        *   `.full-leaf-app-screenshot`: Styles for image content, especially for the Full Leaf App.
+        *   `.phone-content-container img.fullleaf-tea`: Specific styles for the "Full Leaf Tea" image variant within the phone content.
+        *   `.phone-mockup.clickable`: Styles applied when the phone mockup should appear interactive (e.g., hover effects).
+        *   `.phone-content-container`: Wrapper for the content within the phone screen.
+        *   `.phone-content-container .iframe-message`: Styles for the interaction message overlay displayed by `PhoneContent`.
+
+*   **`index.ts` (@app/components/phone/index.ts):**
+    *   A barrel file that exports `PhoneMockup` and `PhoneContent` for easier importing into other components (like `ProjectCard.tsx` or `app/components/index.ts`).
+
+---
+
+### 2. How They Work Together
+
+Typically, you'll use `PhoneMockup` as the parent and nest `PhoneContent` within it:
+
+```tsx
+<PhoneMockup variant="default" className="some-custom-class">
+  <PhoneContent
+    type="iframe"
+    src="https://example.com"
+    variant="vinscribe"
+    alt="Example Website Preview"
+  />
+</PhoneMockup>
+```
+
+Or for an image, like the Full Leaf Tea project:
+
+```tsx
+<PhoneMockup variant="fullleaf-tea"> {/* Example if the mockup itself needs specific styling */}
+  <PhoneContent
+    type="image"
+    src="/full-leaf.jpg"
+    variant="fullleaf-tea"
+    alt="Full Leaf Tea Screenshot"
+    className="custom-image-style"
+    blurDataURL="your-blur-data-url"
+  />
+</PhoneMockup>
+```
+
+---
+
+### 3. Usage within `ProjectCard.tsx`
+
+The `ProjectCard.tsx` component (@app/components/projects/shared/ProjectCard.tsx) is the primary consumer of these phone UI components.
+
+*   If `disablePhoneMockup` prop is `false` (which is the default) on a `ProjectCard`, and an `iframeUrl` or `imageUrl` is provided, the `ProjectCard` will automatically render these inside a `PhoneMockup` and `PhoneContent`.
+*   The `ProjectCard` passes down relevant props like `iframeUrl` (as `src` to `PhoneContent`), `iframeTitle` (as `alt`), and specific classes or variants based on the project.
+*   It determines the `PhoneMockup` variant (e.g., to `'fullleaf'` if `className` includes `full-leaf-app-card`, otherwise `'default'`).
+*   It determines the `PhoneContent` variant based on the project type. For example:
+    *   If `isFullLeafApp` is true: `PhoneContent` variant is `"fullleaf"`.
+    *   If `isFullLeafTea` is true: `PhoneContent` variant is `"fullleaf-tea"`.
+    *   For other projects like Vinscribe or CarlyPhotography, `PhoneContent` might receive its variant indirectly through `className` passed from `iframeClassName` (e.g., `PhoneContent` receives `vinscribe-iframe` as its `className` and `variant` prop might be `"vinscribe"` or default, relying on the direct class for iframe styling).
+
+---
+
+### 4. Adding or Modifying Phone Styles
+
+*   **General Phone Frame:** Modify `.phone-mockup` in `app/components/phone/PhoneMockup.css`.
+*   **Specific Phone Frame Variants:** Modify or add classes like `.fullleaf-mockup` or `.fullleaf-tea-mockup`. Update `PhoneMockup.tsx` props (`variant` type) and logic if new frame variants are added.
+*   **Content Variants:**
+    *   If adding a new *type* of content presentation (like a new branded iframe style or image treatment), add a new class to `app/components/phone/PhoneMockup.css` (e.g., `.new-content-style`).
+    *   Then, update `PhoneContent.tsx` to accept a new `variant` value and apply your new class in its `contentClass` logic or image styling.
+*   **Responsiveness:** Ensure any new styles are responsive. Media queries are present in `app/components/phone/PhoneMockup.css`.
+
+---
+
+### 5. Key Considerations
+
+*   **Aspect Ratios:** The CSS aims to maintain a typical smartphone aspect ratio. Be mindful of this when embedding content.
+*   **Performance:** Iframes can be resource-intensive. `loading="lazy"` is used for iframes and images. `blurDataURL` is used for images.
+*   **Interactions:** If the phone mockup needs to be clickable or respond to hover, ensure the `onClick` or `onMouseEnter` props are passed to `PhoneMockup`. `PhoneContent` manages its own interaction message for iframes.
+*   **Styling Cascade:** Styles for content (e.g., `.vinscribe-iframe`) are defined in `PhoneMockup.css` and applied based on the `variant` prop in `PhoneContent` or classes passed via `iframeClassName`/`imageClassName` to `PhoneContent`.
+
+This focused guide should help in understanding and working with the phone UI elements. Remember to check `app/components/phone/PhoneMockup.css` for detailed styling.

@@ -1,0 +1,104 @@
+/**
+ * Tech Stack Component Styles
+ * 
+ * This file contains styles for the tech stack component and technology items.
+ */
+
+/* Tech Stack Container */
+.tech-stack {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem 1.5rem;
+  margin-top: 0.75rem;
+  align-items: center;
+}
+
+/* Tech Item */
+.tech-item {
+  display: flex;
+  align-items: center;
+  font-size: 1rem;
+  color: #ededed;
+  background: rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  padding: 0.35em 0.8em 0.35em 0.5em;
+  margin-bottom: 0.25em;
+  font-weight: 500;
+  box-shadow: 0 1px 4px 0 rgba(0, 0, 0, 0.08);
+  transition: background 0.2s;
+}
+
+.tech-item:hover {
+  background: rgba(0, 255, 213, 0.1);
+}
+
+/* Tech Icons */
+.tech-icon {
+  font-size: 1.5em;
+  margin-right: 0.5em;
+  vertical-align: middle;
+  filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.1));
+}
+
+.tech-icon.nextjs {
+  color: #fff;
+  background: none;
+  border-radius: 0;
+  padding: 0;
+}
+
+.tech-icon.firebase {
+  color: #ffa611;
+}
+
+.tech-icon.typescript {
+  color: #3178c6;
+}
+
+.tech-icon.tailwind {
+  color: #38bdf8;
+}
+
+/* Responsive styles */
+@media (min-width: 600px) {
+  .tech-stack {
+    gap: 1rem 2.5rem;
+    margin-top: 1rem;
+  }
+  .tech-item {
+    font-size: 1.08rem;
+    padding: 0.45em 1.1em 0.45em 0.7em;
+  }
+  .tech-icon {
+    font-size: 1.8em;
+  }
+}
+
+/* Mobile responsive styles from project-card.css */
+@media (max-width: 768px) {
+  .tech-stack {
+    flex-wrap: wrap;
+    justify-content: center !important;
+    margin-top: 1rem;
+    margin-bottom: 0.5rem;
+    gap: 0.75rem !important;
+  }
+
+  .tech-item {
+    font-size: 0.85rem;
+    padding: 0.25em 0.6em 0.25em 0.4em;
+    margin-bottom: 0.15em;
+  }
+
+  .tech-icon {
+    font-size: 1.2em !important;
+    margin-right: 0.35em !important;
+  }
+  
+  /* Consistent tech stack spacing for all card types */
+  .project-card .tech-stack {
+    margin-top: 1rem;
+    margin-bottom: 0.5rem;
+    justify-content: center;
+  }
+}

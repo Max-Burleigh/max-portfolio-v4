@@ -1,0 +1,101 @@
+/**
+ * Interactive Iframe Component Styles
+ * 
+ * This file contains styles for the interactive iframe components used in project cards,
+ * including message overlays and interaction prompts.
+ */
+
+/* Interactive Iframe Container */
+.interactive-iframe-container {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+/* Iframe message overlay - Always visible and positioned towards bottom */
+.iframe-message {
+  position: absolute;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(10, 15, 30, 0.95);
+  backdrop-filter: blur(12px);
+  border-radius: 12px;
+  padding: 12px 16px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3), 0 0 0 1px rgba(255, 255, 255, 0.1);
+  width: 90%;
+  max-width: 280px;
+  z-index: 10;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  pointer-events: auto;
+  opacity: 1;
+}
+
+/* Message content layout */
+.message-content {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  text-align: center;
+}
+
+/* Icon in message */
+.message-icon {
+  font-size: 24px;
+  margin-bottom: 8px;
+}
+
+/* Message text */
+.iframe-message p {
+  margin: 0;
+  font-size: 0.95rem;
+  line-height: 1.4;
+  color: rgba(255, 255, 255, 0.95);
+}
+
+/* Links within iframe messages */
+.iframe-message a {
+  color: #00ffd5;
+  text-decoration: none;
+  font-weight: 600;
+  pointer-events: auto;
+  position: relative;
+  display: inline-block;
+}
+
+/* Animated underline effect for links */
+.iframe-message a::after {
+  content: "";
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background-color: #00ffd5;
+  transform: scaleX(0);
+  transform-origin: right;
+  transition: transform 0.3s ease;
+}
+
+.iframe-message a:hover::after {
+  transform: scaleX(1);
+  transform-origin: left;
+}
+
+/* Mobile responsive styles */
+@media (max-width: 600px) {
+  .iframe-message {
+    padding: 10px 14px;
+    max-width: 260px;
+  }
+
+  .message-icon {
+    font-size: 20px;
+    margin-bottom: 6px;
+  }
+
+  .iframe-message p {
+    font-size: 0.85rem;
+  }
+}

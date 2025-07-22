@@ -1,0 +1,171 @@
+---
+description: Portfolio architecture, development commands, and global patterns for Next.js 15 portfolio website
+globs: app/**/*.{tsx,ts,css,scss}, *.{js,ts,tsx,jsx,css,scss,json}, package.json, next.config.*, tsconfig.json, tailwind.config.*
+alwaysApply: true
+---
+## Portfolio Global Styles & Structure Guide
+
+This document outlines the global styling architecture, layout principles, font usage, and significant global effects like the Aurora background and cursor light for the portfolio application.
+
+For additional context, please be aware that this project uses NextJS15 and Tailwind v4. This may be beyond your knowledge cut-off date, so you are to use your search tool when appropriate.
+
+## Development Commands
+
+- `npm run dev` - Start development server with hot reload
+- `npm run build` - Create production build
+- `npm run start` - Start production server
+- `npm run lint` - Run ESLint checks
+
+## Key Technologies
+
+- **React 19** with TypeScript for type safety
+- **Framer Motion v12** for animations and gestures
+- **Platform detection** for iOS-specific optimizations
+- **Throttled event handlers** for 60fps performance
+
+## Performance Patterns
+
+- Use motion values for hardware-accelerated animations instead of state
+- Throttle mouse/scroll events to maintain smooth performance
+- Lazy load iframes and images on user interaction
+
+## Component Patterns
+
+- Each component directory exports via `index.ts` barrel files
+- Project cards use shared `ProjectCardProps` interface in `projects/shared/types.ts`
+- Interactive states handled through refs and motion values
+- **For project cards with phone mockups**: Always check screenshot dimensions first to determine if a custom aspect ratio variant is needed
+
+## TypeScript Configuration
+
+- Absolute imports configured with `@/*` path mapping
+- Strict mode enabled for type safety
+- ES2017 target with modern React features
+
+## Asset Management
+
+- WebP conversion script available: `./convert-to-webp.sh`
+- Images stored in `public/webp/` for optimized loading
+- Blur placeholders used for smooth image loading transitions
+
+## Mobile Considerations
+
+- Viewport height handling for Safari toolbar issues
+- Touch-optimized interactions and hover states
+- Hamburger navigation with staggered Framer Motion animations
+
+---
+
+### 1. File Structure & Core Imports
+
+*   **`app/globals.css`:**
+    *   Serves as the central hub for global styles.
+    *   Imports TailwindCSS base, components, and utilities.
+    *   Imports modular CSS files for specific components/features:
+        *   `./styles/components/aurora.css` (Aurora background, blobs, cursor light)
+        *   `./styles/components/navigation.css` (Desktop and mobile navigation)
+        *   `./styles/components/tech-stack.css` (Tech stack display component)
+        *   `./styles/components/project-card.css` (Project card layouts and specific project card styles)
+        *   `./styles/components/interactive-iframe.css` (Standalone interactive iframe messages)
+    *   Defines root CSS variables (e.g., `--background`, `--foreground`) and theme variables for Tailwind.
+
+*   **`app/layout.tsx`:**
+    *   The root layout component for Next.js.
+    *   **Font Setup:** Initializes and provides font families (Geist Sans, Geist Mono, Manrope, Space Grotesk) as CSS variables available globally.
+    *   **CSS Imports:** Imports `app/globals.css`. It also directly imports `app/components/phone/PhoneMockup.css` and `app/styles/components/project-card.css`. While `project-card.css` is also imported in `globals.css`, this direct import ensures its availability. `PhoneMockup.css` is specific to phone components but loaded globally here.
+    *   Sets up basic HTML and body structure.
+
+---
+
+### 2. Fonts
+
+The portfolio utilizes a combination of modern fonts for optimal readability and aesthetic appeal:
+
+*   **Primary Body Font:** `Manrope` (Variable: `--font-manrope`)
+    *   Used for general text content, descriptions, and UI elements.
+    *   Weights: 400, 600, 700.
+*   **Primary Headings Font:** `Space Grotesk` (Variable: `--font-space-grotesk`)
+    *   Used for `<h1>`, `<h2>` tags, and prominent titles.
+    *   Weights: 400, 700.
+*   **Supporting Fonts (from Geist):**
+    *   `Geist Sans` (Variable: `--font-geist-sans`): Used as `--font-sans` for Tailwind.
+    *   `Geist Mono` (Variable: `--font-geist-mono`): Used as `--font-mono` for Tailwind, suitable for code-like text or specific accents (e.g., construction notice).
+
+These fonts are configured in `app/layout.tsx` using `next/font` and their corresponding CSS variables are applied in `app/globals.css` (e.g., `body { font-family: var(--font-manrope), var(--font-fallback); }`).
+
+---
+
+### 3. Layout & Core Structure
+
+*   **`html`, `body`:**
+    *   Configured for full viewport height (`100%`, `min-height: 100%`).
+    *   `overscroll-behavior: none;` and `overflow: hidden;` on `html` and `body` to prevent rubber-band scrolling, especially on mobile.
+    *   Background is transparent to allow the `.aurora-bg` to be visible.
+*   **`.portfolio-container` (in `app/page.tsx`):**
+    *   The main scrollable container for all page content.
+    *   Takes full viewport height (`min-height: 100vh`, JS-enhanced `height: window.innerHeight` for iOS).
+    *   `overflow-y: auto; overflow-x: hidden;` to enable vertical scrolling.
+    *   `scroll-behavior: smooth;` for navigation.
+    *   `overscroll-behavior-y: none;` to prevent bounce effect on iOS Safari.
+*   **`.section` (defined in `app/globals.css`):**
+    *   Base styling for main content sections (About, Projects, Contact).
+    *   `min-height: 100vh` (to fill the viewport vertically).
+    *   Centered with `max-width: 1000px` and `margin: 0 auto`.
+    *   `display: flex; flex-direction: column; justify-content: center;` for content alignment.
+    *   Responsive padding (`padding-left: 3vw; padding-right: 3vw;`).
+*   **Typography:**
+    *   `h1`: Styled with `Space Grotesk`, `2.5rem`.
+    *   `h2`: Styled with `Space Grotesk`, `2rem`.
+    *   `a`: Default link color is `#00ffd5` with `font-weight: 600`.
+
+---
+
+### 4. Color Scheme & Theming
+
+*   The primary color scheme is dark, dominated by the animated aurora background.
+*   **CSS Variables (`app/globals.css`):**
+    *   `--background: #0a0a0a;` (Dark mode default)
+    *   `--foreground: #ededed;`
+*   A `@media (prefers-color-scheme: light)` block exists but is minimal, as the design heavily relies on the dark, gradient-rich aurora.
+*   Key accent color (e.g., links, active navigation): `#00ffd5` (cyan/teal).
+
+---
+
+### 5. Background Effects (Aurora)
+
+Managed by `app/styles/components/aurora.css` and `app/components/aurora/AuroraBlob.tsx`.
+
+*   **`.aurora-bg`:**
+    *   A `position: fixed` element providing a static CSS gradient background covering the entire viewport.
+    *   `z-index: -1` to sit behind all content.
+*   **`.aurora-blob` & `AuroraBlob.tsx`:**
+    *   Multiple `motion.div` components styled as blurred, colored blobs.
+    *   Animated using `framer-motion` for subtle, continuous movement and opacity changes.
+    *   `mix-blend-mode: lighten;` to interact with the background and each other.
+    *   Responsive: Blobs are smaller and have less blur on smaller screens.
+*   **iOS Specific Handling (`app/page.tsx`):**
+    *   If iOS is detected, the animated `AuroraBlob` components are not rendered.
+    *   The `.aurora-bg` has its `background` style potentially overridden to a simpler `#2d174d` if `isIOS` is true (as per logic in `app/page.tsx`). This is to improve performance on iOS devices.
+
+---
+
+### 6. Cursor Light Effect
+
+Provides a subtle light effect that follows the mouse cursor.
+
+*   **Logic (`app/page.tsx`):**
+    *   Uses `framer-motion`'s `useMotionValue` and `useSpring` to create smooth X and Y coordinates for the light effect.
+    *   The `handleMouseMove` event (throttled using `lodash.throttle`) updates these motion values.
+*   **Styling (`app/styles/components/aurora.css` - `.cursor-circle`):**
+    *   A `position: fixed` div.
+    *   Styled as a radial gradient, blurred, to create a soft light spot.
+    *   `pointer-events: none;` so it doesn't interfere with mouse interactions.
+    *   `z-index: 999` to be above most content but below critical UI like modals if any.
+*   **Mobile:** The cursor effect is not rendered on mobile devices (checked via `isMobile` state in `app/page.tsx`).
+
+---
+
+### 7. Global CSS Organization & TailwindCSS
+
+*   The project heavily utilizes **TailwindCSS** for utility-first styling. Tailwind is configured in `tailwind.config.js` (not provided, but assumed) and its directives are imported in `app/globals.css`.
+*   **Modular CSS:** Custom styles are organized into separate CSS files (e.g., `aurora.css`, `navigation.css`, etc.) and imported into `app/globals.css`. This promotes better organization than having all custom styles directly in `globals.css`.
