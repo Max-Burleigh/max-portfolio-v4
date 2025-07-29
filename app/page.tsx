@@ -600,8 +600,7 @@ const Portfolio = () => {
                   href="https://www.linkedin.com/in/max-burleigh/"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex items-center gap-2 mt-2 text-blue-500 hover:text-blue-700 transition-colors font-medium"
-                  style={{ width: "fit-content" }}
+                  className="inline-flex items-center gap-2 mt-2 text-blue-500 hover:text-blue-700 transition-colors font-medium"
                 >
                   <SiLinkedin style={{ width: 22, height: 22 }} />
                   <span>LinkedIn</span>
