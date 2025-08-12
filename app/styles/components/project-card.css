@@ -419,7 +419,8 @@
 /* Animated underline effect for links inside contact card */
 .contact-card a {
   position: relative;
-  display: inline-block;
+  display: inline-flex;
+  align-items: center;
 }
 
 .contact-card a::after {
