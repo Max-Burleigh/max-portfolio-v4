@@ -33,12 +33,13 @@ export const metadata: Metadata = {
     "The official portfolio website of Max Burleigh – web developer, project manager, and solopreneur based in Medford, Oregon. Explore projects, skills, and contact information.",
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const ua = headers().get("user-agent") ?? "";
+  const hdrs = await headers();
+  const ua = hdrs.get("user-agent") ?? "";
   const isIOS = /iPad|iPhone|iPod/i.test(ua);
   const htmlClass = `${geistSans.variable} ${geistMono.variable} ${manrope.variable} ${spaceGrotesk.variable} ${
     isIOS ? "is-ios-device" : "not-ios-device"
