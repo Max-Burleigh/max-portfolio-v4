@@ -595,12 +595,12 @@ const Portfolio = () => {
               <a href="mailto:webwavebuilding@yahoo.com">
                 webwavebuilding@yahoo.com
               </a>
-              <div className="flex justify-center w-full">
+              <div className="flex justify-center w-full mt-2">
                 <a
                   href="https://www.linkedin.com/in/max-burleigh/"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center mt-2 text-blue-500 hover:text-blue-700 transition-colors font-medium space-x-2"
+                  className="inline-flex items-center text-blue-500 hover:text-blue-700 transition-colors font-medium space-x-2"
                 >
                   <SiLinkedin className="w-[22px] h-[22px] flex-shrink-0" />
                   <span>LinkedIn</span>
