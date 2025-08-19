@@ -18,10 +18,10 @@
   bottom: 20px;
   left: 50%;
   transform: translateX(-50%);
-  background: rgba(10, 15, 30, 0.95);
+  background: rgba(10, 15, 30, 0.92);
   backdrop-filter: blur(12px);
   border-radius: 12px;
-  padding: 12px 16px;
+  padding: 14px 18px;
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3), 0 0 0 1px rgba(255, 255, 255, 0.1);
   width: 90%;
   max-width: 280px;
@@ -38,20 +38,22 @@
   justify-content: center;
   flex-direction: column;
   text-align: center;
+  gap: 6px;
 }
 
 /* Icon in message */
 .message-icon {
   font-size: 24px;
-  margin-bottom: 8px;
+  line-height: 1;
 }
 
 /* Message text */
 .iframe-message p {
   margin: 0;
-  font-size: 0.95rem;
-  line-height: 1.4;
-  color: rgba(255, 255, 255, 0.95);
+  font-size: 0.93rem;
+  line-height: 1.35;
+  color: rgba(255, 255, 255, 0.98);
+  text-wrap: balance;
 }
 
 /* Links within iframe messages */
@@ -85,17 +87,9 @@
 
 /* Mobile responsive styles */
 @media (max-width: 600px) {
-  .iframe-message {
-    padding: 10px 14px;
-    max-width: 260px;
-  }
+  .iframe-message { padding: 10px 12px; max-width: 260px; }
 
-  .message-icon {
-    font-size: 20px;
-    margin-bottom: 6px;
-  }
+  .message-icon { font-size: 20px; }
 
-  .iframe-message p {
-    font-size: 0.85rem;
-  }
+  .iframe-message p { font-size: 0.86rem; }
 }

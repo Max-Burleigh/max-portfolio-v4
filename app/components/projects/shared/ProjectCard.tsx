@@ -61,11 +61,7 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
         (disablePhoneMockup ? (
           <div
             className="project-media"
-            style={
-              onClick || onMouseEnter
-                ? { position: "relative", cursor: "pointer" }
-                : undefined
-            }
+            style={{ position: "relative", cursor: onClick || onMouseEnter ? "pointer" : undefined }}
             onMouseEnter={onMouseEnter}
             onClick={onClick}
           >
