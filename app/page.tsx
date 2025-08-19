@@ -142,7 +142,10 @@ const Portfolio = () => {
     [mouseX, mouseY]
   );
 
-  const throttledMouseMove = useMemo(() => rafThrottle(handleMouseMove), [handleMouseMove]);
+  const throttledMouseMove = useMemo(
+    () => rafThrottle<React.MouseEvent<HTMLDivElement>>(handleMouseMove),
+    [handleMouseMove]
+  );
 
   const handlePortraitMouseMove = useCallback(
     (e: React.MouseEvent<HTMLDivElement>) => {
@@ -178,7 +181,10 @@ const Portfolio = () => {
     [rotateY, rotateX, transformPerspective, setGlare]
   );
 
-  const throttledPortraitMouseMove = useMemo(() => rafThrottle(handlePortraitMouseMove), [handlePortraitMouseMove]);
+  const throttledPortraitMouseMove = useMemo(
+    () => rafThrottle<React.MouseEvent<HTMLDivElement>>(handlePortraitMouseMove),
+    [handlePortraitMouseMove]
+  );
 
   const handlePortraitMouseLeave = () => {
     setAnimating(false);
