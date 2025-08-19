@@ -419,7 +419,8 @@
 /* Animated underline effect for links inside contact card */
 .contact-card a {
   position: relative;
-  display: inline-block;
+  display: inline-flex;
+  align-items: center;
 }
 
 .contact-card a::after {
@@ -438,6 +439,11 @@
 .contact-card a:hover::after {
   transform: scaleX(1);
   transform-origin: left;
+}
+
+/* Slightly lower underline specifically for the LinkedIn link */
+.contact-card a[href*="linkedin.com"]::after {
+  bottom: -5px;
 }
 
 .glass-card:hover {

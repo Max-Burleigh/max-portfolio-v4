@@ -467,7 +467,7 @@ const Portfolio = () => {
                     >
                       <div className="pt-4 space-y-3 spiel-detail">
                         <p className="text-xs md:text-sm">
-                          I'm 30 years old, I have 2 amazing children who are my
+                          I'm 31 years old, I have 2 amazing children who are my
                           world, and I reside in Southern Oregon!
                         </p>
                         <p className="text-xs md:text-sm">
