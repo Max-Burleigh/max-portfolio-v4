@@ -1,10 +1,10 @@
-export const rafThrottle = <T extends (...args: any[]) => void>(fn: T): T => {
+export const rafThrottle = <T extends (...args: unknown[]) => void>(fn: T): T => {
   let running = false;
-  return ((...args: any[]) => {
+  return ((...args: unknown[]) => {
     if (running) return;
     running = true;
     requestAnimationFrame(() => {
-      fn(...args);
+      fn(...args as Parameters<T>);
       running = false;
     });
   }) as T;
