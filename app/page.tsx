@@ -12,11 +12,11 @@ import {
   useSpring,
   AnimatePresence,
 } from "framer-motion";
-import { throttle } from "lodash";
+// import { throttle } from "lodash";
+import { rafThrottle } from "./utils/rafThrottle";
 import Image from "next/image";
-import { AuroraBlob, CanvasAurora } from "./components/aurora"; // Keep this import for non-iOS, CanvasAurora for iOS
+import { AuroraBlob, CanvasAurora } from "./components/aurora";
 import { Navigation } from "./components/navigation";
-import PlatformDetector from "./components/PlatformDetector";
 // Import modularized project components
 import {
   Vinscribe,
@@ -73,8 +73,7 @@ const Portfolio = () => {
   const [isMobile, setIsMobile] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
 
-  // State for iOS detection
-  const [isIOS, setIsIOS] = useState(false);
+  // State for iOS detection removed; handled via SSR class on <html>
 
   useEffect(() => {
     const mediaQuery = window.matchMedia("(max-width: 767px)");
@@ -84,21 +83,7 @@ const Portfolio = () => {
     return () => mediaQuery.removeEventListener("change", handler);
   }, []);
 
-  // Detect iOS after component mount by checking the body class
-  useEffect(() => {
-    // Check for iOS after a small delay to ensure PlatformDetector has run
-    const checkIOSClass = () => {
-      if (typeof document !== "undefined") {
-        setIsIOS(document.body.classList.contains("is-ios-device"));
-      }
-    };
-
-    // Check immediately and after a short delay to be sure
-    checkIOSClass();
-    const timeoutId = setTimeout(checkIOSClass, 50);
-
-    return () => clearTimeout(timeoutId);
-  }, []);
+  // Removed client iOS detection; CSS gates backgrounds by <html> class
 
   // Set portfolio container height to exact viewport height (for iOS Safari overscroll fix)
   // useEffect(() => {
@@ -131,20 +116,7 @@ const Portfolio = () => {
 
   const [activeSection, setActiveSection] = useState<SectionKey>("about");
   const containerRef = useRef<HTMLDivElement>(null);
-  const [fullLeafMessageState, setFullLeafMessageState] = useState<
-    "hidden" | "first" | "second"
-  >("hidden");
-  const [fullLeafWholesaleMessageState, setFullLeafWholesaleMessageState] =
-    useState<"hidden" | "first" | "second">("hidden");
-  const [vinscribeMessageState, setVinscribeMessageState] = useState<
-    "hidden" | "first" | "second"
-  >("hidden");
-  const [carlyMessageState, setCarlyMessageState] = useState<
-    "hidden" | "first" | "second"
-  >("hidden");
-  const [shopDowntownMessageState, setShopDowntownMessageState] = useState<
-    "hidden" | "first" | "second"
-  >("hidden");
+  // Removed unused card message states
 
   type SectionKey = "about" | "projects" | "contact";
   const sectionKeys: SectionKey[] = ["about", "projects", "contact"];
@@ -170,10 +142,7 @@ const Portfolio = () => {
     [mouseX, mouseY]
   );
 
-  const throttledMouseMove = useMemo(
-    () => throttle(handleMouseMove, 10),
-    [handleMouseMove]
-  );
+  const throttledMouseMove = useMemo(() => rafThrottle(handleMouseMove), [handleMouseMove]);
 
   const handlePortraitMouseMove = useCallback(
     (e: React.MouseEvent<HTMLDivElement>) => {
@@ -209,10 +178,7 @@ const Portfolio = () => {
     [rotateY, rotateX, transformPerspective, setGlare]
   );
 
-  const throttledPortraitMouseMove = useMemo(
-    () => throttle(handlePortraitMouseMove, 16), // ~60fps
-    [handlePortraitMouseMove]
-  );
+  const throttledPortraitMouseMove = useMemo(() => rafThrottle(handlePortraitMouseMove), [handlePortraitMouseMove]);
 
   const handlePortraitMouseLeave = () => {
     setAnimating(false);
@@ -232,89 +198,31 @@ const Portfolio = () => {
   );
 
   useEffect(() => {
-    const container = containerRef.current;
-    if (!container) return;
-    const handleScroll = throttle(() => {
-      const scrollY = window.scrollY;
-      const viewportHeight = window.innerHeight;
-      const offsets = Object.entries(sectionRefs).map(([key, ref]) => ({
-        key: key as SectionKey,
-        offset: ref.current ? ref.current.offsetTop : 0,
-      }));
-      const current = offsets.reduce<SectionKey>((acc, curr) => {
-        return scrollY >= curr.offset - viewportHeight / 3 ? curr.key : acc;
-      }, "about");
-      if (current !== activeSection) {
-        setActiveSection(current);
+    const sections = [aboutSectionRef, projectsSectionRef, contactSectionRef]
+      .map((r) => r.current)
+      .filter(Boolean) as HTMLElement[];
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            const id = entry.target.id as SectionKey;
+            if (id && id !== activeSection) setActiveSection(id);
+          }
+        });
+      },
+      {
+        root: null,
+        rootMargin: "0px 0px -55% 0px",
+        threshold: 0,
       }
-    }, 100);
-    window.addEventListener("scroll", handleScroll);
-    setTimeout(handleScroll, 100);
-    return () => {
-      window.removeEventListener("scroll", handleScroll);
-      handleScroll.cancel();
-    };
-  }, [activeSection, sectionRefs]);
+    );
 
-  const handleFullLeafMouseEnter = () => {
-    if (fullLeafMessageState === "hidden") {
-      setFullLeafMessageState("first");
-    }
-  };
+    sections.forEach((el) => observer.observe(el));
+    return () => observer.disconnect();
+  }, [activeSection]);
 
-  const handleFullLeafClick = () => {
-    if (fullLeafMessageState === "first") {
-      setFullLeafMessageState("second");
-    }
-  };
-
-  const handleFullLeafWholesaleMouseEnter = () => {
-    if (fullLeafWholesaleMessageState === "hidden") {
-      setFullLeafWholesaleMessageState("first");
-    }
-  };
-
-  const handleFullLeafWholesaleClick = () => {
-    if (fullLeafWholesaleMessageState === "first") {
-      setFullLeafWholesaleMessageState("second");
-    }
-  };
-
-  const handleVinscribeMouseEnter = () => {
-    if (vinscribeMessageState === "hidden") {
-      setVinscribeMessageState("first");
-    }
-  };
-
-  const handleVinscribeClick = () => {
-    if (vinscribeMessageState === "first") {
-      setVinscribeMessageState("second");
-    }
-  };
-
-  const handleCarlyMouseEnter = () => {
-    if (carlyMessageState === "hidden") {
-      setCarlyMessageState("first");
-    }
-  };
-
-  const handleCarlyClick = () => {
-    if (carlyMessageState === "first") {
-      setCarlyMessageState("second");
-    }
-  };
-
-  const handleShopDowntownMouseEnter = () => {
-    if (shopDowntownMessageState === "hidden") {
-      setShopDowntownMessageState("first");
-    }
-  };
-
-  const handleShopDowntownClick = () => {
-    if (shopDowntownMessageState === "first") {
-      setShopDowntownMessageState("second");
-    }
-  };
+  // Remove unused hover/click message state and handlers
 
   const blobProps = {
     style: { zIndex: 0, willChange: "transform, opacity" },
@@ -322,7 +230,7 @@ const Portfolio = () => {
 
   return (
     <>
-      <PlatformDetector />
+      {/* PlatformDetector removed; SSR sets <html> classes */}
       <Navigation
         activeSection={activeSection}
         scrollToSection={scrollToSection}
@@ -350,47 +258,42 @@ const Portfolio = () => {
           )}
         </AnimatePresence>
 
-        {/* AuroraBlobs will be shown/hidden via CSS based on body.is-ios-device class */}
-        {/* Keeping the !isIOS condition as a secondary check for optimization */}
-        {!isIOS && (
-          <>
-            <AuroraBlob
-              className="blob1 aurora-blob"
-              initial={{ opacity: 0.5, scale: 1, x: -50, y: -50 }}
-              animate={{
-                opacity: [0.5, 0.8, 0.5],
-                scale: [1, 1.2, 1],
-                x: [-50, 0, -50],
-                y: [-50, 50, -50],
-              }}
-              transition={{
-                duration: 14,
-                repeat: Infinity,
-                ease: "easeInOut",
-                repeatType: "mirror",
-              }}
-              {...blobProps}
-            />
-            <AuroraBlob
-              className="blob2 aurora-blob"
-              initial={{ opacity: 0.4, scale: 1, x: 150, y: 50 }}
-              animate={{
-                opacity: [0.4, 0.7, 0.4],
-                scale: [1, 1.3, 1],
-                x: [150, 200, 150],
-                y: [50, 150, 50],
-              }}
-              transition={{
-                duration: 18,
-                repeat: Infinity,
-                ease: "easeInOut",
-                repeatType: "mirror",
-              }}
-              {...blobProps}
-            />
-          </>
-        )}
-        {isIOS && <CanvasAurora />}
+        {/* Always render both backgrounds; CSS on <html> decides visibility */}
+        <AuroraBlob
+          className="blob1 aurora-blob"
+          initial={{ opacity: 0.5, scale: 1, x: -50, y: -50 }}
+          animate={{
+            opacity: [0.5, 0.8, 0.5],
+            scale: [1, 1.2, 1],
+            x: [-50, 0, -50],
+            y: [-50, 50, -50],
+          }}
+          transition={{
+            duration: 14,
+            repeat: Infinity,
+            ease: "easeInOut",
+            repeatType: "mirror",
+          }}
+          {...blobProps}
+        />
+        <AuroraBlob
+          className="blob2 aurora-blob"
+          initial={{ opacity: 0.4, scale: 1, x: 150, y: 50 }}
+          animate={{
+            opacity: [0.4, 0.7, 0.4],
+            scale: [1, 1.3, 1],
+            x: [150, 200, 150],
+            y: [50, 150, 50],
+          }}
+          transition={{
+            duration: 18,
+            repeat: Infinity,
+            ease: "easeInOut",
+            repeatType: "mirror",
+          }}
+          {...blobProps}
+        />
+        <CanvasAurora />
 
         {/* 
           REMOVED THE DUPLICATE NAVIGATION COMPONENT FROM HERE.
@@ -554,28 +457,13 @@ const Portfolio = () => {
         >
           <h2>Projects</h2>
           <div className="project-grid">
-            <Vinscribe
-              onMouseEnter={handleVinscribeMouseEnter}
-              onClick={handleVinscribeClick}
-            />
-            <FullLeafTea
-              onMouseEnter={handleFullLeafMouseEnter}
-              onClick={handleFullLeafClick}
-            />
-            <FullLeafWholesale
-              onMouseEnter={handleFullLeafWholesaleMouseEnter}
-              onClick={handleFullLeafWholesaleClick}
-            />
+            <Vinscribe />
+            <FullLeafTea />
+            <FullLeafWholesale />
             <FullLeafApp />
             <Quailmail />
-            <ShopDowntown
-              onMouseEnter={handleShopDowntownMouseEnter}
-              onClick={handleShopDowntownClick}
-            />
-            <CarlyPhotography
-              onMouseEnter={handleCarlyMouseEnter}
-              onClick={handleCarlyClick}
-            />
+            <ShopDowntown />
+            <CarlyPhotography />
             <BasedChat />
           </div>
         </section>

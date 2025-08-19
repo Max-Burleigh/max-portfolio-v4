@@ -4,8 +4,8 @@ import { SiHtml5, SiCss3, SiJavascript, SiPhp, SiMysql } from "react-icons/si";
 import ProjectCard from "./shared/ProjectCard";
 
 interface ShopDowntownProps {
-  onMouseEnter: () => void;
-  onClick: () => void;
+  onMouseEnter?: () => void;
+  onClick?: () => void;
 }
 
 const ShopDowntown: React.FC<ShopDowntownProps> = ({

@@ -6,8 +6,8 @@ import { SiHtml5, SiCss3, SiJavascript, SiShopify } from "react-icons/si";
 import ProjectCard from "./shared/ProjectCard";
 
 interface FullLeafWholesaleProps {
-  onMouseEnter: () => void;
-  onClick: () => void;
+  onMouseEnter?: () => void;
+  onClick?: () => void;
 }
 
 const FullLeafWholesale: React.FC<FullLeafWholesaleProps> = ({

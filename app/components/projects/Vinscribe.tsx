@@ -5,8 +5,8 @@ import { SiFirebase, SiTypescript, SiTailwindcss } from "react-icons/si";
 import ProjectCard from "./shared/ProjectCard";
 
 interface VinscribeProps {
-  onMouseEnter: () => void;
-  onClick: () => void;
+  onMouseEnter?: () => void;
+  onClick?: () => void;
 }
 
 const Vinscribe: React.FC<VinscribeProps> = ({

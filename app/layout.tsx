@@ -1,9 +1,9 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import { Manrope, Space_Grotesk } from "next/font/google";
+import { headers } from "next/headers";
 import "./globals.css";
 import "./components/phone/PhoneMockup.css";
-import "./styles/components/project-card.css";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -38,11 +38,13 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const ua = headers().get("user-agent") ?? "";
+  const isIOS = /iPad|iPhone|iPod/i.test(ua);
+  const htmlClass = `${geistSans.variable} ${geistMono.variable} ${manrope.variable} ${spaceGrotesk.variable} ${
+    isIOS ? "is-ios-device" : "not-ios-device"
+  }`;
   return (
-    <html
-      lang="en"
-      className={`${geistSans.variable} ${geistMono.variable} ${manrope.variable} ${spaceGrotesk.variable}`}
-    >
+    <html lang="en" className={htmlClass}>
       <body className="antialiased">{children}</body>
     </html>
   );

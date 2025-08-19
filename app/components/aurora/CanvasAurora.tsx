@@ -65,9 +65,16 @@ const CanvasAurora: React.FC<CanvasAuroraProps> = ({
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
 
   useEffect(() => {
+    const html = document.documentElement;
+    const isIOS = html.classList.contains('is-ios-device');
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (!isIOS || prefersReducedMotion) {
+      return;
+    }
+
     const canvas = canvasRef.current!;
     const ctx = canvas.getContext('2d')!;
-    let frameId: number;
+    let frameId: number = 0;
     let t = 0;
 
     const resize = () => {
@@ -84,23 +91,21 @@ const CanvasAurora: React.FC<CanvasAuroraProps> = ({
     window.addEventListener('resize', resize);
 
     const draw = () => {
-      t += 0.016; // Base time increment
+      t += 0.016;
       const w = canvas.clientWidth;
       const h = canvas.clientHeight;
 
       ctx.clearRect(0, 0, w, h);
-      ctx.globalCompositeOperation = 'lighter'; // 'lighter' can be more performant than 'lighten'
+      ctx.globalCompositeOperation = 'lighter';
 
-      blobs.forEach(blob => {
+      blobs.forEach((blob) => {
         const timeFactor = t * blob.speed;
         const cx = w * blob.initialOffsetX + Math.sin(timeFactor * blob.frequencyX) * w * blob.amplitudeX;
         const cy = h * blob.initialOffsetY + Math.cos(timeFactor * blob.frequencyY) * h * blob.amplitudeY;
         const radius = Math.max(w, h) * blob.radiusFactor;
 
         const grad = ctx.createRadialGradient(cx, cy, 0, cx, cy, radius);
-        // Base opacity from .aurora-blob CSS is 0.5. Framer animates opacity.
-        // For canvas, we'll set a base opacity in the gradient that works with 'lighter' composite op.
-        grad.addColorStop(0, `rgba(${blob.color},0.3)`); // Slightly reduced for 'lighter' blending
+        grad.addColorStop(0, `rgba(${blob.color},0.3)`);
         grad.addColorStop(blob.softness, `rgba(${blob.color},0)`);
 
         ctx.fillStyle = grad;
@@ -112,7 +117,7 @@ const CanvasAurora: React.FC<CanvasAuroraProps> = ({
       frameId = requestAnimationFrame(draw);
     };
 
-    draw();
+    frameId = requestAnimationFrame(draw);
 
     return () => {
       cancelAnimationFrame(frameId);
@@ -123,7 +128,7 @@ const CanvasAurora: React.FC<CanvasAuroraProps> = ({
   return (
     <canvas
       ref={canvasRef}
-      className={`absolute inset-0 z-0 pointer-events-none ${className}`}
+      className={`absolute inset-0 z-0 pointer-events-none canvas-aurora ${className}`}
       aria-hidden="true"
     />
   );

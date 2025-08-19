@@ -5,8 +5,8 @@ import { SiTailwindcss } from "react-icons/si";
 import ProjectCard from "./shared/ProjectCard";
 
 interface CarlyPhotographyProps {
-  onMouseEnter: () => void;
-  onClick: () => void;
+  onMouseEnter?: () => void;
+  onClick?: () => void;
 }
 
 const CarlyPhotography: React.FC<CarlyPhotographyProps> = ({

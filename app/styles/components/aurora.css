@@ -49,6 +49,20 @@
   display: none;
 }
 
+/* Hide canvas aurora when not on iOS */
+.not-ios-device .canvas-aurora {
+  display: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .aurora-blob {
+    animation: none !important;
+  }
+  .cursor-circle {
+    display: none !important;
+  }
+}
+
 /* Responsive styles for aurora blobs */
 @media (max-width: 900px) {
   .aurora-blob {
@@ -224,4 +238,9 @@
   pointer-events: none;
   z-index: 999;
   transform: translateZ(0);
+}
+
+/* Hide cursor circle when mobile nav overlay is present */
+.mobile-nav-overlay ~ .cursor-circle {
+  display: none;
 }

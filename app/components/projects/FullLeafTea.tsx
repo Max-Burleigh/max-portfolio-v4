@@ -6,8 +6,8 @@ import { ModernWindowsIcon } from "../index";
 import ProjectCard from "./shared/ProjectCard";
 
 interface FullLeafTeaProps {
-  onMouseEnter: () => void;
-  onClick: () => void;
+  onMouseEnter?: () => void;
+  onClick?: () => void;
 }
 
 const FullLeafTea: React.FC<FullLeafTeaProps> = ({
