@@ -448,6 +448,7 @@ const Portfolio = () => {
                   style={{
                     objectFit: "cover",
                     transform: "translateZ(20px)",
+                    borderRadius: "0.5rem",
                   }}
                   priority
                 />
