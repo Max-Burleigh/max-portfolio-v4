@@ -11,6 +11,7 @@ import {
   useMotionValue,
   useSpring,
   AnimatePresence,
+  useReducedMotion,
 } from "framer-motion";
 // import { throttle } from "lodash";
 import { rafThrottle } from "./utils/rafThrottle";
@@ -72,6 +73,8 @@ const Portfolio = () => {
   const [spielOpen, setSpielOpen] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
+
+  const shouldReduceMotion = useReducedMotion();
 
   // State for iOS detection removed; handled via SSR class on <html>
 
@@ -149,6 +152,7 @@ const Portfolio = () => {
 
   const handlePortraitMouseMove = useCallback(
     (e: React.MouseEvent<HTMLDivElement>) => {
+      if (shouldReduceMotion) return;
       setAnimating(true);
       if (!portraitRef.current) return;
       const rect = portraitRef.current.getBoundingClientRect();
@@ -178,7 +182,7 @@ const Portfolio = () => {
         opacity: 0.25,
       });
     },
-    [rotateY, rotateX, transformPerspective, setGlare]
+    [rotateY, rotateX, transformPerspective, setGlare, shouldReduceMotion]
   );
 
   const throttledPortraitMouseMove = useMemo(
@@ -247,7 +251,7 @@ const Portfolio = () => {
       <motion.div
         ref={containerRef}
         className="portfolio-container"
-        onMouseMove={throttledMouseMove}
+        onMouseMove={!shouldReduceMotion ? throttledMouseMove : undefined}
       >
         <div className="aurora-bg" />
 
@@ -264,49 +268,53 @@ const Portfolio = () => {
           )}
         </AnimatePresence>
 
-        {/* Always render both backgrounds; CSS on <html> decides visibility */}
-        <AuroraBlob
-          className="blob1 aurora-blob"
-          initial={{ opacity: 0.5, scale: 1, x: -50, y: -50 }}
-          animate={{
-            opacity: [0.5, 0.8, 0.5],
-            scale: [1, 1.2, 1],
-            x: [-50, 0, -50],
-            y: [-50, 50, -50],
-          }}
-          transition={{
-            duration: 14,
-            repeat: Infinity,
-            ease: "easeInOut",
-            repeatType: "mirror",
-          }}
-          {...blobProps}
-        />
-        <AuroraBlob
-          className="blob2 aurora-blob"
-          initial={{ opacity: 0.4, scale: 1, x: 150, y: 50 }}
-          animate={{
-            opacity: [0.4, 0.7, 0.4],
-            scale: [1, 1.3, 1],
-            x: [150, 200, 150],
-            y: [50, 150, 50],
-          }}
-          transition={{
-            duration: 18,
-            repeat: Infinity,
-            ease: "easeInOut",
-            repeatType: "mirror",
-          }}
-          {...blobProps}
-        />
-        <CanvasAurora />
+        {/* Skip heavy background animations when reduced motion is requested */}
+        {!shouldReduceMotion && (
+          <>
+            <AuroraBlob
+              className="blob1 aurora-blob"
+              initial={{ opacity: 0.5, scale: 1, x: -50, y: -50 }}
+              animate={{
+                opacity: [0.5, 0.8, 0.5],
+                scale: [1, 1.2, 1],
+                x: [-50, 0, -50],
+                y: [-50, 50, -50],
+              }}
+              transition={{
+                duration: 14,
+                repeat: Infinity,
+                ease: "easeInOut",
+                repeatType: "mirror",
+              }}
+              {...blobProps}
+            />
+            <AuroraBlob
+              className="blob2 aurora-blob"
+              initial={{ opacity: 0.4, scale: 1, x: 150, y: 50 }}
+              animate={{
+                opacity: [0.4, 0.7, 0.4],
+                scale: [1, 1.3, 1],
+                x: [150, 200, 150],
+                y: [50, 150, 50],
+              }}
+              transition={{
+                duration: 18,
+                repeat: Infinity,
+                ease: "easeInOut",
+                repeatType: "mirror",
+              }}
+              {...blobProps}
+            />
+            <CanvasAurora />
+          </>
+        )}
 
         {/* 
           REMOVED THE DUPLICATE NAVIGATION COMPONENT FROM HERE.
           The primary Navigation component is already rendered outside this scrollable container.
         */}
 
-        {!isMobile && (
+        {!isMobile && !shouldReduceMotion && (
           <motion.div
             className="cursor-circle"
             style={{
@@ -333,8 +341,10 @@ const Portfolio = () => {
                 <motion.button
                   onClick={() => setSpielOpen(!spielOpen)}
                   className="mt-4 px-4 md:px-5 py-2 md:py-2.5 bg-gradient-to-r from-blue-400 via-purple-400 to-pink-300 rounded-full text-white font-semibold text-shadow-sm self-start overflow-hidden relative text-sm md:text-base"
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
+                  whileHover={
+                    shouldReduceMotion ? undefined : { scale: 1.05 }
+                  }
+                  whileTap={shouldReduceMotion ? undefined : { scale: 0.95 }}
                 >
                   <span className="relative z-10">
                     {spielOpen
@@ -344,34 +354,44 @@ const Portfolio = () => {
                   <motion.div
                     className="absolute inset-0 bg-gradient-to-r from-pink-300 via-purple-400 to-blue-400"
                     style={{ opacity: 0 }}
-                    whileHover={{ opacity: 1 }}
+                    whileHover={
+                      shouldReduceMotion ? undefined : { opacity: 1 }
+                    }
                     transition={{ duration: 0.3 }}
                   />
                 </motion.button>
                 <AnimatePresence>
                   {spielOpen && (
                     <motion.div
-                      initial={{ opacity: 0, height: 0 }}
-                      animate={{
-                        opacity: 1,
-                        height: "auto",
-                        transition: {
-                          height: {
-                            type: "spring",
-                            stiffness: 100,
-                            damping: 15,
-                          },
-                          opacity: { duration: 0.4, delay: 0.2 },
-                        },
-                      }}
-                      exit={{
-                        opacity: 0,
-                        height: 0,
-                        transition: {
-                          height: { duration: 0.3 },
-                          opacity: { duration: 0.2 },
-                        },
-                      }}
+                      initial={shouldReduceMotion ? false : { opacity: 0, height: 0 }}
+                      animate={
+                        shouldReduceMotion
+                          ? { opacity: 1, height: "auto", transition: { duration: 0 } }
+                          : {
+                              opacity: 1,
+                              height: "auto",
+                              transition: {
+                                height: {
+                                  type: "spring",
+                                  stiffness: 100,
+                                  damping: 15,
+                                },
+                                opacity: { duration: 0.4, delay: 0.2 },
+                              },
+                            }
+                      }
+                      exit={
+                        shouldReduceMotion
+                          ? { opacity: 0, height: 0, transition: { duration: 0 } }
+                          : {
+                              opacity: 0,
+                              height: 0,
+                              transition: {
+                                height: { duration: 0.3 },
+                                opacity: { duration: 0.2 },
+                              },
+                            }
+                      }
                       className="overflow-hidden"
                     >
                       <div className="pt-4 space-y-3 spiel-detail">
@@ -404,21 +424,24 @@ const Portfolio = () => {
                   spielOpen ? "" : "mt-4 md:mt-0"
                 }`}
                 style={{
-                  rotateY: rotateYSpring,
-                  rotateX: rotateXSpring,
-                  transformPerspective: transformPerspectiveSpring,
+                  rotateY: shouldReduceMotion ? 0 : rotateYSpring,
+                  rotateX: shouldReduceMotion ? 0 : rotateXSpring,
+                  transformPerspective: shouldReduceMotion
+                    ? 0
+                    : transformPerspectiveSpring,
                   scale: isMobile && spielOpen ? 0.8 : 1,
-                  transformStyle: "preserve-3d",
+                  transformStyle: shouldReduceMotion ? "flat" : "preserve-3d",
                   transformOrigin: "center",
                   perspective: "800px",
                 }}
                 transition={{ duration: 0.5 }}
-                whileHover={{
-                  scale: 1.05,
-                  transition: { duration: 0.2 },
-                }}
-                onMouseMove={throttledPortraitMouseMove}
-                onMouseLeave={handlePortraitMouseLeave}
+                whileHover={
+                  shouldReduceMotion
+                    ? undefined
+                    : { scale: 1.05, transition: { duration: 0.2 } }
+                }
+                onMouseMove={!shouldReduceMotion ? throttledPortraitMouseMove : undefined}
+                onMouseLeave={!shouldReduceMotion ? handlePortraitMouseLeave : undefined}
               >
                 <motion.div
                   style={{
@@ -431,15 +454,19 @@ const Portfolio = () => {
                     borderRadius: "0.5rem",
                     transformStyle: "preserve-3d",
                   }}
-                  animate={{
-                    background: `radial-gradient(
+                  animate={
+                    shouldReduceMotion
+                      ? undefined
+                      : {
+                          background: `radial-gradient(
                       farthest-corner circle at ${glare.x}% ${glare.y}%,
                       rgba(255, 255, 255, 0.7) 10%,
                       rgba(255, 255, 255, 0.5) 24%,
                       rgba(0, 0, 0, 0.8) 82%
                     )`,
-                    opacity: glare.opacity,
-                  }}
+                          opacity: glare.opacity,
+                        }
+                  }
                 />
                 <Image
                   src="/candidate-2.webp"
