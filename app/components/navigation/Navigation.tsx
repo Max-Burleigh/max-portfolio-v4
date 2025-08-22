@@ -1,6 +1,6 @@
 "use client";
 
-import React, { memo, useEffect } from "react";
+import React, { memo, useEffect, useState } from "react";
 import {
   motion,
   AnimatePresence,
@@ -292,6 +292,14 @@ const Navigation: React.FC<NavigationProps> = ({
   menuOpen,
   setMenuOpen,
 }) => {
+  const [menuKey, setMenuKey] = useState(0);
+
+  const handleSetMenuOpen = (isOpen: boolean) => {
+    if (isOpen) {
+      setMenuKey((prev) => prev + 1);
+    }
+    setMenuOpen(isOpen);
+  };
   // Add a subtle haptic feedback when menu opens/closes
   useEffect(() => {
     if (typeof window !== "undefined" && "vibrate" in navigator) {
@@ -316,15 +324,16 @@ const Navigation: React.FC<NavigationProps> = ({
       </nav>
 
       {/* Hamburger for mobile */}
-      <Hamburger menuOpen={menuOpen} setMenuOpen={setMenuOpen} />
+      <Hamburger menuOpen={menuOpen} setMenuOpen={handleSetMenuOpen} />
 
       {/* Mobile menu overlay */}
       <AnimatePresence mode="wait">
         {menuOpen && (
           <MobileMenu
+            key={menuKey}
             sections={sections}
             activeSection={activeSection}
-            setMenuOpen={setMenuOpen}
+            setMenuOpen={handleSetMenuOpen}
             scrollToSection={scrollToSection}
           />
         )}
