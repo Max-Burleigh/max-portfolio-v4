@@ -86,21 +86,8 @@ const Hamburger: React.FC<HamburgerProps> = ({ menuOpen, setMenuOpen }) => {
         boxShadow: "0 0 25px rgba(79, 70, 229, 0.45)",
       }}
       whileTap={{ scale: 0.9 }}
-      animate={
-        menuOpen
-          ? {
-              rotate: 90,
-              scale: 1.1,
-            }
-          : {
-              rotate: 0,
-              scale: 1,
-            }
-      }
-      transition={{
-        rotate: { type: "spring", stiffness: 200, damping: 15 },
-        scale: { type: "spring", stiffness: 500, damping: 15 },
-      }}
+      animate={menuOpen ? { scale: 1.1 } : { scale: 1 }}
+      transition={{ scale: { type: "spring", stiffness: 500, damping: 15 } }}
       style={{
         rotateX: hoverTilt,
         rotateY: hoverRadius,
