@@ -1,6 +1,12 @@
 "use client";
 
-import React, { memo, useEffect, useState } from "react";
+import React, {
+  memo,
+  useEffect,
+  useState,
+  useRef,
+  useLayoutEffect,
+} from "react";
 import {
   motion,
   AnimatePresence,
@@ -167,101 +173,117 @@ const MobileMenu: React.FC<MobileMenuProps> = ({
   activeSection,
   setMenuOpen,
   scrollToSection,
-}) => (
-  <motion.div
-    className="fixed top-0 right-0 h-full w-[280px] bg-gradient-to-br from-blue-900/90 via-purple-900/90 to-pink-900/90 backdrop-blur-xl flex flex-col justify-center items-center shadow-2xl border-l border-white/10 z-[101] md:hidden"
-    initial={{ x: "100%", opacity: 0 }}
-    animate={{ x: 0, opacity: 1 }}
-    exit={{ x: "100%", opacity: 0 }}
-    transition={{
-      type: "spring",
-      damping: 30,
-      stiffness: 220,
-    }}
-  >
+}) => {
+  const itemRefs = useRef<Record<SectionKey, HTMLButtonElement | null>>(
+    {} as Record<SectionKey, HTMLButtonElement | null>
+  );
+  const containerRef = useRef<HTMLDivElement>(null);
+  const [indicatorY, setIndicatorY] = useState(0);
+
+  useLayoutEffect(() => {
+    const activeEl = itemRefs.current[activeSection];
+    const containerEl = containerRef.current;
+    if (activeEl && containerEl) {
+      const containerRect = containerEl.getBoundingClientRect();
+      const activeRect = activeEl.getBoundingClientRect();
+      setIndicatorY(
+        activeRect.top -
+          containerRect.top +
+          activeRect.height / 2 -
+          10 /* half of indicator size */
+      );
+    }
+  }, [activeSection]);
+
+  return (
     <motion.div
-      className="w-full flex flex-col items-center px-12 py-10"
-      variants={containerVariants}
-      initial="hidden"
-      animate="visible"
-      exit="hidden"
+      className="fixed top-0 right-0 h-full w-[280px] bg-gradient-to-br from-blue-900/90 via-purple-900/90 to-pink-900/90 backdrop-blur-xl flex flex-col justify-center items-center shadow-2xl border-l border-white/10 z-[101] md:hidden"
+      initial={{ x: "100%", opacity: 0 }}
+      animate={{ x: 0, opacity: 1 }}
+      exit={{ x: "100%", opacity: 0 }}
+      transition={{
+        type: "spring",
+        damping: 30,
+        stiffness: 220,
+      }}
     >
-      {sections.map((section) => (
-        <motion.button
-          key={section}
-          className={`relative text-2xl font-bold mb-9 last:mb-0 text-white tracking-wide flex items-center w-full justify-start ${
-            section === activeSection ? "text-pink-300" : ""
-          }`}
-          onClick={() => {
-            setMenuOpen(false);
-            scrollToSection(section);
-          }}
-          variants={{
-            visible: {
-              opacity: 1,
-              y: 0,
-              transition: { type: "spring", stiffness: 350, damping: 25 },
-            },
-            hidden: {
-              opacity: 0,
-              y: 20,
-              transition: { type: "spring", stiffness: 350, damping: 25 },
-            },
-          }}
-          whileHover={{
-            scale: 1.05,
-            x: 10,
-            color: "#00ffd5",
-            transition: { type: "spring", stiffness: 400 },
-          }}
-          whileTap={{
-            scale: 0.95,
-            transition: { type: "spring", stiffness: 800, damping: 20 },
-          }}
-          onHoverStart={() => {
-            if (section !== activeSection) {
-              const audio = new Audio(
-                "data:audio/wav;base64,UklGRiIAAABXQVZFZm10IBAAAAABAAEARKwAAIhYAQACABAAZGF0YQAAAAA="
-              );
-              audio.volume = 0.05;
-              audio.play().catch(() => {});
-            }
-          }}
+      <motion.div
+        ref={containerRef}
+        className="w-full flex flex-col items-center px-12 py-10 relative"
+        variants={containerVariants}
+        initial="hidden"
+        animate="visible"
+        exit="hidden"
+      >
+        {/* Active indicator */}
+        <motion.div
+          className="absolute left-12 w-9 h-5 flex items-center pointer-events-none"
+          animate={{ top: indicatorY }}
+          transition={{ type: "spring", stiffness: 500, damping: 30 }}
         >
-          <div className="w-9 h-5 flex-shrink-0 flex items-center">
-            {section === activeSection && (
-              <motion.div className="relative w-5 h-5">
-                <motion.span
-                  className="absolute inset-0 rounded-full bg-gradient-to-br from-blue-400 to-pink-400"
-                  layoutId="activeNavIndicator"
-                  initial={{ scale: 0.8, opacity: 0.5 }}
-                  animate={{ scale: 1, opacity: 1 }}
-                  transition={{ type: "spring", stiffness: 500, damping: 20 }}
-                />
-                <motion.span
-                  className="absolute inset-0 rounded-full bg-cyan-400"
-                  layoutId="activeNavGlow"
-                  initial={{ scale: 1, opacity: 0.3 }}
-                  animate={{
-                    scale: [1, 1.5, 1],
-                    opacity: [0.3, 0.5, 0.3],
-                  }}
-                  transition={{
-                    duration: 1.2,
-                    ease: "easeInOut",
-                    layout: { type: "spring", stiffness: 350, damping: 20 },
-                  }}
-                  style={{ filter: "blur(8px)", zIndex: -1 }}
-                />
-              </motion.div>
-            )}
+          <div className="relative w-5 h-5">
+            <span className="absolute inset-0 rounded-full bg-gradient-to-br from-blue-400 to-pink-400" />
+            <motion.span
+              className="absolute inset-0 rounded-full bg-cyan-400"
+              animate={{ scale: [1, 1.5, 1], opacity: [0.3, 0.5, 0.3] }}
+              transition={{ duration: 1.2, ease: "easeInOut", repeat: Infinity }}
+              style={{ filter: "blur(8px)", zIndex: -1 }}
+            />
           </div>
-          <span>{section.charAt(0).toUpperCase() + section.slice(1)}</span>
-        </motion.button>
-      ))}
+        </motion.div>
+
+        {sections.map((section) => (
+          <motion.button
+            ref={(el) => (itemRefs.current[section] = el)}
+            key={section}
+            className={`relative text-2xl font-bold mb-9 last:mb-0 text-white tracking-wide flex items-center w-full justify-start ${
+              section === activeSection ? "text-pink-300" : ""
+            }`}
+            onClick={() => {
+              setMenuOpen(false);
+              scrollToSection(section);
+            }}
+            variants={{
+              visible: {
+                opacity: 1,
+                y: 0,
+                transition: { type: "spring", stiffness: 350, damping: 25 },
+              },
+              hidden: {
+                opacity: 0,
+                y: 20,
+                transition: { type: "spring", stiffness: 350, damping: 25 },
+              },
+            }}
+            whileHover={{
+              scale: 1.05,
+              x: 10,
+              color: "#00ffd5",
+              transition: { type: "spring", stiffness: 400 },
+            }}
+            whileTap={{
+              scale: 0.95,
+              transition: { type: "spring", stiffness: 800, damping: 20 },
+            }}
+            onHoverStart={() => {
+              if (section !== activeSection) {
+                const audio = new Audio(
+                  "data:audio/wav;base64,UklGRiIAAABXQVZFZm10IBAAAAABAAEARKwAAIhYAQACABAAZGF0YQAAAAA="
+                );
+                audio.volume = 0.05;
+                audio.play().catch(() => {});
+              }
+            }}
+          >
+            {/* Placeholder for indicator positioning */}
+            <div className="w-9 h-5 flex-shrink-0 flex items-center" />
+            <span>{section.charAt(0).toUpperCase() + section.slice(1)}</span>
+          </motion.button>
+        ))}
+      </motion.div>
     </motion.div>
-  </motion.div>
-);
+  );
+};
 
 // --- Navigation Component (Refactored) ---
 interface NavigationProps {
