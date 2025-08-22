@@ -115,8 +115,13 @@ const Portfolio = () => {
   }, [isAnimating]);
 
   const [activeSection, setActiveSection] = useState<SectionKey>("about");
+  const activeSectionRef = useRef<SectionKey>("about");
   const containerRef = useRef<HTMLDivElement>(null);
   // Removed unused card message states
+
+  useEffect(() => {
+    activeSectionRef.current = activeSection;
+  }, [activeSection]);
 
   type SectionKey = "about" | "projects" | "contact";
   const sectionKeys: SectionKey[] = ["about", "projects", "contact"];
@@ -210,23 +215,30 @@ const Portfolio = () => {
 
     const observer = new IntersectionObserver(
       (entries) => {
+        let newActive = activeSectionRef.current;
+        let maxRatio = 0;
+
         entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            const id = entry.target.id as SectionKey;
-            if (id && id !== activeSection) setActiveSection(id);
+          if (entry.isIntersecting && entry.intersectionRatio > maxRatio) {
+            maxRatio = entry.intersectionRatio;
+            newActive = entry.target.id as SectionKey;
           }
         });
+
+        if (newActive !== activeSectionRef.current) {
+          activeSectionRef.current = newActive;
+          setActiveSection(newActive);
+        }
       },
       {
         root: null,
-        rootMargin: "0px 0px -55% 0px",
-        threshold: 0,
+        threshold: [0.2, 0.4, 0.6, 0.8],
       }
     );
 
     sections.forEach((el) => observer.observe(el));
     return () => observer.disconnect();
-  }, [activeSection]);
+  }, [aboutSectionRef, projectsSectionRef, contactSectionRef]);
 
   // Remove unused hover/click message state and handlers
 
