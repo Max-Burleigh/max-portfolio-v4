@@ -1,6 +1,7 @@
 "use client";
 import React, { forwardRef } from "react";
-import { ProjectCard, BasedChat } from "@components/projects";
+import ProjectCard from "@components/projects/ProjectCard";
+import BasedChat from "@components/projects/BasedChat";
 import { projects } from "@/content/projects";
 
 const ProjectsSection = forwardRef<HTMLDivElement>(function ProjectsSection(_, ref) {

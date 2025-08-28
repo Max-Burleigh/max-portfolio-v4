@@ -19,9 +19,8 @@ import {
   SiSupabase,
   SiVercel,
 } from "react-icons/si";
-import { ModernWindowsIcon } from "@components/icons";
-import type { ProjectCardProps } from "@components/projects/shared/types";
-import ProjectOverlay from "@components/projects/shared/ProjectOverlay";
+import { ModernWindowsIcon } from "@components/Icons";
+import type { ProjectCardProps } from "@components/projects/ProjectCard";
 
 export type ProjectEntry = ProjectCardProps & { id: string };
 
@@ -51,9 +50,7 @@ export const projects: ProjectEntry[] = [
     imageBlurDataURL:
       "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNTkyIiBoZWlnaHQ9IjEyNDAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGRlZnM+PGxpbmVhckdyYWRpZW50IGlkPSJnIiB4MT0iMCUiIHkxPSIwJSIgeDI9IjAlIiB5Mj0iMTAwJSI+PHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iIzIwMjAyMCIgLz48c3RvcCBvZmZzZXQ9IjEwMCUiIHN0b3AtY29sb3I9IiMxMDEwMTAiIC8+PC9saW5lYXJHcmFkaWVudD48L2RlZnM+PHJlY3Qgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgZmlsbD0idXJsKCNnKSIvPjwvc3ZnPg==",
     disablePhoneMockup: true,
-    children: (
-      <ProjectOverlay href="https://www.vinscribe.com" emoji="🚗" className="vinscribe-message" />
-    ),
+    overlay: { href: "https://www.vinscribe.com", emoji: "🚗", className: "vinscribe-message" },
   },
   {
     id: "fullleaf-tea",
@@ -87,9 +84,7 @@ export const projects: ProjectEntry[] = [
     imageClassName: "fullleaf-tea",
     imageBlurDataURL:
       "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAwIiBoZWlnaHQ9IjEyMDAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGRlZnM+PGxpbmVhckdyYWRpZW50IGlkPSJnIiB4MT0iMCUiIHkxPSIwJSIgeDI9IjAlIiB5Mj0iMTAwJSI+PHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iIzIwNWUzYiIgLz48c3RvcCBvZmZzZXQ9IjEwMCUiIHN0b3AtY29sb3I9IiMxMDMwMjAiIC8+PC9saW5lYXJHcmFkaWVudD48L2RlZnM+PHJlY3Qgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgZmlsbD0idXJsKCNnKSIvPjwvc3ZnPg==",
-    children: (
-      <ProjectOverlay href="https://fullleafteacompany.com" emoji="🫖" className="fullleaf-message" />
-    ),
+    overlay: { href: "https://fullleafteacompany.com", emoji: "🫖", className: "fullleaf-message" },
   },
   {
     id: "fullleaf-wholesale",
@@ -122,9 +117,7 @@ export const projects: ProjectEntry[] = [
     imageClassName: "fullleaf-wholesale",
     imageBlurDataURL:
       "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAwIiBoZWlnaHQ9IjEyMDAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGRlZnM+PGxpbmVhckdyYWRpZW50IGlkPSJnIiB4MT0iMCUiIHkxPSIwJSIgeDI9IjAlIiB5Mj0iMTAwJSI+PHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iIzMzNWUzYiIgLz48c3RvcCBvZmZzZXQ9IjEwMCUiIHN0b3AtY29sb3I9IiMxZjJmMjAiIC8+PC9saW5lYXJHcmFkaWVudD48L2RlZnM+PHJlY3Qgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgZmlsbD0idXJsKCNnKSIvPjwvc3ZnPg==",
-    children: (
-      <ProjectOverlay href="https://wholesale.fullleafteacompany.com" emoji="📦" className="fullleaf-wholesale-message" />
-    ),
+    overlay: { href: "https://wholesale.fullleafteacompany.com", emoji: "📦", className: "fullleaf-wholesale-message" },
   },
   {
     id: "fullleaf-app",
@@ -238,9 +231,7 @@ export const projects: ProjectEntry[] = [
     imageAlt: "Screenshot of Shop Downtown website",
     imageTitle: "Shop Downtown Website Screenshot",
     disablePhoneMockup: true,
-    children: (
-      <ProjectOverlay href="https://shopdowntown.org/" emoji="🏪" className="shopdowntown-message" />
-    ),
+    overlay: { href: "https://shopdowntown.org/", emoji: "🏪", className: "shopdowntown-message" },
   },
   {
     id: "carly",
@@ -262,8 +253,6 @@ export const projects: ProjectEntry[] = [
     imageBlurDataURL:
       "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNTkyIiBoZWlnaHQ9IjEyNDAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGRlZnM+PGxpbmVhckdyYWRpZW50IGlkPSJnIiB4MT0iMCUiIHkxPSIwJSIgeDI9IjAlIiB5Mj0iMTAwJSI+PHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iIzIwMjAyMCIgLz48c3RvcCBvZmZzZXQ9IjEwMCUiIHN0b3AtY29sb3I9IiMxMDEwMTAiIC8+PC9saW5lYXJHcmFkaWVudD48L2RlZnM+PHJlY3Qgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgZmlsbD0idXJsKCNnKSIvPjwvc3ZnPg==",
     disablePhoneMockup: true,
-    children: (
-      <ProjectOverlay href="https://carlypsphoto.com" emoji="📸" className="carly-message" />
-    ),
+    overlay: { href: "https://carlypsphoto.com", emoji: "📸", className: "carly-message" },
   },
 ];

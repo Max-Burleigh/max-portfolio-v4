@@ -1,7 +1,7 @@
 "use client";
 import React from "react";
 
-const ModernWindowsIcon: React.FC<React.SVGProps<SVGSVGElement>> = ({
+export const ModernWindowsIcon: React.FC<React.SVGProps<SVGSVGElement>> = ({
   style,
   className,
   ...props
@@ -24,3 +24,4 @@ const ModernWindowsIcon: React.FC<React.SVGProps<SVGSVGElement>> = ({
 );
 
 export default ModernWindowsIcon;
+

@@ -3,7 +3,6 @@ import { Geist, Geist_Mono } from "next/font/google";
 import { Manrope, Space_Grotesk } from "next/font/google";
 import { headers } from "next/headers";
 import "./globals.css";
-import "./components/phone/PhoneMockup.css";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",

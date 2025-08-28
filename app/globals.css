@@ -1,12 +1,5 @@
 @import "tailwindcss";
 
-/* Import modular CSS files */
-@import "./styles/components/aurora.css";
-@import "./styles/components/navigation.css";
-@import "./styles/components/tech-stack.css";
-@import "./styles/components/project-card.css";
-@import "./styles/components/overlay-message.css";
-
 :root {
   --background: #0a0a0a; /* Dark mode default */
   --foreground: #ededed;
@@ -38,9 +31,12 @@ body {
   text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
 }
 
-/***********************************************
- * Aurora Gradient Background (More Detailed)
- ***********************************************/
+/* ===== Aurora CSS ===== */
+/**
+ * Aurora Background Effects
+ * 
+ * Inline from app/styles/components/aurora.css
+ */
 html {
   height: 100%; /* Ensure html takes full height */
   width: 100%;
@@ -64,7 +60,239 @@ body {
   /* Modified to allow iOS native interactions */
 }
 
-/* Aurora background styles moved to app/styles/components/aurora.css */
+/* Fixed background gradient element */
+.aurora-bg {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  background: linear-gradient(
+    120deg,
+    #091236 0%,
+    #1e215d 25%,
+    #2f3f72 50%,
+    #415a77 75%,
+    #23252e 100%
+  );
+  background-size: 100% 100%;
+}
+
+/* iOS-specific background override */
+.is-ios-device .aurora-bg {
+  background: #2d174d; /* Solid color for iOS */
+}
+
+/* Aurora blob base styles */
+.aurora-blob {
+  position: absolute;
+  pointer-events: none;
+  z-index: 1;
+  border-radius: 50%;
+  filter: blur(80px);
+  opacity: 0.5;
+  width: 700px;
+  height: 550px;
+  mix-blend-mode: lighten;
+  transform: translateZ(0);
+  transition: width 0.6s, height 0.6s, left 0.6s, right 0.6s, top 0.6s,
+    bottom 0.6s;
+  display: block; /* Default display */
+}
+
+/* Hide blobs on iOS */
+.is-ios-device .aurora-blob {
+  display: none;
+}
+
+/* Hide canvas aurora when not on iOS */
+.not-ios-device .canvas-aurora {
+  display: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .aurora-blob {
+    animation: none !important;
+  }
+  .cursor-circle {
+    display: none !important;
+  }
+}
+
+/* Responsive styles for aurora blobs */
+@media (max-width: 900px) {
+  .aurora-blob {
+    width: 350px;
+    height: 220px;
+    filter: blur(50px);
+  }
+  .blob5,
+  .blob6 {
+    width: 220px;
+    height: 120px;
+  }
+}
+
+/* Individual blob styling */
+.blob1 {
+  background: radial-gradient(
+    circle at 30% 40%,
+    #00ffd5 0%,
+    #0e1e4a 80%,
+    transparent 100%
+  );
+  left: 10vw;
+  top: -500px;
+  width: 900px;
+  height: 900px;
+  transform: translate(-50%, -50%);
+}
+
+.blob2 {
+  background: radial-gradient(
+    circle at 60% 30%,
+    #ff5ce6 0%,
+    #1e215d 80%,
+    transparent 100%
+  );
+  right: 10vw;
+  top: -500px;
+  width: 800px;
+  height: 800px;
+  transform: translate(50%, -50%);
+}
+
+.blob-center {
+  background: radial-gradient(
+    circle at 50% 50%,
+    rgba(0, 255, 255, 0.45) 0%,
+    rgba(0, 160, 255, 0.32) 40%,
+    rgba(0, 80, 200, 0.16) 70%,
+    rgba(20, 35, 80, 0) 100%
+  );
+  left: 50%;
+  top: 120px;
+  width: 500px;
+  height: 500px;
+  transform: translateX(-50%);
+  z-index: 2;
+  opacity: 0.85;
+  filter: blur(60px);
+  pointer-events: none;
+  position: absolute;
+}
+
+.blob3 {
+  background: radial-gradient(
+    circle at 50% 70%,
+    #00ff9d 0%,
+    #2f3f72 80%,
+    transparent 100%
+  );
+  left: 50%;
+  top: 50px;
+  width: 900px;
+  height: 900px;
+}
+
+.blob4 {
+  background: radial-gradient(
+    circle at 70% 60%,
+    #00aaff 0%,
+    #415a77 80%,
+    transparent 100%
+  );
+  right: 60px;
+  top: 20px;
+}
+
+.blob5 {
+  background: radial-gradient(
+    circle at 40% 60%,
+    #8affff 0%,
+    #7b2ff2 70%,
+    transparent 100%
+  );
+  left: -110px;
+  top: 900px;
+  width: 420px;
+  height: 320px;
+}
+
+.blob6 {
+  background: radial-gradient(
+    circle at 60% 80%,
+    #ffb347 0%,
+    #ff5ce6 70%,
+    transparent 100%
+  );
+  right: -80px;
+  top: 1750px;
+  width: 420px;
+  height: 320px;
+}
+
+.blob7 {
+  background: radial-gradient(
+    circle at 20% 50%,
+    #ff9a9e 0%,
+    #fad0c4 70%,
+    transparent 100%
+  );
+  width: 500px;
+  height: 400px;
+  left: 20px;
+  top: 2200px;
+}
+
+.blob8 {
+  background: radial-gradient(
+    circle at 80% 50%,
+    #a18cd1 0%,
+    #fbc2eb 70%,
+    transparent 100%
+  );
+  width: 500px;
+  height: 400px;
+  right: 20px;
+  top: 2600px;
+}
+
+/* Animation for aurora background */
+@keyframes aurora {
+  0% {
+    background-position: 0% 50%;
+  }
+  25% {
+    background-position: 50% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  75% {
+    background-position: 50% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+/* Cursor effect (light following cursor) */
+.cursor-circle {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  background: radial-gradient(
+    circle at center,
+    rgba(255, 255, 255, 0.4),
+    rgba(255, 255, 255, 0)
+  );
+  filter: blur(30px);
+  pointer-events: none;
+  z-index: 999;
+  transform: translateZ(0);
+}
 
 .portfolio-container {
   width: 100%;
@@ -82,19 +310,139 @@ body {
 }
 */
 
-/* Aurora blob styles moved to app/styles/components/aurora.css */
+/* ===== Navigation CSS ===== */
+/** Inline from app/styles/components/navigation.css */
+.side-nav {
+  position: fixed;
+  left: 2rem;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 20;
+  display: flex;
+  flex-direction: column;
+}
 
-/* Navigation styles moved to app/styles/components/navigation.css */
+.nav-item {
+  position: relative;
+  margin-bottom: 1rem;
+}
 
-/* Mobile hamburger button styles moved to navigation.css */
+.side-nav button {
+  background: none;
+  color: #ffffff;
+  cursor: pointer;
+  border: none;
+  font-size: 1.1rem;
+  text-align: left;
+  opacity: 0.7;
+  transition: opacity 0.3s, color 0.3s, transform 0.3s;
+}
 
-/* Tablet hamburger button styles moved to navigation.css */
+.side-nav button.active {
+  opacity: 1;
+  color: #00ffd5;
+  font-weight: 600;
+}
 
-/* Mobile menu animations moved to navigation.css */
-/* Individual blob styles moved to app/styles/components/aurora.css */
+.side-nav button:hover,
+.side-nav button:focus {
+  opacity: 1;
+  transform: translateX(3px);
+}
 
-/* Cursor circle effect moved to app/styles/components/aurora.css */
-/* Side navigation styles moved to app/styles/components/navigation.css */
+.elastic-underline {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  height: 2px;
+  width: 100%;
+  background-color: #00ffd5;
+  transform: scaleX(0);
+  transform-origin: left center;
+  will-change: transform;
+}
+
+.hamburger-btn {
+  display: none;
+  transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1),
+    box-shadow 0.3s cubic-bezier(0.22, 1, 0.36, 1),
+    background 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+  filter: drop-shadow(0 0 12px rgba(79, 70, 229, 0.25));
+}
+
+.hamburger-btn:hover {
+  filter: drop-shadow(0 0 16px rgba(79, 70, 229, 0.4));
+}
+
+@media (max-width: 767px) {
+  .side-nav {
+    display: none !important;
+  }
+  .hamburger-btn {
+    display: flex !important;
+  }
+}
+
+@media (max-width: 640px) {
+  .hamburger-btn {
+    width: 42px !important;
+    height: 42px !important;
+    top: 12px;
+    right: 12px;
+  }
+}
+
+@media (min-width: 641px) and (max-width: 767px) {
+  .hamburger-btn {
+    width: 48px !important;
+    height: 48px !important;
+    top: 14px;
+    right: 14px;
+  }
+}
+
+.mobile-nav-overlay {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  position: fixed;
+  inset: 0;
+  z-index: 99;
+  background: linear-gradient(
+    135deg,
+    rgba(30, 33, 93, 0.9) 0%,
+    rgba(123, 47, 242, 0.9) 100%
+  );
+  backdrop-filter: blur(16px);
+}
+
+.mobile-nav-overlay button.active::before {
+  content: "";
+  position: absolute;
+  inset: -10px;
+  background: radial-gradient(
+    circle at center,
+    rgba(0, 255, 213, 0.2),
+    transparent 70%
+  );
+  border-radius: 50%;
+  z-index: -1;
+  opacity: 0.8;
+  filter: blur(15px);
+  animation: pulse 2s infinite alternate;
+}
+
+@keyframes pulse {
+  0% {
+    transform: scale(0.95);
+    opacity: 0.7;
+  }
+  100% {
+    transform: scale(1.05);
+    opacity: 0.9;
+  }
+}
 
 .section {
   position: relative;
@@ -151,12 +499,235 @@ a {
   font-weight: 600;
 }
 
-/* Phone mockup styles moved to app/components/PhoneMockup.css */
+/* ===== Tech Stack CSS ===== */
+/** Inline from app/styles/components/tech-stack.css */
+.tech-stack {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem 1.5rem;
+  margin-top: 0.75rem;
+  align-items: center;
+}
 
-/* Overlay message styles moved to app/styles/components/overlay-message.css */
+.tech-item {
+  display: flex;
+  align-items: center;
+  font-size: 1rem;
+  color: #ededed;
+  background: rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  padding: 0.35em 0.8em 0.35em 0.5em;
+  margin-bottom: 0.25em;
+  font-weight: 500;
+  box-shadow: 0 1px 4px 0 rgba(0, 0, 0, 0.08);
+  transition: background 0.2s;
+}
 
-/* Tech stack styles moved to app/styles/components/tech-stack.css */
+.tech-item:hover {
+  background: rgba(0, 255, 213, 0.1);
+}
 
-/* Project card styles moved to app/styles/components/project-card.css */
+.tech-icon {
+  font-size: 1.5em;
+  margin-right: 0.5em;
+  vertical-align: middle;
+  filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.1));
+}
 
-/* Mobile navigation and overlay styles moved to app/styles/components/navigation.css */
+.tech-icon.nextjs {
+  color: #fff;
+  background: none;
+  border-radius: 0;
+  padding: 0;
+}
+
+.tech-icon.firebase { color: #ffa611; }
+.tech-icon.typescript { color: #3178c6; }
+.tech-icon.tailwind { color: #38bdf8; }
+
+@media (min-width: 600px) {
+  .tech-stack { gap: 1rem 2.5rem; margin-top: 1rem; }
+  .tech-item { font-size: 1.08rem; padding: 0.45em 1.1em 0.45em 0.7em; }
+  .tech-icon { font-size: 1.8em; }
+}
+
+@media (max-width: 768px) {
+  .tech-stack {
+    flex-wrap: wrap;
+    justify-content: center !important;
+    margin-top: 1rem;
+    margin-bottom: 0.5rem;
+    gap: 0.75rem !important;
+  }
+  .tech-item { font-size: 0.85rem; padding: 0.25em 0.6em 0.25em 0.4em; margin-bottom: 0.15em; }
+  .tech-icon { font-size: 1.2em !important; margin-right: 0.35em !important; }
+  .project-card .tech-stack { margin-top: 1rem; margin-bottom: 0.5rem; justify-content: center; }
+}
+
+/* ===== Project Card CSS ===== */
+/** Inline from app/styles/components/project-card.css */
+.project-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 2rem;
+  flex-basis: 100%;
+  max-width: 100%;
+  padding: 1.5rem;
+  min-height: 400px;
+  transition: transform 0.3s, background 0.3s;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  text-align: left;
+  will-change: transform, background;
+}
+.project-card:hover { transform: translateY(-5px); background: rgba(255, 255, 255, 0.06); }
+.project-card strong { font-size: 1.2rem; color: #00ffd5; display: block; margin-bottom: 0.5rem; }
+.project-grid { display: flex; flex-direction: column; gap: 2.5rem; margin-top: 1.5rem; width: 100%; }
+@media (min-width: 900px) {
+  .project-grid { display: grid; grid-template-columns: repeat(1, minmax(360px, 1fr)); gap: 2.5rem; }
+}
+.project-card.vinscribe-card { display: flex; flex-direction: row; align-items: center; justify-content: space-between; gap: 2rem; flex-basis: 100%; max-width: 100%; padding: 1.5rem; min-height: 400px; }
+.project-card.vinscribe-card .project-info { flex: 1 1 35%; }
+.vinscribe-image { flex: 1 1 60%; width: 248px; height: 320px; object-fit: contain; border-radius: 14px; background: #191c23; box-shadow: 0 6px 24px 0 rgba(0, 0, 0, 0.14); border: 2px solid #23252e; padding: 0.5rem; }
+.vinscribe-preview { display: block; width: 100%; max-width: 280px; min-width: 200px; height: 55vw; max-height: 480px; min-height: 250px; aspect-ratio: 280/480; border-radius: 18px; box-shadow: 0 6px 24px 0 rgba(0, 0, 0, 0.14); background: #191c23; border: none; margin: 0 auto; transition: box-shadow 0.2s; }
+@media (min-width: 600px) { .vinscribe-preview { height: 480px; width: 280px; } }
+.project-card.carlypsphoto-card { flex-basis: 100%; max-width: 100%; min-height: 400px; padding: 1.5rem; }
+.carlypsphoto-card .phone-mockup { margin-top: 2rem; }
+.project-card.full-leaf-app-card { flex-basis: 100%; max-width: 100%; min-height: 400px; }
+.project-card .project-info { flex: 1; max-width: 50%; }
+.project-image-container { width: 100%; height: 100%; position: relative; }
+.project-card.quailmail-card .quailmail-screenshot { position: relative; }
+.project-card.quailmail-card:hover .quailmail-screenshot { z-index: 10; }
+@media (min-width: 769px) {
+  .project-card .project-info { flex: 1; max-width: 50%; }
+  .project-card .project-media { flex: 1; display: flex; justify-content: center; align-items: center; max-width: 280px; max-height: 480px; }
+  .project-card .project-media .project-image-container { width: auto; height: auto; display: inline-flex; }
+  .project-card.media-right .project-media { justify-content: flex-end; }
+  .project-card.media-left .project-media { justify-content: flex-start; }
+  .project-card.media-right .project-media .visit-site-message { left: auto; right: 20px; transform: none; }
+  .project-card.media-left .project-media .visit-site-message { left: 20px; right: auto; transform: none; }
+  .vinscribe-screenshot,
+  .full-leaf-tea-company-screenshot,
+  .full-leaf-tea-company-wholesale-screenshot,
+  .shop-downtown-screenshot,
+  .carly-pearl-sacks-photography-screenshot { max-width: 280px !important; max-height: 480px !important; width: auto !important; height: auto !important; }
+  .project-card.full-leaf-app-card .project-info { flex: 2; max-width: 65%; }
+  .project-card.full-leaf-app-card .project-media { flex: 1; max-width: 35%; }
+  .project-card.full-leaf-app-card .project-info > .flex.justify-center.items-center > .inline-block { padding-top: 1rem !important; padding-bottom: 1rem !important; }
+}
+@media (min-width: 769px) {
+  .project-card.full-leaf-app-card .project-media { justify-content: flex-end !important; }
+  .project-card.full-leaf-app-card .project-image-container,
+  .project-card.full-leaf-app-card img { margin-right: 16px !important; }
+  .project-card.quailmail-card .project-media { justify-content: flex-start !important; }
+  .project-card.quailmail-card .project-image-container,
+  .project-card.quailmail-card img { margin-left: 16px !important; }
+}
+@media (max-width: 768px) {
+  .visit-site-message p { font-size: 0.85rem !important; line-height: 1.3 !important; margin: 0 !important; }
+  .message-icon { font-size: 18px !important; margin-bottom: 5px !important; }
+  .project-grid { display: flex; flex-direction: column; gap: 1.5rem; }
+  .project-card { flex-direction: column !important; gap: 0 !important; padding: 1.25rem; min-height: auto; }
+  .project-card .project-info { width: 100%; max-width: 100%; order: 2; margin-top: 1rem; }
+  .project-card .project-media { width: 100%; max-width: 280px; order: 1; margin: 0 auto; display: flex; justify-content: center; align-items: center; }
+  .project-card .project-info strong { font-size: 1.4rem; margin-bottom: 0.75rem; display: block; text-align: center; }
+  .project-card .project-info p { font-size: 0.95rem; line-height: 1.4; margin-bottom: 1rem; text-align: center; }
+  .project-card .project-media .project-image-container { width: auto; height: auto; display: inline-flex; justify-content: center; align-items: center; }
+  .tech-stack { flex-wrap: wrap; justify-content: center !important; margin-top: 1rem; margin-bottom: 0.5rem; gap: 0.75rem !important; }
+  .tech-item { font-size: 0.85rem; padding: 0.25em 0.6em 0.25em 0.4em; margin-bottom: 0.15em; }
+  .tech-icon { font-size: 1.2em !important; margin-right: 0.35em !important; }
+  .phone-mockup { transform: scale(0.9); margin: 0 auto; }
+}
+@media (min-width: 769px) and (max-width: 1024px) {
+  .project-card { gap: 1.5rem; }
+  .project-card .project-info { max-width: 50%; }
+  .project-card.fullleaf-card .phone-mockup { transform: scale(0.95); }
+}
+.project-card.fullleaf-card .project-media img { width: 100%; height: auto; object-fit: cover; border-radius: 12px; max-height: 100%; }
+.project-card.fullleaf-card .phone-content { display: flex; align-items: center; justify-content: center; overflow: hidden; }
+.project-card.fullleaf-card .phone-content img { width: 100%; height: 100%; object-fit: cover; }
+.glass-card { background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 12px; padding: 2rem; backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); box-shadow: 0 4px 18px rgba(0, 0, 0, 0.1); transition: background 0.3s, box-shadow 0.3s; width: fit-content; max-width: 90%; margin: 1rem auto; }
+.about-card { text-align: left; background: rgba(255, 255, 255, 0.02); max-width: 700px; padding: 3rem 2rem; }
+@media (max-width: 768px) {
+  .about-card { padding: 2rem 1.5rem; max-width: 90%; }
+  .about-card h1 { font-size: 1.75rem; line-height: 1.2; }
+  .about-card p { font-size: 0.95rem; }
+  .spiel-detail p { font-size: 0.85rem; }
+}
+.contact-card { text-align: center; background: rgba(255, 255, 255, 0.02); max-width: 550px; padding: 3rem 2rem; }
+.contact-card a { position: relative; display: inline-flex; align-items: center; }
+.contact-card a::after { content: ""; position: absolute; bottom: -2px; left: 0; width: 100%; height: 2px; background-color: currentColor; transform: scaleX(0); transform-origin: right; transition: transform 0.3s ease; }
+.contact-card a:hover::after { transform: scaleX(1); transform-origin: left; }
+.contact-card a[href*="linkedin.com"]::after { bottom: -5px; }
+.glass-card:hover { background: rgba(255, 255, 255, 0.06); box-shadow: 0 6px 24px rgba(0, 0, 0, 0.15); }
+
+/* ===== Overlay Message CSS ===== */
+/** Inline from app/styles/components/overlay-message.css */
+.visit-site-message {
+  position: absolute;
+  bottom: 20px; /* normalized with phone content overlays */
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(10, 15, 30, 0.92);
+  backdrop-filter: blur(12px);
+  border-radius: 12px;
+  padding: 14px 18px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3), 0 0 0 1px rgba(255, 255, 255, 0.1);
+  width: 90%;
+  max-width: 280px;
+  z-index: 10;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  pointer-events: auto;
+  opacity: 1;
+}
+.message-content { display: flex; align-items: center; justify-content: center; flex-direction: column; text-align: center; gap: 6px; }
+.message-icon { font-size: 24px; line-height: 1; }
+.visit-site-message p { margin: 0; font-size: 0.93rem; line-height: 1.35; color: rgba(255, 255, 255, 0.98); text-wrap: balance; }
+.visit-site-message a { color: #00ffd5; text-decoration: none; font-weight: 600; pointer-events: auto; position: relative; display: inline-block; }
+.visit-site-message a::after { content: ""; position: absolute; bottom: -2px; left: 0; width: 100%; height: 2px; background-color: #00ffd5; transform: scaleX(0); transform-origin: right; transition: transform 0.3s ease; }
+.visit-site-message a:hover::after { transform: scaleX(1); transform-origin: left; }
+@media (max-width: 600px) { .visit-site-message { padding: 10px 12px; max-width: 260px; } .message-icon { font-size: 20px; } .visit-site-message p { font-size: 0.86rem; } }
+
+/* ===== Phone Mockup CSS ===== */
+/** Inline from app/components/phone/PhoneMockup.css */
+.phone-mockup {
+  position: relative;
+  width: 100%;
+  max-width: 370px;
+  min-width: 210px;
+  aspect-ratio: 350/600;
+  background: #181c23;
+  border-radius: 38px;
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.18), 0 1.5px 6px 0 rgba(0, 0, 0, 0.1);
+  border: 3px solid #23252e;
+  margin: 0 auto;
+  padding: 24px 8px 28px 8px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+}
+@media (min-width: 769px) { .phone-mockup { max-width: 296px; } }
+.phone-mockup::before { content: ""; display: block; position: absolute; top: 10px; left: 50%; transform: translateX(-50%); width: 60px; height: 7px; background: #d1d5db; border-radius: 4px; z-index: 2; }
+.phone-mockup::after { content: ""; display: block; position: absolute; top: 10px; right: 32px; width: 10px; height: 10px; background: #bbb; border-radius: 50%; z-index: 2; }
+.phone-mockup .vinscribe-preview,
+.phone-mockup .carlypsphoto-preview { position: relative; width: 100%; height: 100%; max-width: 350px; max-height: 600px; min-width: 200px; min-height: 250px; aspect-ratio: 350/600; border-radius: 24px; box-shadow: none; background: #191c23; border: none; margin: 0; overflow-x: hidden; }
+.fullleaf-mockup { padding: 24px 8px 12px 8px; width: 200px; height: 400px; border-width: 1px; overflow: hidden; }
+@media (min-width: 769px) { .fullleaf-mockup { width: 160px; height: 320px; } }
+.fullleaf-tea-mockup { border-width: 1px; overflow: visible; }
+.fullleaf-wholesale-mockup { max-width: 280px; aspect-ratio: 375/812; border-width: 1px; overflow: visible; }
+@media (min-width: 769px) { .fullleaf-wholesale-mockup { max-width: 224px; } }
+.full-leaf-app-screenshot { margin-top: 5px; }
+.phone-mockup.clickable { cursor: pointer; }
+.phone-content-container { position: relative; width: 100%; height: 100%; opacity: 0; transform: translateY(24px); transition: opacity 0.6s cubic-bezier(0.4, 0, 0.2, 1), transform 0.6s cubic-bezier(0.4, 0, 0.2, 1); }
+.phone-content-container.fade-in { opacity: 1; transform: translateY(0); }
+.phone-content-container .visit-site-message { position: absolute; bottom: 20px; left: 50%; transform: translateX(-50%); width: 90%; max-width: 280px; background: rgba(0, 0, 0, 0.85); border-radius: 1rem; padding: 0.75rem 1rem; z-index: 100; box-shadow: 0 8px 32px rgba(0, 0, 0, 0.25); color: white; text-align: center; font-size: 0.875rem; line-height: 1.4; }
+.phone-content-container .visit-site-message.static-message { opacity: 1; transition: none; box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2); background: rgba(0, 0, 0, 0.75); }
+.phone-content-container .message-content { display: flex; flex-direction: column; align-items: center; justify-content: center; }
+.phone-content-container .message-icon { font-size: 1.5rem; margin-bottom: 0.5rem; }
+.phone-content-container a { color: #00ffd5; text-decoration: none; font-weight: 600; pointer-events: auto; position: relative; display: inline-block; }
+.phone-content-container a::after { content: ""; position: absolute; bottom: -2px; left: 0; width: 100%; height: 2px; background-color: #00ffd5; transform: scaleX(0); transform-origin: right; transition: transform 0.3s ease; }
+.phone-content-container a:hover::after { transform: scaleX(1); transform-origin: left; }
+@media (min-width: 600px) { .phone-mockup { max-width: 370px; padding: 28px 12px 32px 12px; } .fullleaf-wholesale-mockup { max-width: 310px; } .phone-mockup .vinscribe-preview { max-width: 350px; max-height: 600px; } }

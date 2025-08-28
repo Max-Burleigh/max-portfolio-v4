@@ -2,11 +2,9 @@
 import React, { useState, useRef, useCallback, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 // import { throttle } from "lodash";
-import { useActiveSection } from "@lib/hooks/useActiveSection";
-import { useIsMobile } from "@lib/hooks/useMediaQuery";
-import { useCursorFollower } from "@lib/hooks/useCursorFollower";
-import { AuroraBlob, CanvasAurora } from "@components/aurora";
-import { Navigation } from "@components/navigation";
+import { useActiveSection, useIsMobile, useCursorFollower } from "@lib/hooks";
+import AuroraBackground from "@components/AuroraBackground";
+import Navigation from "@components/navigation/Navigation";
 import AboutSection from "@sections/AboutSection";
 import ProjectsSection from "@sections/ProjectsSection";
 import ContactSection from "@sections/ContactSection";
@@ -93,9 +91,7 @@ const Portfolio = () => {
 
   // Remove unused hover/click message state and handlers
 
-  const blobProps = {
-    style: { zIndex: 0, willChange: "transform, opacity" },
-  };
+  // Aurora animation props handled inside AuroraBackground
 
   return (
     <>
@@ -129,41 +125,7 @@ const Portfolio = () => {
         </AnimatePresence>
 
         {/* Always render both backgrounds; CSS on <html> decides visibility */}
-        <AuroraBlob
-          className="blob1 aurora-blob"
-          initial={{ opacity: 0.5, scale: 1, x: -50, y: -50 }}
-          animate={{
-            opacity: [0.5, 0.8, 0.5],
-            scale: [1, 1.2, 1],
-            x: [-50, 0, -50],
-            y: [-50, 50, -50],
-          }}
-          transition={{
-            duration: 14,
-            repeat: Infinity,
-            ease: "easeInOut",
-            repeatType: "mirror",
-          }}
-          {...blobProps}
-        />
-        <AuroraBlob
-          className="blob2 aurora-blob"
-          initial={{ opacity: 0.4, scale: 1, x: 150, y: 50 }}
-          animate={{
-            opacity: [0.4, 0.7, 0.4],
-            scale: [1, 1.3, 1],
-            x: [150, 200, 150],
-            y: [50, 150, 50],
-          }}
-          transition={{
-            duration: 18,
-            repeat: Infinity,
-            ease: "easeInOut",
-            repeatType: "mirror",
-          }}
-          {...blobProps}
-        />
-        <CanvasAurora />
+        <AuroraBackground />
 
         {/* 
           REMOVED THE DUPLICATE NAVIGATION COMPONENT FROM HERE.

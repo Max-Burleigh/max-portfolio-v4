@@ -2,8 +2,7 @@
 import React, { useRef, useState, useCallback, useMemo, forwardRef, useEffect } from "react";
 import Image from "next/image";
 import { motion, useMotionValue, useSpring, AnimatePresence } from "framer-motion";
-import { rafThrottle } from "@utils/rafThrottle";
-import { useIsMobile } from "@lib/hooks/useMediaQuery";
+import { rafThrottle, useIsMobile } from "@lib/hooks";
 
 const round = (num: number, fix = 2) => parseFloat(num.toFixed(fix));
 const distance = (x1: number, y1: number, x2: number, y2: number) =>
