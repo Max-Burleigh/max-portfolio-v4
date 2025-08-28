@@ -5,7 +5,7 @@
 @import "./styles/components/navigation.css";
 @import "./styles/components/tech-stack.css";
 @import "./styles/components/project-card.css";
-@import "./styles/components/interactive-iframe.css";
+@import "./styles/components/overlay-message.css";
 
 :root {
   --background: #0a0a0a; /* Dark mode default */
@@ -148,7 +148,7 @@ a {
 
 /* Phone mockup styles moved to app/components/PhoneMockup.css */
 
-/* Interactive Iframe Component Styles moved to app/styles/components/interactive-iframe.css */
+/* Overlay message styles moved to app/styles/components/overlay-message.css */
 
 /* Tech stack styles moved to app/styles/components/tech-stack.css */
 

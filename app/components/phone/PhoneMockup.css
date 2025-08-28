@@ -51,7 +51,7 @@
   z-index: 2;
 }
 
-.phone-mockup .vinscribe-iframe {
+.phone-mockup .vinscribe-preview {
   position: relative;
   width: 100%;
   height: 100%;
@@ -68,7 +68,7 @@
   overflow-x: hidden;
 }
 
-.phone-mockup .carlypsphoto-iframe {
+.phone-mockup .carlypsphoto-preview {
   position: relative;
   width: 100%;
   height: 100%;
@@ -181,9 +181,9 @@
   transform: translateY(0);
 }
 
-.phone-content-container .iframe-message {
+.phone-content-container .visit-site-message {
   position: absolute;
-  bottom: 1.5rem;
+  bottom: 20px; /* normalized with overlay-message.css */
   left: 50%;
   transform: translateX(-50%);
   width: 90%;
@@ -200,7 +200,7 @@
 }
 
 /* Always visible static message */
-.phone-content-container .iframe-message.static-message {
+.phone-content-container .visit-site-message.static-message {
   opacity: 1;
   transition: none;
   /* More subtle box-shadow to be less distracting */
@@ -259,7 +259,7 @@
     max-width: 310px; /* Consistency with the above definition */
   }
 
-  .phone-mockup .vinscribe-iframe {
+  .phone-mockup .vinscribe-preview {
     max-width: 350px;
     max-height: 600px;
   }

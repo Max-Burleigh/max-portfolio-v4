@@ -8,9 +8,9 @@ export interface ProjectCardProps {
     icon: ReactNode;
     label: string;
   }[];
-  iframeUrl?: string;
-  iframeTitle?: string;
-  iframeClassName?: string;
+  previewUrl?: string; // previously iframeUrl
+  previewTitle?: string; // previously iframeTitle
+  previewClassName?: string; // previously iframeClassName
   imageUrl?: string;
   imageAlt?: string;
   imageTitle?: string;

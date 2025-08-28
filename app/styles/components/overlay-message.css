@@ -1,21 +1,13 @@
 /**
- * Interactive Iframe Component Styles
- * 
- * This file contains styles for the interactive iframe components used in project cards,
- * including message overlays and interaction prompts.
+ * Overlay Message Styles
+ *
+ * Styles for the overlay messages used in project cards and phone content.
  */
 
-/* Interactive Iframe Container */
-.interactive-iframe-container {
-  position: relative;
-  width: 100%;
-  height: 100%;
-}
-
-/* Iframe message overlay - Always visible and positioned towards bottom */
-.iframe-message {
+/* Visit-site message overlay - centered near bottom */
+.visit-site-message {
   position: absolute;
-  bottom: 20px;
+  bottom: 20px; /* normalized with phone content overlays */
   left: 50%;
   transform: translateX(-50%);
   background: rgba(10, 15, 30, 0.92);
@@ -31,7 +23,6 @@
   opacity: 1;
 }
 
-/* Message content layout */
 .message-content {
   display: flex;
   align-items: center;
@@ -41,14 +32,12 @@
   gap: 6px;
 }
 
-/* Icon in message */
 .message-icon {
   font-size: 24px;
   line-height: 1;
 }
 
-/* Message text */
-.iframe-message p {
+.visit-site-message p {
   margin: 0;
   font-size: 0.93rem;
   line-height: 1.35;
@@ -56,8 +45,7 @@
   text-wrap: balance;
 }
 
-/* Links within iframe messages */
-.iframe-message a {
+.visit-site-message a {
   color: #00ffd5;
   text-decoration: none;
   font-weight: 600;
@@ -66,8 +54,7 @@
   display: inline-block;
 }
 
-/* Animated underline effect for links */
-.iframe-message a::after {
+.visit-site-message a::after {
   content: "";
   position: absolute;
   bottom: -2px;
@@ -80,16 +67,13 @@
   transition: transform 0.3s ease;
 }
 
-.iframe-message a:hover::after {
+.visit-site-message a:hover::after {
   transform: scaleX(1);
   transform-origin: left;
 }
 
-/* Mobile responsive styles */
 @media (max-width: 600px) {
-  .iframe-message { padding: 10px 12px; max-width: 260px; }
-
+  .visit-site-message { padding: 10px 12px; max-width: 260px; }
   .message-icon { font-size: 20px; }
-
-  .iframe-message p { font-size: 0.86rem; }
+  .visit-site-message p { font-size: 0.86rem; }
 }

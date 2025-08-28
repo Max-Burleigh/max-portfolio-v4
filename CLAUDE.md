@@ -39,7 +39,7 @@ This is a Next.js 15 portfolio website using App Router with sophisticated perfo
 ### Platform Optimizations
 
 - Aurora background uses Canvas rendering on iOS for performance
-- Platform-specific body classes set via `PlatformDetector` component
+- Platform/device tweaks handled via SSR UA logic in `app/layout.tsx` (no PlatformDetector component)
 - Mobile-first responsive design with breakpoint-based rendering
 
 ### Performance Patterns

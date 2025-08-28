@@ -2,12 +2,8 @@
 import React from "react";
 import Image from "next/image";
 import { motion } from "framer-motion";
-import {
-  PhoneMockup,
-  PhoneContent,
-  InteractiveIframe,
-  TechStack,
-} from "../../index";
+import { PhoneMockup, PhoneContent } from "@components/phone";
+import { TechStack } from "@components/ui";
 import { ProjectCardProps } from "./types";
 
 const ProjectCard: React.FC<ProjectCardProps> = ({
@@ -15,9 +11,9 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
   description,
   websiteUrl,
   techStack,
-  iframeUrl,
-  iframeTitle,
-  iframeClassName,
+  previewUrl,
+  // previewTitle,
+  // previewClassName,
   imageUrl,
   imageAlt,
   imageTitle,
@@ -38,7 +34,7 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
 
   return (
     <div
-      className={`project-card ${className}`}
+      className={`project-card ${reverseLayout ? "media-left" : "media-right"} ${className}`.trim()}
       style={{
         flexDirection: reverseLayout ? "row-reverse" : "row",
         ...style,
@@ -57,7 +53,7 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
           <TechStack items={techStack} style={{ flexDirection: "row" }} />
         )}
       </div>
-      {(iframeUrl || imageUrl) &&
+      {(imageUrl || (previewUrl && !disablePhoneMockup)) &&
         (disablePhoneMockup ? (
           <div
             className="project-media"
@@ -65,13 +61,6 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
             onMouseEnter={onMouseEnter}
             onClick={onClick}
           >
-            {iframeUrl && (
-              <InteractiveIframe
-                src={iframeUrl}
-                title={iframeTitle || `${title} Mobile Preview`}
-                className={iframeClassName || ""}
-              />
-            )}
             {imageUrl && (
               <motion.div
                 className="project-image-container"
@@ -120,19 +109,6 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
               onMouseEnter={onMouseEnter}
               onClick={onClick}
             >
-              {iframeUrl && (
-                <PhoneContent
-                  type="iframe"
-                  src={iframeUrl}
-                  variant={
-                    title.toLowerCase().includes("carlyps")
-                      ? "carlypsphoto"
-                      : "vinscribe"
-                  }
-                  alt={iframeTitle || `${title} Mobile Preview`}
-                  className={iframeClassName || ""}
-                />
-              )}
               {imageUrl && (
                 <PhoneContent
                   type="image"

@@ -11,10 +11,10 @@ import {
 // Define section keys type - needed for props
 type SectionKey = "about" | "projects" | "contact"; // Or import from a shared types file
 
-// --- NavItem Component ---
+// --- NavItem Component (restored original feel) ---
 interface NavItemProps {
-  section: string;
-  activeSection: string;
+  section: SectionKey;
+  activeSection: SectionKey;
   onClick: () => void;
 }
 
@@ -25,13 +25,9 @@ const NavItem = memo(({ section, activeSection, onClick }: NavItemProps) => {
     inactive: { scaleX: 0 },
     active: {
       scaleX: 1,
-      transition: {
-        type: "spring",
-        stiffness: 400,
-        damping: 20,
-      },
+      transition: { type: "spring", stiffness: 400, damping: 20 },
     },
-  };
+  } as const;
 
   return (
     <div className="nav-item">
@@ -48,6 +44,34 @@ const NavItem = memo(({ section, activeSection, onClick }: NavItemProps) => {
   );
 });
 NavItem.displayName = "NavItem";
+
+// Desktop Nav removed – mobile-only menu
+
+// --- SideNav Component (Desktop) ---
+interface SideNavProps {
+  sections: SectionKey[];
+  activeSection: SectionKey;
+  scrollToSection: (section: SectionKey) => void;
+}
+
+const SideNav: React.FC<SideNavProps> = ({
+  sections,
+  activeSection,
+  scrollToSection,
+}) => (
+  <nav className="side-nav">
+    {sections.map((section) => (
+      <NavItem
+        key={section}
+        section={section}
+        activeSection={activeSection}
+        onClick={() => {
+          scrollToSection(section);
+        }}
+      />
+    ))}
+  </nav>
+);
 
 // --- Hamburger Component (Extracted) ---
 interface HamburgerProps {
@@ -140,6 +164,7 @@ interface MobileMenuProps {
   activeSection: SectionKey;
   setMenuOpen: (isOpen: boolean) => void;
   scrollToSection: (section: SectionKey) => void;
+  setActiveSection: (section: SectionKey) => void;
 }
 
 // Container variants - for staggering menu items
@@ -167,6 +192,7 @@ const MobileMenu: React.FC<MobileMenuProps> = ({
   activeSection,
   setMenuOpen,
   scrollToSection,
+  setActiveSection,
 }) => (
   <motion.div
     className="fixed top-0 right-0 h-full w-[280px] bg-gradient-to-br from-blue-900/90 via-purple-900/90 to-pink-900/90 backdrop-blur-xl flex flex-col justify-center items-center shadow-2xl border-l border-white/10 z-[101] md:hidden"
@@ -189,10 +215,12 @@ const MobileMenu: React.FC<MobileMenuProps> = ({
       {sections.map((section) => (
         <motion.button
           key={section}
-          className={`relative text-2xl font-bold mb-9 last:mb-0 text-white tracking-wide flex items-center w-full justify-start ${
+          className={`relative text-2xl font-bold mb-9 last:mb-0 text-white tracking-wide flex items-center w-full justify-start hover:text-[#00ffd5] ${
             section === activeSection ? "text-pink-300" : ""
           }`}
           onClick={() => {
+            // Immediate UI feedback
+            setActiveSection(section as SectionKey);
             setMenuOpen(false);
             scrollToSection(section);
           }}
@@ -208,16 +236,6 @@ const MobileMenu: React.FC<MobileMenuProps> = ({
               transition: { type: "spring", stiffness: 350, damping: 25 },
             },
           }}
-          whileHover={{
-            scale: 1.05,
-            x: 10,
-            color: "#00ffd5",
-            transition: { type: "spring", stiffness: 400 },
-          }}
-          whileTap={{
-            scale: 0.95,
-            transition: { type: "spring", stiffness: 800, damping: 20 },
-          }}
           onHoverStart={() => {
             if (section !== activeSection) {
               const audio = new Audio(
@@ -230,30 +248,13 @@ const MobileMenu: React.FC<MobileMenuProps> = ({
         >
           <div className="w-9 h-5 flex-shrink-0 flex items-center">
             {section === activeSection && (
-              <motion.div className="relative w-5 h-5">
-                <motion.span
-                  className="absolute inset-0 rounded-full bg-gradient-to-br from-blue-400 to-pink-400"
-                  layoutId="activeNavIndicator"
-                  initial={{ scale: 0.8, opacity: 0.5 }}
-                  animate={{ scale: 1, opacity: 1 }}
-                  transition={{ type: "spring", stiffness: 500, damping: 20 }}
-                />
-                <motion.span
-                  className="absolute inset-0 rounded-full bg-cyan-400"
-                  layoutId="activeNavGlow"
-                  initial={{ scale: 1, opacity: 0.3 }}
-                  animate={{
-                    scale: [1, 1.5, 1],
-                    opacity: [0.3, 0.5, 0.3],
-                  }}
-                  transition={{
-                    duration: 1.2,
-                    ease: "easeInOut",
-                    layout: { type: "spring", stiffness: 350, damping: 20 },
-                  }}
+              <span className="relative block w-5 h-5">
+                <span className="absolute inset-0 rounded-full bg-gradient-to-br from-blue-400 to-pink-400"></span>
+                <span
+                  className="absolute inset-0 rounded-full bg-cyan-400 opacity-40"
                   style={{ filter: "blur(8px)", zIndex: -1 }}
-                />
-              </motion.div>
+                ></span>
+              </span>
             )}
           </div>
           <span>{section.charAt(0).toUpperCase() + section.slice(1)}</span>
@@ -270,6 +271,7 @@ interface NavigationProps {
   sections: SectionKey[];
   menuOpen: boolean;
   setMenuOpen: (isOpen: boolean) => void;
+  setActiveSection: (section: SectionKey) => void;
 }
 
 const Navigation: React.FC<NavigationProps> = ({
@@ -278,6 +280,7 @@ const Navigation: React.FC<NavigationProps> = ({
   sections,
   menuOpen,
   setMenuOpen,
+  setActiveSection,
 }) => {
   const [menuKey, setMenuKey] = useState(0);
 
@@ -298,17 +301,12 @@ const Navigation: React.FC<NavigationProps> = ({
 
   return (
     <>
-      {/* Desktop Side Nav */}
-      <nav className="side-nav hidden md:flex">
-        {sections.map((section) => (
-          <NavItem
-            key={section}
-            section={section}
-            activeSection={activeSection}
-            onClick={() => scrollToSection(section)}
-          />
-        ))}
-      </nav>
+      {/* Desktop side navigation */}
+      <SideNav
+        sections={sections}
+        activeSection={activeSection}
+        scrollToSection={scrollToSection}
+      />
 
       {/* Hamburger for mobile */}
       <Hamburger menuOpen={menuOpen} setMenuOpen={handleSetMenuOpen} />
@@ -322,6 +320,7 @@ const Navigation: React.FC<NavigationProps> = ({
             activeSection={activeSection}
             setMenuOpen={handleSetMenuOpen}
             scrollToSection={scrollToSection}
+            setActiveSection={setActiveSection}
           />
         )}
       </AnimatePresence>

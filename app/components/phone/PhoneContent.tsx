@@ -7,7 +7,7 @@ import "./PhoneMockup.css";
 interface PhoneContentProps {
   children?: React.ReactNode;
   src?: string;
-  type?: "iframe" | "image";
+  type?: "preview" | "image"; // renamed from "iframe"
   className?: string;
   variant?:
     | "vinscribe"
@@ -22,21 +22,21 @@ interface PhoneContentProps {
 const PhoneContent: React.FC<PhoneContentProps> = ({
   children,
   src,
-  type = "iframe",
+  type = "preview",
   className = "",
   variant = "vinscribe",
   alt = "Phone content",
   blurDataURL = "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAwIiBoZWlnaHQ9IjEyMDAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHJlY3Qgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgZmlsbD0iIzIwMjAyMCIvPjwvc3ZnPg==",
 }) => {
-  const [loadIframe, setLoadIframe] = useState(false);
-  const iframeRef = useRef<HTMLIFrameElement>(null);
+  const [loadPreview, setLoadPreview] = useState(false);
+  const iframeRef = useRef<HTMLIFrameElement>(null); // retained ref for legacy support if needed
   const containerRef = useRef<HTMLDivElement>(null);
 
   const contentClass =
     variant === "vinscribe"
-      ? "vinscribe-iframe"
+      ? "vinscribe-preview"
       : variant === "carlypsphoto"
-      ? "carlypsphoto-iframe"
+      ? "carlypsphoto-preview"
       : variant === "fullleaf"
       ? "full-leaf-app-screenshot"
       : variant === "fullleaf-tea"
@@ -46,17 +46,17 @@ const PhoneContent: React.FC<PhoneContentProps> = ({
       : "";
 
   const handleLoadIframe = useCallback(() => {
-    if (!loadIframe) {
-      setLoadIframe(true);
+    if (!loadPreview) {
+      setLoadPreview(true);
     }
-  }, [loadIframe]);
+  }, [loadPreview]);
 
   useEffect(() => {
-    if (type !== "iframe" || loadIframe || !containerRef.current) return;
+    if (type !== "preview" || loadPreview || !containerRef.current) return;
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting) {
-          setLoadIframe(true);
+          setLoadPreview(true);
           observer.disconnect();
         }
       },
@@ -66,7 +66,7 @@ const PhoneContent: React.FC<PhoneContentProps> = ({
     return () => {
       observer.disconnect();
     };
-  }, [loadIframe, type]);
+  }, [loadPreview, type]);
 
   const [isVisible, setIsVisible] = useState(false);
 
@@ -106,14 +106,14 @@ const PhoneContent: React.FC<PhoneContentProps> = ({
       </div>
     );
   }
-  if (type === "iframe" && src) {
+  if (type === "preview" && src) {
     return (
       <div
         ref={containerRef}
         className={`phone-content-container${isVisible ? " fade-in" : ""}`}
         onClick={handleLoadIframe}
       >
-        {loadIframe && (
+        {loadPreview && (
           <>
             <iframe
               ref={iframeRef}
@@ -125,13 +125,13 @@ const PhoneContent: React.FC<PhoneContentProps> = ({
               onLoad={() => setIsVisible(true)}
             />
 
-            <div className="iframe-message static-message">
+            <div className="visit-site-message static-message">
               <div className="message-content">
                 <div className="message-icon">✨</div>
                 <p>
-                  For the full experience, visit{" "}
+                  Click to visit the website for the full experience
                   <a href={src} target="_blank" rel="noopener noreferrer">
-                    the website
+                    &nbsp;→
                   </a>
                 </p>
               </div>

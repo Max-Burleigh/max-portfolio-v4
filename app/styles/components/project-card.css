@@ -40,7 +40,7 @@
   display: flex;
   flex-direction: column;
   gap: 2.5rem;
-  margin-top: 2rem;
+  margin-top: 1.5rem;
   width: 100%;
 }
 
@@ -81,7 +81,7 @@
   padding: 0.5rem;
 }
 
-.vinscribe-iframe {
+.vinscribe-preview {
   display: block;
   width: 100%;
   max-width: 280px;
@@ -99,7 +99,7 @@
 }
 
 @media (min-width: 600px) {
-  .vinscribe-iframe {
+  .vinscribe-preview {
     height: 480px;
     width: 280px;
   }
@@ -117,7 +117,7 @@
   margin-top: 2rem;
 }
 
-/* Project-specific message styles removed - now using centered positioning from interactive-iframe.css */
+/* Project-specific message styles removed - now using centered positioning from overlay-message.css */
 
 .project-card.full-leaf-app-card {
   flex-basis: 100%;
@@ -132,7 +132,8 @@
   width: auto !important;
   object-fit: contain;
   box-shadow: 0 6px 24px 0 rgba(0, 0, 0, 0.14);
-  margin-right: 2rem !important;
+  /* Keep margins neutral by default; individual layout rules below */
+  margin-right: 0 !important;
 }
 
 /* Project info column */
@@ -171,8 +172,31 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    max-width: 300px; /* Reduce from typical 375px phone width */
+    max-width: 280px; /* match model child width */
     max-height: 480px; /* 20% smaller than typical 600px height */
+  }
+
+  /* Shrink image wrapper to image size so alignment is truly flush */
+  .project-card .project-media .project-image-container {
+    width: auto;
+    height: auto;
+    display: inline-flex;
+  }
+
+  /* Explicit mirroring per layout to avoid affecting the other */
+  .project-card.media-right .project-media { justify-content: flex-end; }
+  .project-card.media-left .project-media { justify-content: flex-start; }
+
+  /* Mirror overlay message alignment with the phone side */
+  .project-card.media-right .project-media .visit-site-message {
+    left: auto;
+    right: 20px; /* normalized to match Full Leaf Tea spacing */
+    transform: none;
+  }
+  .project-card.media-left .project-media .visit-site-message {
+    left: 20px; /* normalized to match Full Leaf Tea spacing */
+    right: auto;
+    transform: none;
   }
 
   /* Desktop screenshot size overrides - target specific classes to override inline styles */
@@ -208,11 +232,31 @@
   }
 }
 
+/* Desktop edge spacing tweaks for specific cards */
+@media (min-width: 769px) {
+  /* Keep two-column layout but nudge images to equalize edge spacing */
+  .project-card.full-leaf-app-card .project-media {
+    justify-content: flex-end !important;
+  }
+  .project-card.full-leaf-app-card .project-image-container,
+  .project-card.full-leaf-app-card img {
+    margin-right: 16px !important; /* add more space from right edge */
+  }
+
+  .project-card.quailmail-card .project-media {
+    justify-content: flex-start !important;
+  }
+  .project-card.quailmail-card .project-image-container,
+  .project-card.quailmail-card img {
+    margin-left: 16px !important; /* add more space from left edge */
+  }
+}
+
 /* Mobile responsive styles */
 @media (max-width: 768px) {
-  /* Message styles handled by interactive-iframe.css */
+  /* Message styles handled by overlay-message.css */
 
-  .iframe-message p {
+  .visit-site-message p {
     font-size: 0.85rem !important;
     line-height: 1.3 !important;
     margin: 0 !important;
@@ -290,7 +334,7 @@
     margin: 0 auto;
   }
 
-  /* Phone content message styles handled by interactive-iframe.css */
+  /* Phone content message styles handled by overlay-message.css */
 
   /* Full Leaf Tea phone mockup scale */
   .project-card.fullleaf-card .phone-mockup {
@@ -323,7 +367,7 @@
     justify-content: center;
   }
 
-  /* Fullleaf message styles handled by interactive-iframe.css */
+  /* Fullleaf message styles handled by overlay-message.css */
 }
 
 /* Tablet specific adjustments */
