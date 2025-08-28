@@ -130,6 +130,11 @@ h2 {
   h2 {
     margin-bottom: 0;
   }
+  /* Center the Projects heading on mobile only */
+  .projects-section h2 {
+    width: 100%;
+    text-align: center;
+  }
 }
 
 .side-nav,

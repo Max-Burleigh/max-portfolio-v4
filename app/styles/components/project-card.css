@@ -293,6 +293,9 @@
     max-width: 280px;
     order: 1;
     margin: 0 auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
   }
 
   .project-card .project-info strong {
@@ -307,6 +310,15 @@
     line-height: 1.4;
     margin-bottom: 1rem;
     text-align: center;
+  }
+
+  /* Ensure the animated image wrapper shrinks to content and centers */
+  .project-card .project-media .project-image-container {
+    width: auto;
+    height: auto;
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
   }
 
   .tech-stack {
@@ -340,6 +352,18 @@
   .project-card.fullleaf-card .phone-mockup {
     transform: scale(0.9);
     margin: 0 auto;
+  }
+
+  /* Reduce image size on mobile for specific projects only */
+  .vinscribe-screenshot,
+  .full-leaf-tea-company-screenshot,
+  .full-leaf-tea-company-wholesale-screenshot,
+  .shop-downtown-screenshot,
+  .carly-pearl-sacks-photography-screenshot {
+    max-width: 220px !important;
+    max-height: 380px !important;
+    width: auto !important;
+    height: auto !important;
   }
 }
 
