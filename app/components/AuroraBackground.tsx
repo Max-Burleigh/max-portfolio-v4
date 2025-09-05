@@ -2,8 +2,7 @@
 import React, { useEffect, useRef } from "react";
 import { motion } from "framer-motion";
 
-// Keep behavior identical: render two animated blobs and the canvas fallback.
-// CSS on <html> (.is-ios-device / .not-ios-device) controls visibility.
+// Keep behavior identical: render fixed gradient, a single blurred layer wrapping two animated blobs, and a canvas safety fallback.
 
 // Canvas drawing config (ported from previous CanvasAurora)
 interface BlobConfig {
@@ -59,7 +58,7 @@ const AuroraBackground: React.FC = () => {
     const prefersReducedMotion = window.matchMedia(
       "(prefers-reduced-motion: reduce)"
     ).matches;
-    if (!isIOS || prefersReducedMotion) return; // Only draw on iOS
+    if (!isIOS || prefersReducedMotion) return; // Only draw on iOS if needed
 
     const canvas = canvasRef.current!;
     const ctx = canvas.getContext("2d")!;
@@ -115,7 +114,10 @@ const AuroraBackground: React.FC = () => {
 
   return (
     <>
-      {/* Blobs (hidden on iOS via CSS) */}
+      {/* Root gradient background */}
+      <div className="aurora-bg" aria-hidden="true" />
+      {/* Single blur wrapper containing all blobs */}
+      <div className="aurora-layer" aria-hidden="true">
       <motion.div
         className="blob1 aurora-blob"
         initial={{ opacity: 0.5, scale: 1, x: -50, y: -50 }}
@@ -150,8 +152,9 @@ const AuroraBackground: React.FC = () => {
         }}
         {...blobProps}
       />
+      </div>
 
-      {/* Canvas (hidden on non‑iOS via CSS) */}
+      {/* Canvas stays hidden by CSS unless explicitly enabled */}
       <canvas
         ref={canvasRef}
         className="absolute inset-0 z-0 pointer-events-none canvas-aurora"

@@ -109,8 +109,6 @@ const Portfolio = () => {
         className="portfolio-container"
         onMouseMove={throttledMouseMove}
       >
-        <div className="aurora-bg" />
-
         {/* Add overlay when mobile menu is open */}
         <AnimatePresence>
           {menuOpen && isMobile && (

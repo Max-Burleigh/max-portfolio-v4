@@ -5,6 +5,27 @@
   --foreground: #ededed;
   --font-fallback: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
     Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+
+  /* Aurora palette (sRGB fallback) */
+  --a0: #091236;
+  --a1: #1e215d;
+  --a2: #2f3f72;
+  --a3: #415a77;
+  --a4: #23252e;
+
+  /* Prefer perceptual interpolation for aurora gradients */
+  --aurora-gradient: linear-gradient(in oklab 120deg, var(--a0) 0%, var(--a1) 25%, var(--a2) 50%, var(--a3) 75%, var(--a4) 100%);
+}
+
+/* Wide‑gamut enhancement where supported (keeps colors consistent on P3 displays) */
+@media (color-gamut: p3) {
+  :root {
+    --a0: color(display-p3 0.035 0.071 0.212);
+    --a1: color(display-p3 0.118 0.129 0.365);
+    --a2: color(display-p3 0.184 0.247 0.447);
+    --a3: color(display-p3 0.255 0.353 0.467);
+    --a4: color(display-p3 0.137 0.145 0.180);
+  }
 }
 
 @theme inline {
@@ -65,20 +86,28 @@ body {
   position: fixed;
   inset: 0;
   z-index: -1;
-  background: linear-gradient(
-    120deg,
-    #091236 0%,
-    #1e215d 25%,
-    #2f3f72 50%,
-    #415a77 75%,
-    #23252e 100%
-  );
+  background: var(--aurora-gradient);
   background-size: 100% 100%;
+  /* Promote and isolate to avoid scroll repaints */
+  transform: translate3d(0, 0, 0);
+  will-change: transform, opacity;
+  contain: paint;
 }
 
-/* iOS-specific background override */
-.is-ios-device .aurora-bg {
-  background: #2d174d; /* Solid color for iOS */
+/* Subtle noise to dither gradients and kill banding */
+.aurora-bg::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.035; /* 0.02–0.06 works well */
+  mix-blend-mode: overlay; /* or soft-light for subtler effect */
+  background-size: 180px 180px;
+  image-rendering: pixelated;
+  background-image: url("data:image/svg+xml;utf8,\
+<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200' viewBox='0 0 200 200'>\
+<filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/></filter>\
+<rect width='100%' height='100%' filter='url(%23n)' opacity='0.9'/></svg>");
 }
 
 /* Aurora blob base styles */
@@ -87,26 +116,31 @@ body {
   pointer-events: none;
   z-index: 1;
   border-radius: 50%;
-  filter: blur(80px);
+  /* blur moved to wrapper layer; keep opacity here */
   opacity: 0.5;
   width: 700px;
   height: 550px;
-  mix-blend-mode: lighten;
+  mix-blend-mode: screen;
   transform: translateZ(0);
   transition: width 0.6s, height 0.6s, left 0.6s, right 0.6s, top 0.6s,
     bottom 0.6s;
+  will-change: transform, opacity;
   display: block; /* Default display */
 }
 
-/* Hide blobs on iOS */
-.is-ios-device .aurora-blob {
-  display: none;
+/* Single blur layer wrapper for all blobs to reduce Safari artifacts */
+.aurora-layer {
+  position: fixed;
+  inset: 0;
+  filter: blur(80px);
+  will-change: filter;
+  transform: translate3d(0, 0, 0);
+  pointer-events: none;
+  z-index: 0; /* sits above .aurora-bg and below content */
 }
 
-/* Hide canvas aurora when not on iOS */
-.not-ios-device .canvas-aurora {
-  display: none;
-}
+/* Canvas stays hidden by default; can be enabled if needed */
+.canvas-aurora { display: none; }
 
 @media (prefers-reduced-motion: reduce) {
   .aurora-blob {
@@ -122,7 +156,6 @@ body {
   .aurora-blob {
     width: 350px;
     height: 220px;
-    filter: blur(50px);
   }
   .blob5,
   .blob6 {
@@ -296,7 +329,7 @@ body {
 
 .portfolio-container {
   width: 100%;
-  min-height: 100vh; /* Fallback if JS fails or before it runs */
+  min-height: 100dvh; /* dynamic viewport for correct iOS behavior */
   position: relative;
   background: transparent; /* Make transparent to show aurora gradient */
   /* Allow iOS native pull-to-refresh */
@@ -451,7 +484,7 @@ body {
 .section {
   position: relative;
   width: 100vw;
-  min-height: 100vh;
+  min-height: 100dvh; /* dynamic viewport for correct iOS behavior */
   max-width: 1000px;
   margin: 0 auto;
   display: flex;
