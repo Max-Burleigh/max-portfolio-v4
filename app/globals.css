@@ -532,6 +532,11 @@ h2 {
   font-weight: 700;
 }
 
+/* Remove bottom margin for the Projects section heading only */
+.projects-section h2 {
+  margin-bottom: 0;
+}
+
 /* Mobile styles for h2 */
 @media (max-width: 768px) {
   h2 {
