@@ -344,8 +344,8 @@ body {
   font-weight: 600;
 }
 
-.side-nav button:hover,
-.side-nav button:focus {
+.side-nav button:not(.active):hover,
+.side-nav button:not(.active):focus {
   opacity: 1;
   transform: translateX(3px);
 }
@@ -374,11 +374,15 @@ body {
   filter: drop-shadow(0 0 16px rgba(79, 70, 229, 0.4));
 }
 
-@media (max-width: 767px) {
+@media (max-width: 1145px) {
   .side-nav {
     display: none !important;
   }
   .hamburger-btn {
+    display: flex !important;
+  }
+  /* Ensure the mobile menu panel is visible up to 910px even with Tailwind's md:hidden */
+  .mobile-menu-panel {
     display: flex !important;
   }
 }

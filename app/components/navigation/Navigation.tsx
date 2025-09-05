@@ -195,7 +195,7 @@ const MobileMenu: React.FC<MobileMenuProps> = ({
   setActiveSection,
 }) => (
   <motion.div
-    className="fixed top-0 right-0 h-full w-[280px] bg-gradient-to-br from-blue-900/90 via-purple-900/90 to-pink-900/90 backdrop-blur-xl flex flex-col justify-center items-center shadow-2xl border-l border-white/10 z-[101] md:hidden"
+    className="mobile-menu-panel fixed top-0 right-0 h-full w-[280px] bg-gradient-to-br from-blue-900/90 via-purple-900/90 to-pink-900/90 backdrop-blur-xl flex flex-col justify-center items-center shadow-2xl border-l border-white/10 z-[101] md:hidden"
     initial={{ x: "100%", opacity: 0 }}
     animate={{ x: 0, opacity: 1 }}
     exit={{ x: "100%", opacity: 0 }}
