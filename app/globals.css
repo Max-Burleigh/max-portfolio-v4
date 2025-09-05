@@ -634,19 +634,19 @@ a {
   max-width: 100%;
   padding: 1.5rem;
   min-height: 400px;
-  transition: transform 0.3s, background 0.3s;
+  transition: background 0.3s;
   background: rgba(255, 255, 255, 0.03);
   border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: 8px;
   text-align: left;
-  will-change: transform, background;
+  will-change: background;
 }
-.project-card:hover { transform: translateY(-5px); background: rgba(255, 255, 255, 0.06); }
-.project-card strong { font-size: 1.2rem; color: #00ffd5; display: block; margin-bottom: 0.5rem; }
-.project-grid { display: flex; flex-direction: column; gap: 2.5rem; margin-top: 1.5rem; width: 100%; }
-@media (min-width: 900px) {
-  .project-grid { display: grid; grid-template-columns: repeat(1, minmax(360px, 1fr)); gap: 2.5rem; }
-}
+.project-card:hover { background: rgba(255, 255, 255, 0.06); }
+  .project-card strong { font-size: 1.2rem; color: #00ffd5; display: block; margin-bottom: 0.5rem; }
+  .project-grid { display: flex; flex-direction: column; gap: 2.5rem; margin-top: 1.5rem; width: 100%; }
+  @media (min-width: 900px) {
+    .project-grid { display: grid; grid-template-columns: repeat(1, minmax(360px, 1fr)); gap: 2.5rem; }
+  }
 .project-card.vinscribe-card { display: flex; flex-direction: row; align-items: center; justify-content: space-between; gap: 2rem; flex-basis: 100%; max-width: 100%; padding: 1.5rem; min-height: 400px; }
 .project-card.vinscribe-card .project-info { flex: 1 1 35%; }
 .vinscribe-image { flex: 1 1 60%; width: 248px; height: 320px; object-fit: contain; border-radius: 14px; background: #191c23; box-shadow: 0 6px 24px 0 rgba(0, 0, 0, 0.14); border: 2px solid #23252e; padding: 0.5rem; }
@@ -698,6 +698,20 @@ a {
   .tech-item { font-size: 0.85rem; padding: 0.25em 0.6em 0.25em 0.4em; margin-bottom: 0.15em; }
   .tech-icon { font-size: 1.2em !important; margin-right: 0.35em !important; }
   .phone-mockup { transform: scale(0.9); margin: 0 auto; }
+}
+/* Mobile-only size reduction (25%) for selected project screenshots */
+@media (max-width: 768px) {
+  .vinscribe-screenshot,
+  .full-leaf-tea-company-screenshot,
+  .full-leaf-tea-company-wholesale-screenshot,
+  .shop-downtown-screenshot,
+  .carly-pearl-sacks-photography-screenshot {
+    /* Desktop max is 280x480; reduce to 75%: 210x360 */
+    max-width: 210px !important;
+    max-height: 360px !important;
+    width: auto !important;
+    height: auto !important;
+  }
 }
 @media (min-width: 769px) and (max-width: 1024px) {
   .project-card { gap: 1.5rem; }
