@@ -3,46 +3,7 @@ import React, { useEffect, useRef } from "react";
 
 // Keep behavior identical: render fixed gradient, a single blurred layer wrapping two animated blobs, and a canvas safety fallback.
 
-// Canvas drawing config (ported from previous CanvasAurora)
-interface BlobConfig {
-    color: string;
-    softness: number;
-    speed: number;
-    initialOffsetX: number;
-    initialOffsetY: number;
-    amplitudeX: number;
-    amplitudeY: number;
-    frequencyX: number;
-    frequencyY: number;
-    radiusFactor: number;
-  }
-
-const defaultBlobs: BlobConfig[] = [
-  {
-    color: "0,255,213",
-    softness: 0.75,
-    speed: 1 / 14,
-    initialOffsetX: 0.1,
-    initialOffsetY: 0.15,
-    amplitudeX: 0.05,
-    amplitudeY: 0.08,
-    frequencyX: 0.5,
-    frequencyY: 0.7,
-    radiusFactor: 0.6,
-  },
-  {
-    color: "255,92,230",
-    softness: 0.75,
-    speed: 1 / 18,
-    initialOffsetX: 0.9,
-    initialOffsetY: 0.25,
-    amplitudeX: 0.04,
-    amplitudeY: 0.07,
-    frequencyX: 0.45,
-    frequencyY: 0.6,
-    radiusFactor: 0.55,
-  },
-];
+// Canvas drawing config and bitmaps are built per-size; no static blob configs needed.
 
 const AuroraBackground: React.FC = () => {
   const blobProps = {
@@ -146,9 +107,9 @@ const AuroraBackground: React.FC = () => {
       cancelAnimationFrame(raf);
       document.removeEventListener("visibilitychange", onVis);
       window.removeEventListener("resize", resize);
-      // @ts-ignore - ImageBitmap may have close()
+      // @ts-expect-error ImageBitmap.close not typed in this TS lib
       blob1?.close?.();
-      // @ts-ignore
+      // @ts-expect-error ImageBitmap.close not typed in this TS lib
       blob2?.close?.();
     };
   }, []);
