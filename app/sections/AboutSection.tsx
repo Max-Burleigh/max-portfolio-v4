@@ -1,5 +1,5 @@
 "use client";
-import React, { useRef, useState, useCallback, useMemo, forwardRef, useEffect } from "react";
+import React, { useRef, useState, useCallback, useMemo, forwardRef, useEffect, useLayoutEffect } from "react";
 import Image from "next/image";
 import { motion, useMotionValue, useSpring, AnimatePresence } from "framer-motion";
 import { rafThrottle, useIsMobile } from "@lib/hooks";
@@ -32,6 +32,30 @@ const AboutSection = forwardRef<HTMLDivElement>(function AboutSection(_, ref) {
 
   const [glare, setGlare] = useState({ x: 50, y: 50, opacity: 0 });
   const [spielOpen, setSpielOpen] = useState(false);
+  const contentRef = useRef<HTMLDivElement>(null);
+  const [contentHeight, setContentHeight] = useState(0);
+
+  // Measure the spiel content height when open so we can animate numeric height
+  useLayoutEffect(() => {
+    if (!spielOpen) {
+      setContentHeight(0);
+      return;
+    }
+    const el = contentRef.current;
+    if (!el) return;
+    const measure = () => {
+      // Use scrollHeight to capture full content height regardless of overflow
+      setContentHeight(el.scrollHeight);
+    };
+    measure();
+    const ro = new ResizeObserver(measure);
+    ro.observe(el);
+    window.addEventListener("resize", measure);
+    return () => {
+      ro.disconnect();
+      window.removeEventListener("resize", measure);
+    };
+  }, [spielOpen]);
 
   const handlePortraitMouseMove = useCallback(
     (e: React.MouseEvent<HTMLDivElement>) => {
@@ -100,7 +124,7 @@ const AboutSection = forwardRef<HTMLDivElement>(function AboutSection(_, ref) {
                   initial={{ opacity: 0, height: 0 }}
                   animate={{
                     opacity: 1,
-                    height: "auto",
+                    height: contentHeight,
                     transition: {
                       height: { type: "spring", stiffness: 100, damping: 15 },
                       opacity: { duration: 0.4, delay: 0.2 },
@@ -112,8 +136,9 @@ const AboutSection = forwardRef<HTMLDivElement>(function AboutSection(_, ref) {
                     transition: { height: { duration: 0.3 }, opacity: { duration: 0.2 } },
                   }}
                   className="overflow-hidden"
+                  style={{ contain: "layout paint" }}
                 >
-                  <div className="pt-4 space-y-3 spiel-detail">
+                  <div ref={contentRef} className="pt-4 space-y-3 spiel-detail">
                     <p className="text-xs md:text-sm">
                       I'm 31 years old, I have 2 amazing children who are my world, and I reside in Southern Oregon!
                     </p>
