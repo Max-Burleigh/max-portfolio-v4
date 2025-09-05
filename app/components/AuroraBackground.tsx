@@ -52,12 +52,16 @@ const AuroraBackground: React.FC = () => {
       g.addColorStop(softnessStop, `rgba(${rgb},0)`);
       octx.fillStyle = g;
       octx.fillRect(0, 0, off.width, off.height);
-      // @ts-expect-error: createImageBitmap available at runtime on iOS 15+
-      return await createImageBitmap(off);
+      // Prefer ImageBitmap when available; otherwise use the canvas itself.
+      const anyWin = window as unknown as { createImageBitmap?: (source: CanvasImageSource) => Promise<ImageBitmap> };
+      if (typeof anyWin.createImageBitmap === "function") {
+        return await anyWin.createImageBitmap(off);
+      }
+      return off;
     };
 
-    let blob1: ImageBitmap | null = null;
-    let blob2: ImageBitmap | null = null;
+    let blob1: CanvasImageSource | null = null;
+    let blob2: CanvasImageSource | null = null;
 
     const drawFrame = () => {
       t += 0.016;
@@ -107,10 +111,8 @@ const AuroraBackground: React.FC = () => {
       cancelAnimationFrame(raf);
       document.removeEventListener("visibilitychange", onVis);
       window.removeEventListener("resize", resize);
-      // @ts-expect-error ImageBitmap.close not typed in this TS lib
-      blob1?.close?.();
-      // @ts-expect-error ImageBitmap.close not typed in this TS lib
-      blob2?.close?.();
+      blob1 = null;
+      blob2 = null;
     };
   }, []);
 
