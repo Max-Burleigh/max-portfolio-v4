@@ -8,19 +8,19 @@ export default function IntroReveal() {
 
   useEffect(() => {
     const html = document.documentElement;
-    const body = document.body as unknown as { inert?: boolean } & HTMLElement;
+    const body = document.body as HTMLElement & { inert?: boolean };
 
     const update = () => {
       const played = html.getAttribute("data-intro-played") === "1";
       if (!played) {
-        if ("inert" in body) {
-          // Progressive enhancement: block interactions until reveal completes
-          // CSS fallbacks remain in place regardless of inert support
-          (body as any).inert = true;
+        // Progressive enhancement: block interactions until reveal completes
+        // CSS fallbacks remain in place regardless of inert support
+        if (body.inert !== undefined) {
+          body.inert = true;
         }
       } else {
-        if ("inert" in body) {
-          (body as any).inert = false;
+        if (body.inert !== undefined) {
+          body.inert = false;
         }
         setDone(true);
       }
