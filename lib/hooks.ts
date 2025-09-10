@@ -134,3 +134,109 @@ export function useActiveSection<K extends string>(
   return { activeSection, setActiveSection } as const;
 }
 
+// ===== Entrance Stagger =====
+type EntranceOptions = {
+  selector?: string;
+  baseDelay?: number; // ms
+  step?: number; // ms
+};
+
+export function useEntranceStagger<T extends HTMLElement>(
+  containerRef: React.RefObject<T | null>,
+  { selector = "[data-entrance-item]", baseDelay = 0, step = 90 }: EntranceOptions = {}
+) {
+  useEffect(() => {
+    const container = containerRef.current;
+    if (!container) return;
+
+    const prefersReduced = window.matchMedia(
+      "(prefers-reduced-motion: reduce)"
+    ).matches;
+
+    const apply = () => {
+      const items = Array.from(
+        container.querySelectorAll<HTMLElement>(selector)
+      );
+      items.forEach((el, i) => {
+        const delay = Math.max(0, baseDelay + i * step);
+        el.style.setProperty("--enter-delay", `${delay}ms`);
+      });
+      // Flip the entered class next task to allow initial styles to commit
+      const id = window.setTimeout(() => {
+        container.classList.add("is-entered");
+      }, prefersReduced ? 0 : 20);
+      return () => window.clearTimeout(id);
+    };
+
+    // If an intro overlay gates initial paint, wait for it to complete
+    const html = document.documentElement;
+    if (html.getAttribute("data-intro-played") === "1") {
+      return apply();
+    }
+
+    let cleanup: (() => void) | undefined;
+    const observer = new MutationObserver(() => {
+      if (html.getAttribute("data-intro-played") === "1") {
+        cleanup?.();
+        observer.disconnect();
+        cleanup = apply();
+      }
+    });
+    observer.observe(html, { attributes: true, attributeFilter: ["data-intro-played"] });
+
+    // Fallback timeout in case attribute never flips
+    const fallback = window.setTimeout(() => {
+      observer.disconnect();
+      cleanup = apply();
+    }, 2000);
+
+    return () => {
+      window.clearTimeout(fallback);
+      observer.disconnect();
+      cleanup?.();
+    };
+  }, [containerRef, selector, baseDelay, step]);
+}
+
+// ===== Micro Parallax =====
+type ParallaxOptions = {
+  factor?: number; // proportion of viewport offset -> px
+  maxPx?: number; // clamp in pixels
+  disabled?: boolean;
+};
+
+export function useMicroParallax<T extends HTMLElement>(
+  targetRef: React.RefObject<T | null>,
+  { factor = 0.015, maxPx = 12, disabled = false }: ParallaxOptions = {}
+) {
+  useEffect(() => {
+    const el = targetRef.current;
+    if (!el || disabled) return;
+
+    const prefersReduced = window.matchMedia(
+      "(prefers-reduced-motion: reduce)"
+    ).matches;
+    if (prefersReduced) return;
+
+    const compute = () => {
+      const rect = el.getBoundingClientRect();
+      const vh = window.innerHeight || 1;
+      const centerOffset = rect.top + rect.height / 2 - vh / 2; // px from center
+      const raw = centerOffset * factor;
+      const clamped = Math.max(-maxPx, Math.min(maxPx, raw));
+      el.style.setProperty("--parallax-y", `${clamped.toFixed(2)}px`);
+    };
+
+    const onScroll = rafThrottle(compute);
+    const onResize = rafThrottle(compute);
+
+    window.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("resize", onResize);
+    compute();
+
+    return () => {
+      window.removeEventListener("scroll", onScroll as EventListener);
+      window.removeEventListener("resize", onResize as EventListener);
+    };
+  }, [targetRef, factor, maxPx, disabled]);
+}

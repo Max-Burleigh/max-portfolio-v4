@@ -159,6 +159,27 @@ html.not-ios-device .canvas-aurora { display: none; }
   }
 }
 
+/* ===== Entrance Stagger (hero + sections) ===== */
+[data-entrance] [data-entrance-item] {
+  opacity: 0;
+  /* Combine entrance rise with optional parallax offset */
+  transform: translateY(calc(var(--enter-ty, 24px) + var(--parallax-y, 0px))) translateZ(0);
+  transition: opacity 400ms ease-out,
+    transform 500ms cubic-bezier(0.22, 1, 0.36, 1);
+  transition-delay: var(--enter-delay, 0ms);
+  will-change: transform, opacity;
+}
+[data-entrance].is-entered [data-entrance-item] {
+  opacity: 1;
+  --enter-ty: 0px; /* let transform resolve to parallax only */
+}
+@media (prefers-reduced-motion: reduce) {
+  [data-entrance] [data-entrance-item] {
+    transform: none;
+    transition: opacity 250ms ease-out;
+  }
+}
+
 /* Responsive styles for aurora blobs */
 @media (max-width: 900px) {
   .aurora-blob {
