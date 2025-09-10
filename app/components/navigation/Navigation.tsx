@@ -181,8 +181,8 @@ const containerVariants = {
     opacity: 1,
     transition: {
       when: "beforeChildren",
-      staggerChildren: 0.04,
-      delayChildren: 0.25,
+      staggerChildren: 0.03,
+      delayChildren: 0.14,
     },
   },
 };
@@ -201,8 +201,8 @@ const MobileMenu: React.FC<MobileMenuProps> = ({
     exit={{ x: "100%", opacity: 0 }}
     transition={{
       type: "spring",
-      damping: 30,
-      stiffness: 220,
+      damping: 26,
+      stiffness: 360,
     }}
   >
     <motion.div
@@ -215,7 +215,7 @@ const MobileMenu: React.FC<MobileMenuProps> = ({
       {sections.map((section) => (
         <motion.button
           key={section}
-          className={`relative text-2xl font-bold mb-9 last:mb-0 text-white tracking-wide flex items-center w-full justify-start hover:text-[#00ffd5] ${
+          className={`relative pl-6 text-2xl font-bold mb-9 last:mb-0 text-white tracking-wide flex items-center w-full justify-start hover:text-[#00ffd5] ${
             section === activeSection ? "text-pink-300" : ""
           }`}
           onClick={() => {
@@ -228,12 +228,12 @@ const MobileMenu: React.FC<MobileMenuProps> = ({
             visible: {
               opacity: 1,
               y: 0,
-              transition: { type: "spring", stiffness: 350, damping: 25 },
+              transition: { type: "spring", stiffness: 420, damping: 22 },
             },
             hidden: {
               opacity: 0,
-              y: 20,
-              transition: { type: "spring", stiffness: 350, damping: 25 },
+              y: 16,
+              transition: { type: "spring", stiffness: 420, damping: 22 },
             },
           }}
           onHoverStart={() => {
@@ -246,17 +246,14 @@ const MobileMenu: React.FC<MobileMenuProps> = ({
             }
           }}
         >
-          <div className="w-9 h-5 flex-shrink-0 flex items-center">
-            {section === activeSection && (
-              <span className="relative block w-5 h-5">
-                <span className="absolute inset-0 rounded-full bg-gradient-to-br from-blue-400 to-pink-400"></span>
-                <span
-                  className="absolute inset-0 rounded-full bg-cyan-400 opacity-40"
-                  style={{ filter: "blur(8px)", zIndex: -1 }}
-                ></span>
-              </span>
-            )}
-          </div>
+          {section === activeSection && (
+            <motion.span
+              layoutId="mobile-nav-rail"
+              className="absolute left-0 top-1/2 -translate-y-1/2 h-6 w-[3px] rounded-full bg-gradient-to-b from-pink-300 via-purple-400 to-blue-400 shadow-[0_0_8px_rgba(79,70,229,0.45)]"
+              style={{ willChange: "transform" }}
+              transition={{ type: "spring", stiffness: 500, damping: 30 }}
+            />
+          )}
           <span>{section.charAt(0).toUpperCase() + section.slice(1)}</span>
         </motion.button>
       ))}
