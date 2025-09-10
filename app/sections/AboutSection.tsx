@@ -2,7 +2,7 @@
 import React, { useRef, useState, useCallback, useMemo, forwardRef, useEffect, useLayoutEffect } from "react";
 import Image from "next/image";
 import { motion, useMotionValue, useSpring, AnimatePresence } from "framer-motion";
-import { rafThrottle, useIsMobile } from "@lib/hooks";
+import { rafThrottle, useIsMobile, useEntranceStagger, useMicroParallax } from "@lib/hooks";
 
 const round = (num: number, fix = 2) => parseFloat(num.toFixed(fix));
 const distance = (x1: number, y1: number, x2: number, y2: number) =>
@@ -34,6 +34,8 @@ const AboutSection = forwardRef<HTMLDivElement>(function AboutSection(_, ref) {
   const [spielOpen, setSpielOpen] = useState(false);
   const contentRef = useRef<HTMLDivElement>(null);
   const [contentHeight, setContentHeight] = useState(0);
+  const entranceRef = useRef<HTMLDivElement>(null);
+  const titleRef = useRef<HTMLHeadingElement>(null);
 
   // Measure the spiel content height when open so we can animate numeric height
   // Simplified: measure once after open (next frame), and on viewport resize (throttled).
@@ -98,18 +100,32 @@ const AboutSection = forwardRef<HTMLDivElement>(function AboutSection(_, ref) {
     setGlare({ x: 50, y: 50, opacity: 0 });
   };
 
+  // Entrance stagger for hero elements (runs after intro reveal completes)
+  useEntranceStagger(entranceRef, { baseDelay: 0, step: 90 });
+  // Micro parallax on the main heading (disabled on mobile)
+  useMicroParallax(titleRef, { maxPx: 12, factor: 0.015, disabled: isMobile });
+
   return (
     <section ref={ref} id="about" className="section about-section">
       <div className="glass-card about-card">
-        <div className="flex flex-col md:flex-row items-center md:items-start md:gap-6">
+        <div
+          ref={entranceRef}
+          data-entrance="hero"
+          className="flex flex-col md:flex-row items-center md:items-start md:gap-6"
+        >
           <div className="flex flex-col max-w-md flex-1 min-w-0">
-            <h1>Hey, I'm Max Burleigh</h1>
-            <p>web developer, project manager, solopreneur based in Medford, Oregon.</p>
+            <h1 ref={titleRef} data-entrance-item>
+              Hey, I'm Max Burleigh
+            </h1>
+            <p data-entrance-item>
+              web developer, project manager, solopreneur based in Medford, Oregon.
+            </p>
             <motion.button
               onClick={() => setSpielOpen(!spielOpen)}
               className="mt-4 px-4 md:px-5 py-2 md:py-2.5 bg-gradient-to-r from-blue-400 via-purple-400 to-pink-300 rounded-full text-white font-semibold text-shadow-sm self-start overflow-hidden relative text-sm md:text-base"
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
+              data-entrance-item
             >
               <span className="relative z-10">
                 {spielOpen ? "That's enough about me..." : "Click for a detailed spiel ✨"}
@@ -160,26 +176,27 @@ const AboutSection = forwardRef<HTMLDivElement>(function AboutSection(_, ref) {
               )}
             </AnimatePresence>
           </div>
-          <motion.div
-            ref={portraitRef}
-            className={`portrait-frame w-64 h-80 md:w-80 md:h-96 relative rounded-lg overflow-hidden shadow-lg flex-shrink-0 ${
-              spielOpen ? "" : "mt-4 md:mt-0"
-            }`}
-            style={{
-              rotateY: rotateYSpring,
-              rotateX: rotateXSpring,
-              transformPerspective: transformPerspectiveSpring,
-              scale: isMobile && spielOpen ? 0.8 : 1,
-              transformStyle: "preserve-3d",
-              transformOrigin: "center",
-              willChange: "transform",
-            }}
-            initial={false}
-            transition={{ duration: 0.5 }}
-            whileHover={{ scale: 1.05, transition: { duration: 0.2 } }}
-            onMouseMove={throttledPortraitMouseMove}
-            onMouseLeave={handlePortraitMouseLeave}
-          >
+          <div data-entrance-item className="flex-shrink-0">
+            <motion.div
+              ref={portraitRef}
+              className={`portrait-frame w-64 h-80 md:w-80 md:h-96 relative rounded-lg overflow-hidden shadow-lg ${
+                spielOpen ? "" : "mt-4 md:mt-0"
+              }`}
+              style={{
+                rotateY: rotateYSpring,
+                rotateX: rotateXSpring,
+                transformPerspective: transformPerspectiveSpring,
+                scale: isMobile && spielOpen ? 0.8 : 1,
+                transformStyle: "preserve-3d",
+                transformOrigin: "center",
+                willChange: "transform",
+              }}
+              initial={false}
+              transition={{ duration: 0.5 }}
+              whileHover={{ scale: 1.05, transition: { duration: 0.2 } }}
+              onMouseMove={throttledPortraitMouseMove}
+              onMouseLeave={handlePortraitMouseLeave}
+            >
             <motion.div
               style={{
                 zIndex: 2,
@@ -213,7 +230,8 @@ const AboutSection = forwardRef<HTMLDivElement>(function AboutSection(_, ref) {
               style={{ objectFit: "cover", transform: "translateZ(20px)", borderRadius: "0.5rem" }}
               priority
             />
-          </motion.div>
+            </motion.div>
+          </div>
         </div>
       </div>
     </section>
