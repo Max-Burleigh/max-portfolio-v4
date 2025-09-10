@@ -60,9 +60,26 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
         <div className="message-content">
           <div className="message-icon">{emoji}</div>
           <p>
-            <a href={href} target="_blank" rel="noopener noreferrer">
-              {text}
-            </a>
+            <motion.a
+              href={href}
+              target="_blank"
+              rel="noopener noreferrer"
+              initial="inactive"
+              whileHover="active"
+              whileFocus="active"
+            >
+              <span>{text}</span>
+              <motion.span
+                className="elastic-underline"
+                variants={{
+                  inactive: { scaleX: 0 },
+                  active: {
+                    scaleX: 1,
+                    transition: { type: "spring", stiffness: 420, damping: 28, bounce: 0 },
+                  },
+                }}
+              />
+            </motion.a>
           </p>
         </div>
       </div>
@@ -163,4 +180,3 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
 };
 
 export default React.memo(ProjectCard);
-

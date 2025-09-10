@@ -417,6 +417,11 @@ html.not-ios-device .canvas-aurora { display: none; }
   will-change: transform;
 }
 
+/* Fine-tune underline position for overlay links only */
+.visit-site-message .elastic-underline {
+  bottom: -4px; /* slightly lower than default to clear text */
+}
+
 .hamburger-btn {
   display: none;
   transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1),
@@ -763,9 +768,8 @@ a {
 .message-content { display: flex; align-items: center; justify-content: center; flex-direction: column; text-align: center; gap: 6px; }
 .message-icon { font-size: 24px; line-height: 1; }
 .visit-site-message p { margin: 0; font-size: 0.93rem; line-height: 1.35; color: rgba(255, 255, 255, 0.98); text-wrap: balance; }
-.visit-site-message a { color: #00ffd5; text-decoration: none; font-weight: 600; pointer-events: auto; position: relative; display: inline-block; }
-.visit-site-message a::after { content: ""; position: absolute; bottom: -2px; left: 0; width: 100%; height: 2px; background-color: #00ffd5; transform: scaleX(0); transform-origin: right; transition: transform 0.3s ease; }
-.visit-site-message a:hover::after { transform: scaleX(1); transform-origin: left; }
+.visit-site-message p { display: flex; justify-content: center; }
+.visit-site-message a { color: #00ffd5; text-decoration: none; font-weight: 600; pointer-events: auto; position: relative; display: inline-block; width: fit-content; max-width: 100%; }
 @media (max-width: 600px) { .visit-site-message { padding: 10px 12px; max-width: 260px; } .message-icon { font-size: 20px; } .visit-site-message p { font-size: 0.86rem; } }
 
 /* ===== Phone Mockup CSS ===== */
@@ -808,4 +812,6 @@ a {
 .phone-content-container a { color: #00ffd5; text-decoration: none; font-weight: 600; pointer-events: auto; position: relative; display: inline-block; }
 .phone-content-container a::after { content: ""; position: absolute; bottom: -2px; left: 0; width: 100%; height: 2px; background-color: #00ffd5; transform: scaleX(0); transform-origin: right; transition: transform 0.3s ease; }
 .phone-content-container a:hover::after { transform: scaleX(1); transform-origin: left; }
+/* Use motion-based underline for overlay message links, disable pseudo underline */
+.phone-content-container .visit-site-message a::after { content: none; }
 @media (min-width: 600px) { .phone-mockup { max-width: 370px; padding: 28px 12px 32px 12px; } .fullleaf-wholesale-mockup { max-width: 310px; } .phone-mockup .vinscribe-preview { max-width: 350px; max-height: 600px; } }
