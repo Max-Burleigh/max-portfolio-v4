@@ -95,11 +95,23 @@ const Hamburger: React.FC<HamburgerProps> = ({ menuOpen, setMenuOpen }) => {
     mouseY.set(e.clientY - centerY);
   };
 
+  const handleToggle = (e: React.PointerEvent<HTMLButtonElement>) => {
+    // Prevent iOS/Safari ghost click from bubbling to overlay
+    e.preventDefault();
+    e.stopPropagation();
+    setMenuOpen(!menuOpen);
+  };
+
   return (
     <motion.button
       className="hamburger-btn md:hidden fixed top-5 right-5 z-[102] flex flex-col justify-center items-center w-12 h-12 bg-gradient-to-br from-blue-400 via-purple-400 to-pink-400 rounded-full shadow-xl focus:outline-none overflow-hidden"
       aria-label={menuOpen ? "Close menu" : "Open menu"}
-      onClick={() => setMenuOpen(!menuOpen)}
+      onPointerUp={handleToggle}
+      onClick={(e) => {
+        // Safety: if click still fires after pointer, swallow it
+        e.preventDefault();
+        e.stopPropagation();
+      }}
       onMouseMove={handleMouseMove}
       onMouseLeave={() => {
         mouseX.set(0);
