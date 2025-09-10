@@ -815,3 +815,19 @@ a {
 /* Use motion-based underline for overlay message links, disable pseudo underline */
 .phone-content-container .visit-site-message a::after { content: none; }
 @media (min-width: 600px) { .phone-mockup { max-width: 370px; padding: 28px 12px 32px 12px; } .fullleaf-wholesale-mockup { max-width: 310px; } .phone-mockup .vinscribe-preview { max-width: 350px; max-height: 600px; } }
+
+/* Portrait: prevent FOUC and promote to GPU */
+.portrait-frame {
+  /* SSR baseline so hydration doesn't change transform suddenly */
+  transform: perspective(200px) rotateX(0deg) rotateY(0deg) translateZ(0);
+  will-change: transform;
+  backface-visibility: hidden;
+  contain: paint;
+  isolation: isolate;
+}
+
+.portrait-image {
+  will-change: transform;
+  backface-visibility: hidden;
+  transform: translateZ(20px);
+}

@@ -162,7 +162,7 @@ const AboutSection = forwardRef<HTMLDivElement>(function AboutSection(_, ref) {
           </div>
           <motion.div
             ref={portraitRef}
-            className={`w-64 h-80 md:w-80 md:h-96 relative rounded-lg overflow-hidden shadow-lg flex-shrink-0 ${
+            className={`portrait-frame w-64 h-80 md:w-80 md:h-96 relative rounded-lg overflow-hidden shadow-lg flex-shrink-0 ${
               spielOpen ? "" : "mt-4 md:mt-0"
             }`}
             style={{
@@ -172,8 +172,9 @@ const AboutSection = forwardRef<HTMLDivElement>(function AboutSection(_, ref) {
               scale: isMobile && spielOpen ? 0.8 : 1,
               transformStyle: "preserve-3d",
               transformOrigin: "center",
-              perspective: "800px",
+              willChange: "transform",
             }}
+            initial={false}
             transition={{ duration: 0.5 }}
             whileHover={{ scale: 1.05, transition: { duration: 0.2 } }}
             onMouseMove={throttledPortraitMouseMove}
@@ -190,6 +191,7 @@ const AboutSection = forwardRef<HTMLDivElement>(function AboutSection(_, ref) {
                 borderRadius: "0.5rem",
                 transformStyle: "preserve-3d",
               }}
+              initial={false}
               animate={{
                 background: `radial-gradient(
                   farthest-corner circle at ${glare.x}% ${glare.y}%,
@@ -204,6 +206,10 @@ const AboutSection = forwardRef<HTMLDivElement>(function AboutSection(_, ref) {
               src="/candidate-2.webp"
               alt="Max Burleigh"
               fill
+              sizes="(max-width: 768px) 256px, 320px"
+              placeholder="blur"
+              blurDataURL="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjU2IiBoZWlnaHQ9IjMyMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCBmaWxsPSIjMTkxYzIzIiB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIi8+PC9zdmc+"
+              className="portrait-image"
               style={{ objectFit: "cover", transform: "translateZ(20px)", borderRadius: "0.5rem" }}
               priority
             />
