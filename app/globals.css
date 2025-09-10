@@ -508,6 +508,23 @@ html.not-ios-device .canvas-aurora { display: none; }
   }
 }
 
+/* ===== Intro Reveal (first-load wash) ===== */
+@keyframes intro-wash {
+  0%   { transform: translate3d(0,   0%, 0); opacity: 1; }
+  70%  { transform: translate3d(0, -60%, 0); opacity: 1; }
+  100% { transform: translate3d(0,-100%, 0); opacity: 0; }
+}
+.intro-wash {
+  animation: intro-wash 900ms cubic-bezier(0.22, 1, 0.36, 1) forwards;
+  will-change: transform, opacity;
+  transform: translateZ(0);
+}
+/* If already played (or reduced motion), hide entirely */
+html[data-intro-played="1"] .intro-wash { display: none !important; }
+@media (prefers-reduced-motion: reduce) {
+  .intro-wash { display: none !important; animation: none; }
+}
+
 .section {
   position: relative;
   width: 100vw;
