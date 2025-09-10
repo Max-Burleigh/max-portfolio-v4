@@ -53,23 +53,31 @@ export default async function RootLayout({
           {`(function () {
              try {
                var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-               var played = sessionStorage.getItem('introPlayed') === '1';
                var html = document.documentElement;
+               var ss = sessionStorage;
+               var played = ss.getItem('introPlayed') === '1';
 
                if (reduce || played) {
                  html.setAttribute('data-intro-played', '1');
                  return;
                }
 
-               // First time this tab: mark as played and allow wash to render
-               sessionStorage.setItem('introPlayed', '1');
+               // First time this tab: mark as played and gate the UI
+               ss.setItem('introPlayed', '1');
                html.setAttribute('data-intro-played', '0');
+
+               // Flip the gate when the CSS animation should have finished.
+               // Keep in sync with @keyframes duration in globals.css
+               var D = 900; // ms
+               setTimeout(function () {
+                 html.setAttribute('data-intro-played', '1');
+               }, D + 50);
              } catch (e) {}
            })();`}
         </Script>
         <ReactScan />
-        {children}
         <IntroReveal />
+        {children}
       </body>
     </html>
   );

@@ -509,6 +509,29 @@ html.not-ios-device .canvas-aurora { display: none; }
 }
 
 /* ===== Intro Reveal (first-load wash) ===== */
+
+/* Gate: while intro plays or before boot flips to 1, hide and block interactions */
+html:not([data-intro-played="1"]) body {
+  overflow: hidden; /* prevent scroll during intro */
+}
+
+html:not([data-intro-played="1"]) body > :not(script):not(style):not(.intro-wash) {
+  opacity: 0;
+  filter: blur(6px);
+  pointer-events: none;
+  user-select: none;
+}
+
+/* When the gate flips, fade/defocus away smoothly */
+html[data-intro-played="1"] body > :not(script):not(style):not(.intro-wash) {
+  opacity: 1;
+  filter: none;
+  pointer-events: auto;
+  user-select: auto;
+  transition:
+    opacity 420ms cubic-bezier(0.25, 0.9, 0.3, 1),
+    filter 420ms cubic-bezier(0.25, 0.9, 0.3, 1);
+}
 @keyframes intro-wash {
   0%   { transform: translate3d(0,   0%, 0); opacity: 1; }
   70%  { transform: translate3d(0, -60%, 0); opacity: 1; }
@@ -518,12 +541,26 @@ html.not-ios-device .canvas-aurora { display: none; }
   animation: intro-wash 900ms cubic-bezier(0.22, 1, 0.36, 1) forwards;
   will-change: transform, opacity;
   transform: translateZ(0);
+  backface-visibility: hidden;
 }
 /* If already played (or reduced motion), hide entirely */
 html[data-intro-played="1"] .intro-wash { display: none !important; }
 @media (prefers-reduced-motion: reduce) {
   .intro-wash { display: none !important; animation: none; }
+  html[data-intro-played="1"] body > :not(script):not(style):not(.intro-wash) {
+    transition: none;
+  }
 }
+
+/* Reduce heavy blur on touch devices for smoother performance */
+@media (hover: none) and (pointer: coarse) {
+  html:not([data-intro-played="1"]) body > :not(script):not(style):not(.intro-wash) {
+    filter: none; /* rely on opacity only on mobile */
+  }
+}
+
+/* Keep layout from shifting when scrollbars appear */
+html { scrollbar-gutter: stable both-edges; }
 
 .section {
   position: relative;
