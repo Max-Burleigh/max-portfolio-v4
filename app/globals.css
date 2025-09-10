@@ -510,27 +510,19 @@ html.not-ios-device .canvas-aurora { display: none; }
 
 /* ===== Intro Reveal (first-load wash) ===== */
 
-/* Gate: while intro plays or before boot flips to 1, hide and block interactions */
-html:not([data-intro-played="1"]) body {
-  overflow: hidden; /* prevent scroll during intro */
-}
-
-html:not([data-intro-played="1"]) body > :not(script):not(style):not(.intro-wash) {
+/* Gate: while intro plays or before boot flips to 1, lock scroll and skip rendering the main subtree */
+html:not([data-intro-played="1"]) body { overflow: hidden; }
+html:not([data-intro-played="1"]) #site-root {
+  content-visibility: hidden;
+  contain-intrinsic-size: 100vh;
   opacity: 0;
-  filter: blur(6px);
   pointer-events: none;
   user-select: none;
 }
-
-/* When the gate flips, fade/defocus away smoothly */
-html[data-intro-played="1"] body > :not(script):not(style):not(.intro-wash) {
+html[data-intro-played="1"] #site-root {
+  content-visibility: visible;
   opacity: 1;
-  filter: none;
-  pointer-events: auto;
-  user-select: auto;
-  transition:
-    opacity 420ms cubic-bezier(0.25, 0.9, 0.3, 1),
-    filter 420ms cubic-bezier(0.25, 0.9, 0.3, 1);
+  transition: opacity 420ms cubic-bezier(0.25, 0.9, 0.3, 1);
 }
 @keyframes intro-wash {
   0%   { transform: translate3d(0,   0%, 0); opacity: 1; }
@@ -547,20 +539,23 @@ html[data-intro-played="1"] body > :not(script):not(style):not(.intro-wash) {
 html[data-intro-played="1"] .intro-wash { display: none !important; }
 @media (prefers-reduced-motion: reduce) {
   .intro-wash { display: none !important; animation: none; }
-  html[data-intro-played="1"] body > :not(script):not(style):not(.intro-wash) {
+  html[data-intro-played="1"] #site-root {
     transition: none;
   }
 }
 
 /* Reduce heavy blur on touch devices for smoother performance */
 @media (hover: none) and (pointer: coarse) {
-  html:not([data-intro-played="1"]) body > :not(script):not(style):not(.intro-wash) {
-    filter: none; /* rely on opacity only on mobile */
-  }
+  html:not([data-intro-played="1"]) #site-root { filter: none; }
 }
 
 /* Keep layout from shifting when scrollbars appear */
 html { scrollbar-gutter: stable both-edges; }
+
+/* Pause heavy background layers until the intro completes */
+html:not([data-intro-played="1"]) .aurora-layer,
+html:not([data-intro-played="1"]) .canvas-aurora { display: none !important; }
+html:not([data-intro-played="1"]) .aurora-bg::after { display: none !important; }
 
 .section {
   position: relative;

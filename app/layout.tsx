@@ -75,9 +75,13 @@ export default async function RootLayout({
              } catch (e) {}
            })();`}
         </Script>
-        <ReactScan />
+        {/* Gate only this subtree during the intro */}
+        <div id="site-root">
+          <ReactScan />
+          {children}
+        </div>
+        {/* Overlay sits outside the gate */}
         <IntroReveal />
-        {children}
       </body>
     </html>
   );

@@ -44,7 +44,7 @@ export default function IntroReveal() {
         } catch {}
       }}
     >
-      <div className="h-full w-full bg-gradient-to-b from-black/70 via-black/30 to-transparent backdrop-blur-[2px]" />
+      <div className="h-full w-full bg-gradient-to-b from-black/70 via-black/30 to-transparent" />
     </div>
   );
 }

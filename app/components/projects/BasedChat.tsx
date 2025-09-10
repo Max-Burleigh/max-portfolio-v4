@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import {
   SiNextdotjs,
@@ -14,6 +14,24 @@ import {
 
 const BasedChat: React.FC = () => {
   const iconStyle = { width: "32px", height: "32px" };
+  const [shouldLoadVideo, setShouldLoadVideo] = useState(false);
+  const videoWrapRef = useRef<HTMLDivElement | null>(null);
+
+  useEffect(() => {
+    const el = videoWrapRef.current;
+    if (!el) return;
+    const io = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setShouldLoadVideo(true);
+          io.disconnect();
+        }
+      },
+      { rootMargin: "200px" }
+    );
+    io.observe(el);
+    return () => io.disconnect();
+  }, []);
 
   return (
     <div
@@ -31,6 +49,7 @@ const BasedChat: React.FC = () => {
     >
       {/* Video on the left */}
       <div
+        ref={videoWrapRef}
         style={{
           flex: "1",
           minWidth: "280px",
@@ -40,15 +59,28 @@ const BasedChat: React.FC = () => {
           boxShadow: "0 4px 24px rgba(0,0,0,0.12)",
         }}
       >
-        <video
-          src="/based-chat-2.mp4"
-          controls
-          autoPlay
-          muted
-          loop
-          playsInline
-          style={{ width: "100%", height: "auto", display: "block" }}
-        />
+        {shouldLoadVideo ? (
+          <video
+            src="/based-chat-2.mp4"
+            controls
+            autoPlay
+            muted
+            loop
+            playsInline
+            preload="none"
+            poster="/webp/api.webp"
+            style={{ width: "100%", height: "auto", display: "block" }}
+          />
+        ) : (
+          <Image
+            src="/webp/api.webp"
+            alt="Based Chat preview"
+            width={1200}
+            height={675}
+            loading="lazy"
+            style={{ width: "100%", height: "auto", display: "block" }}
+          />
+        )}
       </div>
 
       {/* Text content on the right */}
