@@ -4,6 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
+    "scan": "next dev & npx react-scan@latest http://localhost:3000",
     "build": "next build",
     "start": "next start",
     "lint": "next lint"
@@ -21,6 +22,7 @@
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "react-icons": "^5.5.0",
+    "react-scan": "^0.4.3",
     "simple-icons": "^14.12.2"
   },
   "devDependencies": {

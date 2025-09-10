@@ -1,3 +1,4 @@
+import { ReactScan } from "./components/ReactScan";
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import { Manrope, Space_Grotesk } from "next/font/google";
@@ -45,7 +46,10 @@ export default async function RootLayout({
   }`;
   return (
     <html lang="en" className={htmlClass}>
-      <body className="antialiased">{children}</body>
+      <body className="antialiased">
+        <ReactScan />
+        {children}
+      </body>
     </html>
   );
 }
