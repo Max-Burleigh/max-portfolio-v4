@@ -20,6 +20,8 @@ const Portfolio = () => {
   // Mobile detection (for cursor circle overlay and menu overlay)
   const isMobile = useIsMobile();
   const [menuOpen, setMenuOpen] = useState(false);
+  // Guard to prevent the opening tap from immediately closing via overlay
+  const [overlayReady, setOverlayReady] = useState(false);
 
   // State for iOS detection removed; handled via SSR class on <html>
 
@@ -93,6 +95,21 @@ const Portfolio = () => {
 
   // Aurora animation props handled inside AuroraBackground
 
+  // Avoid mobile overlay immediately capturing the opening tap
+  React.useEffect(() => {
+    let t: number | undefined;
+    if (menuOpen) {
+      setOverlayReady(false);
+      // Defer overlay click handling slightly to avoid click-through
+      t = window.setTimeout(() => setOverlayReady(true), 180);
+    } else {
+      setOverlayReady(false);
+    }
+    return () => {
+      if (t) window.clearTimeout(t);
+    };
+  }, [menuOpen]);
+
   return (
     <>
       {/* PlatformDetector removed; SSR sets <html> classes */}
@@ -113,11 +130,13 @@ const Portfolio = () => {
         <AnimatePresence>
           {menuOpen && isMobile && (
             <motion.div
-              className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50"
+              className={`fixed inset-0 bg-black/50 backdrop-blur-sm z-50 ${
+                overlayReady ? "" : "pointer-events-none"
+              }`}
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              onClick={() => setMenuOpen(false)}
+              onClick={() => overlayReady && setMenuOpen(false)}
             />
           )}
         </AnimatePresence>
