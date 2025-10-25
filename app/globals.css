@@ -571,7 +571,7 @@ html[data-intro-played="1"] .intro-wash { display: none !important; }
 }
 
 /* Keep layout from shifting when scrollbars appear */
-html { scrollbar-gutter: stable both-edges; }
+html { scrollbar-gutter: stable; }
 
 /* Pause heavy background layers until the intro completes */
 html:not([data-intro-played="1"]) .aurora-layer,
