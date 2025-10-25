@@ -761,6 +761,24 @@ a {
     width: 100%;
     max-width: clamp(220px, 28vw, 320px);
     aspect-ratio: 1 / 2;
+    display: block;
+    overflow: hidden;
+  }
+  .project-card.full-leaf-app-card .project-image-container > span {
+    width: 100% !important;
+    height: auto !important;
+    max-width: 100% !important;
+    display: block !important;
+  }
+  .project-card.full-leaf-app-card .project-image-container > span > span {
+    width: 100% !important;
+    height: auto !important;
+    display: block !important;
+  }
+  .project-card.full-leaf-app-card .project-image-container img {
+    width: 100% !important;
+    height: auto !important;
+    aspect-ratio: 1 / 2;
   }
   .project-card.full-leaf-app-card .project-info > .flex.justify-center.items-center > .inline-block { padding-top: 1rem !important; padding-bottom: 1rem !important; }
 }
@@ -771,6 +789,40 @@ a {
   .project-card.quailmail-card .project-media { justify-content: flex-start !important; }
   .project-card.quailmail-card .project-image-container,
   .project-card.quailmail-card img { margin-left: 16px !important; }
+}
+
+/* Fix: Full Leaf App image overflow on desktop only */
+@media (min-width: 769px) {
+  /* Keep portrait aspect but ensure height never exceeds 480px (240 * 2) */
+  .project-card.full-leaf-app-card .project-media {
+    flex: 0 1 clamp(200px, 22vw, 240px);
+    max-width: clamp(200px, 22vw, 240px);
+  }
+
+  .project-card.full-leaf-app-card .project-image-container {
+    width: 100%;
+    height: auto;
+    max-width: clamp(200px, 22vw, 240px);
+    aspect-ratio: 1 / 2;
+    border-radius: 1.5rem;
+    overflow: hidden;
+  }
+
+  .project-card.full-leaf-app-card .project-image-container > span,
+  .project-card.full-leaf-app-card .project-image-container > span > span {
+    border-radius: inherit !important;
+    overflow: hidden;
+  }
+
+  /* Override Next/Image inline sizing for this one screenshot only */
+  .project-card.full-leaf-app-card img.full-leaf-app-screenshot {
+    width: 100% !important;
+    height: auto !important;
+    object-fit: cover !important;
+    object-position: top center !important;
+    display: block;
+    border-radius: inherit !important;
+  }
 }
 @media (max-width: 768px) {
   .visit-site-message p { font-size: 0.85rem !important; line-height: 1.3 !important; margin: 0 !important; }
