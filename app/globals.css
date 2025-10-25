@@ -831,6 +831,13 @@ a {
   .project-card { flex-direction: column !important; gap: 0 !important; padding: 1.25rem; min-height: auto; }
   .project-card .project-info { width: 100%; max-width: 100%; order: 2; margin-top: 1rem; }
   .project-card .project-media { width: 100%; max-width: 280px; order: 1; margin: 0 auto; display: flex; justify-content: center; align-items: center; }
+  .project-card.full-leaf-app-card .project-media { max-width: clamp(160px, 60vw, 200px); }
+  .project-card.full-leaf-app-card .project-image-container { width: 100%; max-width: clamp(160px, 60vw, 200px); aspect-ratio: 1 / 2; }
+  .project-card.full-leaf-app-card .project-image-container > span,
+  .project-card.full-leaf-app-card .project-image-container > span > span,
+  .project-card.full-leaf-app-card .project-image-container img.full-leaf-app-screenshot {
+    border-radius: 1.5rem !important;
+  }
   .project-card .project-info strong { font-size: 1.4rem; margin-bottom: 0.75rem; display: block; text-align: center; }
   .project-card .project-info p { font-size: 0.95rem; line-height: 1.4; margin-bottom: 1rem; text-align: center; }
   .project-card .project-media .project-image-container { width: auto; height: auto; display: inline-flex; justify-content: center; align-items: center; }
