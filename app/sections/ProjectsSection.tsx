@@ -2,6 +2,7 @@
 import React, { forwardRef } from "react";
 import ProjectCard from "@components/projects/ProjectCard";
 import BasedChat from "@components/projects/BasedChat";
+import Colorbookorama from "@components/projects/Colorbookorama";
 import { projects } from "@/content/projects";
 
 const ProjectsSection = forwardRef<HTMLDivElement>(function ProjectsSection(_, ref) {
@@ -15,6 +16,7 @@ const ProjectsSection = forwardRef<HTMLDivElement>(function ProjectsSection(_, r
           </ProjectCard>
         ))}
         <BasedChat />
+        <Colorbookorama />
       </div>
     </section>
   );
