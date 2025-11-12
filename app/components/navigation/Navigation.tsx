@@ -206,71 +206,78 @@ const MobileMenu: React.FC<MobileMenuProps> = ({
   scrollToSection,
   setActiveSection,
 }) => (
-  <motion.div
-    className="mobile-menu-panel fixed top-0 right-0 h-full w-[280px] bg-gradient-to-br from-blue-900/90 via-purple-900/90 to-pink-900/90 backdrop-blur-xl flex flex-col justify-center items-center shadow-2xl border-l border-white/10 z-[101] md:hidden"
-    initial={{ x: "100%", opacity: 0 }}
-    animate={{ x: 0, opacity: 1 }}
-    exit={{ x: "100%", opacity: 0 }}
-    transition={{
-      type: "spring",
-      damping: 26,
-      stiffness: 360,
-    }}
-  >
+  <>
+    {/* Click-away backdrop (transparent) */}
+    <button
+      aria-label="Close menu backdrop"
+      className="fixed inset-0 z-[100] bg-transparent md:hidden"
+      onClick={() => setMenuOpen(false)}
+    />
+
+    {/* Compact dropdown panel under the hamburger */}
     <motion.div
-      className="w-full flex flex-col items-center px-12 py-10"
-      variants={containerVariants}
-      initial="hidden"
-      animate="visible"
-      exit="hidden"
+      className="mobile-menu-panel fixed top-16 right-4 z-[101] md:hidden"
+      initial={{ opacity: 0, y: -8, scale: 0.98 }}
+      animate={{ opacity: 1, y: 0, scale: 1 }}
+      exit={{ opacity: 0, y: -8, scale: 0.98 }}
+      transition={{ type: "spring", stiffness: 500, damping: 30 }}
     >
-      {sections.map((section) => (
-        <motion.button
-          key={section}
-          className={`relative pl-6 text-2xl font-bold mb-9 last:mb-0 text-white tracking-wide flex items-center w-full justify-start hover:text-[#00ffd5] ${
-            section === activeSection ? "text-pink-300" : ""
-          }`}
-          onClick={() => {
-            // Immediate UI feedback
-            setActiveSection(section as SectionKey);
-            setMenuOpen(false);
-            scrollToSection(section);
-          }}
-          variants={{
-            visible: {
-              opacity: 1,
-              y: 0,
-              transition: { type: "spring", stiffness: 420, damping: 22 },
-            },
-            hidden: {
-              opacity: 0,
-              y: 16,
-              transition: { type: "spring", stiffness: 420, damping: 22 },
-            },
-          }}
-          onHoverStart={() => {
-            if (section !== activeSection) {
-              const audio = new Audio(
-                "data:audio/wav;base64,UklGRiIAAABXQVZFZm10IBAAAAABAAEARKwAAIhYAQACABAAZGF0YQAAAAA="
-              );
-              audio.volume = 0.05;
-              audio.play().catch(() => {});
-            }
-          }}
-        >
-          {section === activeSection && (
-            <motion.span
-              layoutId="mobile-nav-rail"
-              className="absolute left-0 top-1/2 -translate-y-1/2 h-6 w-[3px] rounded-full bg-gradient-to-b from-pink-300 via-purple-400 to-blue-400 shadow-[0_0_8px_rgba(79,70,229,0.45)]"
-              style={{ willChange: "transform" }}
-              transition={{ type: "spring", stiffness: 500, damping: 30 }}
-            />
-          )}
-          <span>{section.charAt(0).toUpperCase() + section.slice(1)}</span>
-        </motion.button>
-      ))}
+      <motion.div
+        className="min-w-[220px] max-w-[80vw] rounded-xl border border-white/10 shadow-2xl overflow-hidden backdrop-blur-xl bg-gradient-to-br from-blue-900/90 via-purple-900/90 to-pink-900/90"
+        variants={containerVariants}
+        initial="hidden"
+        animate="visible"
+        exit="hidden"
+      >
+        <div className="py-3">
+          {sections.map((section) => (
+            <motion.button
+              key={section}
+              className={`relative w-full text-left px-5 py-3 text-[17px] font-semibold text-white tracking-wide flex items-center hover:bg-white/5 active:bg-white/10 ${
+                section === activeSection ? "text-pink-300" : ""
+              }`}
+              onClick={() => {
+                setActiveSection(section as SectionKey);
+                setMenuOpen(false);
+                scrollToSection(section);
+              }}
+              variants={{
+                visible: {
+                  opacity: 1,
+                  y: 0,
+                  transition: { type: "spring", stiffness: 420, damping: 22 },
+                },
+                hidden: {
+                  opacity: 0,
+                  y: 10,
+                  transition: { type: "spring", stiffness: 420, damping: 22 },
+                },
+              }}
+              onHoverStart={() => {
+                if (section !== activeSection) {
+                  const audio = new Audio(
+                    "data:audio/wav;base64,UklGRiIAAABXQVZFZm10IBAAAAABAAEARKwAAIhYAQACABAAZGF0YQAAAAA="
+                  );
+                  audio.volume = 0.05;
+                  audio.play().catch(() => {});
+                }
+              }}
+            >
+              {section === activeSection && (
+                <motion.span
+                  layoutId="mobile-nav-rail"
+                  className="absolute left-2.5 top-1/2 -translate-y-1/2 h-4 w-[3px] rounded-full bg-gradient-to-b from-pink-300 via-purple-400 to-blue-400 shadow-[0_0_8px_rgba(79,70,229,0.45)]"
+                  style={{ willChange: "transform" }}
+                  transition={{ type: "spring", stiffness: 500, damping: 30 }}
+                />
+              )}
+              <span className="pl-3">{section.charAt(0).toUpperCase() + section.slice(1)}</span>
+            </motion.button>
+          ))}
+        </div>
+      </motion.div>
     </motion.div>
-  </motion.div>
+  </>
 );
 
 // --- Navigation Component (Refactored) ---
