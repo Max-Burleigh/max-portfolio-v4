@@ -782,6 +782,16 @@ h2 {
   max-width: 44rem;
 }
 
+.projects-subcopy {
+  margin-top: 0.35rem;
+}
+
+@media (max-width: 768px) {
+  .projects-subcopy {
+    display: none;
+  }
+}
+
 @media (max-width: 1559px) {
   .projects-timeline-anchor,
   .projects-timeline-floating {

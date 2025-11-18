@@ -156,6 +156,7 @@ A focused guide for coding agents working in this repo.
 - Keep PRs small and scoped (one feature/fix per change).
 - When you add a project tile, include **optimized assets** and a **before/after** note in the PR description (FPS/CLS if animation/image related).
 - If you touch `globals.css` or animation hooks, run a quick manual QA on **iOS Safari** (to verify canvas fallback / perf) and on **reduced motion**.
+- When the user requests a commit, stage everything with `git add .` before committing (they expect all changes included).
 
 ---
 

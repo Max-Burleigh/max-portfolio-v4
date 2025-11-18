@@ -95,7 +95,9 @@ const ProjectsSection = forwardRef<HTMLDivElement>(function ProjectsSection(_, r
         <div ref={entranceRef} data-entrance="projects" className="projects-content-stack">
           <div className="projects-header">
             <h2 data-entrance-item>Projects</h2>
-            <p data-entrance-item>Selected work spanning ecommerce, AI products, and community platforms.</p>
+            <p data-entrance-item className="projects-subcopy">
+              Selected work spanning ecommerce, AI products, and community platforms.
+            </p>
           </div>
 
           <div className="project-grid" data-entrance-item>
