@@ -64,7 +64,6 @@ export const projects: ProjectEntry[] = [
     ),
     websiteUrl: "https://fullleafteacompany.com",
     className: "fullleaf-card full-leaf-tea-card",
-    reverseLayout: true,
     disablePhoneMockup: true,
     techStack: [
       { icon: <SiHtml5 className="tech-icon html5" style={iconStyle} />, label: "HTML" },
@@ -98,7 +97,6 @@ export const projects: ProjectEntry[] = [
     ),
     websiteUrl: "https://wholesale.fullleafteacompany.com",
     className: "fullleaf-wholesale-card full-leaf-wholesale-card",
-    reverseLayout: false,
     disablePhoneMockup: true,
     techStack: [
       { icon: <SiShopify className="tech-icon shopify" style={iconStyle} color="#fff" />, label: "Shopify" },
@@ -178,7 +176,6 @@ export const projects: ProjectEntry[] = [
       </>
     ),
     className: "full-leaf-app-card flex flex-col items-center",
-    reverseLayout: true,
     disablePhoneMockup: true,
     techStack: [
       { icon: <SiFlutter className="tech-icon flutter" style={iconStyle} />, label: "Flutter" },
@@ -195,7 +192,6 @@ export const projects: ProjectEntry[] = [
     description: "Artisan bakery and cafe website showcasing fresh-baked goods and local ingredients.",
     websiteUrl: "https://farmandflourjville.com",
     className: "farm-flour-card",
-    reverseLayout: false,
     disablePhoneMockup: true,
     techStack: [
       {
@@ -240,7 +236,6 @@ export const projects: ProjectEntry[] = [
       { icon: <SiSupabase className="tech-icon supabase" style={iconStyle} />, label: "Supabase" },
       { icon: <SiVercel className="tech-icon vercel" style={iconStyle} />, label: "Vercel" },
     ],
-    reverseLayout: true,
     disablePhoneMockup: true,
     hidden: true,
   },
@@ -250,7 +245,6 @@ export const projects: ProjectEntry[] = [
     description: "Community-driven online marketplace for local businesses.",
     websiteUrl: "https://shopdowntown.org/",
     className: "shopdowntown-card",
-    reverseLayout: true,
     techStack: [
       { icon: <SiHtml5 className="tech-icon html5" style={iconStyle} />, label: "HTML" },
       { icon: <SiCss3 className="tech-icon css3" style={iconStyle} color="#fff" />, label: "CSS" },
@@ -270,7 +264,6 @@ export const projects: ProjectEntry[] = [
     description: "Portfolio site for a professional photographer. Built with Next.js and TailwindCSS.",
     websiteUrl: "https://carlypsphoto.com",
     className: "carlypsphoto-card",
-    reverseLayout: false,
     techStack: [
       {
         icon: <Image src="/next.svg" alt="Next.js" width={32} height={32} className="tech-icon nextjs" />,

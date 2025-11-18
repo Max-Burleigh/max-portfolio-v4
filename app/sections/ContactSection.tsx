@@ -12,10 +12,10 @@ const ContactSection = forwardRef<HTMLDivElement>(function ContactSection(_, ref
     <section ref={ref} id="contact" className="section contact-section">
       <div ref={entranceRef} data-entrance="contact" className="glass-card contact-card">
         <h2 data-entrance-item>Contact</h2>
-        <p className="text-left" data-entrance-item>
+        <p className="text-left mt-6" data-entrance-item>
           Feel free to reach out if you have a project in mind or just want to chat!
         </p>
-        <div className="mt-4 text-left space-y-2" data-entrance-item>
+        <div className="mt-8 text-left space-y-4" data-entrance-item>
           <div>
             <a
               href={`mailto:${CONTACT_EMAIL}`}

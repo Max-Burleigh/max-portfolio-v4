@@ -8,11 +8,13 @@ import {
   SiTailwindcss,
   SiVercel,
 } from "react-icons/si";
+import { useIsMobile } from "@lib/hooks";
 
 const Colorbookorama: React.FC = () => {
   const iconStyle = { width: "32px", height: "32px" };
   const [shouldLoadVideo, setShouldLoadVideo] = useState(false);
   const videoWrapRef = useRef<HTMLDivElement | null>(null);
+  const isMobile = useIsMobile();
 
   useEffect(() => {
     const element = videoWrapRef.current;
@@ -98,7 +100,7 @@ const Colorbookorama: React.FC = () => {
         {shouldLoadVideo ? (
           <video
             src="/colorbookorama.mp4"
-            controls
+            controls={!isMobile}
             autoPlay
             muted
             loop

@@ -8,6 +8,7 @@ import {
   SiOpenai,
   SiGoogle,
 } from "react-icons/si";
+import { useIsMobile } from "@lib/hooks";
 // Assuming an Anthropic icon might be a simple text or a generic AI icon if a specific one isn't readily available
 // For now, we can use a placeholder or omit it if no suitable icon is found.
 // import { AnthropicIcon } from "../icons"; // Example if you have a custom icon
@@ -16,6 +17,7 @@ const BasedChat: React.FC = () => {
   const iconStyle = { width: "32px", height: "32px" };
   const [shouldLoadVideo, setShouldLoadVideo] = useState(false);
   const videoWrapRef = useRef<HTMLDivElement | null>(null);
+  const isMobile = useIsMobile();
 
   useEffect(() => {
     const el = videoWrapRef.current;
@@ -63,7 +65,7 @@ const BasedChat: React.FC = () => {
         {shouldLoadVideo ? (
           <video
             src="/based-chat-2.mp4"
-            controls
+            controls={!isMobile}
             autoPlay
             muted
             loop

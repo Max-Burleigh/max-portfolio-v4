@@ -101,11 +101,17 @@ const ProjectsSection = forwardRef<HTMLDivElement>(function ProjectsSection(_, r
           </div>
 
           <div className="project-grid" data-entrance-item>
-            {visibleProjects.map(({ id, children, ...props }) => (
-              <div key={id} ref={projectRefs[id]} data-project-card>
-                <ProjectCard {...props}>{children}</ProjectCard>
-              </div>
-            ))}
+            {visibleProjects.map(({ id, children, reverseLayout, ...props }, index) => {
+              const shouldReverse =
+                typeof reverseLayout === "boolean" ? reverseLayout : index % 2 === 1;
+              return (
+                <div key={id} ref={projectRefs[id]} data-project-card>
+                  <ProjectCard {...props} reverseLayout={shouldReverse}>
+                    {children}
+                  </ProjectCard>
+                </div>
+              );
+            })}
             <div ref={projectRefs["basedchat"]} data-project-card>
               <BasedChat />
             </div>
