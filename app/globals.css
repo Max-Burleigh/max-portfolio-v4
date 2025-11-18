@@ -162,20 +162,25 @@ html.not-ios-device .canvas-aurora { display: none; }
 /* ===== Entrance Stagger (hero + sections) ===== */
 [data-entrance] [data-entrance-item] {
   opacity: 0;
+  filter: blur(var(--enter-blur, 14px));
   /* Combine entrance rise with optional parallax offset */
   transform: translateY(calc(var(--enter-ty, 24px) + var(--parallax-y, 0px))) translateZ(0);
-  transition: opacity 400ms ease-out,
-    transform 500ms cubic-bezier(0.22, 1, 0.36, 1);
+  transition:
+    opacity 400ms ease-out,
+    transform 500ms cubic-bezier(0.22, 1, 0.36, 1),
+    filter 520ms ease-out;
   transition-delay: var(--enter-delay, 0ms);
-  will-change: transform, opacity;
+  will-change: transform, opacity, filter;
 }
 [data-entrance].is-entered [data-entrance-item] {
   opacity: 1;
   --enter-ty: 0px; /* let transform resolve to parallax only */
+  --enter-blur: 0px;
 }
 @media (prefers-reduced-motion: reduce) {
   [data-entrance] [data-entrance-item] {
     transform: none;
+    filter: none;
     transition: opacity 250ms ease-out;
   }
 }
@@ -468,6 +473,17 @@ html.not-ios-device .canvas-aurora { display: none; }
   }
 }
 
+@media (min-width: 1146px) and (max-width: 1600px) {
+  .side-nav {
+    left: auto;
+    right: 2rem;
+  }
+  .side-nav button:not(.active):hover,
+  .side-nav button:not(.active):focus {
+    transform: translateX(-3px);
+  }
+}
+
 @media (max-width: 640px) {
   .hamburger-btn {
     width: 42px !important;
@@ -618,9 +634,190 @@ h2 {
     margin-bottom: 0;
   }
   /* Center the Projects heading on mobile only */
-  .projects-section h2 {
-    width: 100%;
-    text-align: center;
+.projects-section h2 {
+  width: 100%;
+  text-align: center;
+  }
+}
+
+.projects-shell {
+  position: relative;
+}
+
+.projects-timeline-anchor {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 3;
+}
+
+.projects-timeline-floating {
+  position: sticky;
+  top: clamp(60px, 12vh, 140px);
+  transform: translateX(calc(-100% - clamp(32px, 5vw, 72px)));
+  width: clamp(70px, 7vw, 120px);
+  padding: 0.5rem 0.7rem 0.9rem;
+  border-radius: 22px;
+  background: rgba(2, 6, 12, 0.35);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(16px);
+  box-shadow: 0 25px 55px rgba(7, 10, 18, 0.4);
+  pointer-events: auto;
+}
+
+.timeline-heading {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.timeline-heading .eyebrow {
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  font-size: 0.75rem;
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.timeline-heading strong {
+  font-size: 1.15rem;
+  font-weight: 600;
+}
+
+.timeline-rail {
+  list-style: none;
+  padding: 1rem 0 0 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+.timeline-label {
+  position: relative;
+  padding: 0.2rem 0;
+}
+
+.timeline-label button {
+  width: 100%;
+  min-height: 38px;
+  text-align: center;
+  padding: 0.65rem 0.35rem;
+  color: rgba(255, 255, 255, 0.5);
+  background: none;
+  border: none;
+  cursor: pointer;
+  position: relative;
+  transition: color 200ms ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.timeline-label button::before {
+  content: "";
+  position: absolute;
+  inset: -10px;
+  border-radius: 999px;
+  background: transparent;
+}
+
+.timeline-label button::after {
+  content: "";
+  display: block;
+  margin: 0 auto;
+  width: 45%;
+  height: 2px;
+  border-radius: 999px;
+  background: linear-gradient(90deg, rgba(255, 255, 255, 0.2), transparent);
+  transition: width 220ms ease, background 220ms ease, opacity 180ms ease;
+  opacity: 0.6;
+}
+
+.timeline-label button span {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  padding: 0.35rem 0.9rem;
+  border-radius: 999px;
+  background: rgba(5, 8, 14, 0.95);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0 18px 36px rgba(0, 0, 0, 0.35);
+  font-size: 0.7rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  opacity: 0;
+  transition: opacity 140ms ease, transform 220ms ease;
+  pointer-events: none;
+}
+
+.timeline-label button:hover span,
+.timeline-label button:focus-visible span {
+  opacity: 1;
+  transform: translate(-50%, calc(-50% - 24px));
+}
+
+.timeline-label button:hover::after,
+.timeline-label button:focus-visible::after {
+  width: 110%;
+  background: linear-gradient(90deg, rgba(0, 255, 213, 0.9), rgba(240, 171, 252, 0.6));
+  opacity: 1;
+}
+
+.timeline-label.is-active button::after {
+  background: linear-gradient(90deg, rgba(0, 255, 213, 0.75), rgba(240, 171, 252, 0.45));
+  opacity: 0.9;
+}
+
+.projects-content-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.projects-header p {
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 0.95rem;
+  max-width: 44rem;
+}
+
+@media (max-width: 1559px) {
+  .projects-timeline-anchor,
+  .projects-timeline-floating {
+    display: none !important;
+  }
+  .projects-shell {
+    gap: 2rem;
+    padding-left: 0;
+  }
+}
+
+@media (max-width: 768px) {
+  .projects-timeline-anchor,
+  .projects-timeline-floating {
+    display: none;
+  }
+  .timeline-rail {
+    flex-direction: row;
+    gap: 0.75rem;
+    overflow-x: auto;
+    padding-bottom: 0.5rem;
+  }
+  .timeline-label {
+    flex: 0 0 auto;
+  }
+  .timeline-label button {
+    min-width: 120px;
+  }
+  .timeline-label button span {
+    position: static;
+    opacity: 1;
+    transform: none;
+    margin-top: 0.4rem;
+  }
+  .timeline-label button span::after {
+    display: none;
   }
 }
 
@@ -751,7 +948,8 @@ a {
   .full-leaf-tea-company-screenshot,
   .full-leaf-tea-company-wholesale-screenshot,
   .shop-downtown-screenshot,
-  .carly-pearl-sacks-photography-screenshot { max-width: 280px !important; max-height: 480px !important; width: auto !important; height: auto !important; }
+  .carly-pearl-sacks-photography-screenshot,
+  .farm-flour { max-width: 280px !important; max-height: 480px !important; width: auto !important; height: auto !important; }
   .project-card.full-leaf-app-card .project-info { flex: 2; max-width: 65%; }
   .project-card.full-leaf-app-card .project-media {
     flex: 0 1 clamp(220px, 28vw, 320px);
@@ -852,7 +1050,8 @@ a {
   .full-leaf-tea-company-screenshot,
   .full-leaf-tea-company-wholesale-screenshot,
   .shop-downtown-screenshot,
-  .carly-pearl-sacks-photography-screenshot {
+  .carly-pearl-sacks-photography-screenshot,
+  .farm-flour {
     /* Desktop max is 280x480; reduce to 75%: 210x360 */
     max-width: 210px !important;
     max-height: 360px !important;

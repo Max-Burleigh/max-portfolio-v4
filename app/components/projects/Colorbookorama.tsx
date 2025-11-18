@@ -38,7 +38,7 @@ const Colorbookorama: React.FC = () => {
       className="project-card colorbookorama-card"
       style={{
         display: "flex",
-        flexDirection: "row",
+        flexDirection: "row-reverse",
         alignItems: "center",
         justifyContent: "space-between",
         gap: "2rem",
@@ -46,6 +46,7 @@ const Colorbookorama: React.FC = () => {
         minHeight: "400px",
         width: "100%",
       }}
+      data-entrance-item
     >
       <div style={{ flex: "1", minWidth: "280px" }} className="project-info">
         <strong>Colorbookorama</strong>

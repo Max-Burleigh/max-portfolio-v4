@@ -38,7 +38,7 @@ const BasedChat: React.FC = () => {
       className="project-card based-chat-card"
       style={{
         display: "flex",
-        flexDirection: "row",
+        flexDirection: "row-reverse",
         alignItems: "center",
         justifyContent: "space-between",
         gap: "2rem",
@@ -46,6 +46,7 @@ const BasedChat: React.FC = () => {
         minHeight: "400px",
         width: "100%",
       }}
+      data-entrance-item
     >
       {/* Video on the left */}
       <div

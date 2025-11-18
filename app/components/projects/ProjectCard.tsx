@@ -88,8 +88,9 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
 
   return (
     <div
-      className={`project-card ${reverseLayout ? "media-left" : "media-right"} ${className}`.trim()}
-      style={{ flexDirection: reverseLayout ? "row-reverse" : "row", ...style }}
+      className={`project-card ${reverseLayout ? "media-left md:flex-row-reverse" : "media-right md:flex-row"} ${className}`.trim()}
+      style={style}
+      data-entrance-item
     >
       <div className="project-info">
         {websiteUrl ? (

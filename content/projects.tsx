@@ -22,7 +22,7 @@ import {
 import { ModernWindowsIcon } from "@components/Icons";
 import type { ProjectCardProps } from "@components/projects/ProjectCard";
 
-export type ProjectEntry = ProjectCardProps & { id: string };
+export type ProjectEntry = ProjectCardProps & { id: string; hidden?: boolean };
 
 const iconStyle = { width: "32px", height: "32px" } as const;
 
@@ -178,6 +178,7 @@ export const projects: ProjectEntry[] = [
       </>
     ),
     className: "full-leaf-app-card flex flex-col items-center",
+    reverseLayout: true,
     disablePhoneMockup: true,
     techStack: [
       { icon: <SiFlutter className="tech-icon flutter" style={iconStyle} />, label: "Flutter" },
@@ -187,6 +188,34 @@ export const projects: ProjectEntry[] = [
     imageUrl: "/webp/app.webp",
     imageAlt: "Portrait screenshot of Full Leaf App",
     imageTitle: "Full Leaf App Screenshot",
+  },
+  {
+    id: "farm-flour",
+    title: "Farm & Flour",
+    description: "Artisan bakery and cafe website showcasing fresh-baked goods and local ingredients.",
+    websiteUrl: "https://farmandflourjville.com",
+    className: "farm-flour-card",
+    reverseLayout: false,
+    disablePhoneMockup: true,
+    techStack: [
+      {
+        icon: (
+          <Image src="/next.svg" alt="Next.js" width={32} height={32} className="tech-icon nextjs" />
+        ),
+        label: "Next.js",
+      },
+      { icon: <SiVercel className="tech-icon vercel" style={iconStyle} color="#fff" />, label: "Vercel" },
+      { icon: <SiTailwindcss className="tech-icon tailwind" style={iconStyle} color="#fff" />, label: "TailwindCSS" },
+      { icon: <SiHtml5 className="tech-icon html5" style={iconStyle} />, label: "HTML" },
+      { icon: <SiCss3 className="tech-icon css3" style={iconStyle} color="#fff" />, label: "CSS" },
+    ],
+    imageUrl: "/project-images/farm-flour-phone-mockup.webp",
+    imageAlt: "Screenshot of Farm & Flour website",
+    imageTitle: "Farm & Flour Website Screenshot",
+    imageClassName: "farm-flour",
+    imageBlurDataURL:
+      "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNTkyIiBoZWlnaHQ9IjEyNDAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGRlZnM+PGxpbmVhckdyYWRpZW50IGlkPSJnIiB4MT0iMCUiIHkxPSIwJSIgeDI9IjAlIiB5Mj0iMTAwJSI+PHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iIzJhMWYxNSIgLz48c3RvcCBvZmZzZXQ9IjEwMCUiIHN0b3AtY29sb3I9IiMxNTEwMGEiIC8+PC9saW5lYXJHcmFkaWVudD48L2RlZnM+PHJlY3Qgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgZmlsbD0idXJsKCNnKSIvPjwvc3ZnPg==",
+    overlay: { href: "https://farmandflourjville.com", emoji: "🥖", className: "farm-flour-message" },
   },
   {
     id: "quailmail",
@@ -213,6 +242,7 @@ export const projects: ProjectEntry[] = [
     ],
     reverseLayout: true,
     disablePhoneMockup: true,
+    hidden: true,
   },
   {
     id: "shop-downtown",
@@ -220,7 +250,7 @@ export const projects: ProjectEntry[] = [
     description: "Community-driven online marketplace for local businesses.",
     websiteUrl: "https://shopdowntown.org/",
     className: "shopdowntown-card",
-    reverseLayout: false,
+    reverseLayout: true,
     techStack: [
       { icon: <SiHtml5 className="tech-icon html5" style={iconStyle} />, label: "HTML" },
       { icon: <SiCss3 className="tech-icon css3" style={iconStyle} color="#fff" />, label: "CSS" },
@@ -240,7 +270,7 @@ export const projects: ProjectEntry[] = [
     description: "Portfolio site for a professional photographer. Built with Next.js and TailwindCSS.",
     websiteUrl: "https://carlypsphoto.com",
     className: "carlypsphoto-card",
-    reverseLayout: true,
+    reverseLayout: false,
     techStack: [
       {
         icon: <Image src="/next.svg" alt="Next.js" width={32} height={32} className="tech-icon nextjs" />,
