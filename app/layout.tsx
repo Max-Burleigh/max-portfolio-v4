@@ -35,6 +35,12 @@ export const metadata: Metadata = {
     "The official portfolio website of Max Burleigh – web developer, project manager, and solopreneur based in Medford, Oregon. Explore projects, skills, and contact information.",
 };
 
+export const viewport = {
+  width: "device-width",
+  initialScale: 1,
+  viewportFit: "cover",
+};
+
 export default async function RootLayout({
   children,
 }: Readonly<{

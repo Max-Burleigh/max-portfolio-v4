@@ -4,6 +4,7 @@ import { motion, AnimatePresence } from "framer-motion";
 // import { throttle } from "lodash";
 import { useActiveSection, useIsMobile, useCursorFollower } from "@lib/hooks";
 import AuroraBackground from "@components/AuroraBackground";
+import IOSViewportOverlay from "@components/IOSViewportOverlay";
 import Navigation from "@components/navigation/Navigation";
 import AboutSection from "@sections/AboutSection";
 import ProjectsSection from "@sections/ProjectsSection";
@@ -112,6 +113,9 @@ const Portfolio = () => {
 
   return (
     <>
+      {/* iOS 26 Safari viewport overlay fallback */}
+      <IOSViewportOverlay />
+      
       {/* PlatformDetector removed; SSR sets <html> classes */}
       <Navigation
         activeSection={activeSection}
