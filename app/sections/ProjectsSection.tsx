@@ -31,7 +31,7 @@ const ProjectsSection = forwardRef<HTMLDivElement>(function ProjectsSection(_, r
   );
 
   const projectRefs = useMemo(() => {
-    const refs: Record<string, React.RefObject<HTMLDivElement>> = {};
+    const refs: Record<string, React.RefObject<HTMLDivElement | null>> = {};
     timelineIds.forEach((id) => {
       refs[id] = createRef<HTMLDivElement>();
     });
