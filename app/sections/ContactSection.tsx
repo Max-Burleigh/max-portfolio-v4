@@ -1,5 +1,5 @@
 "use client";
-import React, { forwardRef, useRef, useState, useEffect } from "react";
+import React, { forwardRef, useRef, useState, useEffect, useCallback } from "react";
 import { SiLinkedin, SiMaildotru } from "react-icons/si";
 import { MdArrowForward, MdTerminal, MdEdit } from "react-icons/md";
 import { motion, AnimatePresence, useInView } from "framer-motion";
@@ -14,6 +14,20 @@ const ContactSection = forwardRef<HTMLDivElement, ContactSectionProps>(function 
   const isMobile = useIsMobile();
   const entranceRef = useRef<HTMLDivElement>(null);
   useEntranceStagger(entranceRef, { baseDelay: 40, step: 90 });
+
+  const sectionRef = useRef<HTMLDivElement>(null);
+  const setSectionRef = useCallback(
+    (node: HTMLDivElement | null) => {
+      sectionRef.current = node;
+      if (!ref) return;
+      if (typeof ref === "function") {
+        ref(node);
+      } else {
+        (ref as React.MutableRefObject<HTMLDivElement | null>).current = node;
+      }
+    },
+    [ref]
+  );
 
   // Track visibility for animation trigger
   const contentRef = useRef<HTMLDivElement>(null);
@@ -87,8 +101,15 @@ My Selection:
     window.location.href = `mailto:${CONTACT_EMAIL}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(messageBody)}`;
   };
 
+  const lineCount = lines.length;
+
+  useEffect(() => {
+    if (!inquiryData || !sectionRef.current) return;
+    sectionRef.current.scrollIntoView({ behavior: "smooth", block: "end" });
+  }, [inquiryData, showForm, lineCount]);
+
   return (
-    <section ref={ref} id="contact" className="section contact-section">
+    <section ref={setSectionRef} id="contact" className="section contact-section">
       <div ref={entranceRef} data-entrance="contact" className="w-full max-w-4xl mx-auto transition-all duration-500">
         <div 
           ref={contentRef}
