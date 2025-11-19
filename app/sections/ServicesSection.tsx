@@ -123,20 +123,7 @@ const ServicesSection = forwardRef<HTMLDivElement, ServicesSectionProps>((props,
   }
 
   const shouldCycleSelections = isMobile && selectionItems.length > 1;
-  const tickerSequence = shouldCycleSelections
-    ? selectionItems.flatMap((item, index) => {
-        const sequence: SelectionItem[] = [item];
-        const needsPlus = index < selectionItems.length - 1;
-        if (needsPlus) {
-          sequence.push({
-            id: `plus-${index}`,
-            label: "+",
-            className: "text-white/30",
-          });
-        }
-        return sequence;
-      })
-    : selectionItems;
+  const tickerSequence = selectionItems;
 
   const activeTickerItem = shouldCycleSelections && tickerSequence.length > 0
     ? tickerSequence[selectionTickerIndex % tickerSequence.length]
