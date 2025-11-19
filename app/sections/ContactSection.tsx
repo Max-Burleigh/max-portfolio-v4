@@ -159,7 +159,7 @@ My Selection:
                         <textarea
                           value={messageBody}
                           onChange={(e) => setMessageBody(e.target.value)}
-                          className="w-full h-56 bg-transparent p-4 text-white/80 text-sm resize-none focus:outline-none font-mono leading-relaxed"
+                          className="w-full h-72 md:h-96 bg-transparent p-4 text-white/80 text-sm resize-none focus:outline-none font-mono leading-relaxed"
                           spellCheck={false}
                         />
                       </div>

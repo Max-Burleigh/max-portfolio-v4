@@ -40,6 +40,7 @@ const ServicesSection = forwardRef<HTMLDivElement, ServicesSectionProps>((props,
   const [toastMessage, setToastMessage] = useState<string | null>(null);
   const [showToast, setShowToast] = useState(false);
   const [toastKey, setToastKey] = useState(0);
+  const [navigatedToContact, setNavigatedToContact] = useState(false);
 
   useEffect(() => {
     setMounted(true);
@@ -59,6 +60,7 @@ const ServicesSection = forwardRef<HTMLDivElement, ServicesSectionProps>((props,
   }, [showToast, toastKey]);
 
   const handlePlanSelection = (plan: "ESSENTIAL" | "GROWTH") => {
+    setNavigatedToContact(false);
     if (selectedPlan === plan) {
       setSelectedPlan(null);
       setHasSubscription(false);
@@ -77,9 +79,11 @@ const ServicesSection = forwardRef<HTMLDivElement, ServicesSectionProps>((props,
       return;
     }
     setHasSubscription(!hasSubscription);
+    setNavigatedToContact(false);
   };
 
   const handleContact = () => {
+    setNavigatedToContact(true);
     if (props.onStartProject) {
       props.onStartProject({ plan: selectedPlan, subscription: hasSubscription });
     }
@@ -96,7 +100,7 @@ const ServicesSection = forwardRef<HTMLDivElement, ServicesSectionProps>((props,
         className="w-full max-w-5xl mx-auto"
         data-entrance="stagger"
       >
-        <div className="portfolio-header mb-12">
+        <div className="portfolio-header mb-12 text-center md:text-left">
           <h2 className="mb-0" data-entrance-item>
             Services
           </h2>
@@ -295,7 +299,7 @@ const ServicesSection = forwardRef<HTMLDivElement, ServicesSectionProps>((props,
                     Managed Hosting & Support
                   </h4>
                 </div>
-                <div className="text-right flex flex-col items-end gap-3">
+                <div className="w-full md:w-auto flex flex-col gap-3 items-center text-center md:text-right md:items-end">
                   <div>
                     <div className="text-3xl font-bold text-white font-space-grotesk">$150 <span className="text-lg text-white/40 font-normal font-manrope">/ month</span></div>
                     <div className="text-xs text-teal-400 mt-1">Cancel anytime. You own your assets.</div>
@@ -435,7 +439,7 @@ const ServicesSection = forwardRef<HTMLDivElement, ServicesSectionProps>((props,
       {mounted && createPortal(
         <>
           <AnimatePresence>
-            {(selectedPlan || hasSubscription) && (
+            {(selectedPlan || hasSubscription) && !navigatedToContact && (
               <motion.div
                 initial={{ y: 100, opacity: 0 }}
                 animate={{ y: 0, opacity: 1 }}
