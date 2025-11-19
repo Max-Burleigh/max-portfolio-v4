@@ -110,11 +110,11 @@ const ServicesSection = forwardRef<HTMLDivElement, ServicesSectionProps>((props,
         </div>
 
         <div className="mt-10 pt-10 border-t border-white/10 space-y-14">
-          <div data-entrance-item>
-            <p className="text-sm md:text-base tracking-[0.2em] uppercase text-white/70 font-space-grotesk font-semibold">
+          <div data-entrance-item className="text-center md:text-left">
+            <p className="text-lg md:text-base tracking-[0.2em] uppercase text-white/70 font-space-grotesk font-semibold">
               Web Design & Development
             </p>
-            <p className="text-lg text-white/80 mt-3 max-w-2xl">
+            <p className="text-lg text-white/80 mt-3 max-w-2xl mx-auto md:mx-0">
               I break Web Design & Development into two tracks so it’s clear what we’re working on together.
             </p>
           </div>
