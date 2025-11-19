@@ -1,7 +1,10 @@
 "use client";
 
-import React, { forwardRef, useRef, useState } from "react";
+import React, { forwardRef, useRef, useState, useEffect } from "react";
+import { createPortal } from "react-dom";
+import { AnimatePresence, motion } from "framer-motion";
 import { useEntranceStagger } from "@lib/hooks";
+import { CONTACT_EMAIL } from "@lib/constants";
 import {
   MdSpeed,
   MdEditDocument,
@@ -16,11 +19,78 @@ import {
   MdSecurity,
   MdWorkspaces,
   MdCheck,
+  MdCheckCircle,
+  MdAdd,
+  MdArrowForward,
+  MdErrorOutline,
 } from "react-icons/md";
 
-const ServicesSection = forwardRef<HTMLDivElement>((props, ref) => {
+interface ServicesSectionProps {
+  onStartProject?: (data: { plan: "ESSENTIAL" | "GROWTH" | null; subscription: boolean }) => void;
+}
+
+const ServicesSection = forwardRef<HTMLDivElement, ServicesSectionProps>((props, ref) => {
   const entranceRef = useRef<HTMLDivElement>(null);
   useEntranceStagger(entranceRef, { baseDelay: 100, step: 50 });
+
+  // Selection State
+  const [selectedPlan, setSelectedPlan] = useState<"ESSENTIAL" | "GROWTH" | null>(null);
+  const [hasSubscription, setHasSubscription] = useState(false);
+  const [mounted, setMounted] = useState(false);
+  const [shakePlans, setShakePlans] = useState(false);
+  const [toastMessage, setToastMessage] = useState<string | null>(null);
+  const [showToast, setShowToast] = useState(false);
+  const [toastKey, setToastKey] = useState(0);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  useEffect(() => {
+    if (shakePlans) {
+      const timer = setTimeout(() => setShakePlans(false), 600);
+      return () => clearTimeout(timer);
+    }
+  }, [shakePlans]);
+
+  useEffect(() => {
+    if (!showToast) return;
+    const timer = setTimeout(() => setShowToast(false), 3000);
+    return () => clearTimeout(timer);
+  }, [showToast, toastKey]);
+
+  const handlePlanSelection = (plan: "ESSENTIAL" | "GROWTH") => {
+    if (selectedPlan === plan) {
+      setSelectedPlan(null);
+      setHasSubscription(false);
+    } else {
+      setSelectedPlan(plan);
+    }
+  };
+
+  const handleSubscriptionToggle = () => {
+    if (!selectedPlan) {
+      setShakePlans(true);
+      document.getElementById("build-phase")?.scrollIntoView({ behavior: "smooth", block: "center" });
+      setToastMessage("Select a plan before adding managed support.");
+      setToastKey((prev) => prev + 1);
+      setShowToast(true);
+      return;
+    }
+    setHasSubscription(!hasSubscription);
+  };
+
+  const triggerToast = (message: string) => {
+    setToastMessage(message);
+    setToastKey((prev) => prev + 1);
+    setShowToast(true);
+  };
+
+  const handleContact = () => {
+    if (props.onStartProject) {
+      props.onStartProject({ plan: selectedPlan, subscription: hasSubscription });
+    }
+  };
 
   return (
     <section
@@ -53,7 +123,7 @@ const ServicesSection = forwardRef<HTMLDivElement>((props, ref) => {
           </div>
 
         {/* 1. The Build Phase */}
-        <div className="mb-20" data-entrance-item>
+        <div id="build-phase" className="mb-20" data-entrance-item>
           <p className="text-xs font-semibold tracking-[0.4em] uppercase text-white/40 mb-3 font-space-grotesk">
             ONE TIME PURCHASE
           </p>
@@ -69,7 +139,18 @@ const ServicesSection = forwardRef<HTMLDivElement>((props, ref) => {
 
               <div className="relative z-10 flex flex-col h-full">
                 <div className="mb-6">
-                  <h4 className="text-xl font-bold text-teal-300 mb-2 font-space-grotesk">ESSENTIAL</h4>
+                  <div className="flex justify-between items-start">
+                    <h4 className="text-xl font-bold text-teal-300 mb-2 font-space-grotesk">ESSENTIAL</h4>
+                    {selectedPlan === "ESSENTIAL" && (
+                      <motion.div
+                        initial={{ scale: 0 }}
+                        animate={{ scale: 1 }}
+                        className="text-teal-400"
+                      >
+                        <MdCheckCircle size={24} />
+                      </motion.div>
+                    )}
+                  </div>
                   <div className="flex items-baseline gap-1">
                     <span className="text-4xl font-bold text-white font-space-grotesk">$3,000</span>
                   </div>
@@ -92,8 +173,16 @@ const ServicesSection = forwardRef<HTMLDivElement>((props, ref) => {
                   }
                 </ul>
 
-                <button className="w-full py-3 px-6 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-white font-semibold transition-all duration-300 hover:scale-[1.02] active:scale-[0.98] mt-auto">
-                  Select Plan
+                <button
+                  onClick={() => handlePlanSelection("ESSENTIAL")}
+                  className={`w-full py-3 px-6 rounded-xl border font-semibold transition-all duration-300 hover:scale-[1.02] active:scale-[0.98] mt-auto flex items-center justify-center gap-2 relative isolate transform-gpu ${
+                    selectedPlan === "ESSENTIAL"
+                      ? "bg-teal-500 text-white border-teal-500 shadow-[0_0_20px_rgba(20,184,166,0.3)]"
+                      : "bg-white/5 hover:bg-white/10 border-white/10 text-white"
+                  }`}
+                  style={{ backfaceVisibility: "hidden" }}
+                >
+                  {selectedPlan === "ESSENTIAL" ? "Plan Selected" : "Select Plan"}
                 </button>
               </div>
             </div>
@@ -104,7 +193,18 @@ const ServicesSection = forwardRef<HTMLDivElement>((props, ref) => {
 
               <div className="relative z-10 flex flex-col h-full">
                 <div className="mb-6">
-                  <h4 className="text-xl font-bold text-purple-300 mb-2 font-space-grotesk">GROWTH</h4>
+                  <div className="flex justify-between items-start">
+                    <h4 className="text-xl font-bold text-purple-300 mb-2 font-space-grotesk">GROWTH</h4>
+                    {selectedPlan === "GROWTH" && (
+                      <motion.div
+                        initial={{ scale: 0 }}
+                        animate={{ scale: 1 }}
+                        className="text-purple-400"
+                      >
+                        <MdCheckCircle size={24} />
+                      </motion.div>
+                    )}
+                  </div>
                   <div className="flex items-baseline gap-1">
                     <span className="text-4xl font-bold text-white font-space-grotesk">$5,000</span>
                   </div>
@@ -130,8 +230,23 @@ const ServicesSection = forwardRef<HTMLDivElement>((props, ref) => {
                   }
                 </ul>
 
-                <button className="w-full py-3 px-6 rounded-xl bg-gradient-to-r from-blue-400 via-purple-400 to-pink-300 text-white font-bold shadow-lg shadow-purple-500/20 transition-all duration-300 hover:scale-[1.02] active:scale-[0.98] mt-auto">
-                  Select Plan
+                <button
+                  onClick={() => handlePlanSelection("GROWTH")}
+                  className={`w-full py-3 px-6 rounded-xl font-bold shadow-lg transition-all duration-300 hover:scale-[1.02] active:scale-[0.98] mt-auto flex items-center justify-center gap-2 relative isolate transform-gpu overflow-hidden bg-purple-500 text-white ${
+                    selectedPlan === "GROWTH"
+                      ? "shadow-purple-500/40"
+                      : "shadow-purple-500/20"
+                  }`}
+                  style={{ backfaceVisibility: "hidden" }}
+                >
+                  <div 
+                    className={`absolute inset-0 bg-gradient-to-r from-blue-400 via-purple-400 to-pink-300 transition-opacity duration-300 ${
+                      selectedPlan === "GROWTH" ? "opacity-0" : "opacity-100"
+                    }`} 
+                  />
+                  <span className="relative z-10">
+                    {selectedPlan === "GROWTH" ? "Plan Selected" : "Select Plan"}
+                  </span>
                 </button>
               </div>
             </div>
@@ -179,7 +294,6 @@ const ServicesSection = forwardRef<HTMLDivElement>((props, ref) => {
           </h3>
 
           <div className="glass-card !m-0 !w-full !max-w-none relative overflow-hidden !p-0">
-
             <div className="p-8 md:p-10">
               <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-8 border-b border-white/10 pb-8">
                 <div>
@@ -188,9 +302,30 @@ const ServicesSection = forwardRef<HTMLDivElement>((props, ref) => {
                     Managed Hosting & Support
                   </h4>
                 </div>
-                <div className="text-right">
-                  <div className="text-3xl font-bold text-white font-space-grotesk">$150 <span className="text-lg text-white/40 font-normal font-manrope">/ month</span></div>
-                  <div className="text-xs text-teal-400 mt-1">Cancel anytime. You own your assets.</div>
+                <div className="text-right flex flex-col items-end gap-3">
+                  <div>
+                    <div className="text-3xl font-bold text-white font-space-grotesk">$150 <span className="text-lg text-white/40 font-normal font-manrope">/ month</span></div>
+                    <div className="text-xs text-teal-400 mt-1">Cancel anytime. You own your assets.</div>
+                  </div>
+                  
+                  <button
+                    onClick={handleSubscriptionToggle}
+                    className={`py-2 px-4 rounded-lg font-semibold text-sm transition-all duration-300 hover:scale-[1.02] active:scale-[0.98] flex items-center gap-2 border ${
+                      hasSubscription
+                        ? "bg-teal-500/20 border-teal-500 text-teal-300"
+                        : "bg-white/5 hover:bg-white/10 border-white/10 text-white"
+                    }`}
+                  >
+                    {hasSubscription ? (
+                      <>
+                        <MdCheckCircle size={16} /> Added
+                      </>
+                    ) : (
+                      <>
+                        <MdAdd size={16} /> Add Support
+                      </>
+                    )}
+                  </button>
                 </div>
               </div>
 
@@ -302,6 +437,67 @@ const ServicesSection = forwardRef<HTMLDivElement>((props, ref) => {
         </div>
         </div>
       </div>
+
+      {/* Sticky Project Bar - Rendered via Portal to ensure top Z-Index */}
+      {mounted && createPortal(
+        <>
+          <AnimatePresence>
+            {(selectedPlan || hasSubscription) && (
+              <motion.div
+                initial={{ y: 100, opacity: 0 }}
+                animate={{ y: 0, opacity: 1 }}
+                exit={{ y: 100, opacity: 0 }}
+                transition={{ type: "spring", stiffness: 300, damping: 30 }}
+                className="fixed bottom-6 inset-x-0 z-[9999] flex justify-center px-4 pointer-events-none"
+              >
+                <div className="pointer-events-auto bg-[#0a0a0a]/90 backdrop-blur-xl border border-white/10 rounded-2xl shadow-2xl shadow-black/50 p-4 pl-6 flex items-center gap-6 max-w-2xl w-full ring-1 ring-white/5">
+                  <div className="flex-grow min-w-0">
+                    <div className="text-xs font-bold text-white/40 uppercase tracking-wider mb-1">
+                      Your Selection
+                    </div>
+                    <div className="flex items-center gap-2 text-white font-space-grotesk truncate">
+                      {selectedPlan && (
+                        <span className={selectedPlan === "GROWTH" ? "text-purple-300" : "text-teal-300"}>
+                          {selectedPlan === "ESSENTIAL" ? "Essential Plan" : "Growth Plan"}
+                        </span>
+                      )}
+                      {selectedPlan && hasSubscription && <span className="text-white/30">+</span>}
+                      {hasSubscription && <span>Peace of Mind</span>}
+                    </div>
+                  </div>
+                  
+                  <button
+                    onClick={handleContact}
+                    className="flex-shrink-0 bg-white text-black px-6 py-3 rounded-xl font-bold hover:scale-105 transition-transform flex items-center gap-2 shadow-[0_0_20px_rgba(255,255,255,0.3)]"
+                  >
+                    Let's Start <MdArrowForward />
+                  </button>
+                </div>
+              </motion.div>
+            )}
+          </AnimatePresence>
+          <AnimatePresence>
+            {showToast && toastMessage && (
+              <motion.div
+                key={toastKey}
+                initial={{ y: 40, opacity: 0 }}
+                animate={{ y: 0, opacity: 1 }}
+                exit={{ y: 40, opacity: 0 }}
+                transition={{ type: "spring", stiffness: 220, damping: 25 }}
+                role="status"
+                aria-live="polite"
+                className="fixed bottom-28 right-6 left-6 md:left-auto z-[9999] pointer-events-auto"
+              >
+                <div className="rounded-2xl bg-white/10 border border-white/15 shadow-2xl shadow-black/60 backdrop-blur-xl px-5 py-4 flex items-center gap-3 text-sm text-white font-semibold">
+                  <MdErrorOutline size={20} className="text-teal-300" aria-hidden="true" />
+                  <span className="leading-snug">{toastMessage}</span>
+                </div>
+              </motion.div>
+            )}
+          </AnimatePresence>
+        </>,
+        document.body
+      )}
     </section>
   );
 });

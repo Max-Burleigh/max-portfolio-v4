@@ -488,7 +488,7 @@ html.not-ios-device .canvas-aurora { display: none; }
   filter: drop-shadow(0 0 16px rgba(79, 70, 229, 0.4));
 }
 
-@media (max-width: 1145px) {
+@media (max-width: 767px) {
   .side-nav {
     display: none !important;
   }
@@ -501,7 +501,7 @@ html.not-ios-device .canvas-aurora { display: none; }
   }
 }
 
-@media (min-width: 1146px) and (max-width: 1600px) {
+@media (min-width: 768px) and (max-width: 1600px) {
   .side-nav {
     left: auto;
     right: max(2rem, var(--safe-right));

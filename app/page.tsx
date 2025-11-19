@@ -93,6 +93,14 @@ const Portfolio = () => {
     [sectionRefs]
   );
 
+  // Inquiry State
+  const [inquiryData, setInquiryData] = useState<{ plan: "ESSENTIAL" | "GROWTH" | null; subscription: boolean } | null>(null);
+
+  const handleStartProject = (data: { plan: "ESSENTIAL" | "GROWTH" | null; subscription: boolean }) => {
+    setInquiryData(data);
+    scrollToSection("contact");
+  };
+
   // Active section logic moved into useActiveSection hook
 
   // Remove unused hover/click message state and handlers
@@ -169,11 +177,11 @@ const Portfolio = () => {
 
         <AboutSection ref={sectionRefs.about} onViewServices={() => scrollToSection("services")} />
 
-        <ServicesSection ref={sectionRefs.services} />
+        <ServicesSection ref={sectionRefs.services} onStartProject={handleStartProject} />
 
         <PortfolioSection ref={sectionRefs.portfolio} />
 
-        <ContactSection ref={sectionRefs.contact} />
+        <ContactSection ref={sectionRefs.contact} inquiryData={inquiryData} />
       </motion.div>
     </>
   );
