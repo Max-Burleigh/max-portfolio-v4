@@ -98,7 +98,8 @@ const Portfolio = () => {
 
   const handleStartProject = (data: { plan: "ESSENTIAL" | "GROWTH" | null; subscription: boolean }) => {
     setInquiryData(data);
-    scrollToSection("contact");
+    // Use center block alignment for better purchase flow experience
+    sectionRefs.contact.current?.scrollIntoView({ behavior: "smooth", block: "center" });
   };
 
   // Active section logic moved into useActiveSection hook

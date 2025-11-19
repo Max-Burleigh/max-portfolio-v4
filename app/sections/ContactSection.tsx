@@ -134,7 +134,7 @@ My Selection:
                       </div>
                       
                       <div className="p-5">
-                        <div className="font-mono text-sm space-y-2 text-teal-300/90 min-h-[80px]">
+                        <div className={`font-mono text-sm space-y-2 text-teal-300/90 ${isMobile ? 'h-48' : 'min-h-[80px]'}`}>
                           {lines.map((line, i) => (
                             <motion.div
                               key={i}
