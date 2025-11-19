@@ -3,7 +3,7 @@
 import React, { forwardRef, useRef, useState, useEffect } from "react";
 import { createPortal } from "react-dom";
 import { AnimatePresence, motion } from "framer-motion";
-import { useEntranceStagger } from "@lib/hooks";
+import { useEntranceStagger, useIsMobile } from "@lib/hooks";
 import {
   MdSpeed,
   MdEditDocument,
@@ -28,6 +28,12 @@ interface ServicesSectionProps {
   onStartProject?: (data: { plan: "ESSENTIAL" | "GROWTH" | null; subscription: boolean }) => void;
 }
 
+type SelectionItem = {
+  id: string;
+  label: string;
+  className?: string;
+};
+
 const ServicesSection = forwardRef<HTMLDivElement, ServicesSectionProps>((props, ref) => {
   const entranceRef = useRef<HTMLDivElement>(null);
   useEntranceStagger(entranceRef, { baseDelay: 100, step: 50 });
@@ -41,6 +47,8 @@ const ServicesSection = forwardRef<HTMLDivElement, ServicesSectionProps>((props,
   const [showToast, setShowToast] = useState(false);
   const [toastKey, setToastKey] = useState(0);
   const [navigatedToContact, setNavigatedToContact] = useState(false);
+  const [selectionTickerIndex, setSelectionTickerIndex] = useState(0);
+  const isMobile = useIsMobile();
 
   useEffect(() => {
     setMounted(true);
@@ -88,6 +96,49 @@ const ServicesSection = forwardRef<HTMLDivElement, ServicesSectionProps>((props,
       props.onStartProject({ plan: selectedPlan, subscription: hasSubscription });
     }
   };
+
+  const planLabel =
+    selectedPlan === "ESSENTIAL"
+      ? "Essential Plan"
+      : selectedPlan === "GROWTH"
+        ? "Growth Plan"
+        : null;
+
+  const planClassName = selectedPlan === "GROWTH" ? "text-purple-300" : "text-teal-300";
+
+  const selectionItems: SelectionItem[] = [];
+  if (planLabel) {
+    selectionItems.push({
+      id: "plan",
+      label: planLabel,
+      className: planClassName,
+    });
+  }
+  if (hasSubscription) {
+    selectionItems.push({
+      id: "subscription",
+      label: "Peace of Mind",
+      className: "text-white",
+    });
+  }
+
+  const shouldCycleSelections = isMobile && selectionItems.length > 1;
+  const activeTickerItem = shouldCycleSelections
+    ? selectionItems[selectionTickerIndex % selectionItems.length]
+    : null;
+
+  useEffect(() => {
+    if (!shouldCycleSelections || selectionItems.length === 0) {
+      setSelectionTickerIndex(0);
+      return;
+    }
+
+    const id = window.setInterval(() => {
+      setSelectionTickerIndex((prev) => (prev + 1) % selectionItems.length);
+    }, 3500);
+
+    return () => window.clearInterval(id);
+  }, [shouldCycleSelections, selectionItems.length]);
 
   return (
     <section
@@ -462,17 +513,34 @@ const ServicesSection = forwardRef<HTMLDivElement, ServicesSectionProps>((props,
                     <div className="text-xs font-bold text-white/40 uppercase tracking-wider mb-1">
                       Your Selection
                     </div>
-                    <div className="flex items-center gap-2 text-white font-space-grotesk truncate">
-                      {selectedPlan && (
-                        <span className={selectedPlan === "GROWTH" ? "text-purple-300" : "text-teal-300"}>
-                          {selectedPlan === "ESSENTIAL" ? "Essential Plan" : "Growth Plan"}
-                        </span>
+                    <div className="flex items-center gap-2 text-white font-space-grotesk truncate min-h-[1.5rem]">
+                      {shouldCycleSelections ? (
+                        <div className="relative h-6 flex items-center overflow-hidden">
+                          <AnimatePresence mode="wait">
+                            {activeTickerItem && (
+                              <motion.span
+                                key={activeTickerItem.id}
+                                initial={{ opacity: 0, y: 8 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                exit={{ opacity: 0, y: -8 }}
+                                transition={{ duration: 0.3 }}
+                                className={`block truncate ${activeTickerItem.className ?? ""}`}
+                              >
+                                {activeTickerItem.label}
+                              </motion.span>
+                            )}
+                          </AnimatePresence>
+                        </div>
+                      ) : (
+                        <>
+                          {planLabel && <span className={planClassName}>{planLabel}</span>}
+                          {selectedPlan && hasSubscription && <span className="text-white/30">+</span>}
+                          {hasSubscription && <span>Peace of Mind</span>}
+                        </>
                       )}
-                      {selectedPlan && hasSubscription && <span className="text-white/30">+</span>}
-                      {hasSubscription && <span>Peace of Mind</span>}
                     </div>
                   </div>
-                  
+
                   <button
                     onClick={handleContact}
                     className="flex-shrink-0 bg-white text-black px-6 py-3 rounded-xl font-bold hover:scale-105 transition-transform flex items-center gap-2 shadow-[0_0_20px_rgba(255,255,255,0.3)]"
