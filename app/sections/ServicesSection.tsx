@@ -300,9 +300,13 @@ const ServicesSection = forwardRef<HTMLDivElement, ServicesSectionProps>((props,
             <div className="p-8 md:p-10">
               <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-8 border-b border-white/10 pb-8">
                 <div>
-                  <h4 className="text-2xl font-bold text-white mb-2 flex items-center gap-2 font-space-grotesk">
-                    <MdSecurity size={28} className="text-teal-300" aria-hidden="true" />
-                    Managed Hosting & Support
+                  <h4
+                    className="text-xl md:text-2xl font-bold text-white mb-2 flex items-start md:items-center gap-2 font-space-grotesk"
+                  >
+                    <span className="-ml-3 md:ml-0 flex items-center text-teal-300" aria-hidden="true">
+                      <MdSecurity size={28} />
+                    </span>
+                    <span className="leading-tight md:leading-none">Managed Hosting & Support</span>
                   </h4>
                 </div>
                 <div className="w-full md:w-auto flex flex-col gap-3 items-center text-center md:text-right md:items-end">
