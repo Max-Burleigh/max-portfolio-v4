@@ -8,6 +8,7 @@ import IOSViewportOverlay from "@components/IOSViewportOverlay";
 import Navigation from "@components/navigation/Navigation";
 import AboutSection from "@sections/AboutSection";
 import PortfolioSection from "@sections/PortfolioSection";
+import ServicesSection from "@sections/ServicesSection";
 import ContactSection from "@sections/ContactSection";
 // Import modularized project components
 //
@@ -58,24 +59,26 @@ const Portfolio = () => {
   const containerRef = useRef<HTMLDivElement>(null);
   // Removed unused card message states
 
-  type SectionKey = "about" | "portfolio" | "contact";
-  const sectionKeys: SectionKey[] = ["about", "portfolio", "contact"];
+  type SectionKey = "about" | "services" | "portfolio" | "contact";
+  const sectionKeys: SectionKey[] = ["about", "services", "portfolio", "contact"];
 
   const aboutSectionRef = useRef<HTMLDivElement>(null);
   const portfolioSectionRef = useRef<HTMLDivElement>(null);
+  const servicesSectionRef = useRef<HTMLDivElement>(null);
   const contactSectionRef = useRef<HTMLDivElement>(null);
 
   const sectionRefs = useMemo(
     () => ({
       about: aboutSectionRef,
+      services: servicesSectionRef,
       portfolio: portfolioSectionRef,
       contact: contactSectionRef,
     }),
-    [aboutSectionRef, portfolioSectionRef, contactSectionRef]
+    [aboutSectionRef, portfolioSectionRef, servicesSectionRef, contactSectionRef]
   );
 
   const { activeSection, setActiveSection } = useActiveSection(
-    { about: aboutSectionRef, portfolio: portfolioSectionRef, contact: contactSectionRef },
+    { about: aboutSectionRef, services: servicesSectionRef, portfolio: portfolioSectionRef, contact: contactSectionRef },
     containerRef
   );
 
@@ -115,7 +118,7 @@ const Portfolio = () => {
     <>
       {/* iOS 26 Safari viewport overlay fallback */}
       <IOSViewportOverlay />
-      
+
       {/* PlatformDetector removed; SSR sets <html> classes */}
       <Navigation
         activeSection={activeSection}
@@ -134,9 +137,8 @@ const Portfolio = () => {
         <AnimatePresence>
           {menuOpen && isMobile && (
             <motion.div
-              className={`fixed inset-0 bg-black/50 backdrop-blur-sm z-50 ${
-                overlayReady ? "" : "pointer-events-none"
-              }`}
+              className={`fixed inset-0 bg-black/50 backdrop-blur-sm z-50 ${overlayReady ? "" : "pointer-events-none"
+                }`}
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
@@ -165,7 +167,9 @@ const Portfolio = () => {
           />
         )}
 
-        <AboutSection ref={sectionRefs.about} />
+        <AboutSection ref={sectionRefs.about} onViewServices={() => scrollToSection("services")} />
+
+        <ServicesSection ref={sectionRefs.services} />
 
         <PortfolioSection ref={sectionRefs.portfolio} />
 

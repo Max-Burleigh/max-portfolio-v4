@@ -9,7 +9,7 @@ import {
 } from "framer-motion";
 
 // Define section keys type - needed for props
-type SectionKey = "about" | "portfolio" | "contact"; // Or import from a shared types file
+type SectionKey = "about" | "portfolio" | "services" | "contact"; // Or import from a shared types file
 
 // --- NavItem Component (restored original feel) ---
 interface NavItemProps {
@@ -233,9 +233,8 @@ const MobileMenu: React.FC<MobileMenuProps> = ({
           {sections.map((section) => (
             <motion.button
               key={section}
-              className={`relative w-full text-left px-5 py-3 text-[17px] font-semibold text-white tracking-wide flex items-center hover:bg-white/5 active:bg-white/10 ${
-                section === activeSection ? "text-pink-300" : ""
-              }`}
+              className={`relative w-full text-left px-5 py-3 text-[17px] font-semibold text-white tracking-wide flex items-center hover:bg-white/5 active:bg-white/10 ${section === activeSection ? "text-pink-300" : ""
+                }`}
               onClick={() => {
                 setActiveSection(section as SectionKey);
                 setMenuOpen(false);
@@ -259,7 +258,7 @@ const MobileMenu: React.FC<MobileMenuProps> = ({
                     "data:audio/wav;base64,UklGRiIAAABXQVZFZm10IBAAAAABAAEARKwAAIhYAQACABAAZGF0YQAAAAA="
                   );
                   audio.volume = 0.05;
-                  audio.play().catch(() => {});
+                  audio.play().catch(() => { });
                 }
               }}
             >

@@ -62,23 +62,23 @@ const Colorbookorama: React.FC = () => {
           style={{ display: "flex", flexWrap: "wrap", gap: "1rem" }}
         >
           <div className="tech-item">
-            <SiNextdotjs className="tech-icon nextjs" style={iconStyle} />
+            <SiNextdotjs className="tech-icon nextjs" style={iconStyle} color="#fff" />
             <span>Next.js</span>
           </div>
           <div className="tech-item">
-            <SiVercel className="tech-icon vercel" style={iconStyle} />
+            <SiVercel className="tech-icon vercel" style={iconStyle} color="#fff" />
             <span>Vercel</span>
           </div>
           <div className="tech-item">
-            <SiFirebase className="tech-icon firebase" style={iconStyle} />
+            <SiFirebase className="tech-icon firebase" style={iconStyle} color="#fff" />
             <span>Firebase</span>
           </div>
           <div className="tech-item">
-            <SiTypescript className="tech-icon typescript" style={iconStyle} />
+            <SiTypescript className="tech-icon typescript" style={iconStyle} color="#fff" />
             <span>TypeScript</span>
           </div>
           <div className="tech-item">
-            <SiTailwindcss className="tech-icon tailwindcss" style={iconStyle} />
+            <SiTailwindcss className="tech-icon tailwindcss" style={iconStyle} color="#fff" />
             <span>Tailwind CSS</span>
           </div>
         </div>

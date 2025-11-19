@@ -5,7 +5,11 @@ import { motion, useMotionValue, useSpring, AnimatePresence, useTransform, useMo
 import { rafThrottle, useIsMobile, useEntranceStagger, useMicroParallax } from "@lib/hooks";
 
 const round = (num: number, fix = 2) => parseFloat(num.toFixed(fix));
-const AboutSection = forwardRef<HTMLDivElement>(function AboutSection(_, ref) {
+interface AboutSectionProps {
+  onViewServices?: () => void;
+}
+
+const AboutSection = forwardRef<HTMLDivElement, AboutSectionProps>(function AboutSection({ onViewServices }, ref) {
   // Local mobile detection for layout tweaks
   const isMobile = useIsMobile();
 
@@ -16,7 +20,7 @@ const AboutSection = forwardRef<HTMLDivElement>(function AboutSection(_, ref) {
   // Increase base perspective to 1000px for realistic 3D (200px was fisheye)
   // Revised: 600px for more dramatic 3D effect without fisheye
   const transformPerspective = useMotionValue(600);
-  
+
   // Use slightly heavier, critical damping for a "premium glass" feel
   const rotateYSpring = useSpring(rotateY, { damping: 20, stiffness: 150 });
   const rotateXSpring = useSpring(rotateX, { damping: 20, stiffness: 150 });
@@ -124,25 +128,37 @@ const AboutSection = forwardRef<HTMLDivElement>(function AboutSection(_, ref) {
               Hey, I'm Max Burleigh
             </h1>
             <p data-entrance-item>
-              web developer, project manager, solopreneur based in Medford, Oregon.
+              web designer & developer helping businesses grow in medford, oregon.
             </p>
-            <motion.button
-              onClick={() => setSpielOpen(!spielOpen)}
-              className="mt-4 px-4 md:px-5 py-2 md:py-2.5 bg-gradient-to-r from-blue-400 via-purple-400 to-pink-300 rounded-full text-white font-semibold text-shadow-sm self-start overflow-hidden relative text-sm md:text-base"
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              data-entrance-item
-            >
-              <span className="relative z-10">
-                {spielOpen ? "That's enough about me..." : "Click for a detailed spiel ✨"}
-              </span>
-              <motion.div
-                className="absolute inset-0 bg-gradient-to-r from-pink-300 via-purple-400 to-blue-400"
-                style={{ opacity: 0 }}
-                whileHover={{ opacity: 1 }}
-                transition={{ duration: 0.3 }}
-              />
-            </motion.button>
+            <div className="mt-4 flex flex-wrap gap-3" data-entrance-item>
+              <motion.button
+                onClick={() => setSpielOpen(!spielOpen)}
+                className="px-4 md:px-5 py-2 md:py-2.5 bg-gradient-to-r from-blue-400 via-purple-400 to-pink-300 rounded-full text-white font-semibold text-shadow-sm self-start overflow-hidden relative text-sm md:text-base"
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                data-entrance-item
+              >
+                <span className="relative z-10">
+                  {spielOpen ? "That's enough about me..." : "Click for a detailed spiel ✨"}
+                </span>
+                <motion.div
+                  className="absolute inset-0 bg-gradient-to-r from-pink-300 via-purple-400 to-blue-400"
+                  style={{ opacity: 0 }}
+                  whileHover={{ opacity: 1 }}
+                  transition={{ duration: 0.3 }}
+                />
+              </motion.button>
+              <motion.button
+                type="button"
+                onClick={useCallback(() => onViewServices?.(), [onViewServices])}
+                className="px-4 md:px-5 py-2 md:py-2.5 rounded-full border border-white/40 text-white/80 font-semibold text-sm md:text-base bg-white/5 backdrop-saturate-150 shadow-[0_0_30px_rgba(0,0,0,0.25)] hover:border-white/70 hover:text-white/100 transition-colors duration-200"
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.96 }}
+                data-entrance-item
+              >
+                <span className="relative z-10">See how I can help</span>
+              </motion.button>
+            </div>
             <AnimatePresence>
               {spielOpen && (
                 <motion.div
@@ -185,9 +201,8 @@ const AboutSection = forwardRef<HTMLDivElement>(function AboutSection(_, ref) {
           <div data-entrance-item className="flex-shrink-0">
             <motion.div
               ref={portraitRef}
-              className={`portrait-frame w-64 h-80 md:w-80 md:h-96 relative rounded-lg overflow-hidden shadow-lg ${
-                spielOpen ? "" : "mt-4 md:mt-0"
-              }`}
+              className={`portrait-frame w-64 h-80 md:w-80 md:h-96 relative rounded-lg overflow-hidden shadow-lg ${spielOpen ? "" : "mt-4 md:mt-0"
+                }`}
               style={{
                 rotateY: rotateYSpring,
                 rotateX: rotateXSpring,
@@ -204,39 +219,39 @@ const AboutSection = forwardRef<HTMLDivElement>(function AboutSection(_, ref) {
               onMouseMove={throttledPortraitMouseMove}
               onMouseLeave={handlePortraitMouseLeave}
             >
-            <motion.div
-              style={{
-                zIndex: 2,
-                mixBlendMode: "overlay",
-                position: "absolute",
-                transform: "translateZ(1px)",
-                width: "100%",
-                height: "100%",
-                borderRadius: "0.5rem",
-                transformStyle: "preserve-3d",
-              }}
-              initial={false}
-              animate={{
-                background: `radial-gradient(
+              <motion.div
+                style={{
+                  zIndex: 2,
+                  mixBlendMode: "overlay",
+                  position: "absolute",
+                  transform: "translateZ(1px)",
+                  width: "100%",
+                  height: "100%",
+                  borderRadius: "0.5rem",
+                  transformStyle: "preserve-3d",
+                }}
+                initial={false}
+                animate={{
+                  background: `radial-gradient(
                   farthest-corner circle at ${glare.x}% ${glare.y}%,
                   rgba(255, 255, 255, 0.8) 10%,
                   rgba(255, 255, 255, 0.65) 20%,
                   rgba(0, 0, 0, 0.5) 90%
                 )`,
-                opacity: glare.opacity,
-              }}
-            />
-            <Image
-              src="/candidate-2.webp"
-              alt="Max Burleigh"
-              fill
-              sizes="(max-width: 768px) 256px, 320px"
-              placeholder="blur"
-              blurDataURL="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjU2IiBoZWlnaHQ9IjMyMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCBmaWxsPSIjMTkxYzIzIiB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIi8+PC9zdmc+"
-              className="portrait-image"
-              style={{ objectFit: "cover", transform: "translateZ(20px)", borderRadius: "0.5rem" }}
-              priority
-            />
+                  opacity: glare.opacity,
+                }}
+              />
+              <Image
+                src="/candidate-2.webp"
+                alt="Max Burleigh"
+                fill
+                sizes="(max-width: 768px) 256px, 320px"
+                placeholder="blur"
+                blurDataURL="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjU2IiBoZWlnaHQ9IjMyMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCBmaWxsPSIjMTkxYzIzIiB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIi8+PC9zdmc+"
+                className="portrait-image"
+                style={{ objectFit: "cover", transform: "translateZ(20px)", borderRadius: "0.5rem" }}
+                priority
+              />
             </motion.div>
           </div>
         </div>
