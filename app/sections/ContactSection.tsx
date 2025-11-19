@@ -4,13 +4,14 @@ import { SiLinkedin, SiMaildotru } from "react-icons/si";
 import { MdArrowForward, MdTerminal, MdEdit } from "react-icons/md";
 import { motion, AnimatePresence, useInView } from "framer-motion";
 import { CONTACT_EMAIL, LINKEDIN_URL } from "@lib/constants";
-import { useEntranceStagger } from "@lib/hooks";
+import { useEntranceStagger, useIsMobile } from "@lib/hooks";
 
 interface ContactSectionProps {
   inquiryData?: { plan: "ESSENTIAL" | "GROWTH" | null; subscription: boolean } | null;
 }
 
 const ContactSection = forwardRef<HTMLDivElement, ContactSectionProps>(function ContactSection({ inquiryData }, ref) {
+  const isMobile = useIsMobile();
   const entranceRef = useRef<HTMLDivElement>(null);
   useEntranceStagger(entranceRef, { baseDelay: 40, step: 90 });
 
@@ -54,11 +55,14 @@ My Selection:
     setLines([]);
     setShowForm(false);
 
+    const mobileDelay = isMobile ? 1200 : 0;
+    const stepMultiplier = isMobile ? 1.5 : 1;
+
     const sequence = [
-      { text: "> Initializing project request...", delay: 100 },
-      { text: `> Selected Plan: ${planName}`, delay: 800 },
-      { text: `> Add-ons: ${subText}`, delay: 1500 },
-      { text: "> Generative draft initialized.", delay: 2200 },
+      { text: "> Initializing project request...", delay: 100 + mobileDelay },
+      { text: `> Selected Plan: ${planName}`, delay: 800 * stepMultiplier + mobileDelay },
+      { text: `> Add-ons: ${subText}`, delay: 1500 * stepMultiplier + mobileDelay },
+      { text: "> Generative draft initialized.", delay: 2200 * stepMultiplier + mobileDelay },
     ];
 
     const timeouts: NodeJS.Timeout[] = [];
@@ -72,11 +76,11 @@ My Selection:
 
     const finalT = setTimeout(() => {
       setShowForm(true);
-    }, 2800);
+    }, 2800 * stepMultiplier + mobileDelay);
     timeouts.push(finalT);
 
     return () => timeouts.forEach(clearTimeout);
-  }, [sequenceStarted, inquiryData]); // inquiryData included to satisfy linter, but sequenceStarted is the main trigger
+  }, [sequenceStarted, inquiryData, isMobile]); // inquiryData included to satisfy linter, but sequenceStarted is the main trigger
 
   const handleLaunchEmail = () => {
     const subject = `Project Inquiry: ${inquiryData?.plan ? inquiryData.plan.charAt(0) + inquiryData.plan.slice(1).toLowerCase() + " Plan" : "Custom Project"}`;
@@ -113,38 +117,48 @@ My Selection:
                 exit={{ opacity: 0 }}
                 className="mt-6"
               >
-                <div className="rounded-xl bg-black/40 border border-white/10 overflow-hidden mb-8">
-                  {/* Terminal Header */}
-                  <div className="bg-white/5 border-b border-white/10 p-3 flex items-center gap-3">
-                    <MdTerminal className="text-teal-400" size={16} />
-                    <span className="text-[10px] font-bold tracking-widest uppercase text-white/60 font-space-grotesk">System Output</span>
-                  </div>
-                  
-                  <div className="p-5">
-                    <div className="font-mono text-sm space-y-2 text-teal-300/90 min-h-[80px]">
-                      {lines.map((line, i) => (
-                        <motion.div
-                          key={i}
-                          initial={{ opacity: 0, x: -5 }}
-                          animate={{ opacity: 1, x: 0 }}
-                        >
-                          {line}
-                        </motion.div>
-                      ))}
-                      {lines.length < 4 && (
-                        <motion.div
-                          animate={{ opacity: [0, 1, 0] }}
-                          transition={{ repeat: Infinity, duration: 0.8 }}
-                          className="w-1.5 h-3 bg-teal-500/50 inline-block align-middle ml-1"
-                        />
-                      )}
-                    </div>
-                  </div>
-                </div>
+                <AnimatePresence mode={isMobile ? "wait" : undefined}>
+                  {(!isMobile || !showForm) && (
+                    <motion.div 
+                      key="system-output"
+                      className="rounded-xl bg-black/40 border border-white/10 overflow-hidden mb-8"
+                      layout
+                      initial={{ opacity: 0, height: 0 }}
+                      animate={{ opacity: 1, height: "auto" }}
+                      exit={{ opacity: 0, height: 0, marginBottom: 0 }}
+                    >
+                      {/* Terminal Header */}
+                      <div className="bg-white/5 border-b border-white/10 p-3 flex items-center gap-3">
+                        <MdTerminal className="text-teal-400" size={16} />
+                        <span className="text-[10px] font-bold tracking-widest uppercase text-white/60 font-space-grotesk">System Output</span>
+                      </div>
+                      
+                      <div className="p-5">
+                        <div className="font-mono text-sm space-y-2 text-teal-300/90 min-h-[80px]">
+                          {lines.map((line, i) => (
+                            <motion.div
+                              key={i}
+                              initial={{ opacity: 0, x: -5 }}
+                              animate={{ opacity: 1, x: 0 }}
+                            >
+                              {line}
+                            </motion.div>
+                          ))}
+                          {lines.length < 4 && (
+                            <motion.div
+                              animate={{ opacity: [0, 1, 0] }}
+                              transition={{ repeat: Infinity, duration: 0.8 }}
+                              className="w-1.5 h-3 bg-teal-500/50 inline-block align-middle ml-1"
+                            />
+                          )}
+                        </div>
+                      </div>
+                    </motion.div>
+                  )}
 
-                <AnimatePresence>
                   {showForm && (
                     <motion.div
+                      key="contact-form"
                       initial={{ opacity: 0, height: 0 }}
                       animate={{ opacity: 1, height: "auto" }}
                       transition={{ duration: 0.5 }}
@@ -189,7 +203,7 @@ My Selection:
                 href={`mailto:${CONTACT_EMAIL}`}
                 className="inline-flex items-center hover:text-teal-300 transition-colors group"
               >
-                <SiMaildotru className="w-[22px] h-[22px] flex-shrink-0 mr-2 text-white/50 group-hover:text-teal-300 transition-colors" />
+                <SiMaildotru className="w-[22px] h-[22px] flex-shrink-0 mr-2 text-blue-500 group-hover:text-blue-400 transition-colors" />
                 <span>{CONTACT_EMAIL}</span>
               </a>
             </div>
