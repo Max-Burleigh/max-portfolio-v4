@@ -4,7 +4,6 @@ import React, { forwardRef, useRef, useState, useEffect } from "react";
 import { createPortal } from "react-dom";
 import { AnimatePresence, motion } from "framer-motion";
 import { useEntranceStagger } from "@lib/hooks";
-import { CONTACT_EMAIL } from "@lib/constants";
 import {
   MdSpeed,
   MdEditDocument,
@@ -78,12 +77,6 @@ const ServicesSection = forwardRef<HTMLDivElement, ServicesSectionProps>((props,
       return;
     }
     setHasSubscription(!hasSubscription);
-  };
-
-  const triggerToast = (message: string) => {
-    setToastMessage(message);
-    setToastKey((prev) => prev + 1);
-    setShowToast(true);
   };
 
   const handleContact = () => {
