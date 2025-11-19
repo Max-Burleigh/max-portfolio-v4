@@ -22,3 +22,19 @@
 [debug] [2025-11-18T05:03:53.632Z] > authorizing via signed-in user (reboundmulti@gmail.com)
 [debug] [2025-11-18T05:03:53.633Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
 [debug] [2025-11-18T05:03:53.633Z] > authorizing via signed-in user (reboundmulti@gmail.com)
+[debug] [2025-11-19T02:27:57.893Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2025-11-19T02:27:57.894Z] > authorizing via signed-in user (reboundmulti@gmail.com)
+[debug] [2025-11-19T02:27:57.899Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2025-11-19T02:27:57.899Z] > authorizing via signed-in user (reboundmulti@gmail.com)
+[debug] [2025-11-19T02:27:57.994Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2025-11-19T02:27:57.994Z] > authorizing via signed-in user (reboundmulti@gmail.com)
+[debug] [2025-11-19T02:27:57.995Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2025-11-19T02:27:57.995Z] > authorizing via signed-in user (reboundmulti@gmail.com)
+[debug] [2025-11-19T02:48:00.168Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2025-11-19T02:48:00.169Z] > authorizing via signed-in user (reboundmulti@gmail.com)
+[debug] [2025-11-19T02:48:00.178Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2025-11-19T02:48:00.178Z] > authorizing via signed-in user (reboundmulti@gmail.com)
+[debug] [2025-11-19T02:48:00.269Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2025-11-19T02:48:00.269Z] > authorizing via signed-in user (reboundmulti@gmail.com)
+[debug] [2025-11-19T02:48:00.269Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2025-11-19T02:48:00.269Z] > authorizing via signed-in user (reboundmulti@gmail.com)

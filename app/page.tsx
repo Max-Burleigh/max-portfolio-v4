@@ -7,7 +7,7 @@ import AuroraBackground from "@components/AuroraBackground";
 import IOSViewportOverlay from "@components/IOSViewportOverlay";
 import Navigation from "@components/navigation/Navigation";
 import AboutSection from "@sections/AboutSection";
-import ProjectsSection from "@sections/ProjectsSection";
+import PortfolioSection from "@sections/PortfolioSection";
 import ContactSection from "@sections/ContactSection";
 // Import modularized project components
 //
@@ -15,7 +15,7 @@ import ContactSection from "@sections/ContactSection";
 // Main Portfolio component
 const Portfolio = () => {
   // For optimized cursor following
-  const { cursorX, cursorY, handleMouseMove } = useCursorFollower({ damping: 25, stiffness: 700 });
+  const { cursorX, cursorY, handleMouseMove, cursorOpacity } = useCursorFollower({ damping: 25, stiffness: 700 });
 
   // About section logic moved into AboutSection component
   // Mobile detection (for cursor circle overlay and menu overlay)
@@ -58,24 +58,24 @@ const Portfolio = () => {
   const containerRef = useRef<HTMLDivElement>(null);
   // Removed unused card message states
 
-  type SectionKey = "about" | "projects" | "contact";
-  const sectionKeys: SectionKey[] = ["about", "projects", "contact"];
+  type SectionKey = "about" | "portfolio" | "contact";
+  const sectionKeys: SectionKey[] = ["about", "portfolio", "contact"];
 
   const aboutSectionRef = useRef<HTMLDivElement>(null);
-  const projectsSectionRef = useRef<HTMLDivElement>(null);
+  const portfolioSectionRef = useRef<HTMLDivElement>(null);
   const contactSectionRef = useRef<HTMLDivElement>(null);
 
   const sectionRefs = useMemo(
     () => ({
       about: aboutSectionRef,
-      projects: projectsSectionRef,
+      portfolio: portfolioSectionRef,
       contact: contactSectionRef,
     }),
-    [aboutSectionRef, projectsSectionRef, contactSectionRef]
+    [aboutSectionRef, portfolioSectionRef, contactSectionRef]
   );
 
   const { activeSection, setActiveSection } = useActiveSection(
-    { about: aboutSectionRef, projects: projectsSectionRef, contact: contactSectionRef },
+    { about: aboutSectionRef, portfolio: portfolioSectionRef, contact: contactSectionRef },
     containerRef
   );
 
@@ -159,14 +159,15 @@ const Portfolio = () => {
             style={{
               x: cursorX,
               y: cursorY,
-              willChange: "transform",
+              opacity: cursorOpacity,
+              willChange: "transform, opacity",
             }}
           />
         )}
 
         <AboutSection ref={sectionRefs.about} />
 
-        <ProjectsSection ref={sectionRefs.projects} />
+        <PortfolioSection ref={sectionRefs.portfolio} />
 
         <ContactSection ref={sectionRefs.contact} />
       </motion.div>

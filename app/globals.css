@@ -652,8 +652,8 @@ h2 {
   font-weight: 700;
 }
 
-/* Remove bottom margin for the Projects section heading only */
-.projects-section h2 {
+/* Remove bottom margin for the Portfolio section heading only */
+.portfolio-section h2 {
   margin-bottom: 0;
 }
 
@@ -662,28 +662,28 @@ h2 {
   h2 {
     margin-bottom: 0;
   }
-  /* Center the Projects heading on mobile only */
-.projects-section h2 {
+  /* Center the Portfolio heading on mobile only */
+.portfolio-section h2 {
   width: 100%;
   text-align: center;
   }
 }
 
-.projects-shell {
+.portfolio-shell {
   position: relative;
 }
 
-.projects-timeline-anchor {
+.portfolio-timeline-anchor {
   position: absolute;
   inset: 0;
   pointer-events: none;
   z-index: 3;
 }
 
-.projects-timeline-floating {
+.portfolio-timeline-floating {
   position: sticky;
   top: clamp(60px, 12vh, 140px);
-  transform: translateX(calc(-100% - clamp(32px, 5vw, 72px)));
+  transform: translateX(calc(-100% - clamp(32px, 5vw, 72px))) scale(var(--timeline-scale, 1));
   width: clamp(70px, 7vw, 120px);
   padding: 0.5rem 0.7rem 0.9rem;
   border-radius: 22px;
@@ -692,6 +692,8 @@ h2 {
   backdrop-filter: blur(16px);
   box-shadow: 0 25px 55px rgba(7, 10, 18, 0.4);
   pointer-events: auto;
+  opacity: var(--timeline-opacity, 1);
+  transform-origin: center center;
 }
 
 .timeline-heading {
@@ -799,42 +801,42 @@ h2 {
   opacity: 0.9;
 }
 
-.projects-content-stack {
+.portfolio-content-stack {
   display: flex;
   flex-direction: column;
   gap: 1.5rem;
 }
 
-.projects-header p {
+.portfolio-header p {
   color: rgba(255, 255, 255, 0.8);
   font-size: 0.95rem;
   max-width: 44rem;
 }
 
-.projects-subcopy {
+.portfolio-subcopy {
   margin-top: 0.35rem;
 }
 
 @media (max-width: 768px) {
-  .projects-subcopy {
+  .portfolio-subcopy {
     display: none;
   }
 }
 
 @media (max-width: 1559px) {
-  .projects-timeline-anchor,
-  .projects-timeline-floating {
+  .portfolio-timeline-anchor,
+  .portfolio-timeline-floating {
     display: none !important;
   }
-  .projects-shell {
+  .portfolio-shell {
     gap: 2rem;
     padding-left: 0;
   }
 }
 
 @media (max-width: 768px) {
-  .projects-timeline-anchor,
-  .projects-timeline-floating {
+  .portfolio-timeline-anchor,
+  .portfolio-timeline-floating {
     display: none;
   }
   .timeline-rail {
@@ -1194,7 +1196,7 @@ a {
 /* Portrait: prevent FOUC and promote to GPU */
 .portrait-frame {
   /* SSR baseline so hydration doesn't change transform suddenly */
-  transform: perspective(200px) rotateX(0deg) rotateY(0deg) translateZ(0);
+  transform: perspective(1000px) rotateX(0deg) rotateY(0deg) translateZ(0);
   will-change: transform;
   backface-visibility: hidden;
   contain: paint;

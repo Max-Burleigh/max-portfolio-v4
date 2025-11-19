@@ -36,7 +36,7 @@ A focused guide for coding agents working in this repo.
   - `app/page.tsx`: Top-level client page; renders sections + cursor effect.
 - **Sections**
   - `app/sections/AboutSection.tsx`
-  - `app/sections/ProjectsSection.tsx`
+  - `app/sections/PortfolioSection.tsx`
   - `app/sections/ContactSection.tsx`
 - **Components**
   - `app/components/navigation/Navigation.tsx` (desktop side‑nav + mobile hamburger/menu)
@@ -71,7 +71,7 @@ A focused guide for coding agents working in this repo.
 ### A) Add a new project card
 1. **Images/video** → add to `/public/project-images` or `/public/webp` (prefer WebP/optimized PNG/JPEG).  
 2. **Content** → create a new entry in `content/projects.tsx` (see existing entries for patterns: `imageUrl`, `imageAlt`, `imageBlurDataURL`, `techStack`).  
-3. **Layout nuance** → if you need a custom preview/UI, create a component in `app/components/projects/` and render it **after** the mapped cards in `ProjectsSection` (see `BasedChat.tsx`).  
+3. **Layout nuance** → if you need a custom preview/UI, create a component in `app/components/portfolio/` and render it **after** the mapped cards in `PortfolioSection` (see `BasedChat.tsx`).  
 4. **Visit overlay** → if linking out, use the `overlay` prop `{ href, emoji?, text?, className? }` on `ProjectCard`.
 
 ### B) Update contact details

@@ -9,7 +9,7 @@ import {
 } from "framer-motion";
 
 // Define section keys type - needed for props
-type SectionKey = "about" | "projects" | "contact"; // Or import from a shared types file
+type SectionKey = "about" | "portfolio" | "contact"; // Or import from a shared types file
 
 // --- NavItem Component (restored original feel) ---
 interface NavItemProps {

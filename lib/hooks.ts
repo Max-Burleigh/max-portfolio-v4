@@ -43,20 +43,37 @@ export function useIsMobile() {
 export function useCursorFollower(spring = { damping: 25, stiffness: 700 }) {
   const mouseX = useMotionValue(0);
   const mouseY = useMotionValue(0);
+  const cursorOpacity = useMotionValue(0); // Start hidden
 
   const cursorX = useSpring(mouseX, spring);
   const cursorY = useSpring(mouseY, spring);
+  const cursorOpacitySpring = useSpring(cursorOpacity, { damping: 30, stiffness: 200 });
+
+  useEffect(() => {
+    const handleLeave = () => cursorOpacity.set(0);
+    const handleEnter = () => cursorOpacity.set(1);
+
+    document.addEventListener("mouseleave", handleLeave);
+    document.addEventListener("mouseenter", handleEnter);
+
+    return () => {
+      document.removeEventListener("mouseleave", handleLeave);
+      document.removeEventListener("mouseenter", handleEnter);
+    };
+  }, [cursorOpacity]);
 
   const handleMouseMove = useMemo(
     () =>
       rafThrottle<React.MouseEvent<HTMLDivElement>>((e) => {
         mouseX.set(e.clientX - 50);
         mouseY.set(e.clientY - 50);
+        // Ensure cursor is visible when moving
+        cursorOpacity.set(1);
       }),
-    [mouseX, mouseY]
+    [mouseX, mouseY, cursorOpacity]
   );
 
-  return { cursorX, cursorY, handleMouseMove } as const;
+  return { cursorX, cursorY, handleMouseMove, cursorOpacity: cursorOpacitySpring } as const;
 }
 
 // ===== useActiveSection =====

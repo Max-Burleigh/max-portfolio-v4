@@ -1,5 +1,6 @@
 "use client";
 import React, { forwardRef, useMemo, useRef, createRef, useCallback } from "react";
+import { motion, useScroll, useTransform, useSpring, type MotionValue } from "framer-motion";
 import ProjectCard from "@components/projects/ProjectCard";
 import BasedChat from "@components/projects/BasedChat";
 import Colorbookorama from "@components/projects/Colorbookorama";
@@ -12,11 +13,23 @@ const CUSTOM_LABELS: Record<(typeof CUSTOM_PROJECT_IDS)[number], string> = {
   colorbookorama: "Colorbookorama",
 };
 
-const ProjectsSection = forwardRef<HTMLDivElement>(function ProjectsSection(_, ref) {
+const PortfolioSection = forwardRef<HTMLDivElement>(function PortfolioSection(_, ref) {
   const entranceRef = useRef<HTMLDivElement>(null);
-  const timelineEntranceRef = useRef<HTMLDivElement>(null);
+  const timelineEntranceRef = useRef<HTMLElement>(null);
   useEntranceStagger(entranceRef, { baseDelay: 60, step: 70 });
   useEntranceStagger(timelineEntranceRef, { baseDelay: 80, step: 70 });
+
+  // Scroll-driven expansion for the timeline
+  const { scrollYProgress } = useScroll({
+    target: ref as React.RefObject<HTMLElement>,
+    offset: ["start 90%", "start 15%"],
+  });
+
+  const scale = useTransform(scrollYProgress, [0, 1], [0.8, 1]);
+  const opacity = useTransform(scrollYProgress, [0, 1], [0.5, 1]);
+  
+  const smoothScale = useSpring(scale, { damping: 20, stiffness: 100 });
+  const smoothOpacity = useSpring(opacity, { damping: 20, stiffness: 100 });
 
   const visibleProjects = useMemo(() => projects.filter((project) => !project.hidden), []);
   const projectMap = useMemo(() => {
@@ -58,14 +71,25 @@ const ProjectsSection = forwardRef<HTMLDivElement>(function ProjectsSection(_, r
     [projectRefs]
   );
 
+  type TimelineStyle = React.CSSProperties & {
+    "--timeline-scale": MotionValue<number>;
+    "--timeline-opacity": MotionValue<number>;
+  };
+
+  const timelineStyle: TimelineStyle = {
+    "--timeline-scale": smoothScale,
+    "--timeline-opacity": smoothOpacity,
+  };
+
   return (
-    <section ref={ref} id="projects" className="section projects-section">
-      <div className="projects-timeline-anchor">
-        <aside
+    <section ref={ref} id="portfolio" className="section portfolio-section">
+      <div className="portfolio-timeline-anchor">
+        <motion.aside
           ref={timelineEntranceRef}
-          data-entrance="projects-timeline"
-          className="projects-timeline-floating"
+          data-entrance="portfolio-timeline"
+          className="portfolio-timeline-floating"
           aria-label="Project timeline"
+          style={timelineStyle}
         >
         <div className="timeline-heading" data-entrance-item>
           <p className="eyebrow">TABLE OF CONTENTS</p>
@@ -88,14 +112,14 @@ const ProjectsSection = forwardRef<HTMLDivElement>(function ProjectsSection(_, r
               </li>
             ))}
           </ul>
-        </aside>
+        </motion.aside>
       </div>
 
-      <div className="projects-shell">
-        <div ref={entranceRef} data-entrance="projects" className="projects-content-stack">
-          <div className="projects-header">
-            <h2 data-entrance-item>Projects</h2>
-            <p data-entrance-item className="projects-subcopy">
+      <div className="portfolio-shell">
+        <div ref={entranceRef} data-entrance="portfolio" className="portfolio-content-stack">
+          <div className="portfolio-header">
+            <h2 data-entrance-item>Portfolio</h2>
+            <p data-entrance-item className="portfolio-subcopy">
               Selected work spanning ecommerce, AI products, and community platforms.
             </p>
           </div>
@@ -125,4 +149,4 @@ const ProjectsSection = forwardRef<HTMLDivElement>(function ProjectsSection(_, r
   );
 });
 
-export default ProjectsSection;
+export default PortfolioSection;

@@ -1,13 +1,10 @@
 "use client";
 import React, { useRef, useState, useCallback, useMemo, forwardRef, useEffect, useLayoutEffect } from "react";
 import Image from "next/image";
-import { motion, useMotionValue, useSpring, AnimatePresence } from "framer-motion";
+import { motion, useMotionValue, useSpring, AnimatePresence, useTransform, useMotionTemplate } from "framer-motion";
 import { rafThrottle, useIsMobile, useEntranceStagger, useMicroParallax } from "@lib/hooks";
 
 const round = (num: number, fix = 2) => parseFloat(num.toFixed(fix));
-const distance = (x1: number, y1: number, x2: number, y2: number) =>
-  Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2));
-
 const AboutSection = forwardRef<HTMLDivElement>(function AboutSection(_, ref) {
   // Local mobile detection for layout tweaks
   const isMobile = useIsMobile();
@@ -16,13 +13,22 @@ const AboutSection = forwardRef<HTMLDivElement>(function AboutSection(_, ref) {
   const portraitRef = useRef<HTMLDivElement>(null);
   const rotateY = useMotionValue(0);
   const rotateX = useMotionValue(0);
-  const transformPerspective = useMotionValue(200);
-  const rotateYSpring = useSpring(rotateY, { damping: 30, stiffness: 300 });
-  const rotateXSpring = useSpring(rotateX, { damping: 30, stiffness: 300 });
+  // Increase base perspective to 1000px for realistic 3D (200px was fisheye)
+  // Revised: 600px for more dramatic 3D effect without fisheye
+  const transformPerspective = useMotionValue(600);
+  
+  // Use slightly heavier, critical damping for a "premium glass" feel
+  const rotateYSpring = useSpring(rotateY, { damping: 20, stiffness: 150 });
+  const rotateXSpring = useSpring(rotateX, { damping: 20, stiffness: 150 });
   const transformPerspectiveSpring = useSpring(transformPerspective, {
-    damping: 28,
-    stiffness: 320,
+    damping: 30,
+    stiffness: 200,
   });
+
+  // Dynamic shadow based on tilt (lift effect)
+  const shadowX = useTransform(rotateYSpring, (val) => -val * 2);
+  const shadowY = useTransform(rotateXSpring, (val) => val * 2 + 10);
+  const boxShadow = useMotionTemplate`${shadowX}px ${shadowY}px 24px rgba(0, 0, 0, 0.4)`;
 
   const [isAnimating, setAnimating] = useState(false);
   const isAnimatingRef = useRef(isAnimating);
@@ -76,12 +82,12 @@ const AboutSection = forwardRef<HTMLDivElement>(function AboutSection(_, ref) {
         y: round((100 / rect.height) * absolute.y),
       };
       const center = { x: percent.x - 50, y: percent.y - 50 };
-      rotateY.set(round(center.x / 12));
-      rotateX.set(round(-center.y / 16));
-      transformPerspective.set(
-        round(distance(percent.x, percent.y, 50, 50) / 20) * 100
-      );
-      setGlare({ x: percent.x, y: percent.y, opacity: 0.25 });
+      // Increased rotation range: /6 instead of /12, and /8 instead of /16
+      rotateY.set(round(center.x / 6));
+      rotateX.set(round(-center.y / 8));
+      // Keep perspective stable at 1000px for realistic 3D
+      transformPerspective.set(1000);
+      setGlare({ x: percent.x, y: percent.y, opacity: 0.4 });
     },
     [rotateY, rotateX, transformPerspective]
   );
@@ -96,7 +102,7 @@ const AboutSection = forwardRef<HTMLDivElement>(function AboutSection(_, ref) {
     isAnimatingRef.current = false;
     rotateY.set(0);
     rotateX.set(0);
-    transformPerspective.set(200);
+    transformPerspective.set(1000);
     setGlare({ x: 50, y: 50, opacity: 0 });
   };
 
@@ -186,6 +192,7 @@ const AboutSection = forwardRef<HTMLDivElement>(function AboutSection(_, ref) {
                 rotateY: rotateYSpring,
                 rotateX: rotateXSpring,
                 transformPerspective: transformPerspectiveSpring,
+                boxShadow,
                 scale: isMobile && spielOpen ? 0.8 : 1,
                 transformStyle: "preserve-3d",
                 transformOrigin: "center",
@@ -212,9 +219,9 @@ const AboutSection = forwardRef<HTMLDivElement>(function AboutSection(_, ref) {
               animate={{
                 background: `radial-gradient(
                   farthest-corner circle at ${glare.x}% ${glare.y}%,
-                  rgba(255, 255, 255, 0.7) 10%,
-                  rgba(255, 255, 255, 0.5) 24%,
-                  rgba(0, 0, 0, 0.8) 82%
+                  rgba(255, 255, 255, 0.8) 10%,
+                  rgba(255, 255, 255, 0.65) 20%,
+                  rgba(0, 0, 0, 0.5) 90%
                 )`,
                 opacity: glare.opacity,
               }}

@@ -1,4 +1,3 @@
-import { ReactScan } from "./components/ReactScan";
 import IntroReveal from "./components/IntroReveal";
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
@@ -83,7 +82,6 @@ export default async function RootLayout({
         </Script>
         {/* Gate only this subtree during the intro */}
         <div id="site-root">
-          <ReactScan />
           {children}
         </div>
         {/* Overlay sits outside the gate */}
