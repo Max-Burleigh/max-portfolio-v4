@@ -253,7 +253,10 @@ const ServicesSection = forwardRef<HTMLDivElement, ServicesSectionProps>((props,
           {/* Key Differentiator */}
           <div className="mt-12 grid md:grid-cols-2 gap-6" data-entrance-item>
             {/* Essential Differentiator */}
-            <div className="p-6 rounded-2xl bg-teal-500/5 border border-teal-500/10 backdrop-blur-sm">
+            <div
+              className="hidden p-6 rounded-2xl bg-teal-500/5 border border-teal-500/10 backdrop-blur-sm"
+              aria-hidden="true"
+            >
               <div className="flex items-center gap-3 mb-4">
                 <div className="p-2 rounded-lg bg-teal-500/10 text-teal-400">
                   <MdSpeed size={24} />
@@ -266,7 +269,10 @@ const ServicesSection = forwardRef<HTMLDivElement, ServicesSectionProps>((props,
             </div>
 
             {/* Growth Differentiator */}
-            <div className="p-6 rounded-2xl bg-purple-500/5 border border-purple-500/10 backdrop-blur-sm">
+            <div
+              className="hidden p-6 rounded-2xl bg-purple-500/5 border border-purple-500/10 backdrop-blur-sm"
+              aria-hidden="true"
+            >
               <div className="flex items-center gap-3 mb-4">
                 <div className="p-2 rounded-lg bg-purple-500/10 text-purple-400">
                   <MdEditDocument size={24} />
