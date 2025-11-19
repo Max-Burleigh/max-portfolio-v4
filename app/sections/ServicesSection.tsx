@@ -123,22 +123,59 @@ const ServicesSection = forwardRef<HTMLDivElement, ServicesSectionProps>((props,
   }
 
   const shouldCycleSelections = isMobile && selectionItems.length > 1;
-  const activeTickerItem = shouldCycleSelections
-    ? selectionItems[selectionTickerIndex % selectionItems.length]
+  const tickerSequence = shouldCycleSelections
+    ? selectionItems.flatMap((item, index) => {
+        const sequence: SelectionItem[] = [item];
+        const needsPlus = index < selectionItems.length - 1;
+        if (needsPlus) {
+          sequence.push({
+            id: `plus-${index}`,
+            label: "+",
+            className: "text-white/30",
+          });
+        }
+        return sequence;
+      })
+    : selectionItems;
+
+  const activeTickerItem = shouldCycleSelections && tickerSequence.length > 0
+    ? tickerSequence[selectionTickerIndex % tickerSequence.length]
     : null;
 
+  const prevTickerLength = useRef(tickerSequence.length);
+
   useEffect(() => {
-    if (!shouldCycleSelections || selectionItems.length === 0) {
+    if (!shouldCycleSelections || tickerSequence.length === 0) {
       setSelectionTickerIndex(0);
       return;
     }
 
     const id = window.setInterval(() => {
-      setSelectionTickerIndex((prev) => (prev + 1) % selectionItems.length);
+      setSelectionTickerIndex((prev) => (prev + 1) % tickerSequence.length);
     }, 3500);
 
     return () => window.clearInterval(id);
-  }, [shouldCycleSelections, selectionItems.length]);
+  }, [shouldCycleSelections, tickerSequence.length]);
+
+  useEffect(() => {
+    if (!shouldCycleSelections || tickerSequence.length === 0) {
+      setSelectionTickerIndex(0);
+      prevTickerLength.current = tickerSequence.length;
+      return;
+    }
+
+    const previousLength = prevTickerLength.current;
+
+    if (tickerSequence.length > previousLength) {
+      setSelectionTickerIndex(tickerSequence.length - 1);
+    } else if (tickerSequence.length < previousLength) {
+      setSelectionTickerIndex((prev) => Math.min(prev, tickerSequence.length - 1));
+    } else {
+      setSelectionTickerIndex((prev) => prev % tickerSequence.length);
+    }
+
+    prevTickerLength.current = tickerSequence.length;
+  }, [shouldCycleSelections, tickerSequence.length]);
 
   return (
     <section
