@@ -98,18 +98,17 @@ const Portfolio = () => {
 
   const handleStartProject = (data: { plan: "ESSENTIAL" | "GROWTH" | null; subscription: boolean }) => {
     setInquiryData(data);
-    // Align the contact section into view; fall back to manual scroll for reliability
     const target = sectionRefs.contact.current ?? document.getElementById("contact");
     if (!target) return;
-    const scrollIntoView = () => {
-      const topFor = () => target.getBoundingClientRect().top + window.scrollY - 24;
-      const align = (behavior: ScrollBehavior) => window.scrollTo({ top: topFor(), behavior });
-      align("smooth");
-      window.setTimeout(() => align("smooth"), 900);
-      window.setTimeout(() => align("auto"), 1700);
-    };
-    // Run after the sticky bar unmounts to avoid layout jumps
-    requestAnimationFrame(() => window.setTimeout(scrollIntoView, 120));
+
+    const prefersReduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const top = target.getBoundingClientRect().top + window.scrollY - 24;
+    const behavior: ScrollBehavior = prefersReduced ? "auto" : "smooth";
+
+    // Run once, after the sticky bar begins unmounting, to avoid a stop-start feel
+    requestAnimationFrame(() => window.setTimeout(() => {
+      window.scrollTo({ top, behavior });
+    }, 120));
   };
 
   // Active section logic moved into useActiveSection hook
