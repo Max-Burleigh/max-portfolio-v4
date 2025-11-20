@@ -1,7 +1,7 @@
 "use client";
 import React, { forwardRef, useRef, useState, useEffect } from "react";
 import { SiLinkedin, SiMaildotru } from "react-icons/si";
-import { MdArrowForward, MdTerminal, MdEdit } from "react-icons/md";
+import { MdArrowForward, MdEdit } from "react-icons/md";
 import { motion, AnimatePresence, useInView } from "framer-motion";
 import { CONTACT_EMAIL, LINKEDIN_URL } from "@lib/constants";
 import { useEntranceStagger, useIsMobile } from "@lib/hooks";
@@ -19,29 +19,22 @@ const ContactSection = forwardRef<HTMLDivElement, ContactSectionProps>(function 
   const contentRef = useRef<HTMLDivElement>(null);
   const isInView = useInView(contentRef, { amount: 0.3, once: true });
 
-  const [sequenceStarted, setSequenceStarted] = useState(false);
-  const [lines, setLines] = useState<string[]>([]);
-  const [showForm, setShowForm] = useState(false);
+  const [isTyping, setIsTyping] = useState(false);
   const [messageBody, setMessageBody] = useState("");
+  const typeTimer = useRef<NodeJS.Timeout | null>(null);
 
-  // Trigger sequence start when in view and data is present
+  // Start typewriter when inquiry data arrives and section is visible
   useEffect(() => {
-    if (inquiryData && isInView && !sequenceStarted) {
-      setSequenceStarted(true);
-    } else if (!inquiryData) {
-      setSequenceStarted(false);
-      setLines([]);
-      setShowForm(false);
+    if (!inquiryData || !isInView) {
+      setMessageBody("");
+      setIsTyping(false);
+      if (typeTimer.current) clearInterval(typeTimer.current);
+      return;
     }
-  }, [inquiryData, isInView, sequenceStarted]);
-
-  // Run animation sequence
-  useEffect(() => {
-    if (!sequenceStarted || !inquiryData) return;
 
     const planName = inquiryData.plan === "ESSENTIAL" ? "Essential Plan" : (inquiryData.plan === "GROWTH" ? "Growth Plan" : "Custom Project");
     const subText = inquiryData.subscription ? "Peace of Mind Subscription" : "None";
-    
+
     const body = `Hi Max,
 
 I'm interested in starting a project with you.
@@ -51,36 +44,27 @@ My Selection:
 • Monthly Support: ${inquiryData.subscription ? "Yes, Peace of Mind Plan" : "No thanks"}
 
 [Please describe your project here...]`;
-    setMessageBody(body);
-    setLines([]);
-    setShowForm(false);
+    if (typeTimer.current) clearInterval(typeTimer.current);
+    setIsTyping(true);
+    setMessageBody("");
 
-    const mobileDelay = isMobile ? 1200 : 0;
-    const stepMultiplier = isMobile ? 1.5 : 1;
+    let i = 0;
+    const delay = isMobile ? 12 : 8;
+    typeTimer.current = setInterval(() => {
+      i += 1;
+      setMessageBody(body.slice(0, i));
+      if (i >= body.length) {
+        if (typeTimer.current) clearInterval(typeTimer.current);
+        typeTimer.current = null;
+        setIsTyping(false);
+      }
+    }, delay);
 
-    const sequence = [
-      { text: "> Initializing project request...", delay: 100 + mobileDelay },
-      { text: `> Selected Plan: ${planName}`, delay: 800 * stepMultiplier + mobileDelay },
-      { text: `> Add-ons: ${subText}`, delay: 1500 * stepMultiplier + mobileDelay },
-      { text: "> Generative draft initialized.", delay: 2200 * stepMultiplier + mobileDelay },
-    ];
-
-    const timeouts: NodeJS.Timeout[] = [];
-
-    sequence.forEach(({ text, delay }) => {
-      const t = setTimeout(() => {
-        setLines(prev => [...prev, text]);
-      }, delay);
-      timeouts.push(t);
-    });
-
-    const finalT = setTimeout(() => {
-      setShowForm(true);
-    }, 2800 * stepMultiplier + mobileDelay);
-    timeouts.push(finalT);
-
-    return () => timeouts.forEach(clearTimeout);
-  }, [sequenceStarted, inquiryData, isMobile]); // inquiryData included to satisfy linter, but sequenceStarted is the main trigger
+    return () => {
+      if (typeTimer.current) clearInterval(typeTimer.current);
+      typeTimer.current = null;
+    };
+  }, [inquiryData, isInView, isMobile]);
 
   const handleLaunchEmail = () => {
     const subject = `Project Inquiry: ${inquiryData?.plan ? inquiryData.plan.charAt(0) + inquiryData.plan.slice(1).toLowerCase() + " Plan" : "Custom Project"}`;
@@ -117,78 +101,55 @@ My Selection:
                 exit={{ opacity: 0 }}
                 className="mt-6"
               >
-                <AnimatePresence mode={isMobile ? "wait" : undefined}>
-                  {(!isMobile || !showForm) && (
-                    <motion.div 
-                      key="system-output"
-                      className="rounded-xl bg-black/40 border border-white/10 overflow-hidden mb-8"
-                      layout
-                      initial={{ opacity: 0, height: 0 }}
-                      animate={{ opacity: 1, height: "auto" }}
-                      exit={{ opacity: 0, height: 0, marginBottom: 0 }}
-                    >
-                      {/* Terminal Header */}
-                      <div className="bg-white/5 border-b border-white/10 p-3 flex items-center gap-3">
-                        <MdTerminal className="text-teal-400" size={16} />
-                        <span className="text-[10px] font-bold tracking-widest uppercase text-white/60 font-space-grotesk">System Output</span>
-                      </div>
-                      
-                      <div className="p-5">
-                        <div className={`font-mono text-sm space-y-2 text-teal-300/90 ${isMobile ? 'h-48' : 'min-h-[80px]'}`}>
-                          {lines.map((line, i) => (
-                            <motion.div
-                              key={i}
-                              initial={{ opacity: 0, x: -5 }}
-                              animate={{ opacity: 1, x: 0 }}
-                            >
-                              {line}
-                            </motion.div>
-                          ))}
-                          {lines.length < 4 && (
-                            <motion.div
-                              animate={{ opacity: [0, 1, 0] }}
-                              transition={{ repeat: Infinity, duration: 0.8 }}
-                              className="w-1.5 h-3 bg-teal-500/50 inline-block align-middle ml-1"
-                            />
-                          )}
+                <motion.div
+                  key="contact-form"
+                  initial={{ opacity: 0, height: 0 }}
+                  animate={{ opacity: 1, height: "auto" }}
+                  transition={{ duration: 0.5 }}
+                >
+                  <div className="rounded-xl bg-black/40 border border-white/10 overflow-hidden mb-6 focus-within:border-teal-500/50 transition-colors">
+                    <div className="px-4 py-3 border-b border-white/10 flex justify-between items-center bg-white/5">
+                      <span className="text-xs text-teal-300 font-semibold flex items-center gap-2">
+                        <MdEdit size={14} /> Message Body
+                      </span>
+                      <span className="text-[10px] text-white/40 uppercase tracking-wider font-semibold">
+                        {isTyping ? "Auto-filling..." : "Editable"}
+                      </span>
+                    </div>
+                    <div className="p-4">
+                      <textarea
+                        value={messageBody}
+                        onChange={(e) => {
+                          if (typeTimer.current) clearInterval(typeTimer.current);
+                          typeTimer.current = null;
+                          setIsTyping(false);
+                          setMessageBody(e.target.value);
+                        }}
+                        className="w-full h-72 md:h-96 bg-transparent p-4 text-white/85 text-sm resize-none focus:outline-none font-mono leading-relaxed rounded-lg border border-white/5"
+                        spellCheck={false}
+                      />
+                      {isTyping && (
+                        <div className="mt-2 text-[11px] text-teal-300/80 font-mono flex items-center gap-2">
+                          <motion.span
+                            className="inline-block w-2 h-2 rounded-full bg-teal-400"
+                            animate={{ opacity: [0.3, 1, 0.3] }}
+                            transition={{ repeat: Infinity, duration: 1.2 }}
+                          />
+                          Generating your draft...
                         </div>
-                      </div>
-                    </motion.div>
-                  )}
+                      )}
+                    </div>
+                  </div>
 
-                  {showForm && (
-                    <motion.div
-                      key="contact-form"
-                      initial={{ opacity: 0, height: 0 }}
-                      animate={{ opacity: 1, height: "auto" }}
-                      transition={{ duration: 0.5 }}
+                  <div className="flex justify-end">
+                    <button
+                      onClick={handleLaunchEmail}
+                      className="w-full md:w-auto bg-teal-500 text-black px-8 py-3 rounded-xl font-bold hover:scale-105 transition-transform flex items-center justify-center gap-2 shadow-[0_0_20px_rgba(20,184,166,0.3)]"
                     >
-                      <div className="bg-white/5 rounded-xl border border-white/10 overflow-hidden mb-6 focus-within:border-teal-500/50 transition-colors">
-                        <div className="px-4 py-2 border-b border-white/5 flex justify-between items-center bg-white/5">
-                          <span className="text-xs text-white/40 font-medium flex items-center gap-2">
-                            <MdEdit size={14} /> Message Body
-                          </span>
-                          <span className="text-[10px] text-white/20 uppercase tracking-wider">Editable</span>
-                        </div>
-                        <textarea
-                          value={messageBody}
-                          onChange={(e) => setMessageBody(e.target.value)}
-                          className="w-full h-72 md:h-96 bg-transparent p-4 text-white/80 text-sm resize-none focus:outline-none font-mono leading-relaxed"
-                          spellCheck={false}
-                        />
-                      </div>
-
-                      <div className="flex justify-end">
-                        <button
-                          onClick={handleLaunchEmail}
-                          className="w-full md:w-auto bg-teal-500 text-black px-8 py-3 rounded-xl font-bold hover:scale-105 transition-transform flex items-center justify-center gap-2 shadow-[0_0_20px_rgba(20,184,166,0.3)]"
-                        >
-                          Send Now <MdArrowForward />
-                        </button>
-                      </div>
-                    </motion.div>
-                  )}
-                </AnimatePresence>
+                      Send Now <MdArrowForward />
+                    </button>
+                  </div>
+                </motion.div>
               </motion.div>
             )}
           </AnimatePresence>
