@@ -88,7 +88,54 @@ const Portfolio = () => {
 
   const scrollToSection = useCallback(
     (section: SectionKey) => {
-      sectionRefs[section]?.current?.scrollIntoView({ behavior: "smooth" });
+      const targetElement = sectionRefs[section]?.current;
+      if (!targetElement) return;
+
+      // Check if there are any lazy-loaded images that haven't finished loading
+      const images = document.querySelectorAll<HTMLImageElement>('img[loading="lazy"]');
+      const pendingImages = Array.from(images).filter(
+        (img) => !img.complete
+      );
+
+      // Helper function to perform the scroll
+      const performScroll = () => {
+        targetElement.scrollIntoView({ behavior: "smooth" });
+      };
+
+      // If all images are loaded, scroll immediately
+      if (pendingImages.length === 0) {
+        performScroll();
+        return;
+      }
+
+      // Otherwise, scroll now and retry after images load
+      performScroll();
+
+      // Wait for all pending images to load, then scroll again to correct position
+      const imagePromises = pendingImages.map(
+        (img) =>
+          new Promise<void>((resolve) => {
+            if (img.complete) {
+              resolve();
+            } else {
+              img.addEventListener("load", () => resolve(), { once: true });
+              img.addEventListener("error", () => resolve(), { once: true });
+            }
+          })
+      );
+
+      // Retry scroll after images load, with a timeout fallback
+      Promise.race([
+        Promise.all(imagePromises),
+        new Promise((resolve) => setTimeout(resolve, 2000)), // 2s timeout
+      ]).then(() => {
+        // Small delay to ensure layout has updated
+        requestAnimationFrame(() => {
+          setTimeout(() => {
+            targetElement.scrollIntoView({ behavior: "smooth" });
+          }, 100);
+        });
+      });
     },
     [sectionRefs]
   );
