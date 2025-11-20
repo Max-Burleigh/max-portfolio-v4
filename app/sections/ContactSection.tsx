@@ -22,6 +22,8 @@ const ContactSection = forwardRef<HTMLDivElement, ContactSectionProps>(function 
   const [isTyping, setIsTyping] = useState(false);
   const [messageBody, setMessageBody] = useState("");
   const typeTimer = useRef<NodeJS.Timeout | null>(null);
+  const [submitState, setSubmitState] = useState<"idle" | "sending" | "sent" | "error">("idle");
+  const [submitError, setSubmitError] = useState<string | null>(null);
 
   // Start typewriter when inquiry data arrives and section is visible
   useEffect(() => {
@@ -66,9 +68,31 @@ My Selection:
     };
   }, [inquiryData, isInView, isMobile]);
 
-  const handleLaunchEmail = () => {
-    const subject = `Project Inquiry: ${inquiryData?.plan ? inquiryData.plan.charAt(0) + inquiryData.plan.slice(1).toLowerCase() + " Plan" : "Custom Project"}`;
-    window.location.href = `mailto:${CONTACT_EMAIL}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(messageBody)}`;
+  const handleSend = async () => {
+    if (submitState === "sending") return;
+    setSubmitState("sending");
+    setSubmitError(null);
+
+    try {
+      const res = await fetch("/api/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          message: messageBody,
+          plan: inquiryData?.plan ?? null,
+          subscription: inquiryData?.subscription ?? false,
+          honey: "",
+        }),
+      });
+      if (!res.ok) {
+        const data = await res.json().catch(() => ({}));
+        throw new Error(data.error || "Failed to send");
+      }
+      setSubmitState("sent");
+    } catch (err) {
+      setSubmitState("error");
+      setSubmitError(err instanceof Error ? err.message : "Failed to send");
+    }
   };
 
   return (
@@ -138,15 +162,22 @@ My Selection:
                           Generating your draft...
                         </div>
                       )}
+                      {submitState === "sent" && (
+                        <div className="mt-2 text-[11px] text-teal-300 font-semibold">Sent! Check your inbox.</div>
+                      )}
+                      {submitState === "error" && submitError && (
+                        <div className="mt-2 text-[11px] text-red-300 font-semibold">Error: {submitError}</div>
+                      )}
                     </div>
                   </div>
 
                   <div className="flex justify-end">
                     <button
-                      onClick={handleLaunchEmail}
-                      className="w-full md:w-auto bg-teal-500 text-black px-8 py-3 rounded-xl font-bold hover:scale-105 transition-transform flex items-center justify-center gap-2 shadow-[0_0_20px_rgba(20,184,166,0.3)]"
+                      onClick={handleSend}
+                      disabled={isTyping || submitState === "sending"}
+                      className="w-full md:w-auto bg-teal-500 text-black px-8 py-3 rounded-xl font-bold hover:scale-105 transition-transform flex items-center justify-center gap-2 shadow-[0_0_20px_rgba(20,184,166,0.3)] disabled:opacity-60 disabled:hover:scale-100"
                     >
-                      Send Now <MdArrowForward />
+                      {submitState === "sending" ? "Sending..." : submitState === "sent" ? "Sent" : "Send Now"} <MdArrowForward />
                     </button>
                   </div>
                 </motion.div>
