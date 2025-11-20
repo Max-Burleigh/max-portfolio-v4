@@ -70,8 +70,8 @@ body {
   /* top: 0; right: 0; bottom: 0; left: 0; */
   pointer-events: none;
   /* non-interactive background layer */
-  z-index: -1;
-  /* sit behind content but above browser chrome */
+  z-index: -5;
+  /* sit behind content and aurora but above browser chrome */
 }
 
 .ios-viewport-overlay-bg {

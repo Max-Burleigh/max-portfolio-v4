@@ -137,6 +137,10 @@ const Portfolio = () => {
       {/* iOS 26 Safari viewport overlay fallback */}
       <IOSViewportOverlay />
 
+      {/* Always render both backgrounds; CSS on <html> decides visibility */}
+      {/* Moved outside of motion.div to ensure fixed positioning works correctly relative to viewport */}
+      <AuroraBackground />
+
       {/* PlatformDetector removed; SSR sets <html> classes */}
       <Navigation
         activeSection={activeSection}
@@ -165,8 +169,7 @@ const Portfolio = () => {
           )}
         </AnimatePresence>
 
-        {/* Always render both backgrounds; CSS on <html> decides visibility */}
-        <AuroraBackground />
+
 
         {/* 
           REMOVED THE DUPLICATE NAVIGATION COMPONENT FROM HERE.

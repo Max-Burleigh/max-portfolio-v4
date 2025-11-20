@@ -13,18 +13,36 @@ import { useEffect, useState } from "react";
  */
 export default function IOSViewportOverlay() {
   const [isIOS, setIsIOS] = useState(false);
+  const [height, setHeight] = useState("100vh");
 
   useEffect(() => {
     // Detect iOS devices
     const ua = navigator.userAgent;
-    setIsIOS(/iPad|iPhone|iPod/i.test(ua));
+    const isIOSDevice = /iPad|iPhone|iPod/i.test(ua);
+    setIsIOS(isIOSDevice);
+
+    if (isIOSDevice) {
+      const updateHeight = () => {
+        // Use outerHeight to cover the full screen including browser chrome areas
+        setHeight(`${window.outerHeight}px`);
+      };
+
+      updateHeight();
+      window.addEventListener("resize", updateHeight);
+      window.addEventListener("orientationchange", updateHeight);
+
+      return () => {
+        window.removeEventListener("resize", updateHeight);
+        window.removeEventListener("orientationchange", updateHeight);
+      };
+    }
   }, []);
 
   if (!isIOS) return null;
 
   return (
-    <div className="ios-viewport-overlay">
-      <div className="ios-viewport-overlay-bg" />
+    <div className="ios-viewport-overlay" style={{ height }}>
+      <div className="ios-viewport-overlay-bg" style={{ height: "100%" }} />
     </div>
   );
 }

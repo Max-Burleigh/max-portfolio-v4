@@ -27,7 +27,8 @@ const AuroraBackground: React.FC = () => {
 
     const resize = () => {
       const w = window.innerWidth;
-      const h = window.innerHeight;
+      // Use outerHeight on iOS to ensure full coverage behind bars
+      const h = isIOS ? window.outerHeight : window.innerHeight;
       canvas.width = Math.max(1, Math.floor(w * dpr));
       canvas.height = Math.max(1, Math.floor(h * dpr));
       canvas.style.width = `${w}px`;
