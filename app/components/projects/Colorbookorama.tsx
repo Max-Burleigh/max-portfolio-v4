@@ -95,6 +95,7 @@ const Colorbookorama: React.FC = () => {
           boxShadow: "0 4px 24px rgba(0,0,0,0.12)",
           background:
             "radial-gradient(circle at 20% 20%, rgba(255,255,255,0.15), transparent 55%), radial-gradient(circle at 80% 20%, rgba(0,255,213,0.15), transparent 60%), rgba(19,20,25,0.96)",
+          aspectRatio: "16/9",
         }}
       >
         {shouldLoadVideo ? (

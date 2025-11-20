@@ -60,6 +60,7 @@ const BasedChat: React.FC = () => {
           borderRadius: "1.5rem",
           overflow: "hidden",
           boxShadow: "0 4px 24px rgba(0,0,0,0.12)",
+          aspectRatio: "16/9",
         }}
       >
         {shouldLoadVideo ? (
