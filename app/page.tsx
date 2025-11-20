@@ -102,18 +102,14 @@ const Portfolio = () => {
     const target = sectionRefs.contact.current ?? document.getElementById("contact");
     if (!target) return;
     const scrollIntoView = () => {
-      const top = target.getBoundingClientRect().top + window.scrollY - 24;
-      window.scrollTo({ top, behavior: "smooth" });
-      // Backup snap if something else shifted the layout after the smooth scroll kicked off
-      window.setTimeout(() => {
-        const remaining = target.getBoundingClientRect().top;
-        if (Math.abs(remaining) > 24) {
-          window.scrollTo({ top: target.getBoundingClientRect().top + window.scrollY - 24, behavior: "auto" });
-        }
-      }, 420);
+      const topFor = () => target.getBoundingClientRect().top + window.scrollY - 24;
+      const align = (behavior: ScrollBehavior) => window.scrollTo({ top: topFor(), behavior });
+      align("smooth");
+      window.setTimeout(() => align("smooth"), 900);
+      window.setTimeout(() => align("auto"), 1700);
     };
     // Run after the sticky bar unmounts to avoid layout jumps
-    requestAnimationFrame(() => window.setTimeout(scrollIntoView, 180));
+    requestAnimationFrame(() => window.setTimeout(scrollIntoView, 120));
   };
 
   // Active section logic moved into useActiveSection hook
