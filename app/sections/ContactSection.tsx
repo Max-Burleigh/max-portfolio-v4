@@ -203,7 +203,7 @@ My Selection:
                 href={`mailto:${CONTACT_EMAIL}`}
                 className="inline-flex items-center hover:text-teal-300 transition-colors group"
               >
-                <SiMaildotru className="w-[22px] h-[22px] flex-shrink-0 mr-2 text-blue-500 group-hover:text-blue-400 transition-colors" />
+                <SiMaildotru className="w-[22px] h-[22px] flex-shrink-0 mr-2 text-teal-300 group-hover:text-teal-200 transition-colors" />
                 <span>{CONTACT_EMAIL}</span>
               </a>
             </div>

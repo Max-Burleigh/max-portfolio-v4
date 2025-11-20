@@ -978,34 +978,30 @@ a {
   display: flex;
   justify-content: center;
   align-items: center;
-  flex: 1 1 45%;
-  min-width: 240px;
-  max-width: 360px;
+  flex: 1;
   width: 100%;
+  max-width: clamp(220px, 70vw, 320px);
 }
 .project-image-container {
   position: relative;
   width: 100%;
-  max-width: clamp(220px, 80vw, 340px);
-  aspect-ratio: 594 / 1240; /* Match phone mockups to avoid height shifts while images load */
-}
-.project-image-container > span {
-  position: relative !important;
-  display: block !important;
-  width: 100% !important;
-  height: 100% !important;
+  /* Match the phone mockup asset ratio to avoid cropping */
+  aspect-ratio: 594 / 1240;
+  max-height: 520px;
+  border-radius: 1.5rem;
+  overflow: hidden;
 }
 .project-image-container img {
   width: 100% !important;
   height: 100% !important;
-  object-fit: cover;
+  object-fit: contain;
+  display: block;
 }
 .project-card.quailmail-card .quailmail-screenshot { position: relative; }
 .project-card.quailmail-card:hover .quailmail-screenshot { z-index: 10; }
 @media (min-width: 769px) {
   .project-card .project-info { flex: 1; max-width: 50%; }
-  .project-card .project-media { flex: 1; display: flex; justify-content: center; align-items: center; max-width: clamp(220px, 28vw, 320px); max-height: 520px; }
-  .project-card .project-media .project-image-container { width: 100%; display: inline-flex; }
+  .project-card .project-media { max-width: clamp(220px, 28vw, 320px); max-height: 520px; }
   .project-card.media-right .project-media { justify-content: flex-end; }
   .project-card.media-left .project-media { justify-content: flex-start; }
   .project-card.media-right .project-media .visit-site-message { left: auto; right: 20px; transform: none; }
@@ -1020,29 +1016,38 @@ a {
   .project-card.full-leaf-app-card .project-media {
     flex: 0 1 clamp(220px, 28vw, 320px);
     max-width: clamp(220px, 28vw, 320px);
+    max-height: 520px;
   }
   .project-card.full-leaf-app-card .project-image-container {
     width: 100%;
     max-width: clamp(220px, 28vw, 320px);
     aspect-ratio: 1 / 2;
+    max-height: 520px;
     display: block;
+    border-radius: 1.25rem;
     overflow: hidden;
   }
   .project-card.full-leaf-app-card .project-image-container > span {
     width: 100% !important;
-    height: auto !important;
-    max-width: 100% !important;
+    height: 100% !important;
     display: block !important;
+    border-radius: inherit !important;
+    overflow: hidden;
   }
   .project-card.full-leaf-app-card .project-image-container > span > span {
     width: 100% !important;
-    height: auto !important;
+    height: 100% !important;
     display: block !important;
+    border-radius: inherit !important;
+    overflow: hidden;
   }
   .project-card.full-leaf-app-card .project-image-container img {
     width: 100% !important;
-    height: auto !important;
+    height: 100% !important;
     aspect-ratio: 1 / 2;
+    object-fit: contain !important;
+    object-position: center center !important;
+    border-radius: inherit !important;
   }
   .project-card.full-leaf-app-card .project-info > .flex.justify-center.items-center > .inline-block { padding-top: 1rem !important; padding-bottom: 1rem !important; }
 }
@@ -1081,8 +1086,8 @@ a {
   /* Override Next/Image inline sizing for this one screenshot only */
   .project-card.full-leaf-app-card img.full-leaf-app-screenshot {
     width: 100% !important;
-    height: auto !important;
-    object-fit: cover !important;
+    height: 100% !important;
+    object-fit: contain !important;
     object-position: top center !important;
     display: block;
     border-radius: inherit !important;
