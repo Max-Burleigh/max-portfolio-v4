@@ -34,9 +34,6 @@ const ContactSection = forwardRef<HTMLDivElement, ContactSectionProps>(function 
       return;
     }
 
-    const planName = inquiryData.plan === "ESSENTIAL" ? "Essential Plan" : (inquiryData.plan === "GROWTH" ? "Growth Plan" : "Custom Project");
-    const subText = inquiryData.subscription ? "Peace of Mind Subscription" : "None";
-
     const body = `Hi Max,
 
 I'm interested in starting a project with you.
