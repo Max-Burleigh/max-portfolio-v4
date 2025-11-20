@@ -98,8 +98,22 @@ const Portfolio = () => {
 
   const handleStartProject = (data: { plan: "ESSENTIAL" | "GROWTH" | null; subscription: boolean }) => {
     setInquiryData(data);
-    // Use center block alignment for better purchase flow experience
-    sectionRefs.contact.current?.scrollIntoView({ behavior: "smooth", block: "center" });
+    // Align the contact section into view; fall back to manual scroll for reliability
+    const target = sectionRefs.contact.current ?? document.getElementById("contact");
+    if (!target) return;
+    const scrollIntoView = () => {
+      const top = target.getBoundingClientRect().top + window.scrollY - 24;
+      window.scrollTo({ top, behavior: "smooth" });
+      // Backup snap if something else shifted the layout after the smooth scroll kicked off
+      window.setTimeout(() => {
+        const remaining = target.getBoundingClientRect().top;
+        if (Math.abs(remaining) > 24) {
+          window.scrollTo({ top: target.getBoundingClientRect().top + window.scrollY - 24, behavior: "auto" });
+        }
+      }, 420);
+    };
+    // Run after the sticky bar unmounts to avoid layout jumps
+    requestAnimationFrame(() => window.setTimeout(scrollIntoView, 180));
   };
 
   // Active section logic moved into useActiveSection hook

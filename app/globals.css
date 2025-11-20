@@ -974,13 +974,38 @@ a {
 .carlypsphoto-card .phone-mockup { margin-top: 2rem; }
 .project-card.full-leaf-app-card { flex-basis: 100%; max-width: 100%; min-height: 400px; }
 .project-card .project-info { flex: 1; max-width: 50%; }
-.project-image-container { width: 100%; height: 100%; position: relative; }
+.project-card .project-media {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex: 1 1 45%;
+  min-width: 240px;
+  max-width: 360px;
+  width: 100%;
+}
+.project-image-container {
+  position: relative;
+  width: 100%;
+  max-width: clamp(220px, 80vw, 340px);
+  aspect-ratio: 594 / 1240; /* Match phone mockups to avoid height shifts while images load */
+}
+.project-image-container > span {
+  position: relative !important;
+  display: block !important;
+  width: 100% !important;
+  height: 100% !important;
+}
+.project-image-container img {
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: cover;
+}
 .project-card.quailmail-card .quailmail-screenshot { position: relative; }
 .project-card.quailmail-card:hover .quailmail-screenshot { z-index: 10; }
 @media (min-width: 769px) {
   .project-card .project-info { flex: 1; max-width: 50%; }
-  .project-card .project-media { flex: 1; display: flex; justify-content: center; align-items: center; max-width: 280px; max-height: 480px; }
-  .project-card .project-media .project-image-container { width: auto; height: auto; display: inline-flex; }
+  .project-card .project-media { flex: 1; display: flex; justify-content: center; align-items: center; max-width: clamp(220px, 28vw, 320px); max-height: 520px; }
+  .project-card .project-media .project-image-container { width: 100%; display: inline-flex; }
   .project-card.media-right .project-media { justify-content: flex-end; }
   .project-card.media-left .project-media { justify-content: flex-start; }
   .project-card.media-right .project-media .visit-site-message { left: auto; right: 20px; transform: none; }
