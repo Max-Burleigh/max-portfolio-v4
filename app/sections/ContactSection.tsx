@@ -21,6 +21,7 @@ const ContactSection = forwardRef<HTMLDivElement, ContactSectionProps>(function 
 
   const [isTyping, setIsTyping] = useState(false);
   const [messageBody, setMessageBody] = useState("");
+  const [senderEmail, setSenderEmail] = useState("");
   const typeTimer = useRef<NodeJS.Timeout | null>(null);
   const [submitState, setSubmitState] = useState<"idle" | "sending" | "sent" | "error">("idle");
   const [submitError, setSubmitError] = useState<string | null>(null);
@@ -30,6 +31,7 @@ const ContactSection = forwardRef<HTMLDivElement, ContactSectionProps>(function 
     if (!inquiryData || !isInView) {
       setMessageBody("");
       setIsTyping(false);
+      setSenderEmail("");
       if (typeTimer.current) clearInterval(typeTimer.current);
       return;
     }
@@ -67,6 +69,16 @@ My Selection:
 
   const handleSend = async () => {
     if (submitState === "sending") return;
+    if (!senderEmail || !/\S+@\S+\.\S+/.test(senderEmail)) {
+      setSubmitState("error");
+      setSubmitError("Please enter a valid email so I can reply.");
+      return;
+    }
+    if (!messageBody.trim()) {
+      setSubmitState("error");
+      setSubmitError("Please add a short message before sending.");
+      return;
+    }
     setSubmitState("sending");
     setSubmitError(null);
 
@@ -78,6 +90,7 @@ My Selection:
           message: messageBody,
           plan: inquiryData?.plan ?? null,
           subscription: inquiryData?.subscription ?? false,
+          email: senderEmail.trim(),
           honey: "",
         }),
       });
@@ -159,8 +172,21 @@ My Selection:
                           Generating your draft...
                         </div>
                       )}
+                      <div className="mt-4">
+                        <label className="block text-[12px] text-teal-200 font-semibold mb-2" htmlFor="sender-email">
+                          Your email (so I can reply)
+                        </label>
+                        <input
+                          id="sender-email"
+                          type="email"
+                          value={senderEmail}
+                          onChange={(e) => setSenderEmail(e.target.value)}
+                          className="w-full bg-black/40 border border-white/10 rounded-lg px-3 py-2 text-sm text-white/90 focus:outline-none focus:border-teal-400"
+                          placeholder="you@example.com"
+                        />
+                      </div>
                       {submitState === "sent" && (
-                        <div className="mt-2 text-[11px] text-teal-300 font-semibold">Sent! Check your inbox.</div>
+                        <div className="mt-2 text-[11px] text-teal-300 font-semibold">Sent! I’ll reply soon.</div>
                       )}
                       {submitState === "error" && submitError && (
                         <div className="mt-2 text-[11px] text-red-300 font-semibold">Error: {submitError}</div>

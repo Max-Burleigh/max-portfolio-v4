@@ -20,7 +20,10 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: "Message too short" }, { status: 400 });
   }
 
-  const safeEmail = typeof email === "string" && email.includes("@") ? email.trim() : "N/A";
+  const safeEmail = typeof email === "string" && /\S+@\S+\.\S+/.test(email) ? email.trim() : null;
+  if (!safeEmail) {
+    return NextResponse.json({ error: "Reply email is required" }, { status: 400 });
+  }
   const planLabel =
     plan === "ESSENTIAL" ? "Essential" : plan === "GROWTH" ? "Growth" : "Custom/Not selected";
   const subLabel = subscription ? "Yes (Peace of Mind)" : "No";
@@ -40,7 +43,7 @@ export async function POST(req: Request) {
       to: resendTo,
       subject: `Project Inquiry: ${planLabel}`,
       text: body,
-      reply_to: safeEmail !== "N/A" ? safeEmail : undefined,
+      reply_to: safeEmail,
     });
     return NextResponse.json({ ok: true });
   } catch (err) {
