@@ -175,7 +175,7 @@ const ServicesSection = forwardRef<HTMLDivElement, ServicesSectionProps>((props,
         className="w-full max-w-5xl mx-auto"
         data-entrance="stagger"
       >
-        <div className="portfolio-header mb-12 text-center md:text-left">
+        <div className="portfolio-header md:mb-12 text-center md:text-left">
           <h2 className="mb-0" data-entrance-item>
             Services
           </h2>
@@ -184,7 +184,7 @@ const ServicesSection = forwardRef<HTMLDivElement, ServicesSectionProps>((props,
           </p>
         </div>
 
-        <div className="mt-10 pt-10 border-t border-white/10 space-y-14">
+        <div className="mt-6 md:mt-10 pt-6 md:pt-10 border-t border-white/10 space-y-14">
           <div data-entrance-item className="text-center md:text-left">
             <p className="text-base md:text-lg tracking-[0.2em] uppercase text-white/70 font-space-grotesk font-semibold">
               Web Design & Development
