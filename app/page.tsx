@@ -138,6 +138,15 @@ const Portfolio = () => {
       window.scrollTo({ top, behavior });
     };
 
+    // Mobile Safari occasionally defers ResizeObserver callbacks behind scrolling.
+    // Fall back to a paint + timeout path when it isn't available to avoid a no-op scroll.
+    if (typeof ResizeObserver === "undefined") {
+      requestAnimationFrame(() => {
+        window.setTimeout(scrollToContact, prefersReduced ? 0 : 120);
+      });
+      return;
+    }
+
     // Wait for the contact section to finish expanding, then issue one smooth scroll.
     // A brief idle window on the ResizeObserver avoids restarting animations mid-glide.
     let idleTimer: number | undefined;
