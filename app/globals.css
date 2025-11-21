@@ -911,6 +911,11 @@ h2 {
   .portfolio-subcopy {
     display: none;
   }
+
+  /* Reduce gap effect for Portfolio header to match Services spacing */
+  .portfolio-section .portfolio-header {
+    margin-bottom: -0.5rem;
+  }
 }
 
 @media (min-width: 768px) {
