@@ -102,17 +102,17 @@ const Portfolio = () => {
           getComputedStyle(document.documentElement).getPropertyValue("--safe-top")
         ) || 0;
 
-      const scrollNow = () => {
+      const scrollOnce = () => {
         const rect = targetElement.getBoundingClientRect();
         const top = rect.top + window.scrollY - safeTop - 12;
         window.scrollTo({ top, behavior });
       };
 
-      // Run once immediately after this frame, then re-run shortly after to correct
-      // for any lazy asset or font shifts that might throw off the initial position.
+      // Defer a single scroll until after the next paint and a brief settle window
+      // so images/fonts have time to claim layout. This keeps the motion one glide.
       requestAnimationFrame(() => {
-        scrollNow();
-        window.setTimeout(scrollNow, 220);
+        const delay = prefersReduced ? 0 : 140;
+        window.setTimeout(scrollOnce, delay);
       });
     },
     [sectionRefs]
