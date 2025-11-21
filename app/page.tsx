@@ -127,13 +127,27 @@ const Portfolio = () => {
     if (!target) return;
 
     const prefersReduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    const top = target.getBoundingClientRect().top + window.scrollY - 24;
     const behavior: ScrollBehavior = prefersReduced ? "auto" : "smooth";
+    const safeTop =
+      parseFloat(
+        getComputedStyle(document.documentElement).getPropertyValue("--safe-top")
+      ) || 0;
 
-    // Run once, after the sticky bar begins unmounting, to avoid a stop-start feel
-    requestAnimationFrame(() => window.setTimeout(() => {
+    const scrollToContact = () => {
+      const top = target.getBoundingClientRect().top + window.scrollY - safeTop - 12;
       window.scrollTo({ top, behavior });
-    }, 120));
+    };
+
+    // Run once after the sticky bar begins unmounting, then nudge again after
+    // the contact section expands (form/typewriter) so the glide completes.
+    requestAnimationFrame(() => {
+      window.setTimeout(() => {
+        scrollToContact();
+        if (!prefersReduced) {
+          window.setTimeout(scrollToContact, 260);
+        }
+      }, prefersReduced ? 0 : 120);
+    });
   };
 
   // Active section logic moved into useActiveSection hook
