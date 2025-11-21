@@ -95,7 +95,25 @@ const Portfolio = () => {
       const images = document.querySelectorAll<HTMLImageElement>('img[loading="lazy"]');
       images.forEach((img) => (img.loading = "eager"));
 
-      targetElement.scrollIntoView({ behavior: "smooth" });
+      const prefersReduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      const behavior: ScrollBehavior = prefersReduced ? "auto" : "smooth";
+      const safeTop =
+        parseFloat(
+          getComputedStyle(document.documentElement).getPropertyValue("--safe-top")
+        ) || 0;
+
+      const scrollNow = () => {
+        const rect = targetElement.getBoundingClientRect();
+        const top = rect.top + window.scrollY - safeTop - 12;
+        window.scrollTo({ top, behavior });
+      };
+
+      // Run once immediately after this frame, then re-run shortly after to correct
+      // for any lazy asset or font shifts that might throw off the initial position.
+      requestAnimationFrame(() => {
+        scrollNow();
+        window.setTimeout(scrollNow, 220);
+      });
     },
     [sectionRefs]
   );
