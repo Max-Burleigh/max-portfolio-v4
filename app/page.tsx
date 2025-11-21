@@ -127,13 +127,35 @@ const Portfolio = () => {
     if (!target) return;
 
     const prefersReduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    const top = target.getBoundingClientRect().top + window.scrollY - 24;
     const behavior: ScrollBehavior = prefersReduced ? "auto" : "smooth";
+    const safeTop =
+      parseFloat(
+        getComputedStyle(document.documentElement).getPropertyValue("--safe-top")
+      ) || 0;
 
-    // Run once, after the sticky bar begins unmounting, to avoid a stop-start feel
-    requestAnimationFrame(() => window.setTimeout(() => {
+    const scrollToContact = () => {
+      const top = target.getBoundingClientRect().top + window.scrollY - safeTop - 12;
       window.scrollTo({ top, behavior });
-    }, 120));
+    };
+
+    // Wait for the contact section to finish expanding, then issue one smooth scroll.
+    // A brief idle window on the ResizeObserver avoids restarting animations mid-glide.
+    let idleTimer: number | undefined;
+
+    const observer = new ResizeObserver(() => {
+      if (idleTimer) window.clearTimeout(idleTimer);
+      idleTimer = window.setTimeout(() => {
+        observer.disconnect();
+        scrollToContact();
+      }, 120);
+    });
+
+    idleTimer = window.setTimeout(() => {
+      observer.disconnect();
+      scrollToContact();
+    }, prefersReduced ? 0 : 150);
+
+    observer.observe(target);
   };
 
   // Active section logic moved into useActiveSection hook
