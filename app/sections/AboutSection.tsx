@@ -133,7 +133,7 @@ const AboutSection = forwardRef<HTMLDivElement, AboutSectionProps>(function Abou
             <div className="mt-4 flex flex-wrap gap-3" data-entrance-item>
               <motion.button
                 onClick={() => setSpielOpen(!spielOpen)}
-                className="px-4 md:px-5 py-2 md:py-2.5 bg-gradient-to-r from-blue-400 via-purple-400 to-pink-300 rounded-full text-white font-semibold text-shadow-sm self-start overflow-hidden relative text-sm md:text-base"
+                className="px-4 md:px-5 py-2 md:py-2.5 bg-gradient-to-r from-blue-400 via-purple-400 to-pink-300 rounded-full text-white font-semibold [text-shadow:0_1px_2px_rgba(0,0,0,0.3)] self-start overflow-hidden relative text-sm md:text-base"
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
                 data-entrance-item

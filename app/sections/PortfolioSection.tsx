@@ -27,7 +27,7 @@ const PortfolioSection = forwardRef<HTMLDivElement>(function PortfolioSection(_,
 
   const scale = useTransform(scrollYProgress, [0, 1], [0.8, 1]);
   const opacity = useTransform(scrollYProgress, [0, 1], [0.5, 1]);
-  
+
   const smoothScale = useSpring(scale, { damping: 20, stiffness: 100 });
   const smoothOpacity = useSpring(opacity, { damping: 20, stiffness: 100 });
 
@@ -91,9 +91,9 @@ const PortfolioSection = forwardRef<HTMLDivElement>(function PortfolioSection(_,
           aria-label="Project timeline"
           style={timelineStyle}
         >
-        <div className="timeline-heading" data-entrance-item>
-          <p className="eyebrow">TABLE OF CONTENTS</p>
-        </div>
+          <div className="timeline-heading" data-entrance-item>
+            <p className="eyebrow">TABLE OF CONTENTS</p>
+          </div>
           <ul className="timeline-rail">
             {timelineEntries.map((entry) => (
               <li

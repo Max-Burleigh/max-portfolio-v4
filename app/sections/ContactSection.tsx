@@ -14,6 +14,7 @@ const ContactSection = forwardRef<HTMLDivElement, ContactSectionProps>(function 
   const isMobile = useIsMobile();
   const entranceRef = useRef<HTMLDivElement>(null);
   useEntranceStagger(entranceRef, { baseDelay: 40, step: 90 });
+  const contactLinkClass = "inline-flex items-center gap-2 text-[#00ffd5] no-underline font-semibold";
 
   // Track visibility for animation trigger
   const contentRef = useRef<HTMLDivElement>(null);
@@ -108,21 +109,21 @@ My Selection:
   return (
     <section ref={ref} id="contact" className="section contact-section">
       <div ref={entranceRef} data-entrance="contact" className="w-full max-w-4xl mx-auto transition-all duration-500">
-        <div 
+        <div
           ref={contentRef}
           className="glass-card contact-card transition-all duration-500 ease-in-out overflow-hidden mx-auto"
           style={{ maxWidth: inquiryData ? "800px" : "550px", width: "100%" }}
         >
           <h2 data-entrance-item>Contact</h2>
-          
+
           <AnimatePresence mode="wait">
             {!inquiryData ? (
-              <motion.p 
+              <motion.p
                 key="intro"
                 initial={{ opacity: 0, height: 0 }}
                 animate={{ opacity: 1, height: "auto" }}
                 exit={{ opacity: 0, height: 0 }}
-                className="text-left mt-6" 
+                className="text-left mt-6"
                 data-entrance-item
               >
                 Feel free to reach out if you have a project in mind or just want to chat!
@@ -209,16 +210,16 @@ My Selection:
           </AnimatePresence>
 
           <div className="mt-8 text-left space-y-4 pt-8 border-t border-white/10" data-entrance-item>
-             {/* Keep contact links always available */}
+            {/* Keep contact links always available */}
             <p className="text-xs font-bold uppercase tracking-widest text-white/30 font-space-grotesk mb-4">
               Direct Channels
             </p>
             <div>
               <a
                 href={`mailto:${CONTACT_EMAIL}`}
-                className="inline-flex items-center hover:text-teal-300 transition-colors group"
+                className={contactLinkClass}
               >
-                <SiMaildotru className="w-[22px] h-[22px] flex-shrink-0 mr-2 text-teal-300 group-hover:text-teal-200 transition-colors" />
+                <SiMaildotru className="w-[22px] h-[22px] flex-shrink-0 text-current" />
                 <span>{CONTACT_EMAIL}</span>
               </a>
             </div>
@@ -227,9 +228,9 @@ My Selection:
                 href={LINKEDIN_URL}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center text-blue-500 hover:text-blue-400 transition-colors font-medium"
+                className={contactLinkClass}
               >
-                <SiLinkedin className="w-[22px] h-[22px] flex-shrink-0 mr-2" />
+                <SiLinkedin className="w-[22px] h-[22px] flex-shrink-0 text-current" />
                 <span>LinkedIn</span>
               </a>
             </div>

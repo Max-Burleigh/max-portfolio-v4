@@ -248,8 +248,8 @@ const ServicesSection = forwardRef<HTMLDivElement, ServicesSectionProps>((props,
                   <button
                     onClick={() => handlePlanSelection("ESSENTIAL")}
                     className={`w-full py-3 px-6 rounded-xl border font-semibold transition-all duration-300 hover:scale-[1.02] active:scale-[0.98] mt-auto flex items-center justify-center gap-2 relative isolate transform-gpu ${selectedPlan === "ESSENTIAL"
-                        ? "bg-teal-500 text-white border-teal-500 shadow-[0_0_20px_rgba(20,184,166,0.3)]"
-                        : "bg-white/5 hover:bg-white/10 border-white/10 text-white"
+                      ? "bg-teal-500 text-white border-teal-500 shadow-[0_0_20px_rgba(20,184,166,0.3)]"
+                      : "bg-white/5 hover:bg-white/10 border-white/10 text-white"
                       }`}
                     style={{ backfaceVisibility: "hidden" }}
                   >
@@ -304,8 +304,8 @@ const ServicesSection = forwardRef<HTMLDivElement, ServicesSectionProps>((props,
                   <button
                     onClick={() => handlePlanSelection("GROWTH")}
                     className={`w-full py-3 px-6 rounded-xl font-bold border transition-all duration-300 hover:scale-[1.02] active:scale-[0.98] mt-auto flex items-center justify-center gap-2 relative isolate transform-gpu overflow-hidden ${selectedPlan === "GROWTH"
-                        ? "border-transparent text-white shadow-[0_0_20px_rgba(168,85,247,0.4)]"
-                        : "bg-white/5 hover:bg-white/10 border-white/10 text-white"
+                      ? "border-transparent text-white shadow-[0_0_20px_rgba(168,85,247,0.4)]"
+                      : "bg-white/5 hover:bg-white/10 border-white/10 text-white"
                       }`}
                     style={{ backfaceVisibility: "hidden" }}
                   >
@@ -390,8 +390,8 @@ const ServicesSection = forwardRef<HTMLDivElement, ServicesSectionProps>((props,
                     <button
                       onClick={handleSubscriptionToggle}
                       className={`py-2 px-4 rounded-lg font-semibold text-sm transition-all duration-300 hover:scale-[1.02] active:scale-[0.98] flex items-center gap-2 border ${hasSubscription
-                          ? "bg-teal-500/20 border-teal-500 text-teal-300"
-                          : "bg-white/5 hover:bg-white/10 border-white/10 text-white"
+                        ? "bg-teal-500/20 border-teal-500 text-teal-300"
+                        : "bg-white/5 hover:bg-white/10 border-white/10 text-white"
                         }`}
                     >
                       {hasSubscription ? (

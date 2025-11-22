@@ -1,3 +1,12 @@
+/*##########################################################
+#
+#  BASE IMPORTS & CSS VARIABLES
+#
+#  Root-level configuration, custom properties, and
+#  color schemes. Modify these to change the global theme.
+#
+##########################################################*/
+
 @import "tailwindcss";
 
 :root {
@@ -49,44 +58,15 @@
   }
 }
 
-body {
-  color: var(--foreground);
-  font-family: var(--font-manrope), var(--font-fallback);
-}
+/*##########################################################
+#
+#  HTML & BODY BASE STYLES
+#
+#  Core layout, scrolling behavior, and viewport setup.
+#  Includes iOS-specific optimizations.
+#
+##########################################################*/
 
-/* Text shadow utility class for better readability on gradients */
-.text-shadow-sm {
-  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
-}
-
-/* ===== iOS 26 Viewport Overlay Fallback ===== */
-/**
- * Forces Safari to repaint behind the URL bar on iOS 26
- * See: app/components/IOSViewportOverlay.tsx
- */
-.ios-viewport-overlay {
-  position: fixed;
-  inset: 0;
-  /* top: 0; right: 0; bottom: 0; left: 0; */
-  pointer-events: none;
-  /* non-interactive background layer */
-  z-index: -5;
-  /* sit behind content and aurora but above browser chrome */
-}
-
-.ios-viewport-overlay-bg {
-  height: 100vh;
-  /* fills the viewport area */
-  background: var(--background);
-  /* match brand background */
-}
-
-/* ===== Aurora CSS ===== */
-/**
- * Aurora Background Effects
- * 
- * Inline from app/styles/components/aurora.css
- */
 html {
   height: 100%;
   /* Ensure html takes full height */
@@ -98,6 +78,8 @@ html {
   background: var(--background);
   scroll-behavior: smooth;
   /* Moved from .portfolio-container */
+  scrollbar-gutter: stable;
+  /* Keep layout from shifting when scrollbars appear */
 }
 
 body {
@@ -114,6 +96,21 @@ body {
   /* Prevent horizontal scrolling from absolute elements */
   /* Modified to allow iOS native interactions */
 }
+
+a {
+  color: #00ffd5;
+  text-decoration: none;
+  font-weight: 600;
+}
+
+/*##########################################################
+#
+#  AURORA BACKGROUND EFFECTS
+#
+#  Fixed background gradient, noise texture, blob elements,
+#  and related animations. Includes iOS Canvas fallback.
+#
+##########################################################*/
 
 /* Fixed background gradient element */
 .aurora-bg {
@@ -200,6 +197,15 @@ html.not-ios-device .canvas-aurora {
   display: none;
 }
 
+/*##########################################################
+#
+#  REDUCED MOTION & ACCESSIBILITY
+#
+#  Disable animations and effects for users who prefer
+#  reduced motion for accessibility.
+#
+##########################################################*/
+
 @media (prefers-reduced-motion: reduce) {
   .aurora-blob {
     animation: none !important;
@@ -208,34 +214,20 @@ html.not-ios-device .canvas-aurora {
   .cursor-circle {
     display: none !important;
   }
-}
 
-/* ===== Entrance Stagger (hero + sections) ===== */
-[data-entrance] [data-entrance-item] {
-  opacity: 0;
-  filter: blur(var(--enter-blur, 14px));
-  /* Combine entrance rise with optional parallax offset */
-  transform: translateY(calc(var(--enter-ty, 24px) + var(--parallax-y, 0px))) translateZ(0);
-  transition:
-    opacity 400ms ease-out,
-    transform 500ms cubic-bezier(0.22, 1, 0.36, 1),
-    filter 520ms ease-out;
-  transition-delay: var(--enter-delay, 0ms);
-  will-change: transform, opacity, filter;
-}
-
-[data-entrance].is-entered [data-entrance-item] {
-  opacity: 1;
-  --enter-ty: 0px;
-  /* let transform resolve to parallax only */
-  --enter-blur: 0px;
-}
-
-@media (prefers-reduced-motion: reduce) {
   [data-entrance] [data-entrance-item] {
     transform: none;
     filter: none;
     transition: opacity 250ms ease-out;
+  }
+
+  .intro-wash {
+    display: none !important;
+    animation: none;
+  }
+
+  html[data-intro-played="1"] #site-root {
+    transition: none;
   }
 }
 
@@ -253,7 +245,7 @@ html.not-ios-device .canvas-aurora {
   }
 }
 
-/* Individual blob styling */
+/* Individual blob colors and positioning */
 .blob1 {
   background: radial-gradient(circle at 30% 40%,
       #00ffd5 0%,
@@ -360,7 +352,7 @@ html.not-ios-device .canvas-aurora {
   top: 2600px;
 }
 
-/* Animation for aurora background */
+/* Aurora keyframe animations */
 @keyframes aurora {
   0% {
     background-position: 0% 50%;
@@ -426,7 +418,7 @@ html.not-ios-device .canvas-aurora {
   animation: auroraBlob2 18s ease-in-out infinite;
 }
 
-/* Cursor effect (light following cursor) */
+/* Cursor light effect */
 .cursor-circle {
   position: fixed;
   top: 0;
@@ -442,6 +434,15 @@ html.not-ios-device .canvas-aurora {
   z-index: 999;
   transform: translateZ(0);
 }
+
+/*##########################################################
+#
+#  LAYOUT & SECTIONS
+#
+#  Main container, section layouts, and viewport handling.
+#  Includes safe area insets for iOS devices.
+#
+##########################################################*/
 
 .portfolio-container {
   width: 100%;
@@ -466,8 +467,37 @@ html.not-ios-device .canvas-aurora {
 }
 */
 
-/* ===== Navigation CSS ===== */
-/** Inline from app/styles/components/navigation.css */
+.section {
+  position: relative;
+  width: 100vw;
+  min-height: 100dvh;
+  /* dynamic viewport for correct iOS behavior */
+  max-width: 1000px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  z-index: 2;
+  /* Respect iOS 26 safe areas with base padding */
+  padding-left: max(3vw, var(--safe-left));
+  padding-right: max(3vw, var(--safe-right));
+}
+
+.contact-section {
+  justify-content: flex-start;
+  padding-top: clamp(64px, 12vh, 128px);
+  padding-bottom: clamp(80px, 14vh, 152px);
+}
+
+/*##########################################################
+#
+#  HEADER / NAVIGATION
+#
+#  Side navigation, mobile hamburger menu, and overlay.
+#  Keep styles here so layout changes are easy to find.
+#
+##########################################################*/
 .side-nav {
   position: fixed;
   left: max(2rem, var(--safe-left));
@@ -621,7 +651,14 @@ html.not-ios-device .canvas-aurora {
   }
 }
 
-/* ===== Intro Reveal (first-load wash) ===== */
+/*##########################################################
+#
+#  INTRO REVEAL ANIMATION
+#
+#  First-load wash effect and site root gating.
+#  Controls the intro animation sequence.
+#
+##########################################################*/
 
 /* Gate: while intro plays or before boot flips to 1, lock scroll and skip rendering the main subtree */
 html:not([data-intro-played="1"]) body {
@@ -671,27 +708,11 @@ html[data-intro-played="1"] .intro-wash {
   display: none !important;
 }
 
-@media (prefers-reduced-motion: reduce) {
-  .intro-wash {
-    display: none !important;
-    animation: none;
-  }
-
-  html[data-intro-played="1"] #site-root {
-    transition: none;
-  }
-}
-
 /* Reduce heavy blur on touch devices for smoother performance */
 @media (hover: none) and (pointer: coarse) {
   html:not([data-intro-played="1"]) #site-root {
     filter: none;
   }
-}
-
-/* Keep layout from shifting when scrollbars appear */
-html {
-  scrollbar-gutter: stable;
 }
 
 /* Pause heavy background layers until the intro completes */
@@ -704,28 +725,42 @@ html:not([data-intro-played="1"]) .aurora-bg::after {
   display: none !important;
 }
 
-.section {
-  position: relative;
-  width: 100vw;
-  min-height: 100dvh;
-  /* dynamic viewport for correct iOS behavior */
-  max-width: 1000px;
-  margin: 0 auto;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: flex-start;
-  z-index: 2;
-  /* Respect iOS 26 safe areas with base padding */
-  padding-left: max(3vw, var(--safe-left));
-  padding-right: max(3vw, var(--safe-right));
+/*##########################################################
+#
+#  ENTRANCE STAGGER ANIMATIONS
+#
+#  Progressive reveal for hero and sections with blur,
+#  transform, and parallax effects.
+#
+##########################################################*/
+
+[data-entrance] [data-entrance-item] {
+  opacity: 0;
+  filter: blur(var(--enter-blur, 14px));
+  /* Combine entrance rise with optional parallax offset */
+  transform: translateY(calc(var(--enter-ty, 24px) + var(--parallax-y, 0px))) translateZ(0);
+  transition:
+    opacity 400ms ease-out,
+    transform 500ms cubic-bezier(0.22, 1, 0.36, 1),
+    filter 520ms ease-out;
+  transition-delay: var(--enter-delay, 0ms);
+  will-change: transform, opacity, filter;
 }
 
-.contact-section {
-  justify-content: flex-start;
-  padding-top: clamp(64px, 12vh, 128px);
-  padding-bottom: clamp(80px, 14vh, 152px);
+[data-entrance].is-entered [data-entrance-item] {
+  opacity: 1;
+  --enter-ty: 0px;
+  /* let transform resolve to parallax only */
+  --enter-blur: 0px;
 }
+
+/*##########################################################
+#
+#  TYPOGRAPHY
+#
+#  Heading styles and text formatting across sections.
+#
+##########################################################*/
 
 h1 {
   font-family: var(--font-space-grotesk), var(--font-fallback);
@@ -758,6 +793,15 @@ h2 {
     text-align: center;
   }
 }
+
+/*##########################################################
+#
+#  PORTFOLIO SECTION
+#
+#  Timeline navigation, shell layout, and content stack.
+#  Includes floating timeline sidebar for desktop.
+#
+##########################################################*/
 
 .portfolio-shell {
   position: relative;
@@ -971,22 +1015,14 @@ h2 {
   }
 }
 
-.side-nav,
-.side-nav button,
-.section,
-a,
-.project-card {
-  font-family: var(--font-manrope), var(--font-fallback);
-}
+/*##########################################################
+#
+#  TECH STACK
+#
+#  Technology badges with icons and hover effects.
+#
+##########################################################*/
 
-a {
-  color: #00ffd5;
-  text-decoration: none;
-  font-weight: 600;
-}
-
-/* ===== Tech Stack CSS ===== */
-/** Inline from app/styles/components/tech-stack.css */
 .tech-stack {
   display: flex;
   flex-wrap: wrap;
@@ -1082,8 +1118,15 @@ a {
   }
 }
 
-/* ===== Project Card CSS ===== */
-/** Inline from app/styles/components/project-card.css */
+/*##########################################################
+#
+#  PROJECT CARDS
+#
+#  Individual project showcase cards with images,
+#  descriptions, and responsive layouts.
+#
+##########################################################*/
+
 .project-card {
   display: flex;
   align-items: center;
@@ -1543,6 +1586,14 @@ a {
   object-fit: cover;
 }
 
+/*##########################################################
+#
+#  GLASS CARDS
+#
+#  Frosted glass effect cards for About and Contact sections.
+#
+##########################################################*/
+
 .glass-card {
   background: rgba(255, 255, 255, 0.03);
   border: 1px solid rgba(255, 255, 255, 0.1);
@@ -1604,23 +1655,19 @@ a {
 .contact-card a::after {
   content: "";
   position: absolute;
-  bottom: -2px;
+  bottom: -5px;
   left: 0;
   width: 100%;
   height: 2px;
   background-color: currentColor;
   transform: scaleX(0);
-  transform-origin: right;
+  transform-origin: left;
   transition: transform 0.3s ease;
+  will-change: transform;
 }
 
 .contact-card a:hover::after {
   transform: scaleX(1);
-  transform-origin: left;
-}
-
-.contact-card a[href*="linkedin.com"]::after {
-  bottom: -5px;
 }
 
 .glass-card:hover {
@@ -1628,8 +1675,14 @@ a {
   box-shadow: 0 6px 24px rgba(0, 0, 0, 0.15);
 }
 
-/* ===== Overlay Message CSS ===== */
-/** Inline from app/styles/components/overlay-message.css */
+/*##########################################################
+#
+#  OVERLAY MESSAGES
+#
+#  "Visit site" overlays displayed on project screenshots.
+#
+##########################################################*/
+
 .visit-site-message {
   position: absolute;
   bottom: 20px;
@@ -1702,8 +1755,15 @@ a {
   }
 }
 
-/* ===== Phone Mockup CSS ===== */
-/** Inline from app/components/phone/PhoneMockup.css */
+/*##########################################################
+#
+#  PHONE MOCKUP
+#
+#  Device frame component for mobile app screenshots.
+#  Includes variants for different project types.
+#
+##########################################################*/
+
 .phone-mockup {
   position: relative;
   width: 100%;

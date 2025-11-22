@@ -25,6 +25,11 @@ import type { ProjectCardProps } from "@components/projects/ProjectCard";
 export type ProjectEntry = ProjectCardProps & { id: string; hidden?: boolean };
 
 const iconStyle = { width: "32px", height: "32px" } as const;
+const storeLinkStyle = {
+  color: "#00ffd5",
+  textShadow:
+    "0 0 6px #ffffff, 0 0 12px #7ce7ff, 0 0 18px #22d3ee, 0 0 25px #22d3ee, 0 0 35px #06b6d4, 0 0 45px #06b6d4",
+} as const;
 
 export const projects: ProjectEntry[] = [
   {
@@ -125,22 +130,13 @@ export const projects: ProjectEntry[] = [
       <>
         A Flutter-based, WebView app for Full Leaf Tea Company.
         <div className="flex justify-center md:justify-start items-center my-4 px-2">
-          <div
-            className="flex flex-row justify-center md:justify-start items-center text-base font-bold uppercase tracking-wider"
-            style={{
-              fontFamily:
-                "'Brush Script MT', 'Brush Script Std', 'Lucida Calligraphy', 'Lucida Handwriting', cursive",
-            }}
-          >
+          <div className="flex flex-row justify-center md:justify-start items-center text-base font-bold uppercase tracking-wider">
             <a
               href="https://apps.apple.com/us/app/full-leaf-tea-co/id6451437741"
               target="_blank"
               rel="noopener noreferrer"
               className="mx-1.5 text-cyan-400 hover:text-cyan-300 hover:brightness-150 transition-all duration-200 underline"
-              style={{
-                textShadow:
-                  "0 0 5px #fff, 0 0 10px #67e8f9, 0 0 15px #22d3ee, 0 0 20px #22d3ee, 0 0 25px #06b6d4, 0 0 30px #06b6d4",
-              }}
+              style={storeLinkStyle}
             >
               App&nbsp;Store
             </a>
@@ -164,10 +160,7 @@ export const projects: ProjectEntry[] = [
               target="_blank"
               rel="noopener noreferrer"
               className="mx-1.5 text-cyan-400 hover:text-cyan-300 hover:brightness-150 transition-all duration-200 underline"
-              style={{
-                textShadow:
-                  "0 0 5px #fff, 0 0 10px #67e8f9, 0 0 15px #22d3ee, 0 0 20px #22d3ee, 0 0 25px #06b6d4, 0 0 30px #06b6d4",
-              }}
+              style={storeLinkStyle}
             >
               Play&nbsp;Store
             </a>

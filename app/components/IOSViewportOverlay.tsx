@@ -41,8 +41,8 @@ export default function IOSViewportOverlay() {
   if (!isIOS) return null;
 
   return (
-    <div className="ios-viewport-overlay" style={{ height }}>
-      <div className="ios-viewport-overlay-bg" style={{ height: "100%" }} />
+    <div className="fixed inset-0 pointer-events-none -z-[5]" style={{ height }}>
+      <div className="h-full bg-[var(--background)]" style={{ height: "100%" }} />
     </div>
   );
 }
