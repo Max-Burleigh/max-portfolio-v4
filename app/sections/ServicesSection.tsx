@@ -2,6 +2,7 @@
 
 import React, { forwardRef, useRef, useState, useEffect } from "react";
 import { createPortal } from "react-dom";
+import { useRouter } from "next/navigation";
 import { AnimatePresence, motion } from "framer-motion";
 import { useEntranceStagger, useIsMobile } from "@lib/hooks";
 import {
@@ -35,6 +36,7 @@ type SelectionItem = {
 };
 
 const ServicesSection = forwardRef<HTMLDivElement, ServicesSectionProps>((props, ref) => {
+  const router = useRouter();
   const entranceRef = useRef<HTMLDivElement>(null);
   useEntranceStagger(entranceRef, { baseDelay: 100, step: 50 });
 
@@ -42,6 +44,19 @@ const ServicesSection = forwardRef<HTMLDivElement, ServicesSectionProps>((props,
   const [selectedPlan, setSelectedPlan] = useState<"ESSENTIAL" | "GROWTH" | null>(null);
   const [hasSubscription, setHasSubscription] = useState(false);
   const [mounted, setMounted] = useState(false);
+
+  // Restore selection from sessionStorage on mount
+  useEffect(() => {
+    const savedPlan = sessionStorage.getItem("selectedPlan");
+    const savedSubscription = sessionStorage.getItem("hasSubscription");
+
+    if (savedPlan === "ESSENTIAL" || savedPlan === "GROWTH") {
+      setSelectedPlan(savedPlan);
+    }
+    if (savedSubscription === "true") {
+      setHasSubscription(true);
+    }
+  }, []);
   const [shakePlans, setShakePlans] = useState(false);
   const [toastMessage, setToastMessage] = useState<string | null>(null);
   const [showToast, setShowToast] = useState(false);
@@ -72,8 +87,11 @@ const ServicesSection = forwardRef<HTMLDivElement, ServicesSectionProps>((props,
     if (selectedPlan === plan) {
       setSelectedPlan(null);
       setHasSubscription(false);
+      sessionStorage.removeItem("selectedPlan");
+      sessionStorage.removeItem("hasSubscription");
     } else {
       setSelectedPlan(plan);
+      sessionStorage.setItem("selectedPlan", plan);
     }
   };
 
@@ -86,15 +104,19 @@ const ServicesSection = forwardRef<HTMLDivElement, ServicesSectionProps>((props,
       setShowToast(true);
       return;
     }
-    setHasSubscription(!hasSubscription);
+    const newValue = !hasSubscription;
+    setHasSubscription(newValue);
+    sessionStorage.setItem("hasSubscription", String(newValue));
     setNavigatedToContact(false);
   };
 
   const handleContact = () => {
     setNavigatedToContact(true);
-    if (props.onStartProject) {
-      props.onStartProject({ plan: selectedPlan, subscription: hasSubscription });
-    }
+    // Navigate to the new intake form page with plan info as URL params
+    const params = new URLSearchParams();
+    if (selectedPlan) params.set("plan", selectedPlan);
+    if (hasSubscription) params.set("support", "true");
+    router.push(`/get-started?${params.toString()}`);
   };
 
   const planLabel =
@@ -176,7 +198,7 @@ const ServicesSection = forwardRef<HTMLDivElement, ServicesSectionProps>((props,
         data-entrance="stagger"
       >
         <div className="portfolio-header md:mb-12 text-center md:text-left">
-          <h2 className="mb-0" data-entrance-item>
+          <h2 className="text-[2rem] font-bold mb-3" data-entrance-item>
             Services
           </h2>
           <p className="portfolio-subcopy" data-entrance-item>
