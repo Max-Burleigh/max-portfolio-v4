@@ -1365,7 +1365,7 @@ h2 {
     width: 100% !important;
     height: auto !important;
     aspect-ratio: 1 / 2;
-    object-fit: cover !important;
+    object-fit: contain !important;
     object-position: center center !important;
   }
 
@@ -1423,8 +1423,8 @@ h2 {
   .project-card.full-leaf-app-card img.full-leaf-app-screenshot {
     width: 100% !important;
     height: auto !important;
-    object-fit: cover !important;
-    object-position: top center !important;
+    object-fit: contain !important;
+    object-position: center center !important;
     display: block;
   }
 }
