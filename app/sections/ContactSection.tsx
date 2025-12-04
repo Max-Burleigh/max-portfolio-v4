@@ -107,14 +107,14 @@ My Selection:
   };
 
   return (
-    <section ref={ref} id="contact" className="section contact-section">
+    <section ref={ref} id="contact" className="section contact-section relative w-screen min-h-dvh max-w-[1000px] mx-auto flex flex-col justify-start items-start z-[2] pt-[clamp(64px,12vh,128px)] pb-[clamp(80px,14vh,152px)]">
       <div ref={entranceRef} data-entrance="contact" className="w-full max-w-4xl mx-auto transition-all duration-500">
         <div
           ref={contentRef}
-          className="glass-card contact-card transition-all duration-500 ease-in-out overflow-hidden mx-auto"
+          className="glass-card contact-card text-center bg-white/[0.02] py-12 px-8 transition-all duration-500 ease-in-out overflow-hidden mx-auto"
           style={{ maxWidth: inquiryData ? "800px" : "550px", width: "100%" }}
         >
-          <h2 data-entrance-item>Contact</h2>
+          <h2 data-entrance-item className="text-[2rem] font-bold mb-0 md:mb-3">Contact</h2>
 
           <AnimatePresence mode="wait">
             {!inquiryData ? (

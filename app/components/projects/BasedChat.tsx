@@ -9,12 +9,28 @@ import {
   SiGoogle,
 } from "react-icons/si";
 import { useIsMobile } from "@lib/hooks";
-// Assuming an Anthropic icon might be a simple text or a generic AI icon if a specific one isn't readily available
-// For now, we can use a placeholder or omit it if no suitable icon is found.
-// import { AnthropicIcon } from "../icons"; // Example if you have a custom icon
+import TechStack from "@components/TechStack";
 
 const BasedChat: React.FC = () => {
-  const iconStyle = { width: "32px", height: "32px" };
+  const techItems = [
+    { icon: <SiNextdotjs size={32} />, label: "Next.js" },
+    { icon: <SiSupabase size={32} />, label: "Supabase" },
+    { icon: <SiOpenai size={32} />, label: "OpenAI" },
+    {
+      icon: (
+        <Image
+          src="/Anthropic/Anthropic_Symbol_0.svg"
+          alt="Anthropic"
+          width={32}
+          height={32}
+          style={{ objectFit: "contain" }}
+        />
+      ),
+      label: "Anthropic",
+    },
+    { icon: <SiGoogle size={32} />, label: "Google Gemini" },
+    { icon: <SiTailwindcss size={32} />, label: "TailwindCSS" },
+  ];
   const [shouldLoadVideo, setShouldLoadVideo] = useState(false);
   const videoWrapRef = useRef<HTMLDivElement | null>(null);
   const isMobile = useIsMobile();
@@ -37,31 +53,14 @@ const BasedChat: React.FC = () => {
 
   return (
     <div
-      className="project-card based-chat-card"
-      style={{
-        display: "flex",
-        flexDirection: "row-reverse",
-        alignItems: "center",
-        justifyContent: "space-between",
-        gap: "2rem",
-        padding: "1.5rem",
-        minHeight: "400px",
-        width: "100%",
-      }}
+      className="flex w-full flex-col md:flex-row-reverse items-center justify-between gap-8 rounded-lg border border-[rgba(255,255,255,0.1)] bg-[rgba(255,255,255,0.03)] p-6 text-left transition-colors duration-300 hover:bg-[rgba(255,255,255,0.06)] min-h-[400px]"
       data-entrance-item
     >
       {/* Video on the left */}
       <div
         ref={videoWrapRef}
-        style={{
-          flex: "1",
-          minWidth: "280px",
-          maxWidth: "600px",
-          borderRadius: "1.5rem",
-          overflow: "hidden",
-          boxShadow: "0 4px 24px rgba(0,0,0,0.12)",
-          aspectRatio: "16/9",
-        }}
+        className="relative flex-1 w-full min-w-[280px] max-w-[600px] overflow-hidden rounded-[1.5rem] shadow-[0_4px_24px_rgba(0,0,0,0.12)]"
+        style={{ aspectRatio: "16/9" }}
       >
         {shouldLoadVideo ? (
           <video
@@ -73,7 +72,7 @@ const BasedChat: React.FC = () => {
             playsInline
             preload="none"
             poster="/webp/api.webp"
-            style={{ width: "100%", height: "auto", display: "block" }}
+            className="w-full h-full object-cover"
           />
         ) : (
           <Image
@@ -82,69 +81,21 @@ const BasedChat: React.FC = () => {
             width={1200}
             height={675}
             loading="lazy"
-            style={{ width: "100%", height: "auto", display: "block" }}
+            className="w-full h-full object-cover"
           />
         )}
       </div>
 
       {/* Text content on the right */}
-      <div style={{ flex: "1", minWidth: "280px" }} className="project-info">
-        <strong>Based Chat</strong>
-        <p>
-          An LLM-agnostic chat application, with many cool features like drag
-          and dropping entire folders, branched threads, prompt storage, code
-          preview, and much more.
+      <div className="flex-1 w-full min-w-[280px] flex flex-col text-left">
+        <strong className="mb-2 block text-[1.2rem] text-[#00ffd5]">Based Chat</strong>
+        <p className="text-base leading-[1.4] text-white">
+          An LLM-agnostic chat application, with many cool features like drag and dropping entire folders, branched threads, prompt storage, code preview, and much more.
           <br />
-          <span className="italic text-sm text-[#00ffd5]">
-            (Preview link coming soon)
-          </span>
+          <span className="italic text-sm text-[#00ffd5]">(Preview link coming soon)</span>
         </p>
-        <div
-          className="tech-stack"
-          style={{ display: "flex", flexWrap: "wrap", gap: "1rem" }}
-        >
-          <div className="tech-item">
-            <SiNextdotjs className="tech-icon nextjs" style={iconStyle} />
-            <span>Next.js</span>
-          </div>
-          <div className="tech-item">
-            <SiSupabase className="tech-icon supabase" style={iconStyle} />
-            <span>Supabase</span>
-          </div>
-          <div className="tech-item">
-            <SiOpenai className="tech-icon openai" style={iconStyle} />
-            <span>OpenAI</span>
-          </div>
-          <div className="tech-item">
-            <div
-              style={{
-                width: "32px",
-                height: "32px",
-                position: "relative",
-                marginRight: "8px",
-              }}
-            >
-              <Image
-                src="/Anthropic/Anthropic_Symbol_0.svg"
-                alt="Anthropic"
-                fill
-                style={{ objectFit: "contain" }}
-                className="tech-icon anthropic"
-              />
-            </div>
-            <span>Anthropic</span>
-          </div>
-          <div className="tech-item">
-            <SiGoogle className="tech-icon google-gemini" style={iconStyle} />
-            <span>Google Gemini</span>
-          </div>
-          <div className="tech-item">
-            <SiTailwindcss
-              className="tech-icon tailwindcss"
-              style={iconStyle}
-            />
-            <span>TailwindCSS</span>
-          </div>
+        <div className="mt-4">
+          <TechStack items={techItems} />
         </div>
       </div>
     </div>

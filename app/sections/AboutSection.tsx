@@ -116,15 +116,15 @@ const AboutSection = forwardRef<HTMLDivElement, AboutSectionProps>(function Abou
   useMicroParallax(titleRef, { maxPx: 12, factor: 0.015, disabled: isMobile });
 
   return (
-    <section ref={ref} id="about" className="section about-section">
-      <div className="glass-card about-card">
+    <section ref={ref} id="about" className="section about-section relative w-screen min-h-dvh max-w-[1000px] mx-auto flex flex-col justify-center items-start z-[2]">
+      <div className="glass-card about-card text-left bg-white/[0.02] max-w-[90%] md:max-w-[700px] py-8 px-6 md:py-12 md:px-8">
         <div
           ref={entranceRef}
           data-entrance="hero"
           className="flex flex-col md:flex-row items-center md:items-start md:gap-6"
         >
           <div className="flex flex-col max-w-md flex-1 min-w-0">
-            <h1 ref={titleRef} data-entrance-item>
+            <h1 ref={titleRef} data-entrance-item className="text-[1.75rem] leading-tight md:text-[2.5rem] mb-4 font-bold">
               Hey, I'm Max Burleigh
             </h1>
             <p data-entrance-item>

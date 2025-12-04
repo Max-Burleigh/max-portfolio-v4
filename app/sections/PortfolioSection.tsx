@@ -82,7 +82,7 @@ const PortfolioSection = forwardRef<HTMLDivElement>(function PortfolioSection(_,
   };
 
   return (
-    <section ref={ref} id="portfolio" className="section portfolio-section">
+    <section ref={ref} id="portfolio" className="section portfolio-section relative w-screen min-h-dvh max-w-[1000px] mx-auto flex flex-col justify-center items-start z-[2]">
       <div className="portfolio-timeline-anchor">
         <motion.aside
           ref={timelineEntranceRef}
@@ -118,7 +118,7 @@ const PortfolioSection = forwardRef<HTMLDivElement>(function PortfolioSection(_,
       <div className="portfolio-shell">
         <div ref={entranceRef} data-entrance="portfolio" className="portfolio-content-stack">
           <div className="portfolio-header">
-            <h2 data-entrance-item>Portfolio</h2>
+            <h2 data-entrance-item className="text-[2rem] font-bold mb-0 w-full text-center md:w-auto md:text-left">Portfolio</h2>
             <p data-entrance-item className="portfolio-subcopy">
               Selected work spanning ecommerce, AI products, and community platforms.
             </p>
