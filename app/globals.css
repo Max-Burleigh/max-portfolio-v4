@@ -1224,6 +1224,42 @@ h1, h2 {
   }
 }
 
+@media (min-width: 769px) {
+  /* Fix for Full Leaf App card jagged corners */
+  .project-card.full-leaf-app-card .project-image-container {
+    width: 100%;
+    height: auto;
+    max-width: clamp(200px, 22vw, 240px);
+    aspect-ratio: 1 / 2;
+    border-radius: 1.5rem;
+    overflow: hidden; 
+    
+    /* Forces GPU composition. Uses (white, white) to ensure 100% opacity 
+       across the whole square while still enforcing the border-radius clip. */
+    transform: translateZ(0);
+    -webkit-mask-image: -webkit-radial-gradient(white, white);
+    mask-image: radial-gradient(white, white);
+  }
+
+  .project-card.full-leaf-app-card .project-image-container > span,
+  .project-card.full-leaf-app-card .project-image-container > span > span {
+    border-radius: inherit !important;
+    overflow: hidden;
+  }
+
+  /* Reset image styles so it fills the masked container perfectly */
+  .project-card.full-leaf-app-card img.full-leaf-app-screenshot {
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: cover !important;
+    object-position: top center !important; /* Ensures the top header isn't cropped */
+    border-radius: 0 !important; 
+    box-shadow: none !important;
+    margin-top: 0 !important; /* Removes the 5px margin causing top gap/shift */
+    display: block;
+  }
+}
+
 @media (max-width: 768px) {
   .visit-site-message p {
     font-size: 0.85rem !important;
@@ -1270,16 +1306,35 @@ h1, h2 {
     max-width: clamp(160px, 60vw, 200px);
   }
 
+  /* Fix for Full Leaf App card on Mobile */
   .project-card.full-leaf-app-card .project-image-container {
     width: 100%;
     max-width: clamp(160px, 60vw, 200px);
     aspect-ratio: 1 / 2;
+    border-radius: 1.5rem;
+    overflow: hidden;
+    
+    /* Apply the GPU mask to smooth the corners */
+    transform: translateZ(0);
+    -webkit-mask-image: -webkit-radial-gradient(white, white);
+    mask-image: radial-gradient(white, white);
   }
 
-  .project-card.full-leaf-app-card .project-image-container>span,
-  .project-card.full-leaf-app-card .project-image-container>span>span,
-  .project-card.full-leaf-app-card .project-image-container img.full-leaf-app-screenshot {
-    border-radius: 1.5rem !important;
+  /* Ensure Next.js wrappers inherit the mask correctly */
+  .project-card.full-leaf-app-card .project-image-container > span,
+  .project-card.full-leaf-app-card .project-image-container > span > span {
+    border-radius: 0 !important;
+  }
+
+  /* Reset the image to fill the masked container perfectly */
+  .project-card.full-leaf-app-card img.full-leaf-app-screenshot {
+    border-radius: 0 !important;
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: cover !important;
+    object-position: top center !important;
+    margin-top: 0 !important; /* Removes the gap at the top */
+    box-shadow: none !important;
   }
 
   .project-card .project-info strong {
