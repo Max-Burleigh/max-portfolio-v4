@@ -128,10 +128,16 @@ const AuroraBackground: React.FC = () => {
         <div className="blob2 aurora-blob" {...blobProps} />
       </div>
 
-      {/* Canvas stays hidden by CSS unless explicitly enabled */}
+      {/* Canvas extends into safe areas; hidden by CSS unless iOS */}
       <canvas
         ref={canvasRef}
-        className="absolute inset-0 z-0 pointer-events-none canvas-aurora"
+        className="fixed z-0 pointer-events-none canvas-aurora"
+        style={{
+          top: "calc(-1 * var(--safe-top))",
+          right: "calc(-1 * var(--safe-right))",
+          bottom: "calc(-1 * var(--safe-bottom))",
+          left: "calc(-1 * var(--safe-left))",
+        }}
         aria-hidden="true"
       />
     </>

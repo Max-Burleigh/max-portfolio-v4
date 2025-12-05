@@ -42,7 +42,8 @@ export default function IOSViewportOverlay() {
 
   return (
     <div className="fixed inset-0 pointer-events-none -z-[5]" style={{ height }}>
-      <div className="h-full bg-[var(--background)]" style={{ height: "100%" }} />
+      {/* Use aurora edge color to match the gradient */}
+      <div className="h-full bg-[var(--a4)]" style={{ height: "100%" }} />
     </div>
   );
 }

@@ -74,8 +74,8 @@ html {
   margin: 0;
   padding: 0;
   -webkit-overflow-scrolling: touch;
-  /* Match brand background for iOS 26 safe areas */
-  background: var(--background);
+  /* Match aurora gradient edge color for iOS safe areas */
+  background: var(--a4);
   scroll-behavior: smooth;
   /* Moved from .portfolio-container */
   scrollbar-gutter: stable;
@@ -115,7 +115,11 @@ a {
 /* Fixed background gradient element */
 .aurora-bg {
   position: fixed;
-  inset: 0;
+  /* Extend beyond safe areas to cover iOS Safari chrome */
+  top: calc(-1 * var(--safe-top));
+  right: calc(-1 * var(--safe-right));
+  bottom: calc(-1 * var(--safe-bottom));
+  left: calc(-1 * var(--safe-left));
   z-index: -1;
   background: var(--aurora-gradient);
   background-size: 100% 100%;
@@ -163,7 +167,11 @@ a {
 /* Single blur layer wrapper for all blobs to reduce Safari artifacts */
 .aurora-layer {
   position: fixed;
-  inset: 0;
+  /* Extend beyond safe areas to cover iOS Safari chrome */
+  top: calc(-1 * var(--safe-top));
+  right: calc(-1 * var(--safe-right));
+  bottom: calc(-1 * var(--safe-bottom));
+  left: calc(-1 * var(--safe-left));
   filter: blur(80px);
   /* Promote the same element that owns the filter for Safari perf */
   transform: translate3d(0, 0, 0);
