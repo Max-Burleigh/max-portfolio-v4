@@ -91,10 +91,6 @@ const Portfolio = () => {
       const targetElement = sectionRefs[section]?.current;
       if (!targetElement) return;
 
-      // Ensure images are eager loaded (redundant safety for desktop/direct calls)
-      const images = document.querySelectorAll<HTMLImageElement>('img[loading="lazy"]');
-      images.forEach((img) => (img.loading = "eager"));
-
       const prefersReduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
       const behavior: ScrollBehavior = prefersReduced ? "auto" : "smooth";
       const safeTop =

@@ -106,22 +106,8 @@ const AuroraBackground: React.FC = () => {
     };
     document.addEventListener("visibilitychange", onVis);
 
-    const boot = () => {
-      cancelAnimationFrame(raf);
-      build();
-    };
-
-    if (html.getAttribute("data-intro-played") === "1") {
-      boot();
-    } else {
-      const mo = new MutationObserver(() => {
-        if (html.getAttribute("data-intro-played") === "1") {
-          mo.disconnect();
-          boot();
-        }
-      });
-      mo.observe(html, { attributes: true, attributeFilter: ["data-intro-played"] });
-    }
+    cancelAnimationFrame(raf);
+    build();
 
     return () => {
       cancelAnimationFrame(raf);

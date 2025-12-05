@@ -185,33 +185,8 @@ export function useEntranceStagger<T extends HTMLElement>(
       return () => window.clearTimeout(id);
     };
 
-    // If an intro overlay gates initial paint, wait for it to complete
-    const html = document.documentElement;
-    if (html.getAttribute("data-intro-played") === "1") {
-      return apply();
-    }
-
-    let cleanup: (() => void) | undefined;
-    const observer = new MutationObserver(() => {
-      if (html.getAttribute("data-intro-played") === "1") {
-        cleanup?.();
-        observer.disconnect();
-        cleanup = apply();
-      }
-    });
-    observer.observe(html, { attributes: true, attributeFilter: ["data-intro-played"] });
-
-    // Fallback timeout in case attribute never flips
-    const fallback = window.setTimeout(() => {
-      observer.disconnect();
-      cleanup = apply();
-    }, 2000);
-
-    return () => {
-      window.clearTimeout(fallback);
-      observer.disconnect();
-      cleanup?.();
-    };
+    const cleanup = apply();
+    return cleanup;
   }, [containerRef, selector, baseDelay, step]);
 }
 
