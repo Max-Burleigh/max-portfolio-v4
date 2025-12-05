@@ -314,16 +314,6 @@ const Navigation: React.FC<NavigationProps> = ({
     }
   }, [menuOpen]);
 
-  // Trigger eager loading of lazy images when menu opens to ensure correct scroll position
-  useEffect(() => {
-    if (menuOpen) {
-      const lazyImages = document.querySelectorAll<HTMLImageElement>('img[loading="lazy"]');
-      lazyImages.forEach((img) => {
-        img.loading = "eager";
-      });
-    }
-  }, [menuOpen]);
-
   return (
     <>
       {/* Desktop side navigation */}
