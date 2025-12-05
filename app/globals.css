@@ -16,12 +16,6 @@
   --font-fallback: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
     Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
 
-  /* Safe area insets for iOS 26 */
-  --safe-top: env(safe-area-inset-top, 0px);
-  --safe-right: env(safe-area-inset-right, 0px);
-  --safe-bottom: env(safe-area-inset-bottom, 0px);
-  --safe-left: env(safe-area-inset-left, 0px);
-
   /* Aurora palette (sRGB fallback) */
   --a0: #091236;
   --a1: #1e215d;
@@ -432,7 +426,7 @@ html.not-ios-device .canvas-aurora {
 #  LAYOUT & SECTIONS
 #
 #  Main container, section layouts, and viewport handling.
-#  Includes safe area insets for iOS devices.
+#  Keep spacing consistent across viewports.
 #
 ##########################################################*/
 
@@ -443,11 +437,6 @@ html.not-ios-device .canvas-aurora {
   position: relative;
   background: transparent;
   /* Make transparent to show aurora gradient */
-  /* Respect iOS 26 safe areas */
-  padding-top: max(0px, var(--safe-top));
-  padding-right: max(0px, var(--safe-right));
-  padding-bottom: max(0px, var(--safe-bottom));
-  padding-left: max(0px, var(--safe-left));
   /* Allow iOS native pull-to-refresh */
 }
 
@@ -460,10 +449,9 @@ html.not-ios-device .canvas-aurora {
 */
 
 /* Section layout migrated to Tailwind in components */
-/* Only safe area padding kept in CSS */
 .section {
-  padding-left: max(3vw, var(--safe-left));
-  padding-right: max(3vw, var(--safe-right));
+  padding-left: 3vw;
+  padding-right: 3vw;
 }
 
 /*##########################################################
@@ -476,7 +464,7 @@ html.not-ios-device .canvas-aurora {
 ##########################################################*/
 .side-nav {
   position: fixed;
-  left: max(2rem, var(--safe-left));
+  left: 2rem;
   top: 50%;
   transform: translateY(-50%);
   z-index: 20;
@@ -560,7 +548,7 @@ html.not-ios-device .canvas-aurora {
 @media (min-width: 768px) and (max-width: 1600px) {
   .side-nav {
     left: auto;
-    right: max(2rem, var(--safe-right));
+    right: 2rem;
   }
 
   .side-nav button:not(.active):hover,
@@ -573,8 +561,8 @@ html.not-ios-device .canvas-aurora {
   .hamburger-btn {
     width: 42px !important;
     height: 42px !important;
-    top: max(12px, var(--safe-top));
-    right: max(12px, var(--safe-right));
+    top: 12px;
+    right: 12px;
   }
 }
 
@@ -582,8 +570,8 @@ html.not-ios-device .canvas-aurora {
   .hamburger-btn {
     width: 48px !important;
     height: 48px !important;
-    top: max(14px, var(--safe-top));
-    right: max(14px, var(--safe-right));
+    top: 14px;
+    right: 14px;
   }
 }
 
