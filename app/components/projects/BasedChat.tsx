@@ -91,11 +91,12 @@ const BasedChat: React.FC = () => {
         <strong className="mb-2 block text-[1.2rem] text-[#00ffd5]">Based Chat</strong>
         <p className="text-base leading-[1.4] text-white">
           An LLM-agnostic chat application, with many cool features like drag and dropping entire folders, branched threads, prompt storage, code preview, and much more.
-          <br />
-          <span className="italic text-sm text-[#00ffd5]">(Preview link coming soon)</span>
         </p>
         <div className="mt-4">
           <TechStack items={techItems} />
+          <p className="mt-4 text-sm text-[rgba(255,255,255,0.6)] italic">
+            Preview link coming soon
+          </p>
         </div>
       </div>
     </div>

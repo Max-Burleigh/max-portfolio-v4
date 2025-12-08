@@ -312,7 +312,6 @@ const ServicesSection = forwardRef<HTMLDivElement, ServicesSectionProps>((props,
                     {[
                       "10+ Custom Pages",
                       "Easy-to-Use Content Editor",
-                      "Advanced SEO Setup",
                       "Analytics Dashboard Setup"
                     ].map((item, i) => (
                       <li key={i} className="flex items-start gap-3 text-sm text-white/80">
