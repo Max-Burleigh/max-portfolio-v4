@@ -54,6 +54,9 @@ const Colorbookorama: React.FC = () => {
         </p>
         <div className="mt-4">
           <TechStack items={techItems} />
+          <p className="mt-4 text-sm text-[rgba(255,255,255,0.6)] italic">
+            Preview link coming soon
+          </p>
         </div>
       </div>
 
