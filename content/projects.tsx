@@ -251,26 +251,4 @@ export const projects: ProjectEntry[] = [
     disablePhoneMockup: true,
     overlay: { href: "https://shopdowntown.org/", emoji: "🏪", className: "shopdowntown-message" },
   },
-  {
-    id: "carly",
-    title: "Carly Pearl-Sacks Photography",
-    description: "Portfolio site for a professional photographer. Built with Next.js and TailwindCSS.",
-    websiteUrl: "https://carlypsphoto.com",
-    className: "carlypsphoto-card",
-    techStack: [
-      {
-        icon: <Image src="/next.svg" alt="Next.js" width={32} height={32} className="tech-icon nextjs" />,
-        label: "Next.js",
-      },
-      { icon: <SiVercel className="tech-icon vercel" style={iconStyle} color="#fff" />, label: "Vercel" },
-      { icon: <SiTailwindcss className="tech-icon tailwind" style={iconStyle} color="#fff" />, label: "TailwindCSS" },
-    ],
-    imageUrl: "/project-images/carly-phone-mockup-corner-to-corner.png",
-    imageAlt: "Screenshot of Carly Pearl-Sacks Photography website",
-    imageTitle: "Carly Pearl-Sacks Photography Website Screenshot",
-    imageBlurDataURL:
-      "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNTkyIiBoZWlnaHQ9IjEyNDAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGRlZnM+PGxpbmVhckdyYWRpZW50IGlkPSJnIiB4MT0iMCUiIHkxPSIwJSIgeDI9IjAlIiB5Mj0iMTAwJSI+PHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iIzIwMjAyMCIgLz48c3RvcCBvZmZzZXQ9IjEwMCUiIHN0b3AtY29sb3I9IiMxMDEwMTAiIC8+PC9saW5lYXJHcmFkaWVudD48L2RlZnM+PHJlY3Qgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgZmlsbD0idXJsKCNnKSIvPjwvc3ZnPg==",
-    disablePhoneMockup: true,
-    overlay: { href: "https://carlypsphoto.com", emoji: "📸", className: "carly-message" },
-  },
 ];

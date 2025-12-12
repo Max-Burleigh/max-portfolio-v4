@@ -944,17 +944,6 @@ h1, h2 {
   }
 }
 
-.project-card.carlypsphoto-card {
-  flex-basis: 100%;
-  max-width: 100%;
-  min-height: 400px;
-  padding: 1.5rem;
-}
-
-.carlypsphoto-card .phone-mockup {
-  margin-top: 2rem;
-}
-
 .project-card.full-leaf-app-card {
   flex-basis: 100%;
   max-width: 100%;
@@ -1035,7 +1024,6 @@ h1, h2 {
   .full-leaf-tea-company-screenshot,
   .full-leaf-tea-company-wholesale-screenshot,
   .shop-downtown-screenshot,
-  .carly-pearl-sacks-photography-screenshot,
   .farm-flour {
     max-width: 280px !important;
     max-height: 480px !important;
@@ -1317,7 +1305,6 @@ h1, h2 {
   .full-leaf-tea-company-screenshot,
   .full-leaf-tea-company-wholesale-screenshot,
   .shop-downtown-screenshot,
-  .carly-pearl-sacks-photography-screenshot,
   .farm-flour {
     /* Desktop max is 280x480; reduce to 75%: 210x360 */
     max-width: 210px !important;
@@ -1573,8 +1560,7 @@ h1, h2 {
   z-index: 2;
 }
 
-.phone-mockup .vinscribe-preview,
-.phone-mockup .carlypsphoto-preview {
+.phone-mockup .vinscribe-preview {
   position: relative;
   width: 100%;
   height: 100%;

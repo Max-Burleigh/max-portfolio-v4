@@ -5,7 +5,6 @@ import Image from "next/image";
 type Variant =
   | "default"
   | "vinscribe"
-  | "carlypsphoto"
   | "fullleaf"
   | "fullleaf-tea"
   | "fullleaf-wholesale";
@@ -53,8 +52,6 @@ const Phone: React.FC<PhoneProps> = ({
   const contentVariantClass =
     variant === "vinscribe"
       ? "vinscribe-preview"
-      : variant === "carlypsphoto"
-      ? "carlypsphoto-preview"
       : variant === "fullleaf"
       ? "full-leaf-app-screenshot"
       : variant === "fullleaf-tea"
