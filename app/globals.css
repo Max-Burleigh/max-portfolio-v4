@@ -550,7 +550,7 @@ html.not-ios-device .canvas-aurora {
   filter: drop-shadow(0 0 16px rgba(79, 70, 229, 0.4));
 }
 
-@media (max-width: 767px) {
+@media (max-width: 1024px) {
   .side-nav {
     display: none !important;
   }
@@ -559,13 +559,13 @@ html.not-ios-device .canvas-aurora {
     display: flex !important;
   }
 
-  /* Ensure the mobile menu panel is visible up to 910px even with Tailwind's md:hidden */
+  /* Ensure the mobile menu panel is visible on tablets and mobile */
   .mobile-menu-panel {
     display: flex !important;
   }
 }
 
-@media (min-width: 768px) and (max-width: 1600px) {
+@media (min-width: 1025px) and (max-width: 1600px) {
   .side-nav {
     left: auto;
     right: max(2rem, var(--safe-right));
