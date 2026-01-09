@@ -82,6 +82,22 @@ const Portfolio = () => {
     containerRef
   );
 
+  const getSafeTop = useCallback(() => {
+    // `visualViewport.offsetTop` reflects the current safe area inset on iOS when the URL bar collapses/expands
+    const viewportOffset = window.visualViewport?.offsetTop ?? 0;
+    if (viewportOffset > 0) return viewportOffset;
+
+    const rootStyle = getComputedStyle(document.documentElement);
+    const safeTopToken = rootStyle.getPropertyValue("--safe-top").trim();
+    const parsed = Number.parseFloat(safeTopToken);
+    if (!Number.isNaN(parsed)) return parsed;
+
+    // Fallback: if the custom property isn't resolved to a number (e.g., reads as `env(...)`),
+    // use the computed padding in case safe areas were applied via CSS instead.
+    const paddingTop = Number.parseFloat(rootStyle.getPropertyValue("padding-top"));
+    return Number.isNaN(paddingTop) ? 0 : paddingTop;
+  }, []);
+
   const throttledMouseMove = handleMouseMove;
 
   // Portrait tilt/glare logic is encapsulated inside AboutSection now
@@ -93,10 +109,7 @@ const Portfolio = () => {
 
       const prefersReduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
       const behavior: ScrollBehavior = prefersReduced ? "auto" : "smooth";
-      const safeTop =
-        parseFloat(
-          getComputedStyle(document.documentElement).getPropertyValue("--safe-top")
-        ) || 0;
+      const safeTop = getSafeTop();
 
       const scrollOnce = () => {
         const rect = targetElement.getBoundingClientRect();
@@ -111,7 +124,7 @@ const Portfolio = () => {
         window.setTimeout(scrollOnce, delay);
       });
     },
-    [sectionRefs]
+    [getSafeTop, sectionRefs]
   );
 
   // Inquiry State
@@ -124,10 +137,7 @@ const Portfolio = () => {
 
     const prefersReduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     const behavior: ScrollBehavior = prefersReduced ? "auto" : "smooth";
-    const safeTop =
-      parseFloat(
-        getComputedStyle(document.documentElement).getPropertyValue("--safe-top")
-      ) || 0;
+    const safeTop = getSafeTop();
 
     const scrollToContact = () => {
       const top = target.getBoundingClientRect().top + window.scrollY - safeTop - 12;
