@@ -180,9 +180,9 @@ interface MobileMenuProps {
 }
 
 // Container variants - for staggering menu items
+// Container variants - for staggering menu items (opacity handled by parent)
 const containerVariants = {
   hidden: {
-    opacity: 0,
     transition: {
       when: "afterChildren",
       staggerChildren: 0.03,
@@ -190,7 +190,6 @@ const containerVariants = {
     },
   },
   visible: {
-    opacity: 1,
     transition: {
       when: "beforeChildren",
       staggerChildren: 0.03,
@@ -217,6 +216,7 @@ const MobileMenu: React.FC<MobileMenuProps> = ({
     {/* Compact dropdown panel under the hamburger */}
     <motion.div
       className="mobile-menu-panel fixed top-16 right-4 z-[101] lg:hidden"
+      style={{ willChange: "transform", transform: "translateZ(0)" }} // Hardware acceleration hint
       initial={{ opacity: 0, y: -8, scale: 0.98 }}
       animate={{ opacity: 1, y: 0, scale: 1 }}
       exit={{ opacity: 0, y: -8, scale: 0.98 }}
