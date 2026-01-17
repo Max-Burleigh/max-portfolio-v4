@@ -1024,7 +1024,8 @@ h1, h2 {
   .full-leaf-tea-company-screenshot,
   .full-leaf-tea-company-wholesale-screenshot,
   .shop-downtown-screenshot,
-  .farm-flour {
+  .farm-flour,
+  .jefferson-state {
     max-width: 280px !important;
     max-height: 480px !important;
     width: auto !important;
@@ -1305,7 +1306,8 @@ h1, h2 {
   .full-leaf-tea-company-screenshot,
   .full-leaf-tea-company-wholesale-screenshot,
   .shop-downtown-screenshot,
-  .farm-flour {
+  .farm-flour,
+  .jefferson-state {
     /* Desktop max is 280x480; reduce to 75%: 210x360 */
     max-width: 210px !important;
     max-height: 360px !important;

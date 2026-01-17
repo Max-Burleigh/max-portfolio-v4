@@ -207,6 +207,33 @@ export const projects: ProjectEntry[] = [
     overlay: { href: "https://farmandflourjville.com", emoji: "🥖", className: "farm-flour-message" },
   },
   {
+    id: "jefferson-state-outfitters",
+    title: "Jefferson State Outfitters",
+    description: "Rogue River rafting and fishing guide service website for outdoor adventures in Oregon.",
+    websiteUrl: "https://jeffersonstateoutfitter.com",
+    className: "jefferson-state-card",
+    disablePhoneMockup: true,
+    techStack: [
+      {
+        icon: (
+          <Image src="/next.svg" alt="Next.js" width={32} height={32} className="tech-icon nextjs" />
+        ),
+        label: "Next.js",
+      },
+      { icon: <SiVercel className="tech-icon vercel" style={iconStyle} color="#fff" />, label: "Vercel" },
+      { icon: <SiTailwindcss className="tech-icon tailwind" style={iconStyle} color="#fff" />, label: "TailwindCSS" },
+      { icon: <SiHtml5 className="tech-icon html5" style={iconStyle} />, label: "HTML" },
+      { icon: <SiCss3 className="tech-icon css3" style={iconStyle} color="#fff" />, label: "CSS" },
+    ],
+    imageUrl: "/project-images/jefferson-state-iphone.webp",
+    imageAlt: "Screenshot of Jefferson State Outfitters website",
+    imageTitle: "Jefferson State Outfitters Website Screenshot",
+    imageClassName: "jefferson-state",
+    imageBlurDataURL:
+      "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNTk0IiBoZWlnaHQ9IjEyNDAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGRlZnM+PGxpbmVhckdyYWRpZW50IGlkPSJnIiB4MT0iMCUiIHkxPSIwJSIgeDI9IjAlIiB5Mj0iMTAwJSI+PHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iIzJhMmExYSIgLz48c3RvcCBvZmZzZXQ9IjEwMCUiIHN0b3AtY29sb3I9IiMxYTFhMGEiIC8+PC9saW5lYXJHcmFkaWVudD48L2RlZnM+PHJlY3Qgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgZmlsbD0idXJsKCNnKSIvPjwvc3ZnPg==",
+    overlay: { href: "https://jeffersonstateoutfitter.com", emoji: "🎣", className: "jefferson-state-message" },
+  },
+  {
     id: "quailmail",
     title: "Quailmail",
     description: (
