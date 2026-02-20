@@ -680,9 +680,9 @@ h1, h2 {
 
 .timeline-heading .eyebrow {
   text-transform: uppercase;
-  letter-spacing: 0.15em;
-  font-size: 0.75rem;
-  color: rgba(255, 255, 255, 0.6);
+  letter-spacing: 0.12em;
+  font-size: 0.65rem;
+  color: rgba(255, 255, 255, 0.5);
 }
 
 .timeline-heading strong {
@@ -810,7 +810,7 @@ h1, h2 {
   }
 }
 
-@media (max-width: 1559px) {
+@media (max-width: 1279px) {
 
   .portfolio-timeline-anchor,
   .portfolio-timeline-floating {
@@ -820,6 +820,23 @@ h1, h2 {
   .portfolio-shell {
     gap: 2rem;
     padding-left: 0;
+  }
+}
+
+@media (min-width: 1280px) and (max-width: 1559px) {
+  .portfolio-timeline-floating {
+    transform: translateX(calc(-100% - clamp(16px, 2vw, 32px))) scale(var(--timeline-scale, 1));
+    width: clamp(60px, 6vw, 90px);
+  }
+  
+  .timeline-heading .eyebrow {
+    font-size: 0.55rem;
+    letter-spacing: 0.1em;
+  }
+  
+  .timeline-label button span {
+    padding: 0.25rem 0.6rem;
+    font-size: 0.6rem;
   }
 }
 
