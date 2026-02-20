@@ -503,6 +503,7 @@ html.not-ios-device .canvas-aurora {
   cursor: pointer;
   border: none;
   font-size: 1.1rem;
+  font-weight: 600;
   text-align: left;
   opacity: 0.7;
   transition: opacity 0.3s, color 0.3s, transform 0.3s;
@@ -511,7 +512,6 @@ html.not-ios-device .canvas-aurora {
 .side-nav button.active {
   opacity: 1;
   color: #00ffd5;
-  font-weight: 600;
 }
 
 .side-nav button:not(.active):hover,
