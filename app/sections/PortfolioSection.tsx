@@ -7,7 +7,11 @@ import Colorbookorama from "@components/projects/Colorbookorama";
 import { projects } from "@/content/projects";
 import { useEntranceStagger, useActiveSection } from "@lib/hooks";
 
-const CUSTOM_PROJECT_IDS = ["basedchat", "colorbookorama"] as const;
+// Keep these cards wired for easy future re-enable without deleting component code.
+const SHOW_CUSTOM_PROJECTS = false;
+const CUSTOM_PROJECT_IDS = SHOW_CUSTOM_PROJECTS
+  ? (["basedchat", "colorbookorama"] as const)
+  : ([] as const);
 const CUSTOM_LABELS: Record<(typeof CUSTOM_PROJECT_IDS)[number], string> = {
   basedchat: "Based Chat",
   colorbookorama: "Colorbookorama",
@@ -136,12 +140,16 @@ const PortfolioSection = forwardRef<HTMLDivElement>(function PortfolioSection(_,
                 </div>
               );
             })}
-            <div ref={projectRefs["basedchat"]} data-project-card>
-              <BasedChat />
-            </div>
-            <div ref={projectRefs["colorbookorama"]} data-project-card>
-              <Colorbookorama />
-            </div>
+            {SHOW_CUSTOM_PROJECTS && (
+              <>
+                <div ref={projectRefs["basedchat"]} data-project-card>
+                  <BasedChat />
+                </div>
+                <div ref={projectRefs["colorbookorama"]} data-project-card>
+                  <Colorbookorama />
+                </div>
+              </>
+            )}
           </div>
         </div>
       </div>
