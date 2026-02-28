@@ -93,14 +93,9 @@ const Portfolio = () => {
 
       const prefersReduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
       const behavior: ScrollBehavior = prefersReduced ? "auto" : "smooth";
-      const safeTop =
-        parseFloat(
-          getComputedStyle(document.documentElement).getPropertyValue("--safe-top")
-        ) || 0;
-
       const scrollOnce = () => {
         const rect = targetElement.getBoundingClientRect();
-        const top = rect.top + window.scrollY - safeTop - 12;
+        const top = rect.top + window.scrollY - 12;
         window.scrollTo({ top, behavior });
       };
 
@@ -124,13 +119,8 @@ const Portfolio = () => {
 
     const prefersReduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     const behavior: ScrollBehavior = prefersReduced ? "auto" : "smooth";
-    const safeTop =
-      parseFloat(
-        getComputedStyle(document.documentElement).getPropertyValue("--safe-top")
-      ) || 0;
-
     const scrollToContact = () => {
-      const top = target.getBoundingClientRect().top + window.scrollY - safeTop - 12;
+      const top = target.getBoundingClientRect().top + window.scrollY - 12;
       window.scrollTo({ top, behavior });
     };
 
