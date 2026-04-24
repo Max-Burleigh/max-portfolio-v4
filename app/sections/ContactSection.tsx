@@ -1,7 +1,7 @@
 "use client";
 import React, { forwardRef, useRef, useState, useEffect } from "react";
 import { SiLinkedin, SiMaildotru } from "react-icons/si";
-import { MdArrowForward, MdEdit } from "react-icons/md";
+import { MdAccessTime, MdArrowForward, MdEdit, MdLocationOn } from "react-icons/md";
 import { motion, AnimatePresence, useInView } from "framer-motion";
 import { CONTACT_EMAIL, LINKEDIN_URL } from "@lib/constants";
 import { useEntranceStagger, useIsMobile } from "@lib/hooks";
@@ -13,12 +13,9 @@ interface ContactSectionProps {
 const ContactSection = forwardRef<HTMLDivElement, ContactSectionProps>(function ContactSection({ inquiryData }, ref) {
   const isMobile = useIsMobile();
   const entranceRef = useRef<HTMLDivElement>(null);
-  useEntranceStagger(entranceRef, { baseDelay: 40, step: 90 });
-  const contactLinkClass = "inline-flex items-center gap-2 text-[#00ffd5] no-underline font-semibold";
-
-  // Track visibility for animation trigger
   const contentRef = useRef<HTMLDivElement>(null);
   const isInView = useInView(contentRef, { amount: 0.3, once: true });
+  useEntranceStagger(entranceRef, { baseDelay: 40, step: 80 });
 
   const [isTyping, setIsTyping] = useState(false);
   const [messageBody, setMessageBody] = useState("");
@@ -27,7 +24,6 @@ const ContactSection = forwardRef<HTMLDivElement, ContactSectionProps>(function 
   const [submitState, setSubmitState] = useState<"idle" | "sending" | "sent" | "error">("idle");
   const [submitError, setSubmitError] = useState<string | null>(null);
 
-  // Start typewriter when inquiry data arrives and section is visible
   useEffect(() => {
     if (!inquiryData || !isInView) {
       setMessageBody("");
@@ -37,15 +33,7 @@ const ContactSection = forwardRef<HTMLDivElement, ContactSectionProps>(function 
       return;
     }
 
-    const body = `Hi Max,
-
-I'm interested in starting a project with you.
-
-My Selection:
-• Build Plan: ${inquiryData.plan || "Not selected"}
-• Monthly Support: ${inquiryData.subscription ? "Yes, Peace of Mind Plan" : "No thanks"}
-
-[Please describe your project here...]`;
+    const body = `Hi Max,\n\nI'm interested in starting a project with you.\n\nMy Selection:\n• Build Plan: ${inquiryData.plan || "Not selected"}\n• Monthly Support: ${inquiryData.subscription ? "Yes, Peace of Mind Plan" : "No thanks"}\n\n[Please describe your project here...]`;
     if (typeTimer.current) clearInterval(typeTimer.current);
     setIsTyping(true);
     setMessageBody("");
@@ -107,134 +95,95 @@ My Selection:
   };
 
   return (
-    <section ref={ref} id="contact" className="section contact-section relative w-screen min-h-dvh max-w-[1000px] mx-auto flex flex-col justify-start items-start z-[2] pt-[clamp(64px,12vh,128px)] pb-[clamp(80px,14vh,152px)]">
-      <div ref={entranceRef} data-entrance="contact" className="w-full max-w-4xl mx-auto transition-all duration-500">
-        <div
-          ref={contentRef}
-          className="glass-card contact-card text-center bg-white/[0.02] py-12 px-8 transition-all duration-500 ease-in-out overflow-hidden mx-auto"
-          style={{ maxWidth: inquiryData ? "800px" : "550px", width: "100%" }}
-        >
-          <h2 data-entrance-item className="text-[2rem] font-bold mb-0 md:mb-3">Contact</h2>
+    <section ref={ref} id="contact" className="section contact-section">
+      <div ref={entranceRef} data-entrance="contact" className="contact-cockpit">
+        <div className="cockpit-header contact-cockpit-header" data-entrance-item>
+          <div className="contact-heading">
+            <p className="hero-eyebrow">Contact</p>
+            <h2>Let&apos;s build something sharp.</h2>
+          </div>
+          <p>Have a project in mind, a half-formed idea, or just want to see if there&apos;s a fit? Start here.</p>
+        </div>
 
+        <div ref={contentRef} className="contact-panel" data-entrance-item>
           <AnimatePresence mode="wait">
             {!inquiryData ? (
-              <motion.p
-                key="intro"
-                initial={{ opacity: 0, height: 0 }}
-                animate={{ opacity: 1, height: "auto" }}
-                exit={{ opacity: 0, height: 0 }}
-                className="text-left mt-6"
-                data-entrance-item
+              <motion.div
+                key="contact-links"
+                initial={{ opacity: 0, y: 12 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -12 }}
+                className="contact-link-panel"
               >
-                Feel free to reach out if you have a project in mind or just want to chat!
-              </motion.p>
+                <div className="contact-pitch">
+                  <span aria-hidden="true" className="contact-pitch-rule" />
+                  <h3>Quick, direct, no weird form maze.</h3>
+                  <p>Send the essentials and I&apos;ll reply with next steps, timelines, and a clean recommendation for the build.</p>
+                </div>
+
+                <div className="contact-channel-card" aria-label="Direct channels">
+                  <a className="contact-channel" href={`mailto:${CONTACT_EMAIL}`}>
+                    <span className="contact-channel-icon"><SiMaildotru aria-hidden="true" /></span>
+                    <span className="contact-channel-copy">
+                      <span className="contact-channel-label">Email</span>
+                      <span className="contact-channel-value">{CONTACT_EMAIL}</span>
+                    </span>
+                    <MdArrowForward className="contact-channel-arrow" aria-hidden="true" />
+                  </a>
+                  <a className="contact-channel" href={LINKEDIN_URL} target="_blank" rel="noopener noreferrer">
+                    <span className="contact-channel-icon"><SiLinkedin aria-hidden="true" /></span>
+                    <span className="contact-channel-copy">
+                      <span className="contact-channel-label">Professional</span>
+                      <span className="contact-channel-value">LinkedIn</span>
+                    </span>
+                    <MdArrowForward className="contact-channel-arrow" aria-hidden="true" />
+                  </a>
+                  <div className="contact-meta-row" aria-label="Contact details">
+                    <span><MdAccessTime aria-hidden="true" /> <span>Typical reply:</span> <strong>within one business day</strong></span>
+                    <span><MdLocationOn aria-hidden="true" /> <strong>Medford, Oregon</strong></span>
+                  </div>
+                </div>
+              </motion.div>
             ) : (
               <motion.div
-                key="inquiry-ui"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-                className="mt-6"
+                key="contact-form"
+                initial={{ opacity: 0, y: 12 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -12 }}
+                className="contact-form-panel"
               >
-                <motion.div
-                  key="contact-form"
-                  initial={{ opacity: 0, height: 0 }}
-                  animate={{ opacity: 1, height: "auto" }}
-                  transition={{ duration: 0.5 }}
-                >
-                  <div className="rounded-xl bg-black/40 border border-white/10 overflow-hidden mb-6 focus-within:border-teal-500/50 transition-colors">
-                    <div className="px-4 py-3 border-b border-white/10 flex justify-between items-center bg-white/5">
-                      <span className="text-xs text-teal-300 font-semibold flex items-center gap-2">
-                        <MdEdit size={14} /> Message Body
-                      </span>
-                      <span className="text-[10px] text-white/40 uppercase tracking-wider font-semibold">
-                        {isTyping ? "Auto-filling..." : "Editable"}
-                      </span>
-                    </div>
-                    <div className="p-4">
-                      <textarea
-                        value={messageBody}
-                        onChange={(e) => {
-                          if (typeTimer.current) clearInterval(typeTimer.current);
-                          typeTimer.current = null;
-                          setIsTyping(false);
-                          setMessageBody(e.target.value);
-                        }}
-                        className="w-full h-72 md:h-96 bg-transparent p-4 text-white/85 text-sm resize-none focus:outline-none font-mono leading-relaxed rounded-lg border border-white/5"
-                        spellCheck={false}
-                      />
-                      {isTyping && (
-                        <div className="mt-2 text-[11px] text-teal-300/80 font-mono flex items-center gap-2">
-                          <motion.span
-                            className="inline-block w-2 h-2 rounded-full bg-teal-400"
-                            animate={{ opacity: [0.3, 1, 0.3] }}
-                            transition={{ repeat: Infinity, duration: 1.2 }}
-                          />
-                          Generating your draft...
-                        </div>
-                      )}
-                      <div className="mt-4">
-                        <label className="block text-[12px] text-teal-200 font-semibold mb-2" htmlFor="sender-email">
-                          Your email (so I can reply)
-                        </label>
-                        <input
-                          id="sender-email"
-                          type="email"
-                          value={senderEmail}
-                          onChange={(e) => setSenderEmail(e.target.value)}
-                          className="w-full bg-black/40 border border-white/10 rounded-lg px-3 py-2 text-sm text-white/90 focus:outline-none focus:border-teal-400"
-                          placeholder="you@example.com"
-                        />
-                      </div>
-                      {submitState === "sent" && (
-                        <div className="mt-2 text-[11px] text-teal-300 font-semibold">Sent! I’ll reply soon.</div>
-                      )}
-                      {submitState === "error" && submitError && (
-                        <div className="mt-2 text-[11px] text-red-300 font-semibold">Error: {submitError}</div>
-                      )}
-                    </div>
+                <div className="contact-form-shell">
+                  <div className="contact-form-header">
+                    <span><MdEdit size={14} /> Message Body</span>
+                    <span>{isTyping ? "Auto-filling..." : "Editable"}</span>
                   </div>
-
-                  <div className="flex justify-end">
-                    <button
-                      onClick={handleSend}
-                      disabled={isTyping || submitState === "sending"}
-                      className="w-full md:w-auto bg-teal-500 text-black px-8 py-3 rounded-xl font-bold hover:scale-105 transition-transform flex items-center justify-center gap-2 shadow-[0_0_20px_rgba(20,184,166,0.3)] disabled:opacity-60 disabled:hover:scale-100"
-                    >
-                      {submitState === "sending" ? "Sending..." : submitState === "sent" ? "Sent" : "Send Now"} <MdArrowForward />
-                    </button>
-                  </div>
-                </motion.div>
+                  <textarea
+                    value={messageBody}
+                    onChange={(e) => {
+                      if (typeTimer.current) clearInterval(typeTimer.current);
+                      typeTimer.current = null;
+                      setIsTyping(false);
+                      setMessageBody(e.target.value);
+                    }}
+                    spellCheck={false}
+                  />
+                  <input
+                    id="sender-email"
+                    type="email"
+                    value={senderEmail}
+                    onChange={(e) => setSenderEmail(e.target.value)}
+                    placeholder="you@example.com"
+                    aria-label="Your email so I can reply"
+                  />
+                  {submitState === "sent" && <p className="contact-status success">Sent! I&apos;ll reply soon.</p>}
+                  {submitState === "error" && submitError && <p className="contact-status error">Error: {submitError}</p>}
+                </div>
+                <button onClick={handleSend} disabled={isTyping || submitState === "sending"} className="contact-send-button">
+                  {submitState === "sending" ? "Sending..." : submitState === "sent" ? "Sent" : "Send Now"} <MdArrowForward />
+                </button>
               </motion.div>
             )}
           </AnimatePresence>
-
-          <div className="mt-8 text-left space-y-4 pt-8 border-t border-white/10" data-entrance-item>
-            {/* Keep contact links always available */}
-            <p className="text-xs font-bold uppercase tracking-widest text-white/30 font-space-grotesk mb-4">
-              Direct Channels
-            </p>
-            <div>
-              <a
-                href={`mailto:${CONTACT_EMAIL}`}
-                className={contactLinkClass}
-              >
-                <SiMaildotru className="w-[22px] h-[22px] flex-shrink-0 text-current" />
-                <span>{CONTACT_EMAIL}</span>
-              </a>
-            </div>
-            <div>
-              <a
-                href={LINKEDIN_URL}
-                target="_blank"
-                rel="noopener noreferrer"
-                className={contactLinkClass}
-              >
-                <SiLinkedin className="w-[22px] h-[22px] flex-shrink-0 text-current" />
-                <span>LinkedIn</span>
-              </a>
-            </div>
-          </div>
         </div>
       </div>
     </section>

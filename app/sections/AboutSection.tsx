@@ -1,15 +1,23 @@
 "use client";
-import React, { useRef, useState, useCallback, useMemo, forwardRef, useEffect, useLayoutEffect } from "react";
+import React, { useRef, useState, useCallback, useMemo, forwardRef, useEffect } from "react";
 import Image from "next/image";
-import { motion, useMotionValue, useSpring, AnimatePresence, useTransform, useMotionTemplate } from "framer-motion";
+import { motion, useMotionValue, useSpring, useTransform, useMotionTemplate } from "framer-motion";
+import { SiGithub, SiLinkedin } from "react-icons/si";
+import { MdArrowForward, MdCode, MdMood, MdOutlineMail, MdRocketLaunch, MdStar } from "react-icons/md";
 import { rafThrottle, useIsMobile, useEntranceStagger, useMicroParallax } from "@lib/hooks";
+import { CONTACT_EMAIL, LINKEDIN_URL } from "@lib/constants";
+import { projects } from "@/content/projects";
 
 const round = (num: number, fix = 2) => parseFloat(num.toFixed(fix));
 interface AboutSectionProps {
-  onViewServices?: () => void;
+  onViewPortfolio?: () => void;
+  onContact?: () => void;
 }
 
-const AboutSection = forwardRef<HTMLDivElement, AboutSectionProps>(function AboutSection({ onViewServices }, ref) {
+const visibleProjectCount = projects.filter((project) => !project.hidden).length;
+const githubUrl = "https://github.com/maxburleigh";
+
+const AboutSection = forwardRef<HTMLDivElement, AboutSectionProps>(function AboutSection({ onViewPortfolio, onContact }, ref) {
   // Local mobile detection for layout tweaks
   const isMobile = useIsMobile();
 
@@ -41,36 +49,8 @@ const AboutSection = forwardRef<HTMLDivElement, AboutSectionProps>(function Abou
   }, [isAnimating]);
 
   const [glare, setGlare] = useState({ x: 50, y: 50, opacity: 0 });
-  const [spielOpen, setSpielOpen] = useState(false);
-  const contentRef = useRef<HTMLDivElement>(null);
-  const [contentHeight, setContentHeight] = useState(0);
   const entranceRef = useRef<HTMLDivElement>(null);
   const titleRef = useRef<HTMLHeadingElement>(null);
-
-  // Measure the spiel content height when open so we can animate numeric height
-  // Simplified: measure once after open (next frame), and on viewport resize (throttled).
-  useLayoutEffect(() => {
-    if (!spielOpen) {
-      setContentHeight(0);
-      return;
-    }
-    const el = contentRef.current;
-    if (!el) return;
-
-    const rafId = requestAnimationFrame(() => {
-      setContentHeight(el.scrollHeight);
-    });
-
-    const onResize = rafThrottle(() => {
-      if (contentRef.current) setContentHeight(contentRef.current.scrollHeight);
-    });
-    window.addEventListener("resize", onResize as EventListener);
-
-    return () => {
-      cancelAnimationFrame(rafId);
-      window.removeEventListener("resize", onResize as EventListener);
-    };
-  }, [spielOpen]);
 
   const handlePortraitMouseMove = useCallback(
     (e: React.MouseEvent<HTMLDivElement>) => {
@@ -116,99 +96,77 @@ const AboutSection = forwardRef<HTMLDivElement, AboutSectionProps>(function Abou
   useMicroParallax(titleRef, { maxPx: 12, factor: 0.015, disabled: isMobile });
 
   return (
-    <section ref={ref} id="about" className="section about-section relative w-screen min-h-dvh max-w-[1000px] mx-auto flex flex-col justify-center items-start z-[2]">
-      <div className="glass-card about-card text-left bg-white/[0.02] max-w-[90%] md:max-w-[700px] py-8 px-6 md:py-12 md:px-8">
+    <section ref={ref} id="about" className="section about-section relative w-screen min-h-dvh mx-auto flex flex-col justify-center items-center z-[2]">
+      <div className="portfolio-stage about-stage">
+        <header className="stage-topline" aria-label="Portfolio identity and social links">
+          <a href="#about" className="stage-wordmark" aria-label="Max Burleigh home">
+            <span>Max</span>
+            <span>Burleigh</span>
+          </a>
+          <div className="stage-socials" aria-label="Social links">
+            <a href={LINKEDIN_URL} target="_blank" rel="noopener noreferrer" aria-label="LinkedIn">
+              <SiLinkedin aria-hidden="true" />
+            </a>
+            <a href={githubUrl} target="_blank" rel="noopener noreferrer" aria-label="GitHub">
+              <SiGithub aria-hidden="true" />
+            </a>
+            <a href={`mailto:${CONTACT_EMAIL}`} aria-label="Email Max">
+              <MdOutlineMail aria-hidden="true" />
+            </a>
+          </div>
+        </header>
+
         <div
           ref={entranceRef}
           data-entrance="hero"
-          className="flex flex-col md:flex-row items-center md:items-start md:gap-6"
+          className="about-stage-content"
         >
-          <div className="flex flex-col max-w-md flex-1 min-w-0">
-            <h1 ref={titleRef} data-entrance-item className="text-[1.75rem] leading-tight md:text-[2.5rem] mb-4 font-bold">
-              Hey, I'm Max Burleigh
-            </h1>
-            <p data-entrance-item>
-              web designer & developer helping businesses grow in medford, oregon.
+          <div className="hero-copy">
+            <p data-entrance-item className="hero-eyebrow">
+              Hey there <span aria-hidden="true">👋</span>
             </p>
-            <div className="mt-4 flex flex-wrap gap-3" data-entrance-item>
+            <h1 ref={titleRef} data-entrance-item className="hero-title">
+              I&apos;m Max<br />Burleigh
+            </h1>
+            <div data-entrance-item className="hero-title-rule" aria-hidden="true" />
+            <p data-entrance-item className="hero-subcopy">
+              Web designer & developer helping businesses grow in{" "}
+              <span>Medford, Oregon</span>.
+            </p>
+
+            <div className="hero-actions" data-entrance-item>
               <motion.button
-                onClick={() => setSpielOpen(!spielOpen)}
-                className="px-4 md:px-5 py-2 md:py-2.5 bg-gradient-to-r from-blue-400 via-purple-400 to-pink-300 rounded-full text-white font-semibold [text-shadow:0_1px_2px_rgba(0,0,0,0.3)] self-start overflow-hidden relative text-sm md:text-base"
-                whileHover={{ scale: 1.05 }}
+                type="button"
+                onClick={onViewPortfolio}
+                className="hero-button hero-button-primary"
+                whileHover={{ scale: 1.035, x: 2 }}
                 whileTap={{ scale: 0.95 }}
-                data-entrance-item
               >
-                <span className="relative z-10">
-                  {spielOpen ? "That's enough about me..." : "Click for a detailed spiel ✨"}
-                </span>
-                <motion.div
-                  className="absolute inset-0 bg-gradient-to-r from-pink-300 via-purple-400 to-blue-400"
-                  style={{ opacity: 0 }}
-                  whileHover={{ opacity: 1 }}
-                  transition={{ duration: 0.3 }}
-                />
+                <span>View My Work</span>
+                <MdArrowForward aria-hidden="true" />
               </motion.button>
               <motion.button
                 type="button"
-                onClick={useCallback(() => onViewServices?.(), [onViewServices])}
-                className="px-4 md:px-5 py-2 md:py-2.5 rounded-full border border-white/40 text-white/80 font-semibold text-sm md:text-base bg-white/5 backdrop-saturate-150 shadow-[0_0_30px_rgba(0,0,0,0.25)] hover:border-white/70 hover:text-white/100 transition-all duration-300"
-                whileHover={{ scale: 1.05 }}
+                onClick={onContact}
+                className="hero-button hero-button-secondary"
+                whileHover={{ scale: 1.035, x: 2 }}
                 whileTap={{ scale: 0.96 }}
-                data-entrance-item
               >
-                <span className="relative z-10">See how I can help</span>
+                <span>Let&apos;s Talk</span>
+                <MdOutlineMail aria-hidden="true" />
               </motion.button>
             </div>
-            <AnimatePresence>
-              {spielOpen && (
-                <motion.div
-                  initial={{ opacity: 0, height: 0 }}
-                  animate={{
-                    opacity: 1,
-                    height: contentHeight,
-                    transition: {
-                      height: { type: "spring", stiffness: 100, damping: 15 },
-                      opacity: { duration: 0.4, delay: 0.2 },
-                    },
-                  }}
-                  exit={{
-                    opacity: 0,
-                    height: 0,
-                    transition: { height: { duration: 0.3 }, opacity: { duration: 0.2 } },
-                  }}
-                  className="overflow-hidden"
-                  style={{
-                    contain: "layout paint",
-                    willChange: "height, opacity",
-                    transform: "translateZ(0)",
-                  }}
-                >
-                  <div ref={contentRef} className="pt-4 space-y-3 spiel-detail">
-                    <p className="text-xs md:text-sm">
-                      I'm 31 years old, I have 2 amazing children who are my world, and I reside in Southern Oregon!
-                    </p>
-                    <p className="text-xs md:text-sm">
-                      I consider myself highly detail-oriented, but I have a ferocious appetite for getting things done. This is an important set of traits that I have found to be useful in my career.
-                    </p>
-                    <p className="text-xs md:text-sm">
-                      I believe as we head towards a world where AI is writing more and more of our code, we will need forward-thinking individuals like myself that can think critically and creatively to solve problems. I'm excited about the opportunity to contribute my skills and passion to your organization (or project)!
-                    </p>
-                  </div>
-                </motion.div>
-              )}
-            </AnimatePresence>
           </div>
+
           <div data-entrance-item className="flex-shrink-0">
             <motion.div
               ref={portraitRef}
-              className={`portrait-frame w-64 h-80 md:w-80 md:h-96 relative rounded-lg overflow-hidden shadow-lg ${spielOpen ? "" : "mt-4 md:mt-0"
-                }`}
+              className="portrait-frame hero-portrait"
               style={{
                 rotateY: rotateYSpring,
                 rotateX: rotateXSpring,
                 transformPerspective: transformPerspectiveSpring,
                 boxShadow,
-                scale: isMobile && spielOpen ? 0.8 : 1,
                 transformStyle: "preserve-3d",
                 transformOrigin: "center",
                 willChange: "transform",
@@ -253,6 +211,29 @@ const AboutSection = forwardRef<HTMLDivElement, AboutSectionProps>(function Abou
                 priority
               />
             </motion.div>
+          </div>
+        </div>
+
+        <div className="hero-stats" data-entrance="stats">
+          <div className="hero-stat">
+            <span className="hero-stat-icon"><MdRocketLaunch aria-hidden="true" /></span>
+            <span className="hero-stat-value">5+</span>
+            <span className="hero-stat-label">Years Experience</span>
+          </div>
+          <div className="hero-stat">
+            <span className="hero-stat-icon"><MdCode aria-hidden="true" /></span>
+            <span className="hero-stat-value">{visibleProjectCount}</span>
+            <span className="hero-stat-label">Projects Featured</span>
+          </div>
+          <div className="hero-stat">
+            <span className="hero-stat-icon"><MdMood aria-hidden="true" /></span>
+            <span className="hero-stat-value">40+</span>
+            <span className="hero-stat-label">Happy Clients</span>
+          </div>
+          <div className="hero-stat">
+            <span className="hero-stat-icon"><MdStar aria-hidden="true" /></span>
+            <span className="hero-stat-value">100%</span>
+            <span className="hero-stat-label">Commitment</span>
           </div>
         </div>
       </div>

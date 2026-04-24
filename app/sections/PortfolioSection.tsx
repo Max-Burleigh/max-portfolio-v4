@@ -1,156 +1,81 @@
 "use client";
-import React, { forwardRef, useMemo, useRef, createRef, useCallback } from "react";
-import { motion, useScroll, useTransform, useSpring, type MotionValue } from "framer-motion";
-import ProjectCard from "@components/projects/ProjectCard";
-import BasedChat from "@components/projects/BasedChat";
-import Colorbookorama from "@components/projects/Colorbookorama";
-import { projects } from "@/content/projects";
-import { useEntranceStagger, useActiveSection } from "@lib/hooks";
 
-// Keep these cards wired for easy future re-enable without deleting component code.
-const SHOW_CUSTOM_PROJECTS = false;
-const CUSTOM_PROJECT_IDS = SHOW_CUSTOM_PROJECTS
-  ? (["basedchat", "colorbookorama"] as const)
-  : ([] as const);
-const CUSTOM_LABELS: Record<(typeof CUSTOM_PROJECT_IDS)[number], string> = {
-  basedchat: "Based Chat",
-  colorbookorama: "Colorbookorama",
-};
+import React, { forwardRef, useMemo, useRef } from "react";
+import Image from "next/image";
+import { MdArrowForward, MdOpenInNew } from "react-icons/md";
+import { projects } from "@/content/projects";
+import { useEntranceStagger } from "@lib/hooks";
 
 const PortfolioSection = forwardRef<HTMLDivElement>(function PortfolioSection(_, ref) {
   const entranceRef = useRef<HTMLDivElement>(null);
-  const timelineEntranceRef = useRef<HTMLElement>(null);
-  useEntranceStagger(entranceRef, { baseDelay: 60, step: 70 });
-  useEntranceStagger(timelineEntranceRef, { baseDelay: 80, step: 70 });
-
-  // Scroll-driven expansion for the timeline
-  const { scrollYProgress } = useScroll({
-    target: ref as React.RefObject<HTMLElement>,
-    offset: ["start 90%", "start 15%"],
-  });
-
-  const scale = useTransform(scrollYProgress, [0, 1], [0.8, 1]);
-  const opacity = useTransform(scrollYProgress, [0, 1], [0.5, 1]);
-
-  const smoothScale = useSpring(scale, { damping: 20, stiffness: 100 });
-  const smoothOpacity = useSpring(opacity, { damping: 20, stiffness: 100 });
-
+  useEntranceStagger(entranceRef, { baseDelay: 60, step: 55 });
   const visibleProjects = useMemo(() => projects.filter((project) => !project.hidden), []);
-  const projectMap = useMemo(() => {
-    const map = new Map<string, (typeof projects)[number]>();
-    visibleProjects.forEach((project) => map.set(project.id, project));
-    return map;
-  }, [visibleProjects]);
-
-  const timelineIds = useMemo(
-    () => [...visibleProjects.map((project) => project.id), ...CUSTOM_PROJECT_IDS],
-    [visibleProjects]
-  );
-
-  const projectRefs = useMemo(() => {
-    const refs: Record<string, React.RefObject<HTMLDivElement | null>> = {};
-    timelineIds.forEach((id) => {
-      refs[id] = createRef<HTMLDivElement>();
-    });
-    return refs;
-  }, [timelineIds]);
-
-  const timelineEntries = useMemo(
-    () =>
-      timelineIds.map((id) => {
-        const project = projectMap.get(id);
-        return {
-          id,
-          title: CUSTOM_LABELS[id as keyof typeof CUSTOM_LABELS] ?? project?.title ?? "Project",
-        };
-      }),
-    [timelineIds, projectMap]
-  );
-
-  const { activeSection: activeProject } = useActiveSection(projectRefs);
-  const scrollToProject = useCallback(
-    (id: string) => {
-      projectRefs[id]?.current?.scrollIntoView({ behavior: "smooth", block: "center" });
-    },
-    [projectRefs]
-  );
-
-  type TimelineStyle = React.CSSProperties & {
-    "--timeline-scale": MotionValue<number>;
-    "--timeline-opacity": MotionValue<number>;
-  };
-
-  const timelineStyle: TimelineStyle = {
-    "--timeline-scale": smoothScale,
-    "--timeline-opacity": smoothOpacity,
-  };
 
   return (
-    <section ref={ref} id="portfolio" className="section portfolio-section relative w-screen min-h-dvh max-w-[1000px] mx-auto flex flex-col justify-center items-start z-[2]">
-      <div className="portfolio-timeline-anchor">
-        <motion.aside
-          ref={timelineEntranceRef}
-          data-entrance="portfolio-timeline"
-          className="portfolio-timeline-floating"
-          aria-label="Project timeline"
-          style={timelineStyle}
-        >
-          <div className="timeline-heading" data-entrance-item>
-            <p className="eyebrow">TABLE OF CONTENTS</p>
+    <section ref={ref} id="portfolio" className="section portfolio-section">
+      <div ref={entranceRef} className="portfolio-cockpit" data-entrance="portfolio-cockpit">
+        <div className="cockpit-header" data-entrance-item>
+          <div>
+            <p className="hero-eyebrow">Portfolio</p>
+            <h2>{visibleProjects.length} project field notes.</h2>
           </div>
-          <ul className="timeline-rail">
-            {timelineEntries.map((entry) => (
-              <li
-                key={entry.id}
-                className={`timeline-label ${activeProject === entry.id ? "is-active" : ""}`}
-                data-entrance-item
-                aria-current={activeProject === entry.id ? "true" : undefined}
-              >
-                <button
-                  type="button"
-                  onClick={() => scrollToProject(entry.id)}
-                  aria-label={`Scroll to ${entry.title}`}
-                >
-                  <span>{entry.title}</span>
-                </button>
-              </li>
-            ))}
-          </ul>
-        </motion.aside>
-      </div>
+          <p>
+            Phone-sized snapshots of ecommerce, AI products, mobile apps, and local business sites.
+            Scroll the deck sideways without leaving the frame.
+          </p>
+        </div>
 
-      <div className="portfolio-shell">
-        <div ref={entranceRef} data-entrance="portfolio" className="portfolio-content-stack">
-          <div className="portfolio-header">
-            <h2 data-entrance-item className="text-[2rem] font-bold mb-0 w-full text-center md:w-auto md:text-left">Portfolio</h2>
-            <p data-entrance-item className="portfolio-subcopy">
-              Selected work spanning ecommerce, AI products, and community platforms.
-            </p>
-          </div>
+        <div className="portfolio-phone-deck" data-entrance-item>
+          {visibleProjects.map((project, index) => (
+            <article key={project.id} className="portfolio-phone-card">
+              <div className="portfolio-phone-copy">
+                <span className="portfolio-index">{String(index + 1).padStart(2, "0")}</span>
+                <h3>{project.title}</h3>
+                <div className="portfolio-description">
+                  {project.id === "fullleaf-app" ? (
+                    <>
+                      <p>A Flutter-based, WebView app for Full Leaf Tea Company.</p>
+                      <div className="portfolio-store-links">
+                        <a href="https://apps.apple.com/us/app/full-leaf-tea-co/id6451437741" target="_blank" rel="noopener noreferrer">App Store</a>
+                        <span aria-hidden="true">/</span>
+                        <a href="https://play.google.com/store/apps/details?id=fullleafteacompany.android.app&hl=en_US&pli=1" target="_blank" rel="noopener noreferrer">Play Store</a>
+                      </div>
+                    </>
+                  ) : typeof project.description === "string" ? <p>{project.description}</p> : project.description}
+                </div>
+                <div className="portfolio-tech-strip" aria-label={`${project.title} tech stack`}>
+                  {project.techStack?.slice(0, 4).map((item) => (
+                    <span key={item.label}>{item.label}</span>
+                  ))}
+                </div>
+              </div>
 
-          <div className="project-grid" data-entrance-item>
-            {visibleProjects.map(({ id, children, reverseLayout, ...props }, index) => {
-              const shouldReverse =
-                typeof reverseLayout === "boolean" ? reverseLayout : index % 2 === 1;
-              return (
-                <div key={id} ref={projectRefs[id]} data-project-card>
-                  <ProjectCard {...props} reverseLayout={shouldReverse}>
-                    {children}
-                  </ProjectCard>
-                </div>
-              );
-            })}
-            {SHOW_CUSTOM_PROJECTS && (
-              <>
-                <div ref={projectRefs["basedchat"]} data-project-card>
-                  <BasedChat />
-                </div>
-                <div ref={projectRefs["colorbookorama"]} data-project-card>
-                  <Colorbookorama />
-                </div>
-              </>
-            )}
-          </div>
+              <div className="portfolio-phone-preview" aria-label={`${project.title} preview`}>
+                {project.imageUrl && (
+                  <Image
+                    src={project.imageUrl}
+                    alt={project.imageAlt || `Screenshot of ${project.title}`}
+                    width={600}
+                    height={1200}
+                    loading="lazy"
+                    placeholder="blur"
+                    blurDataURL={project.imageBlurDataURL || "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAwIiBoZWlnaHQ9IjEyMDAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZyI+PHJlY3Qgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgZmlsbD0iIzIwMjAyMCIvPjwvc3ZnPg=="}
+                  />
+                )}
+              </div>
+
+              {project.websiteUrl && (
+                <a href={project.websiteUrl} target="_blank" rel="noopener noreferrer" className="portfolio-tile-link">
+                  Visit <MdOpenInNew aria-hidden="true" />
+                </a>
+              )}
+            </article>
+          ))}
+        </div>
+
+        <div className="portfolio-hint" data-entrance-item>
+          <span>Drag or scroll horizontally</span>
+          <MdArrowForward aria-hidden="true" />
         </div>
       </div>
     </section>

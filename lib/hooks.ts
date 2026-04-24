@@ -96,28 +96,41 @@ export function useActiveSection<K extends string>(
 
     if (entries.length === 0) return;
 
-    const anchorY = () => window.innerHeight * 0.45; // 45% from top
-    const safeZonePx = 24; // must be this far inside a section before switching
+    const containerEl = containerRef?.current ?? undefined;
+    const getScrollState = () => {
+      if (!containerEl) {
+        return {
+          scrollTop: window.scrollY,
+          anchor: window.innerHeight * 0.45,
+        };
+      }
+
+      return {
+        scrollTop: containerEl.scrollTop,
+        anchor: containerEl.clientHeight * 0.48,
+      };
+    };
 
     const updateActive = () => {
-      const aY = anchorY();
+      const { scrollTop, anchor } = getScrollState();
+      const anchorTop = scrollTop + anchor;
       let found: K | null = null;
+
       for (const s of entries) {
-        const rect = s.el.getBoundingClientRect();
-        if (rect.top + safeZonePx <= aY && rect.bottom - safeZonePx >= aY) {
+        const sectionTop = s.el.offsetTop;
+        const sectionBottom = sectionTop + s.el.offsetHeight;
+        if (sectionTop <= anchorTop && sectionBottom >= anchorTop) {
           found = s.key;
           break;
         }
       }
+
       if (!found) {
         let best: K = activeRef.current;
         let bestDist = Number.POSITIVE_INFINITY;
         for (const s of entries) {
-          const rect = s.el.getBoundingClientRect();
-          const dist = Math.min(
-            Math.abs(rect.top - aY),
-            Math.abs(rect.bottom - aY)
-          );
+          const sectionCenter = s.el.offsetTop + s.el.offsetHeight / 2;
+          const dist = Math.abs(sectionCenter - anchorTop);
           if (dist < bestDist) {
             bestDist = dist;
             best = s.key;
@@ -125,6 +138,7 @@ export function useActiveSection<K extends string>(
         }
         found = best;
       }
+
       if (found && found !== activeRef.current) {
         setActiveSection(found);
       }
@@ -133,7 +147,6 @@ export function useActiveSection<K extends string>(
     const onScroll = rafThrottle(updateActive);
     const onResize = rafThrottle(updateActive);
 
-    const containerEl = containerRef?.current ?? undefined;
     window.addEventListener("scroll", onScroll, { passive: true });
     window.addEventListener("resize", onResize);
     if (containerEl)
