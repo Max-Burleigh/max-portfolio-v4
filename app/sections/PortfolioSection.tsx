@@ -1,6 +1,6 @@
 "use client";
 
-import React, { forwardRef, useMemo, useRef } from "react";
+import React, { forwardRef, useEffect, useMemo, useRef } from "react";
 import Image from "next/image";
 import { MdArrowForward, MdOpenInNew } from "react-icons/md";
 import { projects } from "@/content/projects";
@@ -8,8 +8,73 @@ import { useEntranceStagger } from "@lib/hooks";
 
 const PortfolioSection = forwardRef<HTMLDivElement>(function PortfolioSection(_, ref) {
   const entranceRef = useRef<HTMLDivElement>(null);
+  const deckRef = useRef<HTMLDivElement>(null);
   useEntranceStagger(entranceRef, { baseDelay: 60, step: 55 });
   const visibleProjects = useMemo(() => projects.filter((project) => !project.hidden), []);
+
+  useEffect(() => {
+    const deck = deckRef.current;
+    if (!deck) return;
+
+    let isDown = false;
+    let startX = 0;
+    let startScroll = 0;
+    let moved = false;
+    const DRAG_THRESHOLD = 6;
+
+    const onMouseDown = (e: MouseEvent) => {
+      if (e.button !== 0) return;
+      isDown = true;
+      moved = false;
+      startX = e.clientX;
+      startScroll = deck.scrollLeft;
+    };
+
+    const onMouseMove = (e: MouseEvent) => {
+      if (!isDown) return;
+      const dx = e.clientX - startX;
+      if (!moved && Math.abs(dx) > DRAG_THRESHOLD) {
+        moved = true;
+        deck.classList.add("is-dragging");
+      }
+      if (moved) {
+        e.preventDefault();
+        deck.scrollLeft = startScroll - dx;
+      }
+    };
+
+    const onMouseUp = () => {
+      if (!isDown) return;
+      isDown = false;
+      deck.classList.remove("is-dragging");
+    };
+
+    const onClickCapture = (e: MouseEvent) => {
+      if (moved) {
+        e.preventDefault();
+        e.stopPropagation();
+        moved = false;
+      }
+    };
+
+    const onDragStart = (e: DragEvent) => {
+      e.preventDefault();
+    };
+
+    deck.addEventListener("mousedown", onMouseDown);
+    window.addEventListener("mousemove", onMouseMove);
+    window.addEventListener("mouseup", onMouseUp);
+    deck.addEventListener("click", onClickCapture, true);
+    deck.addEventListener("dragstart", onDragStart);
+
+    return () => {
+      deck.removeEventListener("mousedown", onMouseDown);
+      window.removeEventListener("mousemove", onMouseMove);
+      window.removeEventListener("mouseup", onMouseUp);
+      deck.removeEventListener("click", onClickCapture, true);
+      deck.removeEventListener("dragstart", onDragStart);
+    };
+  }, []);
 
   return (
     <section ref={ref} id="portfolio" className="section portfolio-section">

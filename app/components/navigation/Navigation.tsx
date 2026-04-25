@@ -1,6 +1,6 @@
 "use client";
 
-import React, { memo, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   motion,
   AnimatePresence,
@@ -21,69 +21,6 @@ const mobileMenuItems: Array<{
   { section: "portfolio", number: "03", label: "Portfolio" },
   { section: "contact", number: "04", label: "Contact" },
 ];
-
-// --- NavItem Component (restored original feel) ---
-interface NavItemProps {
-  section: SectionKey;
-  activeSection: SectionKey;
-  onClick: () => void;
-}
-
-const NavItem = memo(({ section, activeSection, onClick }: NavItemProps) => {
-  const isActive = section === activeSection;
-
-  const underlineVariants = {
-    inactive: { scaleY: 0, y: "-50%" },
-    active: {
-      scaleY: 1,
-      y: "-50%",
-      transition: { type: "spring", stiffness: 400, damping: 20 },
-    },
-  } as const;
-
-  return (
-    <div className="nav-item">
-      <button className={isActive ? "active" : ""} onClick={onClick}>
-        {section.charAt(0).toUpperCase() + section.slice(1)}
-      </button>
-      <motion.div
-        className="elastic-underline"
-        variants={underlineVariants}
-        initial="inactive"
-        animate={isActive ? "active" : "inactive"}
-      />
-    </div>
-  );
-});
-NavItem.displayName = "NavItem";
-
-// Desktop Nav removed – mobile-only menu
-
-// --- SideNav Component (Desktop) ---
-interface SideNavProps {
-  sections: SectionKey[];
-  activeSection: SectionKey;
-  scrollToSection: (section: SectionKey) => void;
-}
-
-const SideNav: React.FC<SideNavProps> = ({
-  sections,
-  activeSection,
-  scrollToSection,
-}) => (
-  <nav className="side-nav">
-    {sections.map((section) => (
-      <NavItem
-        key={section}
-        section={section}
-        activeSection={activeSection}
-        onClick={() => {
-          scrollToSection(section);
-        }}
-      />
-    ))}
-  </nav>
-);
 
 // --- Hamburger Component (Extracted) ---
 interface HamburgerProps {
@@ -116,7 +53,7 @@ const Hamburger: React.FC<HamburgerProps> = ({ menuOpen, setMenuOpen }) => {
 
   return (
     <motion.button
-      className="hamburger-btn lg:hidden fixed top-5 right-5 z-[102] flex flex-col justify-center items-center w-12 h-12 rounded-full focus:outline-none overflow-hidden"
+      className="hamburger-btn fixed top-5 right-5 z-[102] flex flex-col justify-center items-center w-12 h-12 rounded-full focus:outline-none overflow-hidden"
       aria-label={menuOpen ? "Close menu" : "Open menu"}
       aria-expanded={menuOpen}
       onPointerUp={handleToggle}
@@ -228,12 +165,12 @@ const MobileMenu: React.FC<MobileMenuProps> = ({
       {/* Click-away backdrop (transparent) */}
       <button
         aria-label="Close menu backdrop"
-        className="fixed inset-0 z-[100] bg-transparent lg:hidden"
+        className="fixed inset-0 z-[100] bg-transparent"
         onClick={() => setMenuOpen(false)}
       />
 
       <motion.div
-        className="mobile-menu-panel fixed top-16 right-4 z-[101] lg:hidden"
+        className="mobile-menu-panel fixed top-16 right-4 z-[101]"
         style={{ willChange: "transform" }}
         initial={{ opacity: 0, y: -10, scale: 0.96, filter: "blur(6px)" }}
         animate={{ opacity: 1, y: 0, scale: 1, filter: "blur(0px)" }}
@@ -344,14 +281,7 @@ const Navigation: React.FC<NavigationProps> = ({
 
   return (
     <>
-      {/* Desktop side navigation */}
-      <SideNav
-        sections={sections}
-        activeSection={activeSection}
-        scrollToSection={scrollToSection}
-      />
-
-      {/* Hamburger for mobile */}
+      {/* Hamburger navigation */}
       <Hamburger menuOpen={menuOpen} setMenuOpen={handleSetMenuOpen} />
 
       {/* Mobile menu overlay */}

@@ -4,7 +4,7 @@ import React, { forwardRef, useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { useRouter } from "next/navigation";
 import { AnimatePresence, motion } from "framer-motion";
-import { MdAdd, MdArrowForward, MdCheckCircle, MdErrorOutline, MdMonitorWeight, MdRocketLaunch, MdSecurity, MdSpeed, MdWorkspaces } from "react-icons/md";
+import { MdAdd, MdArrowForward, MdCheckCircle, MdErrorOutline, MdSecurity } from "react-icons/md";
 import { useEntranceStagger, useIsMobile } from "@lib/hooks";
 
 interface ServicesSectionProps {
@@ -23,64 +23,6 @@ const planBullets = {
 } as const;
 
 const supportDetails = ["Hosting and DNS care", "Uptime monitoring", "Workspace help", "Small fixes and maintenance"];
-
-const supportCardTransition = {
-  type: "spring",
-  stiffness: 175,
-  damping: 27,
-  mass: 1.05,
-} as const;
-
-const supportCardVariants = {
-  expanded: {
-    scale: 1,
-  },
-  compact: {
-    scale: 1,
-  },
-} as const;
-
-const supportIconVariants = {
-  expanded: {
-    width: 46,
-    height: 46,
-    borderRadius: 15,
-    fontSize: "1.55rem",
-  },
-  compact: {
-    width: 46,
-    height: 46,
-    borderRadius: 15,
-    fontSize: "1.55rem",
-  },
-} as const;
-
-const supportHeadingVariants = {
-  expanded: {
-    fontSize: "clamp(1.35rem, 2vw, 1.9rem)",
-  },
-  compact: {
-    fontSize: "clamp(1.35rem, 2vw, 1.9rem)",
-  },
-} as const;
-
-const supportCopyVariants = {
-  expanded: {
-    fontSize: "0.9rem",
-  },
-  compact: {
-    fontSize: "0.9rem",
-  },
-} as const;
-
-const supportPriceVariants = {
-  expanded: {
-    fontSize: "clamp(2.1rem, 3vw, 3rem)",
-  },
-  compact: {
-    fontSize: "clamp(2.1rem, 3vw, 3rem)",
-  },
-} as const;
 
 const ServicesSection = forwardRef<HTMLDivElement, ServicesSectionProps>((_, ref) => {
   const router = useRouter();
@@ -181,7 +123,6 @@ const ServicesSection = forwardRef<HTMLDivElement, ServicesSectionProps>((_, ref
   const activeTickerItem = shouldCycleSelections && selectionItems.length > 0
     ? selectionItems[selectionTickerIndex % selectionItems.length]
     : null;
-  const supportMode = selectedPlan ? "compact" : "expanded";
 
   useEffect(() => {
     if (!shouldCycleSelections || selectionItems.length === 0) {
@@ -198,11 +139,9 @@ const ServicesSection = forwardRef<HTMLDivElement, ServicesSectionProps>((_, ref
 
   return (
     <section ref={ref} id="services" className="section services-section">
-      <motion.div
-        layout="size"
+      <div
         ref={entranceRef}
-        transition={supportCardTransition}
-        className={`services-cockpit ${selectedPlan ? "has-compact-support" : "has-expanded-support"} ${servicesEntered ? "is-entered" : ""}`}
+        className={`services-cockpit ${servicesEntered ? "is-entered" : ""}`}
         data-entrance="services-cockpit"
       >
         <div className="cockpit-header" data-entrance-item>
@@ -251,56 +190,36 @@ const ServicesSection = forwardRef<HTMLDivElement, ServicesSectionProps>((_, ref
           })}
         </div>
 
-        <motion.div
-          layout="size"
-          variants={supportCardVariants}
-          initial={false}
-          animate={supportMode}
-          transition={supportCardTransition}
-          className={`service-support-card ${selectedPlan ? "is-compact" : "is-expanded"} ${hasSubscription ? "is-selected" : ""}`}
+        <div
+          className={`service-support-card ${hasSubscription ? "is-selected" : ""}`}
           data-entrance-item
         >
-          <motion.div layout="size" className="support-main" transition={supportCardTransition}>
-            <motion.span
-              layout="size"
-              variants={supportIconVariants}
-              transition={supportCardTransition}
-              className="support-icon"
-            >
+          <div className="support-main">
+            <span className="support-icon">
               <MdSecurity aria-hidden="true" />
-            </motion.span>
+            </span>
             <div>
               <p className="service-plan-kicker">Monthly subscription</p>
-              <motion.h3 layout="size" variants={supportHeadingVariants} transition={supportCardTransition}>
-                Peace of Mind
-              </motion.h3>
-              <motion.p layout="size" variants={supportCopyVariants} transition={supportCardTransition}>
+              <h3>Peace of Mind</h3>
+              <p>
                 Managed hosting, domain care, uptime monitoring, Google Workspace help, and bug fixes.
-              </motion.p>
+              </p>
             </div>
-          </motion.div>
-          <motion.div layout="size" className="support-price" transition={supportCardTransition}>
-            <motion.strong layout="size" variants={supportPriceVariants} transition={supportCardTransition}>
-              $150
-            </motion.strong>
+          </div>
+          <div className="support-price">
+            <strong>$150</strong>
             <span>/ month</span>
-          </motion.div>
-          <motion.div layout="size" className="support-pills" aria-label="Support includes" transition={supportCardTransition}>
-            <span><MdRocketLaunch /> Hosting</span>
-            <span><MdWorkspaces /> Workspace</span>
-            <span><MdMonitorWeight /> Monitoring</span>
-            <span><MdSpeed /> Fixes</span>
-          </motion.div>
-          <motion.div layout="size" className="support-detail-band" aria-label="Managed support details" transition={supportCardTransition}>
+          </div>
+          <div className="support-detail-band" aria-label="Managed support details">
             {supportDetails.map((item) => (
               <span key={item}><MdCheckCircle aria-hidden="true" /> {item}</span>
             ))}
-          </motion.div>
+          </div>
           <button type="button" onClick={handleSubscriptionToggle} className={`support-toggle ${hasSubscription ? "is-selected" : ""}`}>
             {hasSubscription ? <><MdCheckCircle /> Added</> : <><MdAdd /> Add support</>}
           </button>
-        </motion.div>
-      </motion.div>
+        </div>
+      </div>
 
       {mounted && createPortal(
         <>
