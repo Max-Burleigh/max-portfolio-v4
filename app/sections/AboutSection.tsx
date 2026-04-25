@@ -203,7 +203,9 @@ const AboutSection = forwardRef<HTMLDivElement, AboutSectionProps>(function Abou
                 src="/new-headshot-portfolio.png"
                 alt="Max Burleigh"
                 fill
-                sizes="(max-width: 768px) 256px, 320px"
+                sizes="(max-width: 768px) 640px, (max-width: 1279px) 720px, 820px"
+                quality={100}
+                unoptimized
                 placeholder="blur"
                 blurDataURL="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjU2IiBoZWlnaHQ9IjMyMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCBmaWxsPSIjMTkxYzIzIiB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIi8+PC9zdmc+"
                 className="portrait-image"
