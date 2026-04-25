@@ -5,17 +5,89 @@ import Image from "next/image";
 import useEmblaCarousel from "embla-carousel-react";
 import { WheelGesturesPlugin } from "embla-carousel-wheel-gestures";
 import { MdArrowForward, MdOpenInNew } from "react-icons/md";
-import { projects } from "@/content/projects";
+import { projects, type ProjectEntry } from "@/content/projects";
 import { useEntranceStagger } from "@lib/hooks";
 
-const PortfolioSection = forwardRef<HTMLDivElement>(function PortfolioSection(_, ref) {
+const FALLBACK_BLUR_DATA_URL =
+  "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAwIiBoZWlnaHQ9IjEyMDAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZyI+PHJlY3Qgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgZmlsbD0iIzIwMjAyMCIvPjwvc3ZnPg==";
+
+type PortfolioProjectCardProps = {
+  project: ProjectEntry;
+  index: number;
+};
+
+const PortfolioProjectCard = React.memo(function PortfolioProjectCard({
+  project,
+  index,
+}: PortfolioProjectCardProps) {
+  return (
+    <article className="portfolio-phone-card">
+      <div className="portfolio-phone-copy">
+        <span className="portfolio-index">{String(index + 1).padStart(2, "0")}</span>
+        <h3>{project.title}</h3>
+        <div className="portfolio-description">
+          {project.id === "fullleaf-app" ? (
+            <>
+              <p>A Flutter-based, WebView app for Full Leaf Tea Company.</p>
+              <div className="portfolio-store-links">
+                <a href="https://apps.apple.com/us/app/full-leaf-tea-co/id6451437741" target="_blank" rel="noopener noreferrer">App Store</a>
+                <span aria-hidden="true">/</span>
+                <a href="https://play.google.com/store/apps/details?id=fullleafteacompany.android.app&hl=en_US&pli=1" target="_blank" rel="noopener noreferrer">Play Store</a>
+              </div>
+            </>
+          ) : typeof project.description === "string" ? <p>{project.description}</p> : project.description}
+        </div>
+        <div className="portfolio-tech-strip" aria-label={`${project.title} tech stack`}>
+          {project.techStack?.slice(0, 4).map((item) => (
+            <span key={item.label} className="portfolio-tech-pill">
+              <span className="portfolio-tech-icon" aria-hidden="true">
+                {item.icon}
+              </span>
+              <span>{item.label}</span>
+            </span>
+          ))}
+        </div>
+      </div>
+
+      <div className="portfolio-phone-preview" aria-label={`${project.title} preview`}>
+        {project.imageUrl && (
+          <Image
+            src={project.imageUrl}
+            alt={project.imageAlt || `Screenshot of ${project.title}`}
+            width={600}
+            height={1200}
+            loading="lazy"
+            sizes="(max-width: 768px) 190px, (max-width: 1279px) 210px, 245px"
+            placeholder="blur"
+            blurDataURL={project.imageBlurDataURL || FALLBACK_BLUR_DATA_URL}
+          />
+        )}
+      </div>
+
+      {project.websiteUrl && (
+        <a href={project.websiteUrl} target="_blank" rel="noopener noreferrer" className="portfolio-tile-link">
+          Visit <MdOpenInNew aria-hidden="true" />
+        </a>
+      )}
+    </article>
+  );
+});
+
+const PortfolioSection = React.memo(forwardRef<HTMLDivElement>(function PortfolioSection(_, ref) {
   const entranceRef = useRef<HTMLDivElement>(null);
   const shellRef = useRef<HTMLDivElement | null>(null);
-  const [emblaRef, emblaApi] = useEmblaCarousel({
-    align: "start",
-    containScroll: "trimSnaps",
-    dragFree: true,
-  }, [WheelGesturesPlugin({ forceWheelAxis: "x" })]);
+  const lastShadowBoundsRef = useRef({ top: "", height: "" });
+  const lastEdgeStateRef = useRef({ left: false, right: false });
+  const emblaOptions = useMemo(
+    () => ({
+      align: "start" as const,
+      containScroll: "trimSnaps" as const,
+      dragFree: true,
+    }),
+    []
+  );
+  const wheelGestures = useMemo(() => WheelGesturesPlugin({ forceWheelAxis: "x" }), []);
+  const [emblaRef, emblaApi] = useEmblaCarousel(emblaOptions, [wheelGestures]);
   useEntranceStagger(entranceRef, { baseDelay: 60, step: 55 });
   const visibleProjects = useMemo(() => projects.filter((project) => !project.hidden), []);
 
@@ -38,20 +110,31 @@ const PortfolioSection = forwardRef<HTMLDivElement>(function PortfolioSection(_,
       const trackRect = firstCard?.getBoundingClientRect() ?? shell.getBoundingClientRect();
       const top = Math.max(0, trackRect.top - shellRect.top);
       const height = Math.max(0, Math.min(trackRect.height, shellRect.height - top));
+      const nextTop = `${top.toFixed(2)}px`;
+      const nextHeight = `${height.toFixed(2)}px`;
 
-      shell.style.setProperty("--portfolio-shadow-top", `${top.toFixed(2)}px`);
-      shell.style.setProperty("--portfolio-shadow-height", `${height.toFixed(2)}px`);
+      if (lastShadowBoundsRef.current.top !== nextTop) {
+        shell.style.setProperty("--portfolio-shadow-top", nextTop);
+        lastShadowBoundsRef.current.top = nextTop;
+      }
+
+      if (lastShadowBoundsRef.current.height !== nextHeight) {
+        shell.style.setProperty("--portfolio-shadow-height", nextHeight);
+        lastShadowBoundsRef.current.height = nextHeight;
+      }
     };
 
     const updateEdgeShadows = () => {
-      const progress = Math.max(0, Math.min(1, emblaApi.scrollProgress()));
-      const left = emblaApi.canScrollPrev() ? Math.min(progress * 6, 1) : 0;
-      const right = emblaApi.canScrollNext() ? Math.min((1 - progress) * 6, 1) : 0;
+      const left = emblaApi.canScrollPrev();
+      const right = emblaApi.canScrollNext();
+      const previous = lastEdgeStateRef.current;
+      if (previous.left === left && previous.right === right) return;
 
-      shell.style.setProperty("--portfolio-left-shadow", left.toFixed(3));
-      shell.style.setProperty("--portfolio-right-shadow", right.toFixed(3));
-      shell.classList.toggle("is-at-start", left < 0.02);
-      shell.classList.toggle("is-at-end", right < 0.02);
+      shell.style.setProperty("--portfolio-left-shadow", left ? "1" : "0");
+      shell.style.setProperty("--portfolio-right-shadow", right ? "1" : "0");
+      shell.classList.toggle("is-at-start", !left);
+      shell.classList.toggle("is-at-end", !right);
+      lastEdgeStateRef.current = { left, right };
     };
 
     const onDragStart = (e: DragEvent) => {
@@ -106,54 +189,7 @@ const PortfolioSection = forwardRef<HTMLDivElement>(function PortfolioSection(_,
         <div ref={setShellRef} className="portfolio-deck-shell" data-entrance-item>
           <div className="portfolio-phone-deck">
             {visibleProjects.map((project, index) => (
-              <article key={project.id} className="portfolio-phone-card">
-                <div className="portfolio-phone-copy">
-                  <span className="portfolio-index">{String(index + 1).padStart(2, "0")}</span>
-                  <h3>{project.title}</h3>
-                  <div className="portfolio-description">
-                    {project.id === "fullleaf-app" ? (
-                      <>
-                        <p>A Flutter-based, WebView app for Full Leaf Tea Company.</p>
-                        <div className="portfolio-store-links">
-                          <a href="https://apps.apple.com/us/app/full-leaf-tea-co/id6451437741" target="_blank" rel="noopener noreferrer">App Store</a>
-                          <span aria-hidden="true">/</span>
-                          <a href="https://play.google.com/store/apps/details?id=fullleafteacompany.android.app&hl=en_US&pli=1" target="_blank" rel="noopener noreferrer">Play Store</a>
-                        </div>
-                      </>
-                    ) : typeof project.description === "string" ? <p>{project.description}</p> : project.description}
-                  </div>
-                  <div className="portfolio-tech-strip" aria-label={`${project.title} tech stack`}>
-                    {project.techStack?.slice(0, 4).map((item) => (
-                      <span key={item.label} className="portfolio-tech-pill">
-                        <span className="portfolio-tech-icon" aria-hidden="true">
-                          {item.icon}
-                        </span>
-                        <span>{item.label}</span>
-                      </span>
-                    ))}
-                  </div>
-                </div>
-
-                <div className="portfolio-phone-preview" aria-label={`${project.title} preview`}>
-                  {project.imageUrl && (
-                    <Image
-                      src={project.imageUrl}
-                      alt={project.imageAlt || `Screenshot of ${project.title}`}
-                      width={600}
-                      height={1200}
-                      loading="lazy"
-                      placeholder="blur"
-                      blurDataURL={project.imageBlurDataURL || "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAwIiBoZWlnaHQ9IjEyMDAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZyI+PHJlY3Qgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgZmlsbD0iIzIwMjAyMCIvPjwvc3ZnPg=="}
-                    />
-                  )}
-                </div>
-
-                {project.websiteUrl && (
-                  <a href={project.websiteUrl} target="_blank" rel="noopener noreferrer" className="portfolio-tile-link">
-                    Visit <MdOpenInNew aria-hidden="true" />
-                  </a>
-                )}
-              </article>
+              <PortfolioProjectCard key={project.id} project={project} index={index} />
             ))}
           </div>
         </div>
@@ -165,6 +201,8 @@ const PortfolioSection = forwardRef<HTMLDivElement>(function PortfolioSection(_,
       </div>
     </section>
   );
-});
+}));
+
+PortfolioSection.displayName = "PortfolioSection";
 
 export default PortfolioSection;
