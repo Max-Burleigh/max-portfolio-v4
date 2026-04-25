@@ -2,7 +2,7 @@
 import React, { useState, useRef, useCallback, useMemo, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 // import { throttle } from "lodash";
-import { useIsMobile, useCursorFollower } from "@lib/hooks";
+import { useIsMobile } from "@lib/hooks";
 import AuroraBackground from "@components/AuroraBackground";
 import IOSViewportOverlay from "@components/IOSViewportOverlay";
 import Navigation from "@components/navigation/Navigation";
@@ -17,9 +17,6 @@ const SECTION_TRANSITION_MS = 640;
 
 // Main Portfolio component
 const Portfolio = () => {
-  // For optimized cursor following
-  const { cursorX, cursorY, handleMouseMove, cursorOpacity } = useCursorFollower({ damping: 25, stiffness: 700 });
-
   // About section logic moved into AboutSection component
   // Mobile detection (for cursor circle overlay and menu overlay)
   const isMobile = useIsMobile();
@@ -90,8 +87,6 @@ const Portfolio = () => {
   useEffect(() => {
     activeRef.current = activeSection;
   }, [activeSection]);
-
-  const throttledMouseMove = handleMouseMove;
 
   // Portrait tilt/glare logic is encapsulated inside AboutSection now
 
@@ -409,7 +404,6 @@ const Portfolio = () => {
             ref={containerRef}
             id="portfolio-sections"
             className="portfolio-container"
-            onMouseMove={throttledMouseMove}
           >
         {/* Add overlay when mobile menu is open */}
         <AnimatePresence>
@@ -432,18 +426,6 @@ const Portfolio = () => {
           The primary Navigation component is already rendered outside this scrollable container.
         */}
 
-        {!isMobile && (
-          <motion.div
-            className="cursor-circle"
-            style={{
-              x: cursorX,
-              y: cursorY,
-              opacity: cursorOpacity,
-              willChange: "transform, opacity",
-            }}
-          />
-        )}
-
             <div
               className="portfolio-sections"
               style={{
@@ -458,7 +440,11 @@ const Portfolio = () => {
                 onContact={() => scrollToSection("contact")}
               />
 
-              <ServicesSection ref={sectionRefs.services} onStartProject={handleStartProject} />
+              <ServicesSection
+                ref={sectionRefs.services}
+                isActive={activeSection === "services"}
+                onStartProject={handleStartProject}
+              />
 
               <PortfolioSection ref={sectionRefs.portfolio} />
 

@@ -8,6 +8,7 @@ import { MdAdd, MdArrowForward, MdCheckCircle, MdErrorOutline, MdSecurity } from
 import { useEntranceStagger, useIsMobile } from "@lib/hooks";
 
 interface ServicesSectionProps {
+  isActive?: boolean;
   onStartProject?: (data: { plan: "ESSENTIAL" | "GROWTH" | null; subscription: boolean }) => void;
 }
 
@@ -24,7 +25,7 @@ const planBullets = {
 
 const supportDetails = ["Hosting and DNS care", "Uptime monitoring", "Workspace help", "Small fixes and maintenance"];
 
-const ServicesSection = forwardRef<HTMLDivElement, ServicesSectionProps>((_, ref) => {
+const ServicesSection = forwardRef<HTMLDivElement, ServicesSectionProps>(({ isActive = false }, ref) => {
   const router = useRouter();
   const entranceRef = useRef<HTMLDivElement>(null);
   useEntranceStagger(entranceRef, { baseDelay: 80, step: 45 });
@@ -118,6 +119,7 @@ const ServicesSection = forwardRef<HTMLDivElement, ServicesSectionProps>((_, ref
   const selectionItems: SelectionItem[] = [];
   if (planLabel) selectionItems.push({ id: "plan", label: planLabel, className: planClassName });
   if (hasSubscription) selectionItems.push({ id: "subscription", label: "Peace of Mind", className: "text-white" });
+  const shouldShowSelectionDock = mounted && isActive && (selectedPlan || hasSubscription) && !navigatedToContact;
 
   const shouldCycleSelections = isMobile && selectionItems.length > 1;
   const activeTickerItem = shouldCycleSelections && selectionItems.length > 0
@@ -221,60 +223,62 @@ const ServicesSection = forwardRef<HTMLDivElement, ServicesSectionProps>((_, ref
         </div>
       </div>
 
+      <AnimatePresence>
+        {shouldShowSelectionDock && (
+          <motion.div
+            initial={{ x: "-50%", y: 100, opacity: 0 }}
+            animate={{ x: "-50%", y: 0, opacity: 1 }}
+            exit={{ x: "-50%", y: 100, opacity: 0 }}
+            transition={{ type: "spring", stiffness: 300, damping: 30 }}
+            className="service-selection-dock"
+          >
+            <div className="selection-dock-content">
+              <div className="selection-dock-copy">
+                <div className="selection-dock-eyebrow">
+                  Your Selection
+                </div>
+                <div className="selection-dock-label">
+                  {shouldCycleSelections ? (
+                    <div className="selection-ticker">
+                      <AnimatePresence mode="wait">
+                        {activeTickerItem && (
+                          <motion.span
+                            key={activeTickerItem.id}
+                            initial={{ opacity: 0, y: 8 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            exit={{ opacity: 0, y: -8 }}
+                            transition={{ duration: 0.3 }}
+                            className={`block truncate ${activeTickerItem.className ?? ""}`}
+                          >
+                            {activeTickerItem.label}
+                          </motion.span>
+                        )}
+                      </AnimatePresence>
+                    </div>
+                  ) : (
+                    <>
+                      {planLabel && <span className={planClassName}>{planLabel}</span>}
+                      {selectedPlan && hasSubscription && <span className="selection-dock-plus">+</span>}
+                      {hasSubscription && <span>Peace of Mind</span>}
+                    </>
+                  )}
+                </div>
+              </div>
+
+              <button
+                type="button"
+                onClick={handleContact}
+                className="selection-dock-button"
+              >
+                Let&apos;s Start <MdArrowForward aria-hidden="true" />
+              </button>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
       {mounted && createPortal(
         <>
-          <AnimatePresence>
-            {(selectedPlan || hasSubscription) && !navigatedToContact && (
-              <motion.div
-                initial={{ y: 100, opacity: 0 }}
-                animate={{ y: 0, opacity: 1 }}
-                exit={{ y: 100, opacity: 0 }}
-                transition={{ type: "spring", stiffness: 300, damping: 30 }}
-                className="fixed bottom-6 inset-x-0 z-[9999] flex justify-center px-4 pointer-events-none"
-              >
-                <div className="pointer-events-auto bg-[#0a0a0a]/90 backdrop-blur-xl border border-white/10 rounded-2xl shadow-2xl shadow-black/50 p-4 pl-6 flex items-center gap-6 max-w-2xl w-full ring-1 ring-white/5">
-                  <div className="flex-grow min-w-0">
-                    <div className="text-xs font-bold text-white/40 uppercase tracking-wider mb-1">
-                      Your Selection
-                    </div>
-                    <div className="flex items-center gap-2 text-white font-space-grotesk truncate min-h-[1.5rem]">
-                      {shouldCycleSelections ? (
-                        <div className="relative h-6 flex items-center overflow-hidden">
-                          <AnimatePresence mode="wait">
-                            {activeTickerItem && (
-                              <motion.span
-                                key={activeTickerItem.id}
-                                initial={{ opacity: 0, y: 8 }}
-                                animate={{ opacity: 1, y: 0 }}
-                                exit={{ opacity: 0, y: -8 }}
-                                transition={{ duration: 0.3 }}
-                                className={`block truncate ${activeTickerItem.className ?? ""}`}
-                              >
-                                {activeTickerItem.label}
-                              </motion.span>
-                            )}
-                          </AnimatePresence>
-                        </div>
-                      ) : (
-                        <>
-                          {planLabel && <span className={planClassName}>{planLabel}</span>}
-                          {selectedPlan && hasSubscription && <span className="text-white/30">+</span>}
-                          {hasSubscription && <span>Peace of Mind</span>}
-                        </>
-                      )}
-                    </div>
-                  </div>
-
-                  <button
-                    onClick={handleContact}
-                    className="flex-shrink-0 bg-white text-black px-6 py-3 rounded-xl font-bold hover:scale-105 transition-transform flex items-center gap-2 shadow-[0_0_20px_rgba(255,255,255,0.3)]"
-                  >
-                    Let&apos;s Start <MdArrowForward />
-                  </button>
-                </div>
-              </motion.div>
-            )}
-          </AnimatePresence>
           <AnimatePresence>
             {showToast && toastMessage && (
               <motion.div
