@@ -200,7 +200,7 @@ const AboutSection = forwardRef<HTMLDivElement, AboutSectionProps>(function Abou
                 }}
               />
               <Image
-                src="/new-headshot.png"
+                src="/new-headshot-portfolio.png"
                 alt="Max Burleigh"
                 fill
                 sizes="(max-width: 768px) 256px, 320px"
