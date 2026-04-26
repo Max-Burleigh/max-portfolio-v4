@@ -237,8 +237,12 @@ const ServicesSection = forwardRef<HTMLDivElement, ServicesSectionProps>((_, ref
               </motion.button>
             );
           })}
-          <div
+          <motion.button
+            type="button"
+            onClick={handleSubscriptionToggle}
+            aria-pressed={hasSubscription}
             className={`service-support-card ${hasSubscription ? "is-selected" : ""}`}
+            whileTap={{ scale: 0.985 }}
           >
             <div className="plan-card-header">
               <span className="service-plan-title support-eyebrow">Peace of Mind</span>
@@ -266,10 +270,10 @@ const ServicesSection = forwardRef<HTMLDivElement, ServicesSectionProps>((_, ref
                 );
               })}
             </ul>
-            <button type="button" onClick={handleSubscriptionToggle} className={`service-plan-action support-toggle ${hasSubscription ? "is-selected" : ""}`}>
+            <span className={`service-plan-action support-toggle ${hasSubscription ? "is-selected" : ""}`}>
               {hasSubscription ? <><MdCheckCircle /> Added</> : <><MdAdd /> Add support</>}
-            </button>
-          </div>
+            </span>
+          </motion.button>
 
           <div className={`service-selection-card ${hasSelection ? "has-selection" : ""}`}>
             <div className="selection-dock-content">
@@ -350,11 +354,11 @@ const ServicesSection = forwardRef<HTMLDivElement, ServicesSectionProps>((_, ref
                 transition={{ type: "spring", stiffness: 220, damping: 25 }}
                 role="status"
                 aria-live="polite"
-                className="fixed bottom-28 right-6 left-6 md:left-auto z-[9999] pointer-events-auto"
+                className="service-toast"
               >
-                <div className="rounded-2xl bg-white/10 border border-white/15 shadow-2xl shadow-black/60 backdrop-blur-xl px-5 py-4 flex items-center gap-3 text-sm text-white font-semibold">
-                  <MdErrorOutline size={20} className="text-teal-300" aria-hidden="true" />
-                  <span className="leading-snug">{toastMessage}</span>
+                <div className="service-toast-panel">
+                  <MdErrorOutline aria-hidden="true" />
+                  <span>{toastMessage}</span>
                 </div>
               </motion.div>
             )}

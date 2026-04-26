@@ -1,7 +1,17 @@
 "use client";
 import React, { forwardRef, useRef, useState, useEffect } from "react";
-import { SiLinkedin, SiMaildotru } from "react-icons/si";
-import { MdAccessTime, MdArrowForward, MdEdit, MdLocationOn } from "react-icons/md";
+import { SiLinkedin } from "react-icons/si";
+import {
+  MdAccessTime,
+  MdAlternateEmail,
+  MdArrowForward,
+  MdChatBubbleOutline,
+  MdCode,
+  MdEdit,
+  MdGpsFixed,
+  MdLocationOn,
+  MdRocketLaunch,
+} from "react-icons/md";
 import { motion, AnimatePresence, useInView } from "framer-motion";
 import { CONTACT_EMAIL, LINKEDIN_URL } from "@lib/constants";
 import { useEntranceStagger, useIsMobile } from "@lib/hooks";
@@ -9,6 +19,13 @@ import { useEntranceStagger, useIsMobile } from "@lib/hooks";
 interface ContactSectionProps {
   inquiryData?: { plan: "ESSENTIAL" | "GROWTH" | null; subscription: boolean } | null;
 }
+
+const contactPromises = [
+  { icon: MdChatBubbleOutline, label: "Clear communication" },
+  { icon: MdGpsFixed, label: "Focused solutions" },
+  { icon: MdCode, label: "Clean execution" },
+  { icon: MdRocketLaunch, label: "On-time delivery" },
+] as const;
 
 const ContactSection = forwardRef<HTMLDivElement, ContactSectionProps>(function ContactSection({ inquiryData }, ref) {
   const isMobile = useIsMobile();
@@ -119,11 +136,19 @@ const ContactSection = forwardRef<HTMLDivElement, ContactSectionProps>(function 
                   <span aria-hidden="true" className="contact-pitch-rule" />
                   <h3>Need support or a new build?</h3>
                   <p>Tell me what&apos;s broken, what you want to launch, and your deadline. I&apos;ll give you the roadmap.</p>
+                  <div className="contact-promise-grid" aria-label="Working style">
+                    {contactPromises.map(({ icon: Icon, label }) => (
+                      <div className="contact-promise" key={label}>
+                        <Icon aria-hidden="true" />
+                        <span>{label}</span>
+                      </div>
+                    ))}
+                  </div>
                 </div>
 
                 <div className="contact-channel-card" aria-label="Direct channels">
                   <a className="contact-channel" href={`mailto:${CONTACT_EMAIL}`}>
-                    <span className="contact-channel-icon"><SiMaildotru aria-hidden="true" /></span>
+                    <span className="contact-channel-icon"><MdAlternateEmail aria-hidden="true" /></span>
                     <span className="contact-channel-copy">
                       <span className="contact-channel-label">Email</span>
                       <span className="contact-channel-value">{CONTACT_EMAIL}</span>

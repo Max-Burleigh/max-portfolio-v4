@@ -265,7 +265,7 @@ function GetStartedForm() {
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        className="min-h-screen flex items-center justify-center p-6"
+        className="get-started-page min-h-screen flex items-center justify-center p-6"
       >
         <div className="bg-[#0d1117]/90 backdrop-blur-xl border border-white/10 rounded-2xl max-w-lg w-full text-center py-16 px-8">
           <motion.div
@@ -292,7 +292,7 @@ function GetStartedForm() {
   }
 
   return (
-    <div className="min-h-screen py-12 md:py-20 px-4">
+    <div className="get-started-page min-h-screen py-12 md:py-20 px-4">
       <div className="max-w-2xl mx-auto">
         {/* Header */}
         <motion.div
