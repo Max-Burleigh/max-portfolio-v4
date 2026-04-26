@@ -178,7 +178,7 @@ const PortfolioSection = React.memo(forwardRef<HTMLDivElement>(function Portfoli
         <div className="cockpit-header" data-entrance-item>
           <div>
             <p className="hero-eyebrow">Portfolio</p>
-            <h2>{visibleProjects.length} project field notes.</h2>
+            <h2>Projects that shipped.</h2>
           </div>
           <p>
             Phone-sized snapshots of ecommerce, AI products, mobile apps, and local business sites.

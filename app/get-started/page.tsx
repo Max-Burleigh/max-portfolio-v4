@@ -301,10 +301,10 @@ function GetStartedForm() {
           className="text-center mb-10"
         >
           <Link
-            href="/#services"
+            href="/"
             className="inline-flex items-center gap-2 text-white hover:text-teal-300 transition-colors mb-6 text-sm font-semibold drop-shadow-[0_2px_4px_rgba(0,0,0,0.5)]"
           >
-            <MdArrowBack /> Back to services
+            <MdArrowBack /> Back to site
           </Link>
           <h1 className="text-3xl md:text-4xl font-bold mb-3 font-space-grotesk text-white drop-shadow-[0_2px_10px_rgba(0,0,0,0.5)]">
             Let&apos;s get the basics

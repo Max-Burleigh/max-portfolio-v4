@@ -88,6 +88,27 @@ const Portfolio = () => {
     activeRef.current = activeSection;
   }, [activeSection]);
 
+  useEffect(() => {
+    const resetHashScroll = () => {
+      if (!window.location.hash) return;
+
+      const hashSection = window.location.hash.slice(1);
+      if (!sectionKeys.includes(hashSection as SectionKey)) return;
+
+      window.history.replaceState(null, "", `${window.location.pathname}${window.location.search}`);
+      setActiveSection("about");
+
+      requestAnimationFrame(() => {
+        window.scrollTo({ top: 0, left: 0, behavior: "auto" });
+        containerRef.current?.scrollTo({ top: 0, left: 0, behavior: "auto" });
+      });
+    };
+
+    resetHashScroll();
+    window.addEventListener("hashchange", resetHashScroll);
+    return () => window.removeEventListener("hashchange", resetHashScroll);
+  }, [sectionKeys]);
+
   // Portrait tilt/glare logic is encapsulated inside AboutSection now
 
   const scrollToSection = useCallback(

@@ -4,7 +4,21 @@ import React, { forwardRef, useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { useRouter } from "next/navigation";
 import { AnimatePresence, motion } from "framer-motion";
-import { MdAdd, MdArrowForward, MdCheckCircle, MdErrorOutline, MdSecurity } from "react-icons/md";
+import {
+  MdAdd,
+  MdArrowForward,
+  MdBuild,
+  MdCheckCircle,
+  MdDashboardCustomize,
+  MdDevices,
+  MdErrorOutline,
+  MdManageSearch,
+  MdOutlineEmail,
+  MdQueryStats,
+  MdShield,
+  MdSupportAgent,
+  MdViewModule,
+} from "react-icons/md";
 import { useEntranceStagger, useIsMobile } from "@lib/hooks";
 
 interface ServicesSectionProps {
@@ -18,14 +32,31 @@ type SelectionItem = {
   className?: string;
 };
 
-const planBullets = {
-  ESSENTIAL: ["5-page custom site", "Email + contact setup", "SEO-ready launch"],
-  GROWTH: ["10+ page site system", "Editable content dashboard", "Analytics + launch tracking"],
+const planFeatures = {
+  ESSENTIAL: [
+    { title: "Custom 5-page site", detail: "Mobile-first, on-brand design", icon: MdDevices },
+    { title: "Email + contact", detail: "Workspace setup and forms wired", icon: MdOutlineEmail },
+    { title: "Launch-ready SEO", detail: "Schema, sitemap, OG tags shipped", icon: MdManageSearch },
+  ],
+  GROWTH: [
+    { title: "10+ page system", detail: "Modular components, room to grow", icon: MdViewModule },
+    { title: "Editable dashboard", detail: "Update copy and images yourself", icon: MdDashboardCustomize },
+    { title: "Built-in analytics", detail: "GA4 events + conversion views", icon: MdQueryStats },
+  ],
 } as const;
 
-const supportDetails = ["Hosting and DNS care", "Uptime monitoring", "Workspace help", "Small fixes and maintenance"];
+const planTaglines = {
+  ESSENTIAL: "A sharp marketing site, launch-ready.",
+  GROWTH: "A larger system with analytics and room to grow.",
+} as const;
 
-const ServicesSection = forwardRef<HTMLDivElement, ServicesSectionProps>(({ isActive = false }, ref) => {
+const supportFeatures = [
+  { title: "Hosting + DNS", detail: "Certs and infra handled", icon: MdShield },
+  { title: "Workspace help", detail: "Email, calendars, accounts", icon: MdSupportAgent },
+  { title: "Small fixes", detail: "Copy, images, quick tweaks", icon: MdBuild },
+] as const;
+
+const ServicesSection = forwardRef<HTMLDivElement, ServicesSectionProps>((_, ref) => {
   const router = useRouter();
   const entranceRef = useRef<HTMLDivElement>(null);
   useEntranceStagger(entranceRef, { baseDelay: 80, step: 45 });
@@ -113,13 +144,20 @@ const ServicesSection = forwardRef<HTMLDivElement, ServicesSectionProps>(({ isAc
       : selectedPlan === "GROWTH"
         ? "Growth Plan"
         : null;
+  const planPrice = selectedPlan === "ESSENTIAL" ? "$3,000" : selectedPlan === "GROWTH" ? "$5,000" : null;
+  const totalEstimate =
+    selectedPlan === "ESSENTIAL"
+      ? "$3,000"
+      : selectedPlan === "GROWTH"
+        ? "$5,000"
+        : "Pending";
 
   const planClassName = selectedPlan === "GROWTH" ? "text-purple-300" : "text-teal-300";
 
   const selectionItems: SelectionItem[] = [];
   if (planLabel) selectionItems.push({ id: "plan", label: planLabel, className: planClassName });
   if (hasSubscription) selectionItems.push({ id: "subscription", label: "Peace of Mind", className: "text-white" });
-  const shouldShowSelectionDock = mounted && isActive && (selectedPlan || hasSubscription) && !navigatedToContact;
+  const hasSelection = Boolean((selectedPlan || hasSubscription) && !navigatedToContact);
 
   const shouldCycleSelections = isMobile && selectionItems.length > 1;
   const activeTickerItem = shouldCycleSelections && selectionItems.length > 0
@@ -149,15 +187,15 @@ const ServicesSection = forwardRef<HTMLDivElement, ServicesSectionProps>(({ isAc
         <div className="cockpit-header" data-entrance-item>
           <div>
             <p className="hero-eyebrow">Services</p>
-            <h2>Build the site. Keep it fast.</h2>
+            <h2>Design-forward websites engineered to win customers.</h2>
           </div>
-          <p>
-            Two clear website builds, plus an optional managed support layer for hosting,
-            domains, monitoring, and small fixes.
-          </p>
+            <p>
+              Choose from two packages: Essentials and Growth—plus an optional $150/month
+              support plan for ongoing maintenance and operations.
+            </p>
         </div>
 
-        <div className="service-plan-grid" data-entrance-item>
+        <div className={`service-plan-grid ${selectedPlan ? "has-card-focus" : ""}`} data-entrance-item>
           {(["ESSENTIAL", "GROWTH"] as const).map((plan) => {
             const isSelected = selectedPlan === plan;
             return (
@@ -166,79 +204,83 @@ const ServicesSection = forwardRef<HTMLDivElement, ServicesSectionProps>(({ isAc
                 type="button"
                 onClick={() => handlePlanSelection(plan)}
                 aria-pressed={isSelected}
-                className={`service-plan-card ${plan === "ESSENTIAL" ? "is-essential" : "is-growth"} ${isSelected ? "is-selected" : ""} ${shakePlans ? "shake" : ""}`}
+                className={`service-plan-card ${plan === "ESSENTIAL" ? "is-essential" : "is-growth"} ${isSelected ? "is-selected" : "is-dimmed"} ${shakePlans ? "shake" : ""}`}
                 whileTap={{ scale: 0.98 }}
               >
-                <span className="service-plan-title">{plan}</span>
-                <span className="service-plan-price">{plan === "ESSENTIAL" ? "$3,000" : "$5,000"}</span>
-                <span className="service-plan-copy">
-                  {plan === "ESSENTIAL"
-                    ? "A sharp, fast marketing site for a business that needs a professional web presence."
-                    : "A larger site with editable content, analytics, and more room to grow."}
-                </span>
-                <span className="service-plan-bullets" role="list">
-                  {planBullets[plan].map((feature) => (
-                    <span key={feature} role="listitem">
-                      <MdCheckCircle aria-hidden="true" />
-                      {feature}
-                    </span>
-                  ))}
-                </span>
+                <div className="plan-card-header">
+                  <span className="service-plan-title">{plan}</span>
+                  <div className="plan-card-price-row">
+                    <span className="service-plan-price">{plan === "ESSENTIAL" ? "$3,000" : "$5,000"}</span>
+                    <span className="plan-price-suffix">one-time</span>
+                  </div>
+                </div>
+                <p className="service-plan-copy">{planTaglines[plan]}</p>
+                <ul className="service-feature-rail" aria-label={`${plan.toLowerCase()} plan details`}>
+                  {planFeatures[plan].map((feature) => {
+                    const FeatureIcon = feature.icon;
+                    return (
+                      <li key={feature.title} className="service-feature-column">
+                        <span className="service-feature-icon" aria-hidden="true">
+                          <FeatureIcon />
+                        </span>
+                        <span className="service-feature-text">
+                          <span className="service-feature-title">{feature.title}</span>
+                          <span className="service-feature-detail">{feature.detail}</span>
+                        </span>
+                      </li>
+                    );
+                  })}
+                </ul>
                 <span className="service-plan-action">
                   {isSelected ? <><MdCheckCircle /> Selected</> : "Select plan"}
                 </span>
               </motion.button>
             );
           })}
-        </div>
-
-        <div
-          className={`service-support-card ${hasSubscription ? "is-selected" : ""}`}
-          data-entrance-item
-        >
-          <div className="support-main">
-            <span className="support-icon">
-              <MdSecurity aria-hidden="true" />
-            </span>
-            <div>
-              <p className="service-plan-kicker">Monthly subscription</p>
-              <h3>Peace of Mind</h3>
-              <p>
-                Managed hosting, domain care, uptime monitoring, Google Workspace help, and bug fixes.
-              </p>
-            </div>
-          </div>
-          <div className="support-price">
-            <strong>$150</strong>
-            <span>/ month</span>
-          </div>
-          <div className="support-detail-band" aria-label="Managed support details">
-            {supportDetails.map((item) => (
-              <span key={item}><MdCheckCircle aria-hidden="true" /> {item}</span>
-            ))}
-          </div>
-          <button type="button" onClick={handleSubscriptionToggle} className={`support-toggle ${hasSubscription ? "is-selected" : ""}`}>
-            {hasSubscription ? <><MdCheckCircle /> Added</> : <><MdAdd /> Add support</>}
-          </button>
-        </div>
-      </div>
-
-      <AnimatePresence>
-        {shouldShowSelectionDock && (
-          <motion.div
-            initial={{ x: "-50%", y: 100, opacity: 0 }}
-            animate={{ x: "-50%", y: 0, opacity: 1 }}
-            exit={{ x: "-50%", y: 100, opacity: 0 }}
-            transition={{ type: "spring", stiffness: 300, damping: 30 }}
-            className="service-selection-dock"
+          <div
+            className={`service-support-card ${hasSubscription ? "is-selected" : ""}`}
           >
+            <div className="plan-card-header">
+              <span className="service-plan-title support-eyebrow">Peace of Mind</span>
+              <div className="plan-card-price-row">
+                <span className="service-plan-price">$150</span>
+                <span className="plan-price-suffix">/ month</span>
+              </div>
+            </div>
+            <p className="service-plan-copy">
+              Hosting, uptime, and small fixes — handled monthly.
+            </p>
+            <ul className="service-feature-rail support-feature-rail" aria-label="Managed support details">
+              {supportFeatures.map((feature) => {
+                const FeatureIcon = feature.icon;
+                return (
+                  <li key={feature.title} className="service-feature-column support-feature-column">
+                    <span className="service-feature-icon support-feature-icon" aria-hidden="true">
+                      <FeatureIcon />
+                    </span>
+                    <span className="service-feature-text support-feature-text">
+                      <span className="service-feature-title support-feature-title">{feature.title}</span>
+                      <span className="service-feature-detail support-feature-detail">{feature.detail}</span>
+                    </span>
+                  </li>
+                );
+              })}
+            </ul>
+            <button type="button" onClick={handleSubscriptionToggle} className={`service-plan-action support-toggle ${hasSubscription ? "is-selected" : ""}`}>
+              {hasSubscription ? <><MdCheckCircle /> Added</> : <><MdAdd /> Add support</>}
+            </button>
+          </div>
+
+          <div className={`service-selection-card ${hasSelection ? "has-selection" : ""}`}>
             <div className="selection-dock-content">
               <div className="selection-dock-copy">
                 <div className="selection-dock-eyebrow">
                   Your Selection
                 </div>
-                <div className="selection-dock-label">
-                  {shouldCycleSelections ? (
+                <div className={`selection-dock-label ${hasSelection ? "" : "is-empty"}`}>
+                  {!hasSelection ? (
+                    <span>Choose a plan to start.</span>
+                  ) : shouldCycleSelections ? (
                     <div className="selection-ticker">
                       <AnimatePresence mode="wait">
                         {activeTickerItem && (
@@ -263,19 +305,38 @@ const ServicesSection = forwardRef<HTMLDivElement, ServicesSectionProps>(({ isAc
                     </>
                   )}
                 </div>
+                <div className="selection-summary" aria-label="Selection summary">
+                  <div>
+                    <span>Build</span>
+                    <strong>{planLabel ?? "Not selected"}</strong>
+                  </div>
+                  <div>
+                    <span>Project fee</span>
+                    <strong>{planPrice ?? "--"}</strong>
+                  </div>
+                  <div>
+                    <span>Support</span>
+                    <strong>{hasSubscription ? "$150 / month" : "Optional"}</strong>
+                  </div>
+                  <div>
+                    <span>Total</span>
+                    <strong>{totalEstimate}</strong>
+                  </div>
+                </div>
               </div>
 
               <button
                 type="button"
                 onClick={handleContact}
+                disabled={!hasSelection}
                 className="selection-dock-button"
               >
                 Let&apos;s Start <MdArrowForward aria-hidden="true" />
               </button>
             </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+          </div>
+        </div>
+      </div>
 
       {mounted && createPortal(
         <>

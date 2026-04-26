@@ -130,8 +130,7 @@ const AboutSection = forwardRef<HTMLDivElement, AboutSectionProps>(function Abou
             </h1>
             <div data-entrance-item className="hero-title-rule" aria-hidden="true" />
             <p data-entrance-item className="hero-subcopy">
-              Web designer & developer helping businesses grow in{" "}
-              <span>Medford, Oregon</span>.
+              Web developer, designer, and tech support specialist helping businesses grow in Oregon and across the nation.
             </p>
 
             <div className="hero-actions" data-entrance-item>
@@ -219,7 +218,7 @@ const AboutSection = forwardRef<HTMLDivElement, AboutSectionProps>(function Abou
         <div className="hero-stats" data-entrance="stats">
           <div className="hero-stat">
             <span className="hero-stat-icon"><MdRocketLaunch aria-hidden="true" /></span>
-            <span className="hero-stat-value">5+</span>
+            <span className="hero-stat-value">10+</span>
             <span className="hero-stat-label">Years Experience</span>
           </div>
           <div className="hero-stat">
@@ -229,7 +228,7 @@ const AboutSection = forwardRef<HTMLDivElement, AboutSectionProps>(function Abou
           </div>
           <div className="hero-stat">
             <span className="hero-stat-icon"><MdMood aria-hidden="true" /></span>
-            <span className="hero-stat-value">40+</span>
+            <span className="hero-stat-value">100+</span>
             <span className="hero-stat-label">Happy Clients</span>
           </div>
           <div className="hero-stat">

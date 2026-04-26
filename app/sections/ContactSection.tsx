@@ -117,8 +117,8 @@ const ContactSection = forwardRef<HTMLDivElement, ContactSectionProps>(function 
               >
                 <div className="contact-pitch">
                   <span aria-hidden="true" className="contact-pitch-rule" />
-                  <h3>Quick, direct, no weird form maze.</h3>
-                  <p>Send the essentials and I&apos;ll reply with next steps, timelines, and a clean recommendation for the build.</p>
+                  <h3>Need support or a new build?</h3>
+                  <p>Tell me what&apos;s broken, what you want to launch, and your deadline. I&apos;ll give you the roadmap.</p>
                 </div>
 
                 <div className="contact-channel-card" aria-label="Direct channels">
@@ -139,7 +139,7 @@ const ContactSection = forwardRef<HTMLDivElement, ContactSectionProps>(function 
                     <MdArrowForward className="contact-channel-arrow" aria-hidden="true" />
                   </a>
                   <div className="contact-meta-row" aria-label="Contact details">
-                    <span><MdAccessTime aria-hidden="true" /> <span>Typical reply:</span> <strong>within one business day</strong></span>
+                    <span><MdAccessTime aria-hidden="true" /> <span>Typical reply:</span> <strong>one to two business days</strong></span>
                     <span><MdLocationOn aria-hidden="true" /> <strong>Medford, Oregon</strong></span>
                   </div>
                 </div>
