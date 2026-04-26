@@ -1,0 +1,526 @@
+.moduleScope { --module-scope: initial; }
+
+:global(.contact-section):where(:not(.moduleScope)) {
+  align-items: stretch !important;
+  justify-content: stretch !important;
+}
+
+:global(.contact-section > [data-entrance]):where(:not(.moduleScope)) {
+  width: 100% !important;
+  max-width: 100% !important;
+  height: 100% !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+
+:global(.contact-card):where(:not(.moduleScope)) {
+  width: 100% !important;
+  max-width: 100% !important;
+  height: auto !important;
+  max-height: 100% !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  contain: none !important;
+  display: grid;
+  grid-template-columns: minmax(0, 0.95fr) minmax(300px, 0.85fr);
+  grid-template-areas:
+    "title intro"
+    "title channels";
+  gap: clamp(1.4rem, 4vw, 4rem);
+  align-items: center;
+  overflow: visible !important;
+  text-align: left !important;
+}
+
+:global(.contact-card h2):where(:not(.moduleScope)) {
+  grid-area: title;
+  color: #fff;
+  font-size: clamp(4rem, 9vw, 8.5rem) !important;
+  line-height: 0.86;
+  letter-spacing: -0.085em;
+  margin: 0 !important;
+  text-align: left;
+}
+
+:global(.contact-card h2):where(:not(.moduleScope))::after {
+  content: "";
+  display: block;
+  width: min(190px, 42vw);
+  height: 3px;
+  margin-top: clamp(1.2rem, 3vh, 2rem);
+  border-radius: 999px;
+  background: linear-gradient(90deg, #27f5e6 0%, rgba(106, 111, 255, 0.78) 70%, transparent 100%);
+}
+
+:global(.contact-card > p):where(:not(.moduleScope)),
+:global(.contact-card > div:nth-of-type(1)):where(:not(.moduleScope)) {
+  grid-area: intro;
+}
+
+:global(.contact-card > p):where(:not(.moduleScope)) {
+  margin: 0 !important;
+  max-width: 34rem;
+  color: rgba(230, 238, 248, 0.72);
+  font-size: clamp(1.2rem, 2vw, 1.65rem);
+  line-height: 1.45;
+}
+
+:global(.contact-card > .mt-8):where(:not(.moduleScope)) {
+  grid-area: channels;
+  margin: 0 !important;
+  padding: clamp(1rem, 2vw, 1.25rem) !important;
+  border-top: 0 !important;
+  border-left: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(255, 255, 255, 0.035);
+  border-radius: 22px;
+  display: grid;
+  gap: 1rem;
+}
+
+:global(.contact-card > .mt-8 p):where(:not(.moduleScope)) {
+  margin: 0 !important;
+}
+
+:global(.contact-card a):where(:not(.moduleScope)) {
+  color: #53fff1 !important;
+  font-size: clamp(1.05rem, 1.5vw, 1.35rem);
+}
+
+:global(.contact-card a):where(:not(.moduleScope))::after {
+  display: none !important;
+}
+
+@media (max-width: 768px) {
+  :global(.contact-card):where(:not(.moduleScope)) {
+    grid-template-columns: 1fr;
+    grid-template-areas:
+      "title"
+      "intro"
+      "channels";
+    gap: 1.2rem;
+    align-content: center;
+  }
+
+  :global(.contact-card h2):where(:not(.moduleScope)) {
+    font-size: clamp(3.4rem, 18vw, 5.2rem) !important;
+  }
+
+  :global(.contact-card > .mt-8):where(:not(.moduleScope)) {
+    border-left: 0;
+  }
+}
+
+:global(.contact-cockpit):where(:not(.moduleScope)) {
+  width: 100%;
+  height: 100%;
+  display: grid !important;
+  grid-template-rows: auto minmax(0, 1fr);
+  gap: clamp(1.65rem, 5vh, 4.9rem);
+  align-items: stretch !important;
+  justify-content: stretch !important;
+  overflow: hidden;
+}
+
+:global(.contact-section > .contact-cockpit):where(:not(.moduleScope)) {
+  display: grid !important;
+  align-items: stretch !important;
+  justify-content: stretch !important;
+}
+
+:global(.contact-cockpit-header):where(:not(.moduleScope)) {
+  display: grid !important;
+  grid-template-columns: minmax(0, 0.95fr) minmax(280px, 0.65fr);
+  align-items: end;
+  gap: clamp(1.25rem, 4vw, 4rem);
+  margin-bottom: 0 !important;
+  padding-bottom: clamp(1.05rem, 2.3vh, 1.45rem);
+  border-bottom: 1px solid rgba(201, 219, 255, 0.16);
+}
+
+:global(.contact-cockpit-header .hero-eyebrow):where(:not(.moduleScope)) {
+  margin-bottom: 0.72rem;
+  color: rgba(245, 248, 255, 0.66);
+  letter-spacing: 0.46em;
+}
+
+:global(.contact-heading h2):where(:not(.moduleScope)) {
+  max-width: 100%;
+  color: rgba(255, 255, 255, 0.97);
+  text-shadow: 0 0 24px rgba(255, 255, 255, 0.08);
+}
+
+:global(.contact-panel):where(:not(.moduleScope)) {
+  align-self: start;
+  justify-self: stretch;
+  width: 100%;
+  min-width: 0;
+}
+
+:global(.contact-link-panel):where(:not(.moduleScope)) {
+  display: grid;
+  grid-template-columns: minmax(270px, 0.46fr) minmax(420px, 0.78fr);
+  align-items: center;
+  justify-content: space-between;
+  gap: clamp(2.5rem, 5.8vw, 5.4rem);
+}
+
+:global(.contact-pitch):where(:not(.moduleScope)) {
+  min-width: 0;
+  max-width: 29.8rem;
+}
+
+:global(.contact-pitch-rule):where(:not(.moduleScope)) {
+  display: block;
+  width: min(10.5rem, 46%);
+  height: 3px;
+  margin-bottom: clamp(1.55rem, 3.4vh, 2.35rem);
+  border-radius: 999px;
+  background: linear-gradient(90deg, #39fff0 0%, #3bbcff 58%, rgba(88, 91, 255, 0) 100%);
+  box-shadow: 0 0 24px rgba(57, 255, 240, 0.22);
+}
+
+:global(.contact-pitch h3):where(:not(.moduleScope)) {
+  max-width: 22rem;
+  margin: 0;
+  color: rgba(255, 255, 255, 0.95);
+  font-family: var(--font-space-grotesk), var(--font-fallback);
+  font-size: clamp(1.85rem, 2.8vw, 2.62rem);
+  line-height: 1.12;
+  letter-spacing: -0.045em;
+}
+
+:global(.contact-pitch p):where(:not(.moduleScope)) {
+  max-width: 25rem;
+  margin: clamp(1.1rem, 2.4vh, 1.55rem) 0 0;
+  color: rgba(230, 238, 248, 0.7);
+  font-size: clamp(1rem, 1.24vw, 1.17rem);
+  line-height: 1.58;
+}
+
+:global(.contact-promise-grid):where(:not(.moduleScope)) {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  column-gap: clamp(0.45rem, 1.1vw, 0.95rem);
+  row-gap: 2.9rem;
+  margin-top: clamp(3.4rem, 8vh, 5.2rem);
+}
+
+:global(.contact-promise):where(:not(.moduleScope)) {
+  min-width: 0;
+  display: grid;
+  justify-items: center;
+  gap: 1.1rem;
+  padding: 0 0.25rem;
+  color: rgba(235, 242, 255, 0.82);
+  text-align: center;
+  font-size: clamp(0.72rem, 0.98vw, 0.9rem);
+  line-height: 1.38;
+}
+
+:global(.contact-promise + .contact-promise):where(:not(.moduleScope)) {
+  border-left: 0;
+}
+
+:global(.contact-promise svg):where(:not(.moduleScope)) {
+  color: #39fff0;
+  font-size: clamp(2.15rem, 3.4vw, 2.95rem);
+  filter: drop-shadow(0 0 13px rgba(57, 255, 240, 0.26));
+}
+
+:global(.contact-promise span):where(:not(.moduleScope)) {
+  position: relative;
+  min-height: 2.4em;
+  max-width: 6.8rem;
+}
+
+:global(.contact-promise span):where(:not(.moduleScope))::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  bottom: -1.15rem;
+  width: 2.4rem;
+  height: 2px;
+  border-radius: 999px;
+  background: linear-gradient(90deg, #35dfff, #9b71ff);
+  transform: translateX(-50%);
+  box-shadow: 0 0 12px rgba(72, 175, 255, 0.3);
+}
+
+:global(.contact-channel-card):where(:not(.moduleScope)) {
+  display: grid;
+  gap: 0.86rem;
+  padding: clamp(1.45rem, 2.6vw, 1.8rem) clamp(1.25rem, 2.3vw, 1.55rem) 0;
+  border-radius: 28px;
+  border: 1px solid rgba(148, 177, 255, 0.28);
+  background:
+    radial-gradient(circle at 12% 0%, rgba(83, 255, 241, 0.13), transparent 36%),
+    linear-gradient(145deg, rgba(112, 155, 198, 0.2), rgba(95, 68, 170, 0.1) 48%, rgba(16, 22, 54, 0.18));
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.12),
+    inset 0 0 58px rgba(255, 255, 255, 0.03),
+    0 24px 58px rgba(0, 0, 0, 0.2);
+  overflow: hidden;
+}
+
+:global(.contact-channel):where(:not(.moduleScope)) {
+  min-height: clamp(5rem, 10vh, 6.55rem);
+  display: grid;
+  grid-template-columns: clamp(3.9rem, 5.8vw, 4.95rem) minmax(0, 1fr) auto;
+  align-items: center;
+  gap: clamp(1rem, 2vw, 1.45rem);
+  padding: clamp(0.9rem, 1.45vw, 1.15rem) clamp(1rem, 1.75vw, 1.35rem);
+  border-radius: 18px;
+  border: 1px solid rgba(129, 155, 224, 0.14);
+  background:
+    radial-gradient(circle at 0% 50%, rgba(83, 255, 241, 0.07), transparent 30%),
+    linear-gradient(135deg, rgba(3, 13, 30, 0.68), rgba(15, 17, 48, 0.78));
+  color: white;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04);
+  transition: border-color 180ms ease, transform 180ms ease, background 180ms ease;
+}
+
+:global(.contact-channel:hover):where(:not(.moduleScope)) {
+  border-color: rgba(83, 255, 241, 0.34);
+  background:
+    radial-gradient(circle at 0% 50%, rgba(83, 255, 241, 0.12), transparent 32%),
+    linear-gradient(135deg, rgba(4, 17, 39, 0.78), rgba(18, 19, 55, 0.86));
+  transform: translateY(-1px);
+}
+
+:global(.contact-channel-icon):where(:not(.moduleScope)) {
+  width: clamp(3.9rem, 5.8vw, 4.95rem);
+  height: clamp(3.9rem, 5.8vw, 4.95rem);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 17px;
+  color: #39fff0;
+  background: linear-gradient(145deg, rgba(57, 255, 240, 0.16), rgba(57, 255, 240, 0.06));
+  box-shadow:
+    inset 0 0 0 1px rgba(83, 255, 241, 0.18),
+    0 0 26px rgba(83, 255, 241, 0.11);
+  font-size: clamp(2rem, 3.3vw, 2.75rem);
+}
+
+:global(.contact-channel-copy):where(:not(.moduleScope)) {
+  min-width: 0;
+  display: grid;
+  gap: 0.3rem;
+}
+
+:global(.contact-channel-label):where(:not(.moduleScope)) {
+  color: #39fff0;
+  font-size: clamp(0.7rem, 0.86vw, 0.82rem);
+  font-weight: 800;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+}
+
+:global(.contact-channel-value):where(:not(.moduleScope)) {
+  overflow-wrap: anywhere;
+  color: rgba(255, 255, 255, 0.94);
+  font-family: var(--font-space-grotesk), var(--font-fallback);
+  font-size: clamp(1.38rem, 2.4vw, 2rem);
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  line-height: 1.05;
+}
+
+:global(.contact-channel-arrow):where(:not(.moduleScope)) {
+  color: #39fff0;
+  font-size: clamp(1.35rem, 2.2vw, 1.78rem);
+}
+
+:global(.contact-meta-row):where(:not(.moduleScope)) {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 0.72fr);
+  align-items: center;
+  gap: 1rem;
+  margin: 0 calc(-1 * clamp(1.25rem, 2.3vw, 1.55rem));
+  padding: clamp(0.95rem, 1.8vw, 1.18rem) clamp(1.25rem, 2.3vw, 1.55rem);
+  border-top: 1px solid rgba(190, 209, 255, 0.15);
+  color: rgba(230, 238, 248, 0.66);
+  font-size: clamp(0.84rem, 1vw, 0.98rem);
+}
+
+:global(.contact-meta-row span):where(:not(.moduleScope)) {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.52rem;
+  min-width: 0;
+}
+
+:global(.contact-meta-row > span + span):where(:not(.moduleScope)) {
+  justify-content: center;
+  border-left: 1px solid rgba(190, 209, 255, 0.14);
+}
+
+:global(.contact-meta-row svg):where(:not(.moduleScope)) {
+  flex: 0 0 auto;
+  color: #39fff0;
+  font-size: 1.25rem;
+}
+
+:global(.contact-meta-row strong):where(:not(.moduleScope)) {
+  color: rgba(255, 255, 255, 0.88);
+  font-weight: 800;
+}
+
+@media (max-width: 1180px) {
+  :global(.contact-cockpit):where(:not(.moduleScope)) {
+    gap: clamp(1.3rem, 3.4vh, 2.2rem);
+  }
+
+  :global(.contact-link-panel):where(:not(.moduleScope)) {
+    grid-template-columns: minmax(240px, 0.48fr) minmax(360px, 0.82fr);
+    gap: clamp(1.6rem, 4vw, 3.1rem);
+  }
+
+  :global(.contact-promise-grid):where(:not(.moduleScope)) {
+    margin-top: clamp(2.4rem, 5.6vh, 3.4rem);
+  }
+
+  :global(.contact-channel-value):where(:not(.moduleScope)) {
+    font-size: clamp(1.2rem, 2.15vw, 1.7rem);
+  }
+}
+
+:global(.contact-form-panel):where(:not(.moduleScope)) {
+  display: grid;
+  gap: 1rem;
+}
+
+:global(.contact-form-shell):where(:not(.moduleScope)) {
+  border-radius: 22px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(2, 8, 18, 0.3);
+  overflow: hidden;
+}
+
+:global(.contact-form-header):where(:not(.moduleScope)) {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.85rem 1rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  color: #53fff1;
+  font-size: 0.75rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+}
+
+:global(.contact-form-header span):where(:not(.moduleScope)) {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+:global(.contact-form-shell textarea):where(:not(.moduleScope)),
+:global(.contact-form-shell input):where(:not(.moduleScope)) {
+  width: 100%;
+  color: rgba(255, 255, 255, 0.88);
+  background: transparent;
+  border: 0;
+  outline: 0;
+}
+
+:global(.contact-form-shell textarea):where(:not(.moduleScope)) {
+  height: clamp(10rem, 28vh, 16rem);
+  padding: 1rem;
+  resize: none;
+  font-family: var(--font-geist-mono), monospace;
+  font-size: 0.85rem;
+}
+
+:global(.contact-form-shell input):where(:not(.moduleScope)) {
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  padding: 0.9rem 1rem;
+}
+
+:global(.contact-send-button):where(:not(.moduleScope)) {
+  justify-self: end;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  border: 0;
+  border-radius: 16px;
+  background: white;
+  color: #050914;
+  padding: 0.85rem 1.2rem;
+  font-weight: 900;
+}
+
+:global(.contact-status):where(:not(.moduleScope)) {
+  margin: 0;
+  padding: 0 1rem 0.85rem;
+  font-size: 0.8rem;
+  font-weight: 800;
+}
+
+:global(.contact-status.success):where(:not(.moduleScope)) { color: #53fff1; }
+:global(.contact-status.error):where(:not(.moduleScope)) { color: #fca5a5; }
+
+@media (max-width: 768px) {
+  :global(.contact-cockpit):where(:not(.moduleScope)) {
+    grid-template-rows: auto minmax(0, 1fr);
+    gap: 1.5rem;
+  }
+
+  :global(.contact-panel):where(:not(.moduleScope)) {
+    justify-self: stretch;
+    align-self: center;
+  }
+
+  :global(.contact-link-panel):where(:not(.moduleScope)) {
+    grid-template-columns: 1fr;
+    gap: 1.4rem;
+  }
+
+  :global(.contact-pitch):where(:not(.moduleScope)) {
+    max-width: none;
+  }
+
+  :global(.contact-promise-grid):where(:not(.moduleScope)) {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    row-gap: 2.8rem;
+    margin-top: 2.6rem;
+  }
+
+  :global(.contact-promise):where(:not(.moduleScope)) {
+    padding: 0 0.75rem;
+  }
+
+  :global(.contact-promise:nth-child(odd)):where(:not(.moduleScope)) {
+    border-left: 0;
+  }
+
+  :global(.contact-channel-card):where(:not(.moduleScope)) {
+    padding: 1rem;
+  }
+
+  :global(.contact-channel):where(:not(.moduleScope)) {
+    grid-template-columns: 3.2rem minmax(0, 1fr) auto;
+  }
+
+  :global(.contact-channel-icon):where(:not(.moduleScope)) {
+    width: 3.2rem;
+    height: 3.2rem;
+  }
+
+  :global(.contact-meta-row):where(:not(.moduleScope)) {
+    grid-template-columns: 1fr;
+  }
+
+  :global(.contact-meta-row > span + span):where(:not(.moduleScope)) {
+    justify-content: flex-start;
+    border-left: 0;
+  }
+}

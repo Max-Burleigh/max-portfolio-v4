@@ -1,6 +1,14 @@
 "use client";
 import React, { useState, useRef, useCallback, useMemo, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import "./components/AuroraBackground.module.css";
+import "./page.module.css";
+import "./components/navigation/Navigation.module.css";
+import "./sections/PortfolioSection.module.css";
+import "./components/projects/ProjectCard.module.css";
+import "./components/Phone.module.css";
+import "./sections/ServicesSection.module.css";
+import "./sections/ContactSection.module.css";
 // import { throttle } from "lodash";
 import { useIsMobile } from "@lib/hooks";
 import AuroraBackground from "@components/AuroraBackground";

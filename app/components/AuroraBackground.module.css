@@ -1,0 +1,312 @@
+.moduleScope { --module-scope: initial; }
+
+/*##########################################################
+#
+#  AURORA BACKGROUND EFFECTS
+#
+#  Fixed background gradient, noise texture, blob elements,
+#  and related animations. Includes iOS Canvas fallback.
+#
+##########################################################*/
+
+/* Fixed background gradient element */
+:global(.aurora-bg):where(:not(.moduleScope)) {
+  position: fixed;
+  /* Extend beyond safe areas to cover iOS Safari chrome */
+  top: calc(-1 * var(--safe-top));
+  right: calc(-1 * var(--safe-right));
+  bottom: calc(-1 * var(--safe-bottom));
+  left: calc(-1 * var(--safe-left));
+  z-index: -1;
+  background: var(--aurora-gradient);
+  background-size: 100% 100%;
+  /* Promote and isolate to avoid scroll repaints */
+  transform: translate3d(0, 0, 0);
+  will-change: transform, opacity;
+  contain: paint;
+}
+
+/* Subtle noise to dither gradients and kill banding */
+:global(.aurora-bg):where(:not(.moduleScope))::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.035;
+  /* 0.02–0.06 works well */
+  mix-blend-mode: overlay;
+  /* or soft-light for subtler effect */
+  background-size: 24px 24px;
+  image-rendering: pixelated;
+  /* Static, pre-baked noise tile (SVG, no filters) to avoid feTurbulence cost */
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'><rect width='24' height='24' fill='black' fill-opacity='0'/><rect x='1' y='2' width='1' height='1' fill='white' fill-opacity='0.9'/><rect x='4' y='1' width='1' height='1' fill='white' fill-opacity='0.9'/><rect x='7' y='3' width='1' height='1' fill='white' fill-opacity='0.9'/><rect x='10' y='2' width='1' height='1' fill='white' fill-opacity='0.9'/><rect x='13' y='1' width='1' height='1' fill='white' fill-opacity='0.9'/><rect x='16' y='2' width='1' height='1' fill='white' fill-opacity='0.9'/><rect x='19' y='1' width='1' height='1' fill='white' fill-opacity='0.9'/><rect x='22' y='2' width='1' height='1' fill='white' fill-opacity='0.9'/><rect x='0' y='5' width='1' height='1' fill='white' fill-opacity='0.9'/><rect x='3' y='4' width='1' height='1' fill='white' fill-opacity='0.9'/><rect x='6' y='6' width='1' height='1' fill='white' fill-opacity='0.9'/><rect x='9' y='5' width='1' height='1' fill='white' fill-opacity='0.9'/><rect x='12' y='4' width='1' height='1' fill='white' fill-opacity='0.9'/><rect x='15' y='6' width='1' height='1' fill='white' fill-opacity='0.9'/><rect x='18' y='4' width='1' height='1' fill='white' fill-opacity='0.9'/><rect x='21' y='5' width='1' height='1' fill='white' fill-opacity='0.9'/><rect x='2' y='8' width='1' height='1' fill='white' fill-opacity='0.9'/><rect x='5' y='7' width='1' height='1' fill='white' fill-opacity='0.9'/><rect x='8' y='9' width='1' height='1' fill='white' fill-opacity='0.9'/><rect x='11' y='8' width='1' height='1' fill='white' fill-opacity='0.9'/><rect x='14' y='7' width='1' height='1' fill='white' fill-opacity='0.9'/><rect x='17' y='9' width='1' height='1' fill='white' fill-opacity='0.9'/><rect x='20' y='7' width='1' height='1' fill='white' fill-opacity='0.9'/><rect x='23' y='8' width='1' height='1' fill='white' fill-opacity='0.9'/><rect x='1' y='11' width='1' height='1' fill='white' fill-opacity='0.9'/><rect x='4' y='12' width='1' height='1' fill='white' fill-opacity='0.9'/><rect x='7' y='10' width='1' height='1' fill='white' fill-opacity='0.9'/><rect x='10' y='11' width='1' height='1' fill='white' fill-opacity='0.9'/><rect x='13' y='12' width='1' height='1' fill='white' fill-opacity='0.9'/><rect x='16' y='10' width='1' height='1' fill='white' fill-opacity='0.9'/><rect x='19' y='12' width='1' height='1' fill='white' fill-opacity='0.9'/><rect x='22' y='11' width='1' height='1' fill='white' fill-opacity='0.9'/><rect x='0' y='14' width='1' height='1' fill='white' fill-opacity='0.9'/><rect x='3' y='15' width='1' height='1' fill='white' fill-opacity='0.9'/><rect x='6' y='13' width='1' height='1' fill='white' fill-opacity='0.9'/><rect x='9' y='14' width='1' height='1' fill='white' fill-opacity='0.9'/><rect x='12' y='15' width='1' height='1' fill='white' fill-opacity='0.9'/><rect x='15' y='13' width='1' height='1' fill='white' fill-opacity='0.9'/><rect x='18' y='15' width='1' height='1' fill='white' fill-opacity='0.9'/><rect x='21' y='14' width='1' height='1' fill='white' fill-opacity='0.9'/><rect x='2' y='17' width='1' height='1' fill='white' fill-opacity='0.9'/><rect x='5' y='18' width='1' height='1' fill='white' fill-opacity='0.9'/><rect x='8' y='16' width='1' height='1' fill='white' fill-opacity='0.9'/><rect x='11' y='17' width='1' height='1' fill='white' fill-opacity='0.9'/><rect x='14' y='18' width='1' height='1' fill='white' fill-opacity='0.9'/><rect x='17' y='16' width='1' height='1' fill='white' fill-opacity='0.9'/><rect x='20' y='18' width='1' height='1' fill='white' fill-opacity='0.9'/><rect x='23' y='17' width='1' height='1' fill='white' fill-opacity='0.9'/><rect x='1' y='20' width='1' height='1' fill='white' fill-opacity='0.9'/><rect x='4' y='21' width='1' height='1' fill='white' fill-opacity='0.9'/><rect x='7' y='19' width='1' height='1' fill='white' fill-opacity='0.9'/><rect x='10' y='20' width='1' height='1' fill='white' fill-opacity='0.9'/><rect x='13' y='21' width='1' height='1' fill='white' fill-opacity='0.9'/><rect x='16' y='19' width='1' height='1' fill='white' fill-opacity='0.9'/><rect x='19' y='21' width='1' height='1' fill='white' fill-opacity='0.9'/><rect x='22' y='20' width='1' height='1' fill='white' fill-opacity='0.9'/></svg>");
+}
+
+/* Aurora blob base styles */
+:global(.aurora-blob):where(:not(.moduleScope)) {
+  position: absolute;
+  pointer-events: none;
+  z-index: 1;
+  border-radius: 50%;
+  /* blur moved to wrapper layer; keep opacity here */
+  opacity: 0.5;
+  width: 700px;
+  height: 550px;
+  mix-blend-mode: screen;
+  transform: translateZ(0);
+  transition: width 0.6s, height 0.6s, left 0.6s, right 0.6s, top 0.6s,
+    bottom 0.6s;
+  will-change: transform, opacity;
+  display: block;
+  /* Default display */
+}
+
+/* Single blur layer wrapper for all blobs to reduce Safari artifacts */
+:global(.aurora-layer):where(:not(.moduleScope)) {
+  position: fixed;
+  /* Extend beyond safe areas to cover iOS Safari chrome */
+  top: calc(-1 * var(--safe-top));
+  right: calc(-1 * var(--safe-right));
+  bottom: calc(-1 * var(--safe-bottom));
+  left: calc(-1 * var(--safe-left));
+  filter: blur(80px);
+  /* Promote the same element that owns the filter for Safari perf */
+  transform: translate3d(0, 0, 0);
+  will-change: filter, opacity, transform;
+  contain: paint;
+  pointer-events: none;
+  z-index: 0;
+  /* sits above .aurora-bg and below content */
+}
+
+/* Canvas stays hidden by default; can be enabled if needed */
+:global(.canvas-aurora):where(:not(.moduleScope)) {
+  display: none;
+}
+
+/* iOS: show the canvas, hide the CSS blur+blend layer and heavy SVG noise */
+:global(html.is-ios-device .aurora-layer):where(:not(.moduleScope)) {
+  display: none;
+}
+
+:global(html.is-ios-device .canvas-aurora):where(:not(.moduleScope)) {
+  display: block;
+}
+
+:global(html.is-ios-device .aurora-bg):where(:not(.moduleScope))::after {
+  display: none;
+}
+
+/* Non‑iOS: keep current CSS path */
+:global(html.not-ios-device .canvas-aurora):where(:not(.moduleScope)) {
+  display: none;
+}
+
+/*##########################################################
+#
+#  REDUCED MOTION & ACCESSIBILITY
+#
+#  Disable animations and effects for users who prefer
+#  reduced motion for accessibility.
+#
+##########################################################*/
+
+@media (prefers-reduced-motion: reduce) {
+  :global(.aurora-blob):where(:not(.moduleScope)) {
+    animation: none !important;
+  }
+
+  :global([data-entrance] [data-entrance-item]):where(:not(.moduleScope)) {
+    transform: none;
+    filter: none;
+    transition: opacity 250ms ease-out;
+  }
+
+}
+
+/* Responsive styles for aurora blobs */
+@media (max-width: 900px) {
+  :global(.aurora-blob):where(:not(.moduleScope)) {
+    width: 350px;
+    height: 220px;
+  }
+
+  :global(.blob5):where(:not(.moduleScope)),
+  :global(.blob6):where(:not(.moduleScope)) {
+    width: 220px;
+    height: 120px;
+  }
+}
+
+/* Individual blob colors and positioning */
+:global(.blob1):where(:not(.moduleScope)) {
+  background: radial-gradient(circle at 30% 40%,
+      #00ffd5 0%,
+      #0e1e4a 80%,
+      transparent 100%);
+  left: 10vw;
+  top: -500px;
+  width: 900px;
+  height: 900px;
+  transform: translate(-50%, -50%);
+}
+
+:global(.blob2):where(:not(.moduleScope)) {
+  background: radial-gradient(circle at 60% 30%,
+      #ff5ce6 0%,
+      #1e215d 80%,
+      transparent 100%);
+  right: 10vw;
+  top: -500px;
+  width: 800px;
+  height: 800px;
+  transform: translate(50%, -50%);
+}
+
+:global(.blob-center):where(:not(.moduleScope)) {
+  background: radial-gradient(circle at 50% 50%,
+      rgba(0, 255, 255, 0.45) 0%,
+      rgba(0, 160, 255, 0.32) 40%,
+      rgba(0, 80, 200, 0.16) 70%,
+      rgba(20, 35, 80, 0) 100%);
+  left: 50%;
+  top: 120px;
+  width: 500px;
+  height: 500px;
+  transform: translateX(-50%);
+  z-index: 2;
+  opacity: 0.85;
+  filter: blur(60px);
+  pointer-events: none;
+  position: absolute;
+}
+
+:global(.blob3):where(:not(.moduleScope)) {
+  background: radial-gradient(circle at 50% 70%,
+      #00ff9d 0%,
+      #2f3f72 80%,
+      transparent 100%);
+  left: 50%;
+  top: 50px;
+  width: 900px;
+  height: 900px;
+}
+
+:global(.blob4):where(:not(.moduleScope)) {
+  background: radial-gradient(circle at 70% 60%,
+      #00aaff 0%,
+      #415a77 80%,
+      transparent 100%);
+  right: 60px;
+  top: 20px;
+}
+
+:global(.blob5):where(:not(.moduleScope)) {
+  background: radial-gradient(circle at 40% 60%,
+      #8affff 0%,
+      #7b2ff2 70%,
+      transparent 100%);
+  left: -110px;
+  top: 900px;
+  width: 420px;
+  height: 320px;
+}
+
+:global(.blob6):where(:not(.moduleScope)) {
+  background: radial-gradient(circle at 60% 80%,
+      #ffb347 0%,
+      #ff5ce6 70%,
+      transparent 100%);
+  right: -80px;
+  top: 1750px;
+  width: 420px;
+  height: 320px;
+}
+
+:global(.blob7):where(:not(.moduleScope)) {
+  background: radial-gradient(circle at 20% 50%,
+      #ff9a9e 0%,
+      #fad0c4 70%,
+      transparent 100%);
+  width: 500px;
+  height: 400px;
+  left: 20px;
+  top: 2200px;
+}
+
+:global(.blob8):where(:not(.moduleScope)) {
+  background: radial-gradient(circle at 80% 50%,
+      #a18cd1 0%,
+      #fbc2eb 70%,
+      transparent 100%);
+  width: 500px;
+  height: 400px;
+  right: 20px;
+  top: 2600px;
+}
+
+/* Aurora keyframe animations */
+@keyframes aurora {
+  0% {
+    background-position: 0% 50%;
+  }
+
+  25% {
+    background-position: 50% 50%;
+  }
+
+  50% {
+    background-position: 100% 50%;
+  }
+
+  75% {
+    background-position: 50% 50%;
+  }
+
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+/* CSS keyframes for blob motion (replaces JS-driven Motion on non-iOS) */
+@keyframes auroraBlob1 {
+  0% {
+    opacity: 0.5;
+    transform: translate(-50px, -50px) scale(1);
+  }
+
+  50% {
+    opacity: 0.8;
+    transform: translate(0, 50px) scale(1.2);
+  }
+
+  100% {
+    opacity: 0.5;
+    transform: translate(-50px, -50px) scale(1);
+  }
+}
+
+@keyframes auroraBlob2 {
+  0% {
+    opacity: 0.4;
+    transform: translate(150px, 50px) scale(1);
+  }
+
+  50% {
+    opacity: 0.7;
+    transform: translate(200px, 150px) scale(1.3);
+  }
+
+  100% {
+    opacity: 0.4;
+    transform: translate(150px, 50px) scale(1);
+  }
+}
+
+:global(.blob1):where(:not(.moduleScope)) {
+  animation: auroraBlob1 14s ease-in-out infinite;
+}
+
+:global(.blob2):where(:not(.moduleScope)) {
+  animation: auroraBlob2 18s ease-in-out infinite;
+}
