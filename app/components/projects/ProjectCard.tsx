@@ -5,6 +5,9 @@ import { motion } from "framer-motion";
 import Phone from "@components/Phone";
 import TechStack from "@components/TechStack";
 
+export const PROJECT_MOCKUP_WIDTH = 594;
+export const PROJECT_MOCKUP_HEIGHT = 1240;
+
 export interface ProjectCardProps {
   title: string;
   description: React.ReactNode;
@@ -17,6 +20,8 @@ export interface ProjectCardProps {
   imageAlt?: string;
   imageTitle?: string;
   imageClassName?: string;
+  imageWidth?: number;
+  imageHeight?: number;
   imageBlurDataURL?: string;
   reverseLayout?: boolean;
   disablePhoneMockup?: boolean;
@@ -37,6 +42,8 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
   imageUrl,
   imageAlt,
   imageTitle,
+  imageWidth = PROJECT_MOCKUP_WIDTH,
+  imageHeight = PROJECT_MOCKUP_HEIGHT,
   imageBlurDataURL,
   reverseLayout = false,
   disablePhoneMockup = false,
@@ -127,8 +134,8 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
                     src={imageUrl}
                     alt={imageAlt || `Screenshot of ${title}`}
                     title={imageTitle}
-                    width={600}
-                    height={1200}
+                    width={imageWidth}
+                    height={imageHeight}
                     loading="lazy"
                     placeholder="blur"
                     blurDataURL={imageBlurDataURL || "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAwIiBoZWlnaHQ9IjEyMDAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHJlY3Qgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgZmlsbD0iIzIwMjAyMCIvPjwvc3ZnPg=="}

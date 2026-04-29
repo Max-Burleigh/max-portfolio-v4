@@ -6,6 +6,7 @@ import useEmblaCarousel from "embla-carousel-react";
 import { WheelGesturesPlugin } from "embla-carousel-wheel-gestures";
 import { MdArrowForward, MdOpenInNew } from "react-icons/md";
 import { projects, type ProjectEntry } from "@/content/projects";
+import { PROJECT_MOCKUP_HEIGHT, PROJECT_MOCKUP_WIDTH } from "@components/projects/ProjectCard";
 import { useEntranceStagger } from "@lib/hooks";
 
 const FALLBACK_BLUR_DATA_URL =
@@ -26,26 +27,34 @@ const PortfolioProjectCard = React.memo(function PortfolioProjectCard({
         <span className="portfolio-index">{String(index + 1).padStart(2, "0")}</span>
         <h3>{project.title}</h3>
         <div className="portfolio-description">
-          {project.id === "fullleaf-app" ? (
-            <>
-              <p>A Flutter-based, WebView app for Full Leaf Tea Company.</p>
-              <div className="portfolio-store-links">
-                <a href="https://apps.apple.com/us/app/full-leaf-tea-co/id6451437741" target="_blank" rel="noopener noreferrer">App Store</a>
-                <span aria-hidden="true">/</span>
-                <a href="https://play.google.com/store/apps/details?id=fullleafteacompany.android.app&hl=en_US&pli=1" target="_blank" rel="noopener noreferrer">Play Store</a>
-              </div>
-            </>
-          ) : typeof project.description === "string" ? <p>{project.description}</p> : project.description}
+          {typeof project.description === "string" ? <p>{project.description}</p> : project.description}
         </div>
-        <div className="portfolio-tech-strip" aria-label={`${project.title} tech stack`}>
-          {project.techStack?.slice(0, 4).map((item) => (
-            <span key={item.label} className="portfolio-tech-pill">
-              <span className="portfolio-tech-icon" aria-hidden="true">
-                {item.icon}
+        {project.id === "fullleaf-app" && (
+          <div className="portfolio-store-links">
+            <a href="https://apps.apple.com/us/app/full-leaf-tea-co/id6451437741" target="_blank" rel="noopener noreferrer">App Store</a>
+            <span aria-hidden="true">/</span>
+            <a href="https://play.google.com/store/apps/details?id=fullleafteacompany.android.app&hl=en_US&pli=1" target="_blank" rel="noopener noreferrer">Play Store</a>
+          </div>
+        )}
+        <div className="portfolio-tech-strip" aria-label={`${project.title} tech stack`} tabIndex={0}>
+          <div className="portfolio-tech-track" role="list">
+            {project.techStack?.map((item) => (
+              <span key={item.label} className="portfolio-tech-pill" role="listitem">
+                <span className="portfolio-tech-icon" aria-hidden="true">
+                  {item.icon}
+                </span>
+                <span>{item.label}</span>
               </span>
-              <span>{item.label}</span>
-            </span>
-          ))}
+            ))}
+            {project.techStack?.map((item) => (
+              <span key={`${item.label}-duplicate`} className="portfolio-tech-pill" aria-hidden="true">
+                <span className="portfolio-tech-icon" aria-hidden="true">
+                  {item.icon}
+                </span>
+                <span>{item.label}</span>
+              </span>
+            ))}
+          </div>
         </div>
       </div>
 
@@ -54,10 +63,10 @@ const PortfolioProjectCard = React.memo(function PortfolioProjectCard({
           <Image
             src={project.imageUrl}
             alt={project.imageAlt || `Screenshot of ${project.title}`}
-            width={600}
-            height={1200}
+            width={project.imageWidth || PROJECT_MOCKUP_WIDTH}
+            height={project.imageHeight || PROJECT_MOCKUP_HEIGHT}
             loading="lazy"
-            sizes="(max-width: 768px) 190px, (max-width: 1279px) 210px, 245px"
+            sizes="(max-width: 768px) 220px, (max-width: 1279px) 210px, 245px"
             placeholder="blur"
             blurDataURL={project.imageBlurDataURL || FALLBACK_BLUR_DATA_URL}
           />
@@ -188,7 +197,11 @@ const PortfolioSection = React.memo(forwardRef<HTMLDivElement>(function Portfoli
         <div ref={setShellRef} className="portfolio-deck-shell" data-entrance-item>
           <div className="portfolio-phone-deck">
             {visibleProjects.map((project, index) => (
-              <PortfolioProjectCard key={project.id} project={project} index={index} />
+              <PortfolioProjectCard
+                key={project.id}
+                project={project}
+                index={index}
+              />
             ))}
           </div>
         </div>

@@ -17,6 +17,7 @@ import {
   SiAndroidstudio,
   SiNextdotjs,
   SiSupabase,
+  SiSquarespace,
   SiVercel,
 } from "react-icons/si";
 import { ModernWindowsIcon } from "@components/Icons";
@@ -25,17 +26,11 @@ import type { ProjectCardProps } from "@components/projects/ProjectCard";
 export type ProjectEntry = ProjectCardProps & { id: string; hidden?: boolean };
 
 const iconStyle = { width: "32px", height: "32px" } as const;
-const storeLinkStyle = {
-  color: "#00ffd5",
-  textShadow:
-    "0 0 6px #ffffff, 0 0 12px #7ce7ff, 0 0 18px #22d3ee, 0 0 25px #22d3ee, 0 0 35px #06b6d4, 0 0 45px #06b6d4",
-} as const;
-
 export const projects: ProjectEntry[] = [
   {
     id: "vinscribe",
     title: "VINSCRIBE",
-    description: "AI-driven vehicle history reports and automotive tools.",
+    description: "AI vehicle reports and automotive tools.",
     websiteUrl: "https://www.vinscribe.com",
     className: "vinscribe-card",
     techStack: [
@@ -50,7 +45,7 @@ export const projects: ProjectEntry[] = [
       { icon: <SiTypescript className="tech-icon typescript" style={iconStyle} color="#fff" />, label: "TypeScript" },
       { icon: <SiTailwindcss className="tech-icon tailwind" style={iconStyle} color="#fff" />, label: "TailwindCSS" },
     ],
-    imageUrl: "/project-images/vinscribe-phone-mockup-corner-to-corner.png",
+    imageUrl: "/project-images/vinscribe-standard-phone.png",
     imageAlt: "Screenshot of VINSCRIBE website",
     imageTitle: "VINSCRIBE Website Screenshot",
     imageBlurDataURL:
@@ -61,12 +56,7 @@ export const projects: ProjectEntry[] = [
   {
     id: "fullleaf-tea",
     title: "Full Leaf Tea Company",
-    description: (
-      <>
-        <p>Multi-million dollar ecommerce business for premium loose leaf tea.</p>
-        <p>Designed/developed by yours truly.</p>
-      </>
-    ),
+    description: "Premium loose-leaf tea ecommerce at scale.",
     websiteUrl: "https://fullleafteacompany.com",
     className: "fullleaf-card full-leaf-tea-card",
     disablePhoneMockup: true,
@@ -83,7 +73,7 @@ export const projects: ProjectEntry[] = [
       { icon: <SiGoogle className="tech-icon google" style={iconStyle} />, label: "Google Ads" },
       { icon: <ModernWindowsIcon className="tech-icon windows" style={iconStyle} />, label: "Microsoft Ads" },
     ],
-    imageUrl: "/project-images/full-leaf-tea-phone-mockup-corner-to-corner.png",
+    imageUrl: "/project-images/full-leaf-tea-standard-phone.png",
     imageAlt: "Screenshot of Full Leaf Tea Company website",
     imageTitle: "Full Leaf Tea Company Website Screenshot",
     imageClassName: "fullleaf-tea",
@@ -94,12 +84,7 @@ export const projects: ProjectEntry[] = [
   {
     id: "fullleaf-wholesale",
     title: "Full Leaf Tea Company Wholesale",
-    description: (
-      <>
-        <p>B2B wholesale platform for bulk tea orders and business partnerships.</p>
-        <p>Enabling cafes, restaurants, and retailers to source premium tea.</p>
-      </>
-    ),
+    description: "B2B tea ordering for wholesale partners.",
     websiteUrl: "https://wholesale.fullleafteacompany.com",
     className: "fullleaf-wholesale-card full-leaf-wholesale-card",
     disablePhoneMockup: true,
@@ -115,7 +100,7 @@ export const projects: ProjectEntry[] = [
         label: "Klaviyo",
       },
     ],
-    imageUrl: "/project-images/wholesale-full-leaf-phone-mockup-corner-to-corner.png",
+    imageUrl: "/project-images/full-leaf-wholesale-standard-phone.png",
     imageAlt: "Screenshot of Full Leaf Tea Company Wholesale website",
     imageTitle: "Full Leaf Tea Company Wholesale Website Screenshot",
     imageClassName: "fullleaf-wholesale",
@@ -126,48 +111,7 @@ export const projects: ProjectEntry[] = [
   {
     id: "fullleaf-app",
     title: "Full Leaf App",
-    description: (
-      <>
-        A Flutter-based, WebView app for Full Leaf Tea Company.
-        <div className="flex justify-center md:justify-start items-center my-4 px-2">
-          <div className="flex flex-row justify-center md:justify-start items-center text-base font-bold uppercase tracking-wider">
-            <a
-              href="https://apps.apple.com/us/app/full-leaf-tea-co/id6451437741"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="mx-1.5 text-cyan-400 hover:text-cyan-300 hover:brightness-150 transition-all duration-200 underline"
-              style={storeLinkStyle}
-            >
-              App&nbsp;Store
-            </a>
-            <span
-              className="mx-2 text-xl md:text-2xl text-neutral-400 select-none"
-              style={{
-                fontFamily:
-                  "'Inter', 'Segoe UI', 'Roboto', 'Helvetica Neue', Arial, 'Liberation Sans', sans-serif",
-                fontWeight: 700,
-                lineHeight: 1,
-                display: "inline-block",
-                verticalAlign: "middle",
-                letterSpacing: "0",
-              }}
-              aria-hidden="true"
-            >
-              ·
-            </span>
-            <a
-              href="https://play.google.com/store/apps/details?id=fullleafteacompany.android.app&hl=en_US&pli=1"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="mx-1.5 text-cyan-400 hover:text-cyan-300 hover:brightness-150 transition-all duration-200 underline"
-              style={storeLinkStyle}
-            >
-              Play&nbsp;Store
-            </a>
-          </div>
-        </div>
-      </>
-    ),
+    description: "Flutter WebView app for Full Leaf Tea Company.",
     className: "full-leaf-app-card flex flex-col items-center",
     disablePhoneMockup: true,
     techStack: [
@@ -175,14 +119,14 @@ export const projects: ProjectEntry[] = [
       { icon: <SiXcode className="tech-icon xcode" style={iconStyle} />, label: "Xcode" },
       { icon: <SiAndroidstudio className="tech-icon android-studio" style={iconStyle} />, label: "Android Studio" },
     ],
-    imageUrl: "/webp/app.webp",
+    imageUrl: "/project-images/full-leaf-app-standard-phone.png",
     imageAlt: "Portrait screenshot of Full Leaf App",
     imageTitle: "Full Leaf App Screenshot",
   },
   {
     id: "farm-flour",
     title: "Farm & Flour",
-    description: "Artisan bakery and cafe website showcasing fresh-baked goods and local ingredients.",
+    description: "Bakery and cafe site for menu, story, and visits.",
     websiteUrl: "https://farmandflourjville.com",
     className: "farm-flour-card",
     disablePhoneMockup: true,
@@ -198,7 +142,7 @@ export const projects: ProjectEntry[] = [
       { icon: <SiHtml5 className="tech-icon html5" style={iconStyle} />, label: "HTML" },
       { icon: <SiCss3 className="tech-icon css3" style={iconStyle} color="#fff" />, label: "CSS" },
     ],
-    imageUrl: "/project-images/farm-flour-phone-mockup.webp",
+    imageUrl: "/project-images/farm-flour-standard-phone.png",
     imageAlt: "Screenshot of Farm & Flour website",
     imageTitle: "Farm & Flour Website Screenshot",
     imageClassName: "farm-flour",
@@ -209,7 +153,7 @@ export const projects: ProjectEntry[] = [
   {
     id: "jefferson-state-outfitters",
     title: "Jefferson State Outfitters",
-    description: "Rogue River rafting and fishing guide service website for outdoor adventures in Oregon.",
+    description: "Rogue River rafting and fishing guide website.",
     websiteUrl: "https://jeffersonstateoutfitter.com",
     className: "jefferson-state-card",
     disablePhoneMockup: true,
@@ -225,13 +169,38 @@ export const projects: ProjectEntry[] = [
       { icon: <SiHtml5 className="tech-icon html5" style={iconStyle} />, label: "HTML" },
       { icon: <SiCss3 className="tech-icon css3" style={iconStyle} color="#fff" />, label: "CSS" },
     ],
-    imageUrl: "/project-images/jefferson-state-iphone.webp",
+    imageUrl: "/project-images/jefferson-state-standard-phone.png",
     imageAlt: "Screenshot of Jefferson State Outfitters website",
     imageTitle: "Jefferson State Outfitters Website Screenshot",
     imageClassName: "jefferson-state",
     imageBlurDataURL:
       "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNTk0IiBoZWlnaHQ9IjEyNDAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGRlZnM+PGxpbmVhckdyYWRpZW50IGlkPSJnIiB4MT0iMCUiIHkxPSIwJSIgeDI9IjAlIiB5Mj0iMTAwJSI+PHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iIzJhMmExYSIgLz48c3RvcCBvZmZzZXQ9IjEwMCUiIHN0b3AtY29sb3I9IiMxYTFhMGEiIC8+PC9saW5lYXJHcmFkaWVudD48L2RlZnM+PHJlY3Qgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgZmlsbD0idXJsKCNnKSIvPjwvc3ZnPg==",
     overlay: { href: "https://jeffersonstateoutfitter.com", emoji: "🎣", className: "jefferson-state-message" },
+  },
+  {
+    id: "erin-kiernan-photography",
+    title: "Erin Kiernan Photography",
+    description: "Photography portfolio with booking-focused polish.",
+    websiteUrl: "https://www.erinkiernanphotography.com",
+    className: "erin-kiernan-card",
+    disablePhoneMockup: true,
+    techStack: [
+      { icon: <SiSquarespace className="tech-icon squarespace" style={iconStyle} color="#fff" />, label: "Squarespace" },
+      { icon: <SiHtml5 className="tech-icon html5" style={iconStyle} />, label: "HTML" },
+      { icon: <SiCss3 className="tech-icon css3" style={iconStyle} color="#fff" />, label: "CSS" },
+      { icon: <SiJavascript className="tech-icon javascript" style={iconStyle} color="#fff" />, label: "JavaScript" },
+    ],
+    imageUrl: "/project-images/erin-kiernan-photography-standard-phone.png",
+    imageAlt: "Screenshot of Erin Kiernan Photography website",
+    imageTitle: "Erin Kiernan Photography Website Screenshot",
+    imageClassName: "erin-kiernan",
+    imageBlurDataURL:
+      "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNTk0IiBoZWlnaHQ9IjEyNDAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGRlZnM+PGxpbmVhckdyYWRpZW50IGlkPSJnIiB4MT0iMCUiIHkxPSIwJSIgeDI9IjAlIiB5Mj0iMTAwJSI+PHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iIzEwMmIzNyIgLz48c3RvcCBvZmZzZXQ9IjUwJSIgc3RvcC1jb2xvcj0iIzY3YWJjZiIgLz48c3RvcCBvZmZzZXQ9IjEwMCUiIHN0b3AtY29sb3I9IiMwODE0MTgiIC8+PC9saW5lYXJHcmFkaWVudD48L2RlZnM+PHJlY3Qgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgZmlsbD0idXJsKCNnKSIvPjwvc3ZnPg==",
+    overlay: {
+      href: "https://www.erinkiernanphotography.com",
+      emoji: "📷",
+      className: "erin-kiernan-message",
+    },
   },
   {
     id: "quailmail",
@@ -262,7 +231,7 @@ export const projects: ProjectEntry[] = [
   {
     id: "shop-downtown",
     title: "Shop Downtown",
-    description: "Community-driven online marketplace for local businesses.",
+    description: "Local marketplace for downtown businesses.",
     websiteUrl: "https://shopdowntown.org/",
     className: "shopdowntown-card",
     techStack: [
@@ -272,7 +241,7 @@ export const projects: ProjectEntry[] = [
       { icon: <SiPhp className="tech-icon php" style={iconStyle} />, label: "PHP" },
       { icon: <SiMysql className="tech-icon mysql" style={iconStyle} />, label: "MySQL" },
     ],
-    imageUrl: "/project-images/shop-downtown-mockup-corner-to-corner.png",
+    imageUrl: "/project-images/shop-downtown-standard-phone.png",
     imageAlt: "Screenshot of Shop Downtown website",
     imageTitle: "Shop Downtown Website Screenshot",
     disablePhoneMockup: true,

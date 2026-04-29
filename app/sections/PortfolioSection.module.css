@@ -428,7 +428,7 @@
   min-width: 0;
   height: 100%;
   display: grid;
-  grid-template-rows: auto minmax(0, 1fr) auto;
+  grid-template-rows: clamp(9.35rem, 22vh, 11rem) minmax(0, 1fr) auto;
   gap: 0.7rem;
   padding: clamp(0.95rem, 1.5vw, 1.25rem);
   border: 1px solid rgba(148, 177, 210, 0.18);
@@ -443,6 +443,7 @@
 
 :global(.portfolio-phone-copy):where(:not(.moduleScope)) {
   min-width: 0;
+  overflow: hidden;
 }
 
 :global(.portfolio-phone-card h3):where(:not(.moduleScope)) {
@@ -459,7 +460,12 @@
   color: rgba(230, 238, 248, 0.7);
   font-size: clamp(0.78rem, 0.9vw, 0.9rem);
   line-height: 1.28;
-  overflow: visible;
+  display: -webkit-box;
+  min-height: 1.3em;
+  max-height: 2.65em;
+  overflow: hidden;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
 }
 
 :global(.portfolio-phone-card .portfolio-description p):where(:not(.moduleScope)),
@@ -473,12 +479,57 @@
 }
 
 :global(.portfolio-phone-card .portfolio-tech-strip):where(:not(.moduleScope)) {
+  position: relative;
   margin-top: 0.7rem;
-  max-height: 4.9rem;
-  overflow: hidden;
+  max-width: 100%;
+  overflow-x: hidden;
+  overflow-y: hidden;
+  padding-bottom: 0.15rem;
+  mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
+  scrollbar-width: none;
+}
+
+:global(.portfolio-phone-card .portfolio-tech-strip):where(:not(.moduleScope))::-webkit-scrollbar {
+  display: none;
+}
+
+:global(.portfolio-phone-card .portfolio-tech-strip):where(:not(.moduleScope)):focus-visible {
+  outline: 2px solid rgba(83, 255, 241, 0.72);
+  outline-offset: 3px;
+  border-radius: 12px;
+}
+
+:global(.portfolio-tech-track):where(:not(.moduleScope)) {
+  display: flex;
+  width: max-content;
+  gap: 0.4rem;
+  animation: portfolio-tech-marquee 18s linear infinite;
+  will-change: transform;
+}
+
+:global(.portfolio-phone-card .portfolio-tech-strip:hover .portfolio-tech-track):where(:not(.moduleScope)),
+:global(.portfolio-phone-card .portfolio-tech-strip:focus-visible .portfolio-tech-track):where(:not(.moduleScope)) {
+  animation-play-state: paused;
+}
+
+@keyframes portfolio-tech-marquee {
+  from {
+    transform: translateX(0);
+  }
+
+  to {
+    transform: translateX(calc(-50% - 0.2rem));
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :global(.portfolio-tech-track):where(:not(.moduleScope)) {
+    animation: none;
+  }
 }
 
 :global(.portfolio-phone-card .portfolio-tech-pill):where(:not(.moduleScope)) {
+  flex: 0 0 auto;
   display: inline-flex;
   align-items: center;
   gap: 0.45rem;
@@ -614,8 +665,8 @@
   }
 
   :global(.portfolio-phone-card):where(:not(.moduleScope)) {
-    flex-basis: 82%;
-    grid-template-rows: auto minmax(0, 1fr) auto;
+    flex-basis: 88%;
+    grid-template-rows: 8.15rem minmax(0, 1fr) auto;
     gap: 0.45rem;
     padding: 0.68rem;
     border-radius: 18px;
@@ -630,19 +681,22 @@
     margin-top: 0.36rem;
     font-size: 0.7rem;
     line-height: 1.22;
-    display: -webkit-box;
-    overflow: hidden;
-    -webkit-box-orient: vertical;
-    -webkit-line-clamp: 3;
+    min-height: 1.3em;
+    max-height: 2.5em;
+    -webkit-line-clamp: 2;
   }
 
   :global(.portfolio-phone-card .portfolio-tech-strip):where(:not(.moduleScope)) {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.28rem;
-    max-height: 3.45rem;
+    max-height: none;
     margin-top: 0.44rem;
-    overflow: hidden;
+    overflow-x: hidden;
+    overflow-y: hidden;
+    padding-bottom: 0.12rem;
+  }
+
+  :global(.portfolio-tech-track):where(:not(.moduleScope)) {
+    gap: 0.28rem;
+    animation-duration: 16s;
   }
 
   :global(.portfolio-phone-card .portfolio-tech-pill):where(:not(.moduleScope)) {
@@ -703,7 +757,7 @@
   position: relative;
   z-index: 1;
   width: auto !important;
-  height: auto !important;
+  height: 100% !important;
   max-width: min(84%, 245px) !important;
   max-height: 100% !important;
   object-fit: contain !important;
@@ -725,7 +779,7 @@
 
 @media (max-width: 768px) {
   :global(.portfolio-phone-preview > img):where(:not(.moduleScope)) {
-    max-width: min(74%, 160px) !important;
+    max-width: min(88%, 220px) !important;
   }
 }
 
@@ -734,10 +788,13 @@
 :global(.portfolio-store-links):where(:not(.moduleScope)) {
   display: flex;
   align-items: center;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
   gap: 0.45rem;
-  margin-top: 0.55rem !important;
+  min-height: 1.05rem;
+  margin-top: 0.42rem !important;
+  overflow: hidden;
   color: rgba(255, 255, 255, 0.36);
+  white-space: nowrap;
 }
 
 :global(.portfolio-store-links a):where(:not(.moduleScope)) {
@@ -749,11 +806,6 @@
   text-transform: uppercase;
   text-shadow: none !important;
   text-decoration: none !important;
-}
-
-:global(.portfolio-phone-card .portfolio-description:has(.portfolio-store-links)):where(:not(.moduleScope)) {
-  max-height: none;
-  overflow: visible;
 }
 
 /* User callout: remove redundant top identity/social row from the card. */
