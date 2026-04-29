@@ -181,8 +181,7 @@ const PortfolioSection = React.memo(forwardRef<HTMLDivElement>(function Portfoli
             <h2>Projects that shipped.</h2>
           </div>
           <p>
-            Phone-sized snapshots of ecommerce, AI products, mobile apps, and local business sites.
-            Scroll the deck sideways without leaving the frame.
+            Ecommerce. AI tools. Mobile apps. Local business sites. Real work, in production.
           </p>
         </div>
 

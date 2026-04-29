@@ -405,7 +405,7 @@
 #
 ##########################################################*/
 
-@media (min-width: 769px) and (max-width: 1279px) {
+@media (min-width: 1025px) and (max-width: 1279px) {
   :global(.about-stage-content):where(:not(.moduleScope)) {
     grid-template-columns: minmax(0, 0.85fr) minmax(280px, 0.65fr);
     gap: clamp(1.5rem, 4vw, 3rem);
@@ -731,7 +731,7 @@
   height: clamp(11rem, 32vh, 18rem) !important;
 }
 
-@media (max-width: 1279px) {
+@media (min-width: 1025px) and (max-width: 1279px) {
   :global(.portfolio-master-card):where(:not(.moduleScope)) {
     height: calc(100dvh - 2rem);
   }
@@ -807,12 +807,25 @@
 }
 
 @media (max-width: 768px) {
+  :global(.site-stage-shell):where(:not(.moduleScope)) {
+    padding: max(0.55rem, var(--safe-top)) max(0.55rem, var(--safe-right)) max(0.55rem, var(--safe-bottom)) max(0.55rem, var(--safe-left));
+  }
+
   :global(.portfolio-master-card):where(:not(.moduleScope)) {
-    height: 100dvh;
+    width: 100%;
+    height: calc(100dvh - max(1.1rem, var(--safe-top)) - max(1.1rem, var(--safe-bottom)));
+    min-height: 0;
+    border-radius: 22px;
   }
 
   :global(.section):where(:not(.moduleScope)) {
-    padding: 1rem;
+    padding: clamp(0.82rem, 3.4vw, 1.05rem);
+  }
+
+  :global(.portfolio-stage):where(:not(.moduleScope)),
+  :global(.about-stage):where(:not(.moduleScope)) {
+    height: 100%;
+    min-height: 0;
   }
 
   :global(.about-stage-content):where(:not(.moduleScope)) {
@@ -820,30 +833,101 @@
     text-align: center;
     justify-items: center;
     align-content: center;
+    gap: clamp(0.62rem, 1.8vh, 0.95rem);
+    width: min(100%, 26rem);
   }
 
   :global(.stage-topline):where(:not(.moduleScope)) {
     margin-bottom: 1rem;
   }
 
+  :global(.hero-eyebrow):where(:not(.moduleScope)) {
+    margin-bottom: 0.62rem;
+    font-size: 0.72rem;
+  }
+
+  :global(.hero-title):where(:not(.moduleScope)) {
+    font-size: clamp(2.8rem, 18vw, 4.35rem);
+    line-height: 0.88;
+  }
+
   :global(.hero-title-rule):where(:not(.moduleScope)) {
+    width: min(8.5rem, 38vw);
+    margin-top: 0.9rem;
+    margin-bottom: 0.95rem;
     margin-left: auto;
     margin-right: auto;
+  }
+
+  :global(.hero-subcopy):where(:not(.moduleScope)) {
+    max-width: 22rem;
+    font-size: clamp(0.88rem, 3.7vw, 1rem);
+    line-height: 1.42;
   }
 
   :global(.hero-actions):where(:not(.moduleScope)) {
     width: 100%;
     justify-content: center;
+    gap: 0.65rem !important;
+    margin-top: 1.05rem;
+  }
+
+  :global(.hero-button):where(:not(.moduleScope)) {
+    min-width: min(9.5rem, 46%);
+    min-height: 46px;
+    padding: 0.72rem 0.85rem;
+    font-size: 0.86rem;
   }
 
   :global(.hero-portrait):where(:not(.moduleScope)) {
-    display: none;
+    display: block;
+    width: clamp(7.2rem, 33vw, 9.4rem);
+    height: clamp(8.55rem, 39vw, 11.2rem);
+    border-radius: 20px;
+    margin-top: clamp(0.1rem, 0.6vh, 0.35rem);
+    box-shadow: 0 18px 42px rgba(0, 0, 0, 0.32);
   }
 
   :global(.hero-stats):where(:not(.moduleScope)) {
-    grid-template-columns: 1fr;
-    margin-top: 1rem;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.5rem;
+    margin-top: clamp(0.52rem, 1.6vh, 0.82rem);
     padding-top: 0;
+  }
+
+  :global(.hero-stat):where(:not(.moduleScope)) {
+    min-height: 3.25rem;
+    grid-template-columns: auto minmax(0, 1fr);
+    column-gap: 0.5rem;
+    row-gap: 0.05rem;
+    padding: 0.55rem 0.48rem;
+    border-radius: 16px;
+    background: rgba(255, 255, 255, 0.045);
+  }
+
+  :global(.hero-stat:not(:last-child)):where(:not(.moduleScope)) {
+    padding-right: 0.48rem;
+  }
+
+  :global(.hero-stat-icon):where(:not(.moduleScope)) {
+    grid-row: 1 / 3;
+    width: 32px;
+    height: 32px;
+    font-size: 0.92rem;
+  }
+
+  :global(.hero-stat-value):where(:not(.moduleScope)) {
+    font-size: clamp(1.05rem, 5vw, 1.35rem);
+  }
+
+  :global(.hero-stat-label):where(:not(.moduleScope)) {
+    grid-column: 2;
+    font-size: 0.58rem;
+    line-height: 1.12;
+  }
+
+  :global(.cockpit-header):where(:not(.moduleScope)) {
+    padding-right: clamp(3.8rem, 15vw, 4.8rem);
   }
 
   :global(.services-section .portfolio-header):where(:not(.moduleScope)),
@@ -1063,14 +1147,12 @@
 
 @media (max-width: 768px), (hover: none) {
   :global(.portfolio-container):where(:not(.moduleScope)) {
-    overflow-y: auto !important;
+    overflow-y: hidden !important;
   }
 
   :global(.portfolio-sections):where(:not(.moduleScope)) {
-    height: auto;
-    transform: none !important;
-    transition: none !important;
-    will-change: auto;
+    height: 100%;
+    will-change: transform;
   }
 
   :global(.section-scrollbar):where(:not(.moduleScope)) {
@@ -1152,6 +1234,108 @@
 :global(.hero-button-secondary):where(:not(.moduleScope)) {
   background: rgba(7, 15, 31, 0.42) !important;
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06) !important;
+}
+
+/* Compact desktop: keep the card/section model through tablet widths without clipping. */
+@media (min-width: 769px) and (max-width: 1024px) {
+  :global(.portfolio-master-card):where(:not(.moduleScope)) {
+    height: calc(100dvh - 1.5rem);
+    min-height: 620px;
+  }
+
+  :global(.section):where(:not(.moduleScope)) {
+    padding: clamp(1.1rem, 2.5vw, 1.7rem);
+  }
+
+  :global(.about-stage):where(:not(.moduleScope)) {
+    justify-content: center;
+    gap: clamp(0.75rem, 1.8vh, 1.25rem);
+  }
+
+  :global(.about-stage-content):where(:not(.moduleScope)) {
+    align-self: stretch;
+    grid-template-columns: minmax(0, 1fr) minmax(220px, 0.62fr);
+    align-items: center;
+    gap: clamp(1.25rem, 3vw, 2rem);
+    flex: 0 1 auto;
+    min-height: 0;
+    padding-right: clamp(1.75rem, 4vw, 2.5rem);
+  }
+
+  :global(.hero-copy):where(:not(.moduleScope)) {
+    max-width: 460px;
+  }
+
+  :global(.hero-eyebrow):where(:not(.moduleScope)) {
+    margin-bottom: 0.9rem;
+    font-size: 0.78rem;
+  }
+
+  :global(.hero-title):where(:not(.moduleScope)) {
+    font-size: clamp(3.15rem, 6vw, 3.85rem);
+    line-height: 0.96;
+  }
+
+  :global(.hero-title-rule):where(:not(.moduleScope)) {
+    width: min(160px, 34vw);
+    margin: 1.25rem 0 1.35rem;
+  }
+
+  :global(.hero-subcopy):where(:not(.moduleScope)) {
+    max-width: 29rem;
+    font-size: clamp(0.94rem, 1.8vw, 1.08rem);
+    line-height: 1.48;
+  }
+
+  :global(.hero-actions):where(:not(.moduleScope)) {
+    gap: clamp(0.9rem, 2vw, 1.25rem) !important;
+    margin-top: 1.45rem;
+  }
+
+  :global(.hero-button):where(:not(.moduleScope)) {
+    min-width: 160px;
+    min-height: 50px;
+    padding: 0.75rem 1.25rem;
+    font-size: 0.95rem;
+  }
+
+  :global(.hero-portrait):where(:not(.moduleScope)) {
+    width: min(100%, 280px);
+    height: clamp(270px, 34vw, 330px);
+  }
+
+  :global(.hero-stats):where(:not(.moduleScope)) {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 0.65rem;
+    margin-top: 0.85rem;
+    padding-top: 0.8rem;
+  }
+
+  :global(.hero-stat):where(:not(.moduleScope)) {
+    grid-template-columns: auto max-content;
+    column-gap: 0.55rem;
+    row-gap: 0.15rem;
+  }
+
+  :global(.hero-stat:not(:last-child)):where(:not(.moduleScope)) {
+    padding-right: 0.65rem;
+  }
+
+  :global(.hero-stat-icon):where(:not(.moduleScope)) {
+    grid-row: 1 / 3;
+    width: 38px;
+    height: 38px;
+    font-size: 1rem;
+  }
+
+  :global(.hero-stat-value):where(:not(.moduleScope)) {
+    font-size: 1.35rem;
+  }
+
+  :global(.hero-stat-label):where(:not(.moduleScope)) {
+    grid-column: 2;
+    font-size: 0.7rem;
+  }
 }
 
 /* Make contained scrolling feel intentional, not like a random browser artifact. */

@@ -22,6 +22,8 @@ import ContactSection from "@sections/ContactSection";
 //
 
 const SECTION_TRANSITION_MS = 640;
+const MOBILE_SWIPE_THRESHOLD_PX = 48;
+const MOBILE_SWIPE_AXIS_LOCK_PX = 12;
 
 // Main Portfolio component
 const Portfolio = () => {
@@ -92,6 +94,14 @@ const Portfolio = () => {
   const [draggedScrollbarIndex, setDraggedScrollbarIndex] = useState<number | null>(null);
   const [isScrollbarDragging, setIsScrollbarDragging] = useState(false);
   const activeRef = useRef<SectionKey>(activeSection);
+  const mobileSwipeRef = useRef<{
+    pointerId: number;
+    startX: number;
+    startY: number;
+    isHorizontal: boolean;
+    isVertical: boolean;
+    didNavigate: boolean;
+  } | null>(null);
   useEffect(() => {
     activeRef.current = activeSection;
   }, [activeSection]);
@@ -125,12 +135,110 @@ const Portfolio = () => {
       if (!targetElement) return;
 
       setActiveSection(section);
-      if (isMobile) {
-        targetElement.scrollIntoView({ behavior: "smooth", block: "start", inline: "nearest" });
+    },
+    [sectionRefs]
+  );
+
+  const snapMobileSection = useCallback(
+    (direction: 1 | -1) => {
+      const currentIndex = Math.max(0, sectionKeys.indexOf(activeRef.current));
+      const nextIndex = Math.max(
+        0,
+        Math.min(sectionKeys.length - 1, currentIndex + direction)
+      );
+
+      if (nextIndex !== currentIndex) {
+        setActiveSection(sectionKeys[nextIndex]);
       }
     },
-    [isMobile, sectionRefs]
+    [sectionKeys]
   );
+
+  const canScrollVerticallyWithin = useCallback(
+    (target: EventTarget | null, direction: 1 | -1) => {
+      const scrollParent = containerRef.current;
+      if (!scrollParent || !(target instanceof Element)) return false;
+
+      let el: Element | null = target;
+      while (el && el !== scrollParent) {
+        if (el instanceof HTMLElement) {
+          const style = window.getComputedStyle(el);
+          const canOverflowY = /(auto|scroll)/.test(style.overflowY);
+
+          if (canOverflowY && el.scrollHeight > el.clientHeight + 1) {
+            const atTop = el.scrollTop <= 1;
+            const atBottom = el.scrollTop + el.clientHeight >= el.scrollHeight - 1;
+            if ((direction < 0 && !atTop) || (direction > 0 && !atBottom)) {
+              return true;
+            }
+          }
+        }
+
+        el = el.parentElement;
+      }
+
+      return false;
+    },
+    []
+  );
+
+  const handleMobilePointerDown = useCallback(
+    (event: React.PointerEvent<HTMLDivElement>) => {
+      if (!isMobile || event.pointerType === "mouse") return;
+      if (event.target instanceof HTMLElement) {
+        const formField = event.target.closest("input, textarea, select");
+        if (formField) return;
+      }
+
+      mobileSwipeRef.current = {
+        pointerId: event.pointerId,
+        startX: event.clientX,
+        startY: event.clientY,
+        isHorizontal: false,
+        isVertical: false,
+        didNavigate: false,
+      };
+    },
+    [isMobile]
+  );
+
+  const handleMobilePointerMove = useCallback(
+    (event: React.PointerEvent<HTMLDivElement>) => {
+      const swipe = mobileSwipeRef.current;
+      if (!isMobile || !swipe || swipe.pointerId !== event.pointerId) return;
+
+      const deltaX = event.clientX - swipe.startX;
+      const deltaY = event.clientY - swipe.startY;
+      const absX = Math.abs(deltaX);
+      const absY = Math.abs(deltaY);
+
+      if (!swipe.isHorizontal && !swipe.isVertical) {
+        if (absX < MOBILE_SWIPE_AXIS_LOCK_PX && absY < MOBILE_SWIPE_AXIS_LOCK_PX) return;
+        swipe.isHorizontal = absX > absY * 1.15;
+        swipe.isVertical = absY > absX * 1.15;
+      }
+
+      if (swipe.isHorizontal) return;
+
+      if (swipe.isVertical) {
+        const direction = deltaY < 0 ? 1 : -1;
+        if (canScrollVerticallyWithin(event.target, direction)) return;
+        event.preventDefault();
+      }
+
+      if (!swipe.didNavigate && absY >= MOBILE_SWIPE_THRESHOLD_PX) {
+        swipe.didNavigate = true;
+        snapMobileSection(deltaY < 0 ? 1 : -1);
+      }
+    },
+    [canScrollVerticallyWithin, isMobile, snapMobileSection]
+  );
+
+  const clearMobileSwipe = useCallback((event: React.PointerEvent<HTMLDivElement>) => {
+    const swipe = mobileSwipeRef.current;
+    if (!swipe || swipe.pointerId !== event.pointerId) return;
+    mobileSwipeRef.current = null;
+  }, []);
 
   const handleScrollbarPointerDown = useCallback(
     (event: React.PointerEvent<HTMLDivElement>) => {
@@ -229,9 +337,6 @@ const Portfolio = () => {
 
     const scrollToContact = () => {
       setActiveSection("contact");
-      if (isMobile) {
-        target.scrollIntoView({ behavior: "smooth", block: "start", inline: "nearest" });
-      }
     };
 
     // Wait one frame for inquiry state to render before targeting the section.
@@ -433,6 +538,11 @@ const Portfolio = () => {
             ref={containerRef}
             id="portfolio-sections"
             className="portfolio-container"
+            onPointerCancel={clearMobileSwipe}
+            onPointerDown={handleMobilePointerDown}
+            onPointerLeave={clearMobileSwipe}
+            onPointerMove={handleMobilePointerMove}
+            onPointerUp={clearMobileSwipe}
           >
         {/* Add overlay when mobile menu is open */}
         <AnimatePresence>
@@ -458,9 +568,7 @@ const Portfolio = () => {
             <div
               className="portfolio-sections"
               style={{
-                transform: isMobile
-                  ? undefined
-                  : `translate3d(0, -${activeIndex * 100}%, 0)`,
+                transform: `translate3d(0, -${activeIndex * 100}%, 0)`,
               }}
             >
               <AboutSection

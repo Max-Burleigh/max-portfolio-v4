@@ -599,12 +599,82 @@
 }
 
 @media (max-width: 768px) {
+  :global(.portfolio-cockpit):where(:not(.moduleScope)) {
+    gap: clamp(0.45rem, 1.35vh, 0.7rem);
+  }
+
+  :global(.portfolio-deck-shell):where(:not(.moduleScope)) {
+    min-height: 0;
+    height: 100%;
+  }
+
+  :global(.portfolio-phone-deck):where(:not(.moduleScope)) {
+    gap: 0.62rem;
+    padding: 0.1rem 0.05rem 0.25rem;
+  }
+
   :global(.portfolio-phone-card):where(:not(.moduleScope)) {
-    flex-basis: 86%;
+    flex-basis: 82%;
+    grid-template-rows: auto minmax(0, 1fr) auto;
+    gap: 0.45rem;
+    padding: 0.68rem;
+    border-radius: 18px;
+  }
+
+  :global(.portfolio-phone-card h3):where(:not(.moduleScope)) {
+    margin-top: 0.2rem;
+    font-size: clamp(1.02rem, 5.5vw, 1.35rem);
+  }
+
+  :global(.portfolio-phone-card .portfolio-description):where(:not(.moduleScope)) {
+    margin-top: 0.36rem;
+    font-size: 0.7rem;
+    line-height: 1.22;
+    display: -webkit-box;
+    overflow: hidden;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 3;
+  }
+
+  :global(.portfolio-phone-card .portfolio-tech-strip):where(:not(.moduleScope)) {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.28rem;
+    max-height: 3.45rem;
+    margin-top: 0.44rem;
+    overflow: hidden;
+  }
+
+  :global(.portfolio-phone-card .portfolio-tech-pill):where(:not(.moduleScope)) {
+    min-height: 1.55rem;
+    gap: 0.28rem;
+    padding: 0.2rem 0.45rem 0.2rem 0.24rem;
+    font-size: 0.6rem;
+  }
+
+  :global(.portfolio-tech-icon):where(:not(.moduleScope)) {
+    width: 1.08rem;
+    height: 1.08rem;
+  }
+
+  :global(.portfolio-tech-icon .tech-icon):where(:not(.moduleScope)),
+  :global(.portfolio-tech-icon svg):where(:not(.moduleScope)),
+  :global(.portfolio-tech-icon img):where(:not(.moduleScope)) {
+    width: 0.72rem !important;
+    height: 0.72rem !important;
+  }
+
+  :global(.portfolio-phone-preview):where(:not(.moduleScope)) {
+    border-radius: 14px;
+    padding-top: 0.35rem;
   }
 
   :global(.portfolio-phone-device):where(:not(.moduleScope)) {
     width: min(58%, 150px);
+  }
+
+  :global(.portfolio-phone-card .portfolio-tile-link):where(:not(.moduleScope)) {
+    font-size: 0.72rem;
   }
 }
 
@@ -655,7 +725,7 @@
 
 @media (max-width: 768px) {
   :global(.portfolio-phone-preview > img):where(:not(.moduleScope)) {
-    max-width: min(78%, 190px) !important;
+    max-width: min(74%, 160px) !important;
   }
 }
 

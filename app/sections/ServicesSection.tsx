@@ -23,7 +23,7 @@ import { useEntranceStagger, useIsMobile } from "@lib/hooks";
 
 interface ServicesSectionProps {
   isActive?: boolean;
-  onStartProject?: (data: { plan: "ESSENTIAL" | "GROWTH" | null; subscription: boolean }) => void;
+  onStartProject?: (data: { plan: PlanKey | null; subscription: boolean }) => void;
 }
 
 type SelectionItem = {
@@ -31,6 +31,9 @@ type SelectionItem = {
   label: string;
   className?: string;
 };
+
+const planKeys = ["ESSENTIAL", "GROWTH"] as const;
+type PlanKey = (typeof planKeys)[number];
 
 const planFeatures = {
   ESSENTIAL: [
@@ -59,9 +62,10 @@ const supportFeatures = [
 const ServicesSection = forwardRef<HTMLDivElement, ServicesSectionProps>((_, ref) => {
   const router = useRouter();
   const entranceRef = useRef<HTMLDivElement>(null);
+  const planSwiperRef = useRef<HTMLDivElement>(null);
   useEntranceStagger(entranceRef, { baseDelay: 80, step: 45 });
 
-  const [selectedPlan, setSelectedPlan] = useState<"ESSENTIAL" | "GROWTH" | null>(null);
+  const [selectedPlan, setSelectedPlan] = useState<PlanKey | null>(null);
   const [hasSubscription, setHasSubscription] = useState(false);
   const [mounted, setMounted] = useState(false);
   const [shakePlans, setShakePlans] = useState(false);
@@ -70,6 +74,7 @@ const ServicesSection = forwardRef<HTMLDivElement, ServicesSectionProps>((_, ref
   const [toastKey, setToastKey] = useState(0);
   const [navigatedToContact, setNavigatedToContact] = useState(false);
   const [selectionTickerIndex, setSelectionTickerIndex] = useState(0);
+  const [activePlanSlide, setActivePlanSlide] = useState(0);
   const [servicesEntered, setServicesEntered] = useState(false);
   const isMobile = useIsMobile();
 
@@ -101,7 +106,7 @@ const ServicesSection = forwardRef<HTMLDivElement, ServicesSectionProps>((_, ref
     return () => clearTimeout(timer);
   }, [showToast, toastKey]);
 
-  const handlePlanSelection = (plan: "ESSENTIAL" | "GROWTH") => {
+  const handlePlanSelection = (plan: PlanKey) => {
     setNavigatedToContact(false);
     if (selectedPlan === plan) {
       setSelectedPlan(null);
@@ -115,10 +120,23 @@ const ServicesSection = forwardRef<HTMLDivElement, ServicesSectionProps>((_, ref
     sessionStorage.setItem("selectedPlan", plan);
   };
 
+  const handlePlanSwiperScroll = () => {
+    const swiper = planSwiperRef.current;
+    if (!swiper) return;
+
+    const slide = swiper.querySelector<HTMLElement>(".service-plan-card");
+    if (!slide) return;
+
+    const slideWidth = slide.getBoundingClientRect().width;
+    const gap = parseFloat(window.getComputedStyle(swiper).columnGap || "0");
+    const nextIndex = Math.round(swiper.scrollLeft / Math.max(1, slideWidth + gap));
+    setActivePlanSlide(Math.max(0, Math.min(planKeys.length - 1, nextIndex)));
+  };
+
   const handleSubscriptionToggle = () => {
     if (!selectedPlan) {
       setShakePlans(true);
-      setToastMessage("Select a build plan before adding managed support.");
+      setToastMessage("Select a build plan before adding hosting + maintenance.");
       setToastKey((prev) => prev + 1);
       setShowToast(true);
       return;
@@ -156,7 +174,7 @@ const ServicesSection = forwardRef<HTMLDivElement, ServicesSectionProps>((_, ref
 
   const selectionItems: SelectionItem[] = [];
   if (planLabel) selectionItems.push({ id: "plan", label: planLabel, className: planClassName });
-  if (hasSubscription) selectionItems.push({ id: "subscription", label: "Peace of Mind", className: "text-white" });
+  if (hasSubscription) selectionItems.push({ id: "subscription", label: "Hosting + Maintenance", className: "text-white" });
   const hasSelection = Boolean((selectedPlan || hasSubscription) && !navigatedToContact);
 
   const shouldCycleSelections = isMobile && selectionItems.length > 1;
@@ -189,154 +207,173 @@ const ServicesSection = forwardRef<HTMLDivElement, ServicesSectionProps>((_, ref
             <p className="hero-eyebrow">Services</p>
             <h2>Design-forward websites engineered to win customers.</h2>
           </div>
-            <p>
-              Choose from two packages: Essentials and Growth—plus an optional $150/month
-              support plan for ongoing maintenance and operations.
-            </p>
+          <p>
+            Choose from two packages: Essentials and Growth—plus an optional $150/month
+            support plan for ongoing maintenance and operations.
+          </p>
         </div>
 
         <div className={`service-plan-grid ${selectedPlan ? "has-card-focus" : ""}`} data-entrance-item>
-          {(["ESSENTIAL", "GROWTH"] as const).map((plan) => {
-            const isSelected = selectedPlan === plan;
-            return (
-              <motion.button
-                key={plan}
-                type="button"
-                onClick={() => handlePlanSelection(plan)}
-                aria-pressed={isSelected}
-                className={`service-plan-card ${plan === "ESSENTIAL" ? "is-essential" : "is-growth"} ${isSelected ? "is-selected" : "is-dimmed"} ${shakePlans ? "shake" : ""}`}
-                whileTap={{ scale: 0.98 }}
-              >
-                <div className="plan-card-header">
-                  <span className="service-plan-title">{plan}</span>
-                  <div className="plan-card-price-row">
-                    <span className="service-plan-price">{plan === "ESSENTIAL" ? "$3,000" : "$5,000"}</span>
-                    <span className="plan-price-suffix">one-time</span>
-                  </div>
-                </div>
-                <p className="service-plan-copy">{planTaglines[plan]}</p>
-                <ul className="service-feature-rail" aria-label={`${plan.toLowerCase()} plan details`}>
-                  {planFeatures[plan].map((feature) => {
-                    const FeatureIcon = feature.icon;
-                    return (
-                      <li key={feature.title} className="service-feature-column">
-                        <span className="service-feature-icon" aria-hidden="true">
-                          <FeatureIcon />
-                        </span>
-                        <span className="service-feature-text">
-                          <span className="service-feature-title">{feature.title}</span>
-                          <span className="service-feature-detail">{feature.detail}</span>
-                        </span>
-                      </li>
-                    );
-                  })}
-                </ul>
-                <span className="service-plan-action">
-                  {isSelected ? <><MdCheckCircle /> Selected</> : "Select plan"}
-                </span>
-              </motion.button>
-            );
-          })}
-          <motion.button
-            type="button"
-            onClick={handleSubscriptionToggle}
-            aria-pressed={hasSubscription}
-            className={`service-support-card ${hasSubscription ? "is-selected" : ""}`}
-            whileTap={{ scale: 0.985 }}
+          <div
+            ref={planSwiperRef}
+            className="service-plan-swiper"
+            aria-label="Build package options"
+            onScroll={handlePlanSwiperScroll}
           >
-            <div className="plan-card-header">
-              <span className="service-plan-title support-eyebrow">Peace of Mind</span>
-              <div className="plan-card-price-row">
-                <span className="service-plan-price">$150</span>
-                <span className="plan-price-suffix">/ month</span>
-              </div>
-            </div>
-            <p className="service-plan-copy">
-              Hosting, uptime, and small fixes — handled monthly.
-            </p>
-            <ul className="service-feature-rail support-feature-rail" aria-label="Managed support details">
-              {supportFeatures.map((feature) => {
-                const FeatureIcon = feature.icon;
-                return (
-                  <li key={feature.title} className="service-feature-column support-feature-column">
-                    <span className="service-feature-icon support-feature-icon" aria-hidden="true">
-                      <FeatureIcon />
-                    </span>
-                    <span className="service-feature-text support-feature-text">
-                      <span className="service-feature-title support-feature-title">{feature.title}</span>
-                      <span className="service-feature-detail support-feature-detail">{feature.detail}</span>
-                    </span>
-                  </li>
-                );
-              })}
-            </ul>
-            <span className={`service-plan-action support-toggle ${hasSubscription ? "is-selected" : ""}`}>
-              {hasSubscription ? <><MdCheckCircle /> Added</> : <><MdAdd /> Add support</>}
-            </span>
-          </motion.button>
-
-          <div className={`service-selection-card ${hasSelection ? "has-selection" : ""}`}>
-            <div className="selection-dock-content">
-              <div className="selection-dock-copy">
-                <div className="selection-dock-eyebrow">
-                  Your Selection
-                </div>
-                <div className={`selection-dock-label ${hasSelection ? "" : "is-empty"}`}>
-                  {!hasSelection ? (
-                    <span>Choose a plan to start.</span>
-                  ) : shouldCycleSelections ? (
-                    <div className="selection-ticker">
-                      <AnimatePresence mode="wait">
-                        {activeTickerItem && (
-                          <motion.span
-                            key={activeTickerItem.id}
-                            initial={{ opacity: 0, y: 8 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            exit={{ opacity: 0, y: -8 }}
-                            transition={{ duration: 0.3 }}
-                            className={`block truncate ${activeTickerItem.className ?? ""}`}
-                          >
-                            {activeTickerItem.label}
-                          </motion.span>
-                        )}
-                      </AnimatePresence>
+            {planKeys.map((plan) => {
+              const isSelected = selectedPlan === plan;
+              return (
+                <motion.button
+                  key={plan}
+                  type="button"
+                  onClick={() => handlePlanSelection(plan)}
+                  aria-pressed={isSelected}
+                  className={`service-plan-card ${plan === "ESSENTIAL" ? "is-essential" : "is-growth"} ${isSelected ? "is-selected" : "is-dimmed"} ${shakePlans ? "shake" : ""}`}
+                  whileTap={{ scale: 0.98 }}
+                >
+                  <div className="plan-card-header">
+                    <span className="service-plan-title">{plan}</span>
+                    <div className="plan-card-price-row">
+                      <span className="service-plan-price">{plan === "ESSENTIAL" ? "$3,000" : "$5,000"}</span>
+                      <span className="plan-price-suffix">one-time</span>
                     </div>
-                  ) : (
-                    <>
-                      {planLabel && <span className={planClassName}>{planLabel}</span>}
-                      {selectedPlan && hasSubscription && <span className="selection-dock-plus">+</span>}
-                      {hasSubscription && <span>Peace of Mind</span>}
-                    </>
-                  )}
-                </div>
-                <div className="selection-summary" aria-label="Selection summary">
-                  <div>
-                    <span>Build</span>
-                    <strong>{planLabel ?? "Not selected"}</strong>
                   </div>
-                  <div>
-                    <span>Project fee</span>
-                    <strong>{planPrice ?? "--"}</strong>
-                  </div>
-                  <div>
-                    <span>Support</span>
-                    <strong>{hasSubscription ? "$150 / month" : "Optional"}</strong>
-                  </div>
-                  <div>
-                    <span>Total</span>
-                    <strong>{totalEstimate}</strong>
-                  </div>
+                  <p className="service-plan-copy">{planTaglines[plan]}</p>
+                  <ul className="service-feature-rail" aria-label={`${plan.toLowerCase()} plan details`}>
+                    {planFeatures[plan].map((feature) => {
+                      const FeatureIcon = feature.icon;
+                      return (
+                        <li key={feature.title} className="service-feature-column">
+                          <span className="service-feature-icon" aria-hidden="true">
+                            <FeatureIcon />
+                          </span>
+                          <span className="service-feature-text">
+                            <span className="service-feature-title">{feature.title}</span>
+                            <span className="service-feature-detail">{feature.detail}</span>
+                          </span>
+                        </li>
+                      );
+                    })}
+                  </ul>
+                  <span className="service-plan-action">
+                    {isSelected ? <><MdCheckCircle /> Selected</> : "Select plan"}
+                  </span>
+                </motion.button>
+              );
+            })}
+          </div>
+
+          <div className="service-plan-pagination" aria-hidden="true">
+            <span>Swipe plans</span>
+            <div>
+              {planKeys.map((plan, index) => (
+                <i key={plan} className={activePlanSlide === index ? "is-active" : ""} />
+              ))}
+            </div>
+          </div>
+
+          <div className="service-lower-panels">
+            <motion.button
+              type="button"
+              onClick={handleSubscriptionToggle}
+              aria-pressed={hasSubscription}
+              className={`service-support-card ${hasSubscription ? "is-selected" : ""} ${!selectedPlan ? "is-unavailable" : ""}`}
+              whileTap={{ scale: 0.985 }}
+            >
+              <div className="plan-card-header">
+                <span className="service-plan-title support-eyebrow">Hosting + Maintenance</span>
+                <div className="plan-card-price-row">
+                  <span className="service-plan-price">$150</span>
+                  <span className="plan-price-suffix">/ month</span>
                 </div>
               </div>
+              <p className="service-plan-copy">
+                Monthly maintenance, hosting, and support.
+              </p>
+              <ul className="service-feature-rail support-feature-rail" aria-label="Managed support details">
+                {supportFeatures.map((feature) => {
+                  const FeatureIcon = feature.icon;
+                  return (
+                    <li key={feature.title} className="service-feature-column support-feature-column">
+                      <span className="service-feature-icon support-feature-icon" aria-hidden="true">
+                        <FeatureIcon />
+                      </span>
+                      <span className="service-feature-text support-feature-text">
+                        <span className="service-feature-title support-feature-title">{feature.title}</span>
+                        <span className="service-feature-detail support-feature-detail">{feature.detail}</span>
+                      </span>
+                    </li>
+                  );
+                })}
+              </ul>
+              <span className={`service-plan-action support-toggle ${hasSubscription ? "is-selected" : ""}`}>
+                {hasSubscription ? <><MdCheckCircle /> Added</> : <><MdAdd /> Add support</>}
+              </span>
+            </motion.button>
 
-              <button
-                type="button"
-                onClick={handleContact}
-                disabled={!hasSelection}
-                className="selection-dock-button"
-              >
-                Let&apos;s Start <MdArrowForward aria-hidden="true" />
-              </button>
+            <div className={`service-selection-card ${hasSelection ? "has-selection" : ""} ${hasSubscription ? "has-support" : ""} ${selectedPlan === "GROWTH" ? "is-growth" : selectedPlan === "ESSENTIAL" ? "is-essential" : ""}`}>
+              <div className="selection-dock-content">
+                <div className="selection-dock-copy">
+                  <div className="selection-dock-eyebrow">
+                    Your Selection
+                  </div>
+                  <div className={`selection-dock-label ${hasSelection ? "" : "is-empty"}`}>
+                    {!hasSelection ? (
+                      <span>Choose a plan to start.</span>
+                    ) : shouldCycleSelections ? (
+                      <div className="selection-ticker">
+                        <AnimatePresence mode="wait">
+                          {activeTickerItem && (
+                            <motion.span
+                              key={activeTickerItem.id}
+                              initial={{ opacity: 0, y: 8 }}
+                              animate={{ opacity: 1, y: 0 }}
+                              exit={{ opacity: 0, y: -8 }}
+                              transition={{ duration: 0.3 }}
+                              className={`block truncate ${activeTickerItem.className ?? ""}`}
+                            >
+                              {activeTickerItem.label}
+                            </motion.span>
+                          )}
+                        </AnimatePresence>
+                      </div>
+                    ) : (
+                      <>
+                        {planLabel && <span className={planClassName}>{planLabel}</span>}
+                        {selectedPlan && hasSubscription && <span className="selection-dock-plus">+</span>}
+                        {hasSubscription && <span>Hosting + Maintenance</span>}
+                      </>
+                    )}
+                  </div>
+                  <div className="selection-summary" aria-label="Selection summary">
+                    <div>
+                      <span>Build</span>
+                      <strong>{planLabel ?? "Not selected"}</strong>
+                    </div>
+                    <div>
+                      <span>Project fee</span>
+                      <strong>{planPrice ?? "--"}</strong>
+                    </div>
+                    <div>
+                      <span>Support</span>
+                      <strong>{hasSubscription ? "$150 / month" : "Optional"}</strong>
+                    </div>
+                    <div>
+                      <span>Total</span>
+                      <strong>{totalEstimate}</strong>
+                    </div>
+                  </div>
+                </div>
+
+                <button
+                  type="button"
+                  onClick={handleContact}
+                  disabled={!hasSelection}
+                  className="selection-dock-button"
+                >
+                  Let&apos;s Start <MdArrowForward aria-hidden="true" />
+                </button>
+              </div>
             </div>
           </div>
         </div>

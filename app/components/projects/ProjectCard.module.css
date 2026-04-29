@@ -502,9 +502,10 @@
     linear-gradient(145deg, rgba(255, 255, 255, 0.075), rgba(255, 255, 255, 0.035));
 }
 
-@media (max-width: 1024px) {
+@media (max-width: 768px) {
   :global(.portfolio-stage):where(:not(.moduleScope)) {
-    min-height: auto;
+    height: 100%;
+    min-height: 0;
   }
 
   :global(.about-stage-content):where(:not(.moduleScope)) {
@@ -514,7 +515,7 @@
   }
 
   :global(.hero-copy):where(:not(.moduleScope)) {
-    max-width: 720px;
+    max-width: 26rem;
   }
 
   :global(.hero-title-rule):where(:not(.moduleScope)) {
@@ -530,16 +531,16 @@
 @media (max-width: 768px) {
   :global(.site-stage-shell):where(:not(.moduleScope)) {
     min-height: 100dvh;
-    padding: 0;
+    padding: max(0.55rem, var(--safe-top)) max(0.55rem, var(--safe-right)) max(0.55rem, var(--safe-bottom)) max(0.55rem, var(--safe-left));
   }
 
   :global(.portfolio-master-card):where(:not(.moduleScope)) {
     width: 100%;
-    height: 100dvh;
+    height: calc(100dvh - max(1.1rem, var(--safe-top)) - max(1.1rem, var(--safe-bottom)));
     min-height: 0;
-    border-radius: 0;
-    border-left: 0;
-    border-right: 0;
+    border-radius: 22px;
+    border-left: 1px solid rgba(148, 177, 210, 0.22);
+    border-right: 1px solid rgba(148, 177, 210, 0.22);
   }
 
   :global(.portfolio-container):where(:not(.moduleScope)) {
@@ -556,12 +557,12 @@
 
   :global(.section):where(:not(.moduleScope)) {
     scroll-snap-align: none;
-    padding: 1rem;
+    padding: clamp(0.72rem, 3vw, 0.95rem);
   }
 
 
   :global(.stage-topline):where(:not(.moduleScope)) {
-    margin-bottom: 2.2rem;
+    margin-bottom: 0.8rem;
   }
 
   :global(.stage-wordmark):where(:not(.moduleScope)) {
@@ -579,44 +580,71 @@
   }
 
   :global(.hero-title):where(:not(.moduleScope)) {
-    font-size: clamp(3rem, 18vw, 4.6rem);
-    letter-spacing: -0.065em;
+    font-size: clamp(2.45rem, 14.5vw, 3.75rem);
+    line-height: 0.9;
+    letter-spacing: -0.07em;
   }
 
   :global(.hero-subcopy):where(:not(.moduleScope)) {
-    font-size: 1rem;
+    max-width: 20rem;
+    font-size: clamp(0.78rem, 3.3vw, 0.92rem);
+    line-height: 1.34;
   }
 
   :global(.hero-actions):where(:not(.moduleScope)) {
-    gap: 0.8rem;
+    gap: 0.55rem;
+    margin-top: 0.9rem;
   }
 
   :global(.hero-button):where(:not(.moduleScope)) {
-    width: 100%;
-    min-height: 54px;
+    width: auto;
+    min-width: min(9rem, 46%);
+    min-height: 42px;
+    padding: 0.62rem 0.78rem;
+    font-size: 0.8rem;
   }
 
   :global(.hero-portrait):where(:not(.moduleScope)) {
-    width: min(100%, 310px);
-    height: 380px;
+    display: block;
+    width: clamp(7.2rem, 33vw, 9.4rem);
+    height: clamp(8.55rem, 39vw, 11.2rem);
+    border-radius: 20px;
+    margin-top: clamp(0.1rem, 0.6vh, 0.35rem);
+    box-shadow: 0 18px 42px rgba(0, 0, 0, 0.32);
   }
 
   :global(.hero-stats):where(:not(.moduleScope)) {
-    grid-template-columns: 1fr;
-    gap: 1rem;
-    margin-top: 2rem;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.45rem;
+    margin-top: clamp(0.68rem, 2vh, 0.95rem);
+    padding-top: 0;
   }
 
   :global(.hero-stat):where(:not(.moduleScope)) {
-    grid-template-columns: auto auto max-content;
-    padding: 0;
+    min-height: 3rem;
+    grid-template-columns: auto minmax(0, 1fr);
+    column-gap: 0.45rem;
+    row-gap: 0.02rem;
+    padding: 0.45rem;
+    border-radius: 14px;
     border-right: 0 !important;
   }
 
   :global(.hero-stat-icon):where(:not(.moduleScope)) {
-    width: 48px;
-    height: 48px;
-    font-size: 1.25rem;
+    grid-row: 1 / 3;
+    width: 30px;
+    height: 30px;
+    font-size: 0.86rem;
+  }
+
+  :global(.hero-stat-value):where(:not(.moduleScope)) {
+    font-size: clamp(0.98rem, 4.6vw, 1.24rem);
+  }
+
+  :global(.hero-stat-label):where(:not(.moduleScope)) {
+    grid-column: 2;
+    font-size: 0.54rem;
+    line-height: 1.1;
   }
 }
 

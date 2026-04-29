@@ -14,10 +14,11 @@ This is a polished portfolio site. Treat visual behavior as product behavior.
 ## Local Tool Rules
 
 - Do not run `npx next dev`. The user will already be running the dev server when needed.
+- Do not run `npm run build` in this project unless the user explicitly asks for a build.
 - Do not run Playwright.
 - Do not use Browser Use or Computer Use unless the user specifically asks.
 - If Computer Use is specifically requested and you open an app/window yourself, close it when finished.
-- For normal code verification, use `npm run build` and `npm run lint`.
+- For normal code verification, use `npm run lint` only.
 
 ## Stack
 
@@ -42,6 +43,7 @@ Node should be >=18.18. Prefer Node 20+ on dev machines.
 
 Notes:
 - Agents should not run `npm run dev` unless explicitly asked, and should never run `npx next dev`.
+- Agents should not run `npm run build` unless explicitly asked.
 - `npm run lint` currently uses `next lint`, which is deprecated in newer Next versions, but it is still the repo's current script.
 
 ## Current Repository Map
@@ -199,7 +201,6 @@ Important CSS Modules detail:
 For code changes, normally run:
 
 ```bash
-npm run build
 npm run lint
 ```
 
@@ -232,4 +233,3 @@ git push
 ```bash
 git push --set-upstream origin <branch>
 ```
-
