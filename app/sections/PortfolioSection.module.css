@@ -814,6 +814,63 @@
   }
 }
 
+@media (min-width: 700px) and (max-width: 768px) and (min-height: 900px) and (orientation: portrait) {
+  :global(.portfolio-cockpit):where(:not(.moduleScope)) {
+    gap: 0.58rem;
+  }
+
+  :global(.portfolio-phone-deck):where(:not(.moduleScope)) {
+    gap: 0.72rem;
+    padding: 0.08rem 0.05rem 0.3rem;
+  }
+
+  :global(.portfolio-phone-card):where(:not(.moduleScope)) {
+    flex-basis: clamp(19.25rem, 43vw, 20.75rem);
+    grid-template-rows: 7.25rem minmax(0, 1fr) auto;
+    gap: 0.52rem;
+    padding: 0.76rem;
+    border-radius: 18px;
+  }
+
+  :global(.portfolio-phone-card h3):where(:not(.moduleScope)) {
+    font-size: clamp(1.08rem, 2.7vw, 1.35rem);
+  }
+
+  :global(.portfolio-phone-card .portfolio-description):where(:not(.moduleScope)) {
+    font-size: 0.72rem;
+    line-height: 1.25;
+  }
+
+  :global(.portfolio-phone-card .portfolio-tech-strip):where(:not(.moduleScope)) {
+    --portfolio-tech-gap: 0.3rem;
+    --portfolio-tech-edge-cut: 1.4rem;
+    margin-top: 0.45rem;
+  }
+
+  :global(.portfolio-phone-card .portfolio-tech-pill):where(:not(.moduleScope)) {
+    min-height: 1.68rem;
+    padding: 0.22rem 0.5rem 0.22rem 0.26rem;
+    font-size: 0.64rem;
+  }
+
+  :global(.portfolio-tech-icon):where(:not(.moduleScope)) {
+    width: 1.14rem;
+    height: 1.14rem;
+  }
+
+  :global(.portfolio-phone-preview):where(:not(.moduleScope)) {
+    border-radius: 15px;
+  }
+
+  :global(.portfolio-phone-preview > img):where(:not(.moduleScope)) {
+    max-width: min(84%, 215px) !important;
+  }
+
+  :global(.portfolio-phone-card .portfolio-tile-link):where(:not(.moduleScope)) {
+    font-size: 0.76rem;
+  }
+}
+
 /* Hard section isolation: never show the previous section when landing. */
 
 :global(.portfolio-store-links):where(:not(.moduleScope)) {
