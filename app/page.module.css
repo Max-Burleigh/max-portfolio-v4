@@ -1341,30 +1341,30 @@
 /* Tall tablet portrait: keep the card laptop-like instead of stretching the section layouts. */
 @media (min-width: 700px) and (max-width: 768px) and (min-height: 900px) and (orientation: portrait) {
   :global(.site-stage-shell):where(:not(.moduleScope)) {
-    padding: max(1rem, var(--safe-top)) max(1rem, var(--safe-right)) max(1rem, var(--safe-bottom)) max(1rem, var(--safe-left));
+    padding: max(0.85rem, var(--safe-top)) max(0.85rem, var(--safe-right)) max(0.85rem, var(--safe-bottom)) max(0.85rem, var(--safe-left));
   }
 
   :global(.portfolio-master-card):where(:not(.moduleScope)) {
-    height: min(790px, calc(100dvh - 2rem));
-    min-height: 620px;
-    border-radius: 28px;
+    height: min(660px, calc(100dvh - 1.7rem));
+    min-height: 560px;
+    border-radius: 26px;
   }
 
   :global(.section):where(:not(.moduleScope)) {
-    padding: clamp(1.4rem, 3.1vw, 1.85rem);
+    padding: clamp(1.1rem, 2.65vw, 1.45rem);
   }
 
   :global(.cockpit-header):where(:not(.moduleScope)) {
     grid-template-columns: minmax(0, 1fr) minmax(18rem, 0.82fr);
     align-items: end;
-    gap: 1.2rem;
+    gap: 1rem;
     padding-right: clamp(3.9rem, 11vw, 5rem);
   }
 
   :global(.cockpit-header > p):where(:not(.moduleScope)) {
     max-width: 27rem;
     justify-self: end;
-    font-size: clamp(0.86rem, 1.95vw, 1rem);
+    font-size: clamp(0.78rem, 1.75vw, 0.9rem);
     line-height: 1.34;
   }
 }
