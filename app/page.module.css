@@ -1341,7 +1341,7 @@
 /* Tall tablet portrait: keep the card laptop-like instead of stretching the section layouts. */
 @media (min-width: 769px) and (max-width: 1024px) and (min-height: 900px) and (orientation: portrait) {
   :global(.portfolio-master-card):where(:not(.moduleScope)) {
-    height: min(900px, calc(100dvh - 2rem));
+    height: min(840px, calc(100dvh - 2rem));
     min-height: 620px;
   }
 }
