@@ -548,7 +548,7 @@ const AboutSection = forwardRef<HTMLDivElement, AboutSectionProps>(function Abou
           <div className="hero-stat">
             <span className="hero-stat-icon"><MdCode aria-hidden="true" /></span>
             <span className="hero-stat-value">{visibleProjectCount}</span>
-            <span className="hero-stat-label">Projects Featured</span>
+            <span className="hero-stat-label">Featured Projects</span>
           </div>
           <div className="hero-stat">
             <span className="hero-stat-icon"><MdMood aria-hidden="true" /></span>

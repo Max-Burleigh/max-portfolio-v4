@@ -54,7 +54,7 @@ const planTaglines = {
 } as const;
 
 const supportFeatures = [
-  { title: "Hosting + DNS", detail: "Certs and infra handled", icon: MdShield },
+  { title: "Website hosting", detail: "Site stays live and secure", icon: MdShield },
   { title: "Workspace help", detail: "Email, calendars, accounts", icon: MdSupportAgent },
   { title: "Small fixes", detail: "Copy, images, quick tweaks", icon: MdBuild },
 ] as const;

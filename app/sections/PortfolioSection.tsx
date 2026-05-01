@@ -21,6 +21,8 @@ const PortfolioProjectCard = React.memo(function PortfolioProjectCard({
   project,
   index,
 }: PortfolioProjectCardProps) {
+  const techStack = project.techStack ?? [];
+
   return (
     <article className="portfolio-phone-card">
       <div className="portfolio-phone-copy">
@@ -36,26 +38,32 @@ const PortfolioProjectCard = React.memo(function PortfolioProjectCard({
             <a href="https://play.google.com/store/apps/details?id=fullleafteacompany.android.app&hl=en_US&pli=1" target="_blank" rel="noopener noreferrer">Play Store</a>
           </div>
         )}
-        <div className="portfolio-tech-strip" aria-label={`${project.title} tech stack`} tabIndex={0}>
-          <div className="portfolio-tech-track" role="list">
-            {project.techStack?.map((item) => (
-              <span key={item.label} className="portfolio-tech-pill" role="listitem">
-                <span className="portfolio-tech-icon" aria-hidden="true">
-                  {item.icon}
-                </span>
-                <span>{item.label}</span>
-              </span>
-            ))}
-            {project.techStack?.map((item) => (
-              <span key={`${item.label}-duplicate`} className="portfolio-tech-pill" aria-hidden="true">
-                <span className="portfolio-tech-icon" aria-hidden="true">
-                  {item.icon}
-                </span>
-                <span>{item.label}</span>
-              </span>
-            ))}
+        {techStack.length > 0 && (
+          <div className="portfolio-tech-strip" aria-label={`${project.title} tech stack`} tabIndex={0}>
+            <div className="portfolio-tech-track">
+              <div className="portfolio-tech-group" role="list">
+                {techStack.map((item) => (
+                  <span key={item.label} className="portfolio-tech-pill" role="listitem">
+                    <span className="portfolio-tech-icon" aria-hidden="true">
+                      {item.icon}
+                    </span>
+                    <span>{item.label}</span>
+                  </span>
+                ))}
+              </div>
+              <div className="portfolio-tech-group" aria-hidden="true">
+                {techStack.map((item) => (
+                  <span key={`${item.label}-duplicate`} className="portfolio-tech-pill">
+                    <span className="portfolio-tech-icon" aria-hidden="true">
+                      {item.icon}
+                    </span>
+                    <span>{item.label}</span>
+                  </span>
+                ))}
+              </div>
+            </div>
           </div>
-        </div>
+        )}
       </div>
 
       <div className="portfolio-phone-preview" aria-label={`${project.title} preview`}>
