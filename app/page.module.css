@@ -29,6 +29,13 @@
   isolation: isolate;
 }
 
+@media (min-width: 2200px) and (min-height: 1200px) {
+  :global(.portfolio-master-card):where(:not(.moduleScope)) {
+    transform: scale(clamp(1.12, 5vw, 1.2));
+    transform-origin: center;
+  }
+}
+
 :global(.portfolio-master-card):where(:not(.moduleScope))::before {
   content: "";
   position: absolute;
@@ -1345,9 +1352,9 @@
   }
 
   :global(.portfolio-master-card):where(:not(.moduleScope)) {
-    height: min(620px, calc(100dvh - 1.7rem)) !important;
-    min-height: 520px !important;
-    max-height: 620px !important;
+    height: min(660px, calc(100dvh - 1.7rem)) !important;
+    min-height: 560px !important;
+    max-height: 660px !important;
     border-radius: 26px;
   }
 
@@ -1365,15 +1372,17 @@
   }
 
   :global(.cockpit-header):where(:not(.moduleScope)) {
-    grid-template-columns: minmax(0, 1fr) minmax(18rem, 0.82fr);
-    align-items: end;
-    gap: 1rem;
+    grid-template-columns: minmax(0, 1fr);
+    align-items: start;
+    gap: 0.7rem;
     padding-right: clamp(3.9rem, 11vw, 5rem);
   }
 
   :global(.cockpit-header > p):where(:not(.moduleScope)) {
-    max-width: 27rem;
-    justify-self: end;
+    max-width: 34rem;
+    justify-self: start;
+    transform: none;
+    text-align: left;
     font-size: clamp(0.78rem, 1.75vw, 0.9rem);
     line-height: 1.34;
   }
@@ -1381,8 +1390,21 @@
 
 @media (min-width: 769px) and (max-width: 1024px) and (min-height: 900px) and (orientation: portrait) {
   :global(.portfolio-master-card):where(:not(.moduleScope)) {
-    height: min(840px, calc(100dvh - 2rem));
-    min-height: 620px;
+    height: min(920px, calc(100dvh - 2rem));
+    min-height: 700px;
+  }
+
+  :global(.cockpit-header):where(:not(.moduleScope)) {
+    grid-template-columns: minmax(0, 1fr);
+    align-items: start;
+    gap: 0.75rem;
+  }
+
+  :global(.cockpit-header > p):where(:not(.moduleScope)) {
+    max-width: 34rem;
+    justify-self: start;
+    transform: none;
+    text-align: left;
   }
 }
 

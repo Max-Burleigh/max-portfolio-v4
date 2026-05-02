@@ -1263,6 +1263,21 @@
   }
 }
 
+@media (min-width: 769px) and (max-width: 1024px) and (min-height: 900px) and (orientation: portrait) {
+  :global(.cockpit-header):where(:not(.moduleScope)) {
+    grid-template-columns: minmax(0, 1fr);
+    align-items: start;
+    gap: 0.75rem;
+  }
+
+  :global(.cockpit-header > p):where(:not(.moduleScope)) {
+    max-width: 34rem;
+    justify-self: start;
+    transform: none;
+    text-align: left;
+  }
+}
+
 @media (min-width: 700px) and (max-width: 768px) and (min-height: 900px) and (orientation: portrait) {
   :global(.services-section > .services-cockpit):where(:not(.moduleScope)) {
     gap: 0.46rem;
