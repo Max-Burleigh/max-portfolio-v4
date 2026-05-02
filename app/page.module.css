@@ -1339,18 +1339,28 @@
 }
 
 /* Tall tablet portrait: keep the card laptop-like instead of stretching the section layouts. */
-@media (min-width: 700px) and (max-width: 768px) and (min-height: 900px) and (orientation: portrait) {
+@media (min-width: 700px) and (max-width: 800px) and (min-height: 900px) and (orientation: portrait) {
   :global(.site-stage-shell):where(:not(.moduleScope)) {
     padding: max(0.85rem, var(--safe-top)) max(0.85rem, var(--safe-right)) max(0.85rem, var(--safe-bottom)) max(0.85rem, var(--safe-left));
   }
 
   :global(.portfolio-master-card):where(:not(.moduleScope)) {
-    height: min(660px, calc(100dvh - 1.7rem));
-    min-height: 560px;
+    height: min(620px, calc(100dvh - 1.7rem)) !important;
+    min-height: 520px !important;
+    max-height: 620px !important;
     border-radius: 26px;
   }
 
+  :global(.portfolio-container):where(:not(.moduleScope)),
+  :global(.portfolio-sections):where(:not(.moduleScope)) {
+    height: 100% !important;
+    max-height: 100% !important;
+  }
+
   :global(.section):where(:not(.moduleScope)) {
+    height: 100% !important;
+    min-height: 100% !important;
+    max-height: 100% !important;
     padding: clamp(1.1rem, 2.65vw, 1.45rem);
   }
 
