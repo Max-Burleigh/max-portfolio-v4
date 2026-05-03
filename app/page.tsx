@@ -107,6 +107,24 @@ const Portfolio = () => {
   }, [activeSection]);
 
   useEffect(() => {
+    if (!isMobile) return;
+
+    const frame = window.requestAnimationFrame(() => {
+      const section = sectionRefs[activeSection]?.current;
+      section?.scrollTo({ top: 0, left: 0, behavior: "auto" });
+      section
+        ?.querySelectorAll<HTMLElement>(
+          ".about-stage, .services-cockpit, .portfolio-cockpit, .contact-cockpit"
+        )
+        .forEach((element) => {
+          element.scrollTo({ top: 0, left: 0, behavior: "auto" });
+        });
+    });
+
+    return () => window.cancelAnimationFrame(frame);
+  }, [activeSection, isMobile, sectionRefs]);
+
+  useEffect(() => {
     const resetHashScroll = () => {
       if (!window.location.hash) return;
 
@@ -504,7 +522,7 @@ const Portfolio = () => {
       <AuroraBackground />
 
       <main className="site-stage-shell">
-        <div className="portfolio-master-card">
+        <div className="portfolio-master-card" data-active-section={activeSection}>
           {/* PlatformDetector removed; SSR sets <html> classes */}
           <Navigation
             activeSection={activeSection}

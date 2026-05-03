@@ -56,6 +56,11 @@ const COLOR_PALETTES = [
   { id: "coffee", name: "Coffee", colors: ["#78350f", "#92400e", "#fef3c7", "#1c1917"] },
 ];
 
+const INITIAL_PALETTE_IDS = ["lavender", "ocean", "noir", "forest", "arctic", "mono"];
+const INITIAL_PALETTES = INITIAL_PALETTE_IDS.map(id =>
+  COLOR_PALETTES.find(palette => palette.id === id)
+).filter((palette): palette is (typeof COLOR_PALETTES)[number] => Boolean(palette));
+
 const GOAL_OPTIONS = [
   { value: "contact", label: "Get people to contact me" },
   { value: "book", label: "Book appointments/calls" },
@@ -107,7 +112,7 @@ function GetStartedForm() {
     return shuffled.slice(0, 6);
   }, []);
 
-  const [displayedPalettes, setDisplayedPalettes] = useState(() => getRandomPalettes());
+  const [displayedPalettes, setDisplayedPalettes] = useState(INITIAL_PALETTES);
 
   const shufflePalettes = () => {
     setDisplayedPalettes(getRandomPalettes());

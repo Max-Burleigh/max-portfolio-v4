@@ -204,12 +204,12 @@ const ServicesSection = forwardRef<HTMLDivElement, ServicesSectionProps>((_, ref
       >
         <div className="cockpit-header" data-entrance-item>
           <div>
-            <p className="hero-eyebrow">Services</p>
+            <p className="hero-eyebrow">Web Development &amp; Design Services</p>
             <h2>Design-forward websites engineered to win customers.</h2>
           </div>
           <p>
-            Choose from two packages: Essentials and Growth—plus an optional $150/month
-            support plan for ongoing maintenance and operations.
+            Choose from two web development and design packages: Essentials and Growth—plus
+            an optional $150/month support plan for ongoing maintenance and operations.
           </p>
         </div>
 
