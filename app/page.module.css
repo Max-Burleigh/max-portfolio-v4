@@ -29,13 +29,6 @@
   isolation: isolate;
 }
 
-@media (min-width: 2200px) and (min-height: 1200px) {
-  :global(.portfolio-master-card):where(:not(.moduleScope)) {
-    transform: scale(clamp(1.12, 5vw, 1.2));
-    transform-origin: center;
-  }
-}
-
 :global(.portfolio-master-card):where(:not(.moduleScope))::before {
   content: "";
   position: absolute;
@@ -438,6 +431,13 @@
 /* Card-native redesign pass: every section is a contained screen inside the master card. */
 :global(.portfolio-master-card):where(:not(.moduleScope)) {
   height: min(874px, calc(100dvh - 3rem));
+}
+
+@media (min-width: 2200px) and (min-height: 1200px) {
+  :global(.portfolio-master-card):where(:not(.moduleScope)) {
+    width: min(1960px, calc(100vw - max(4rem, var(--safe-left)) - max(4rem, var(--safe-right))));
+    height: min(1136px, calc(100dvh - max(3rem, var(--safe-top)) - max(3rem, var(--safe-bottom))));
+  }
 }
 
 :global(.portfolio-container):where(:not(.moduleScope)) {
