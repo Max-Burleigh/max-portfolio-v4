@@ -473,9 +473,9 @@ const AboutSection = forwardRef<HTMLDivElement, AboutSectionProps>(function Abou
           <div data-entrance-item className="flex-shrink-0">
             <motion.div
               ref={portraitRef}
-              role={isMobile ? undefined : "button"}
-              tabIndex={isMobile ? undefined : 0}
-              aria-label={isMobile ? "Max Burleigh portrait" : "Flick Max Burleigh portrait"}
+              role="button"
+              tabIndex={0}
+              aria-label="Flick Max Burleigh portrait"
               className="portrait-frame hero-portrait"
               style={{
                 rotateY: portraitRotateY,
@@ -485,20 +485,20 @@ const AboutSection = forwardRef<HTMLDivElement, AboutSectionProps>(function Abou
                 y: flickY,
                 transformPerspective: transformPerspectiveSpring,
                 boxShadow,
-                transformStyle: isMobile ? "flat" : "preserve-3d",
+                transformStyle: "preserve-3d",
                 transformOrigin: "center",
-                willChange: isMobile ? "auto" : "transform",
+                willChange: "transform",
               }}
               initial={false}
               transition={{ duration: 0.5 }}
               whileHover={isMobile ? undefined : { scale: 1.05, transition: { duration: 0.2 } }}
               onMouseMove={isMobile ? undefined : throttledPortraitMouseMove}
               onMouseLeave={isMobile ? undefined : handlePortraitMouseLeave}
-              onPointerDown={isMobile ? undefined : handlePortraitPointerDown}
-              onPointerMove={isMobile ? undefined : handlePortraitPointerMove}
-              onPointerUp={isMobile ? undefined : finishPortraitPointer}
-              onPointerCancel={isMobile ? undefined : cancelPortraitPointer}
-              onKeyDown={isMobile ? undefined : handlePortraitKeyDown}
+              onPointerDown={handlePortraitPointerDown}
+              onPointerMove={handlePortraitPointerMove}
+              onPointerUp={finishPortraitPointer}
+              onPointerCancel={cancelPortraitPointer}
+              onKeyDown={handlePortraitKeyDown}
             >
               <motion.div
                 className="portrait-glare"
@@ -533,7 +533,7 @@ const AboutSection = forwardRef<HTMLDivElement, AboutSectionProps>(function Abou
                 placeholder="blur"
                 blurDataURL="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjU2IiBoZWlnaHQ9IjMyMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCBmaWxsPSIjMTkxYzIzIiB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIi8+PC9zdmc+"
                 className="portrait-image"
-                style={{ objectFit: "cover", transform: isMobile ? "none" : "translateZ(20px)", borderRadius: "0.5rem" }}
+                style={{ objectFit: "cover", transform: "translateZ(20px)", borderRadius: "0.5rem" }}
                 priority
               />
             </motion.div>

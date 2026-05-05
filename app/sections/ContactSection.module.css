@@ -994,7 +994,8 @@
 
   :global(.contact-pitch):where(:not(.moduleScope)) {
     display: grid;
-    align-content: start;
+    grid-template-rows: auto auto auto minmax(0, 1fr);
+    align-content: stretch;
     min-height: 0;
   }
 
@@ -1014,8 +1015,10 @@
   }
 
   :global(.contact-promise-grid):where(:not(.moduleScope)) {
+    align-self: center;
+    width: 100%;
     row-gap: clamp(1.65rem, 4.2vh, 2.25rem);
-    margin-top: clamp(1rem, 2.6vh, 1.35rem);
+    margin-top: 0;
   }
 
   :global(.contact-promise):where(:not(.moduleScope)) {

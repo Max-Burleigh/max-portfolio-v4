@@ -1437,8 +1437,8 @@
   }
 
   :global(.hero-portrait):where(:not(.moduleScope)) {
-    touch-action: pan-y;
-    transform-style: flat !important;
+    touch-action: none;
+    transform-style: preserve-3d !important;
     -webkit-backface-visibility: hidden;
     backface-visibility: hidden;
     -webkit-mask-image: -webkit-radial-gradient(white, black);
@@ -1446,11 +1446,11 @@
   }
 
   :global(.hero-portrait .portrait-glare):where(:not(.moduleScope)) {
-    display: none;
+    display: block;
   }
 
   :global(.hero-portrait .portrait-image):where(:not(.moduleScope)) {
-    transform: none !important;
+    transform: translateZ(20px) !important;
     border-radius: inherit !important;
     -webkit-backface-visibility: hidden;
     backface-visibility: hidden;
