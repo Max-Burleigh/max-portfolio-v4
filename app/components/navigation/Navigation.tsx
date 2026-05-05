@@ -1,6 +1,6 @@
 "use client";
 
-import React, { memo, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   motion,
   AnimatePresence,
@@ -11,67 +11,16 @@ import {
 // Define section keys type - needed for props
 type SectionKey = "about" | "portfolio" | "services" | "contact"; // Or import from a shared types file
 
-// --- NavItem Component (restored original feel) ---
-interface NavItemProps {
+const mobileMenuItems: Array<{
   section: SectionKey;
-  activeSection: SectionKey;
-  onClick: () => void;
-}
-
-const NavItem = memo(({ section, activeSection, onClick }: NavItemProps) => {
-  const isActive = section === activeSection;
-
-  const underlineVariants = {
-    inactive: { scaleX: 0 },
-    active: {
-      scaleX: 1,
-      transition: { type: "spring", stiffness: 400, damping: 20 },
-    },
-  } as const;
-
-  return (
-    <div className="nav-item">
-      <button className={isActive ? "active" : ""} onClick={onClick}>
-        {section.charAt(0).toUpperCase() + section.slice(1)}
-      </button>
-      <motion.div
-        className="elastic-underline"
-        variants={underlineVariants}
-        initial="inactive"
-        animate={isActive ? "active" : "inactive"}
-      />
-    </div>
-  );
-});
-NavItem.displayName = "NavItem";
-
-// Desktop Nav removed – mobile-only menu
-
-// --- SideNav Component (Desktop) ---
-interface SideNavProps {
-  sections: SectionKey[];
-  activeSection: SectionKey;
-  scrollToSection: (section: SectionKey) => void;
-}
-
-const SideNav: React.FC<SideNavProps> = ({
-  sections,
-  activeSection,
-  scrollToSection,
-}) => (
-  <nav className="side-nav">
-    {sections.map((section) => (
-      <NavItem
-        key={section}
-        section={section}
-        activeSection={activeSection}
-        onClick={() => {
-          scrollToSection(section);
-        }}
-      />
-    ))}
-  </nav>
-);
+  number: string;
+  label: string;
+}> = [
+  { section: "about", number: "01", label: "About" },
+  { section: "services", number: "02", label: "Services" },
+  { section: "portfolio", number: "03", label: "Portfolio" },
+  { section: "contact", number: "04", label: "Contact" },
+];
 
 // --- Hamburger Component (Extracted) ---
 interface HamburgerProps {
@@ -104,8 +53,9 @@ const Hamburger: React.FC<HamburgerProps> = ({ menuOpen, setMenuOpen }) => {
 
   return (
     <motion.button
-      className="hamburger-btn lg:hidden fixed top-5 right-5 z-[102] flex flex-col justify-center items-center w-12 h-12 bg-gradient-to-br from-blue-400 via-purple-400 to-pink-400 rounded-full shadow-xl focus:outline-none overflow-hidden"
+      className="hamburger-btn fixed top-5 right-5 z-[102] flex flex-col justify-center items-center w-12 h-12 rounded-full focus:outline-none overflow-hidden"
       aria-label={menuOpen ? "Close menu" : "Open menu"}
+      aria-expanded={menuOpen}
       onPointerUp={handleToggle}
       onClick={(e) => {
         // Safety: if click still fires after pointer, swallow it
@@ -118,11 +68,12 @@ const Hamburger: React.FC<HamburgerProps> = ({ menuOpen, setMenuOpen }) => {
         mouseY.set(0);
       }}
       whileHover={{
-        scale: 1.1,
-        boxShadow: "0 0 25px rgba(79, 70, 229, 0.45)",
+        scale: 1.04,
+        boxShadow:
+          "0 18px 42px rgba(0, 0, 0, 0.26), 0 0 24px rgba(53, 243, 235, 0.16)",
       }}
-      whileTap={{ scale: 0.9 }}
-      animate={menuOpen ? { scale: 1.1 } : { scale: 1 }}
+      whileTap={{ scale: 0.94 }}
+      animate={menuOpen ? { scale: 1.02 } : { scale: 1 }}
       transition={{ scale: { type: "spring", stiffness: 500, damping: 15 } }}
       style={{
         rotateX: hoverTilt,
@@ -131,14 +82,14 @@ const Hamburger: React.FC<HamburgerProps> = ({ menuOpen, setMenuOpen }) => {
     >
       {/* Animated gradient background */}
       <motion.div
-        className="absolute inset-0 bg-gradient-to-br from-blue-500 via-purple-500 to-pink-500 opacity-0"
-        animate={{ opacity: menuOpen ? 0.8 : 0 }}
+        className="hamburger-glass absolute inset-0"
+        animate={{ opacity: menuOpen ? 1 : 0.88 }}
         transition={{ duration: 0.3 }}
       />
 
       {/* Icon lines - animates to 'X' and back to hamburger */}
       <motion.span
-        className="block w-6 bg-white rounded mb-1.5 z-10"
+        className="hamburger-line block w-6 rounded mb-1.5 z-10"
         animate={
           menuOpen
             ? { rotate: 45, y: 8, width: 20 }
@@ -148,7 +99,7 @@ const Hamburger: React.FC<HamburgerProps> = ({ menuOpen, setMenuOpen }) => {
         style={{ height: "2px" }}
       />
       <motion.span
-        className="block w-6 bg-white rounded z-10"
+        className="hamburger-line block w-6 rounded z-10"
         animate={
           menuOpen ? { opacity: 0, width: 0 } : { opacity: 1, width: 24 }
         }
@@ -156,7 +107,7 @@ const Hamburger: React.FC<HamburgerProps> = ({ menuOpen, setMenuOpen }) => {
         style={{ height: "2px" }}
       />
       <motion.span
-        className="block w-6 bg-white rounded mt-1.5 z-10"
+        className="hamburger-line block w-6 rounded mt-1.5 z-10"
         animate={
           menuOpen
             ? { rotate: -45, y: -8, width: 20 }
@@ -204,80 +155,94 @@ const MobileMenu: React.FC<MobileMenuProps> = ({
   setMenuOpen,
   scrollToSection,
   setActiveSection,
-}) => (
-  <>
-    {/* Click-away backdrop (transparent) */}
-    <button
-      aria-label="Close menu backdrop"
-      className="fixed inset-0 z-[100] bg-transparent lg:hidden"
-      onClick={() => setMenuOpen(false)}
-    />
+}) => {
+  const visibleMenuItems = mobileMenuItems.filter((item) =>
+    sections.includes(item.section)
+  );
 
-    {/* Compact dropdown panel under the hamburger */}
-    <motion.div
-      className="mobile-menu-panel fixed top-16 right-4 z-[101] lg:hidden"
-      style={{ willChange: "transform", transform: "translateZ(0)" }} // Hardware acceleration hint
-      initial={{ opacity: 0, y: -8, scale: 0.98 }}
-      animate={{ opacity: 1, y: 0, scale: 1 }}
-      exit={{ opacity: 0, y: -8, scale: 0.98 }}
-      transition={{ type: "spring", stiffness: 500, damping: 30 }}
-    >
+  return (
+    <>
+      {/* Click-away backdrop (transparent) */}
+      <button
+        aria-label="Close menu backdrop"
+        className="fixed inset-0 z-[100] bg-transparent"
+        onClick={() => setMenuOpen(false)}
+      />
+
       <motion.div
-        className="min-w-[220px] max-w-[80vw] rounded-xl border border-white/10 shadow-2xl overflow-hidden backdrop-blur-xl bg-gradient-to-br from-blue-900/90 via-purple-900/90 to-pink-900/90"
-        variants={containerVariants}
-        initial="hidden"
-        animate="visible"
-        exit="hidden"
+        className="mobile-menu-panel fixed top-16 right-4 z-[101]"
+        style={{ willChange: "transform" }}
+        initial={{ opacity: 0, y: -10, scale: 0.96, filter: "blur(6px)" }}
+        animate={{ opacity: 1, y: 0, scale: 1, filter: "blur(0px)" }}
+        exit={{ opacity: 0, y: -10, scale: 0.96, filter: "blur(6px)" }}
+        transition={{ type: "spring", stiffness: 520, damping: 34 }}
       >
-        <div className="py-3">
-          {sections.map((section) => (
-            <motion.button
-              key={section}
-              className={`relative w-full text-left px-5 py-3 text-[17px] font-semibold text-white tracking-wide flex items-center hover:bg-white/5 active:bg-white/10 ${section === activeSection ? "text-pink-300" : ""
-                }`}
-              onClick={() => {
-                setActiveSection(section as SectionKey);
-                setMenuOpen(false);
-                scrollToSection(section);
-              }}
-              variants={{
-                visible: {
-                  opacity: 1,
-                  y: 0,
-                  transition: { type: "spring", stiffness: 420, damping: 22 },
-                },
-                hidden: {
-                  opacity: 0,
-                  y: 10,
-                  transition: { type: "spring", stiffness: 420, damping: 22 },
-                },
-              }}
-              onHoverStart={() => {
-                if (section !== activeSection) {
-                  const audio = new Audio(
-                    "data:audio/wav;base64,UklGRiIAAABXQVZFZm10IBAAAAABAAEARKwAAIhYAQACABAAZGF0YQAAAAA="
-                  );
-                  audio.volume = 0.05;
-                  audio.play().catch(() => { });
-                }
-              }}
-            >
-              {section === activeSection && (
-                <motion.span
-                  layoutId="mobile-nav-rail"
-                  className="absolute left-2.5 top-1/2 -translate-y-1/2 h-4 w-[3px] rounded-full bg-gradient-to-b from-pink-300 via-purple-400 to-blue-400 shadow-[0_0_8px_rgba(79,70,229,0.45)]"
-                  style={{ willChange: "transform" }}
-                  transition={{ type: "spring", stiffness: 500, damping: 30 }}
-                />
-              )}
-              <span className="pl-3">{section.charAt(0).toUpperCase() + section.slice(1)}</span>
-            </motion.button>
-          ))}
-        </div>
+        <motion.nav
+          aria-label="Mobile navigation"
+          className="mobile-menu-card"
+          variants={containerVariants}
+          initial="hidden"
+          animate="visible"
+          exit="hidden"
+        >
+          {visibleMenuItems.map(({ section, number, label }) => {
+            const isActive = section === activeSection;
+
+            return (
+              <motion.button
+                key={section}
+                aria-current={isActive ? "page" : undefined}
+                aria-label={`${number} ${label}`}
+                className={`mobile-menu-item${isActive ? " is-active" : ""}`}
+                onClick={() => {
+                  setActiveSection(section);
+                  setMenuOpen(false);
+                  scrollToSection(section);
+                }}
+                variants={{
+                  visible: {
+                    opacity: 1,
+                    x: 0,
+                    transition: {
+                      type: "spring",
+                      stiffness: 460,
+                      damping: 28,
+                    },
+                  },
+                  hidden: {
+                    opacity: 0,
+                    x: 14,
+                    transition: {
+                      type: "spring",
+                      stiffness: 460,
+                      damping: 28,
+                    },
+                  },
+                }}
+              >
+                {isActive && (
+                  <>
+                    <motion.span
+                      layoutId="mobile-nav-rail"
+                      className="mobile-menu-active-rail"
+                      transition={{
+                        type: "spring",
+                        stiffness: 520,
+                        damping: 34,
+                      }}
+                    />
+                  </>
+                )}
+                <span className="mobile-menu-index">{number}</span>
+                <span className="mobile-menu-label">{label}</span>
+              </motion.button>
+            );
+          })}
+        </motion.nav>
       </motion.div>
-    </motion.div>
-  </>
-);
+    </>
+  );
+};
 
 // --- Navigation Component (Refactored) ---
 interface NavigationProps {
@@ -316,14 +281,7 @@ const Navigation: React.FC<NavigationProps> = ({
 
   return (
     <>
-      {/* Desktop side navigation */}
-      <SideNav
-        sections={sections}
-        activeSection={activeSection}
-        scrollToSection={scrollToSection}
-      />
-
-      {/* Hamburger for mobile */}
+      {/* Hamburger navigation */}
       <Hamburger menuOpen={menuOpen} setMenuOpen={handleSetMenuOpen} />
 
       {/* Mobile menu overlay */}

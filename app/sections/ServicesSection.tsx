@@ -1,33 +1,25 @@
 "use client";
 
-import React, { forwardRef, useRef, useState, useEffect } from "react";
+import React, { forwardRef, useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { useRouter } from "next/navigation";
 import { AnimatePresence, motion } from "framer-motion";
-import { useEntranceStagger, useIsMobile } from "@lib/hooks";
 import {
-  MdSpeed,
-  MdEditDocument,
-  MdExpandMore,
-  MdShield,
-  MdRocketLaunch,
-  MdLanguage,
-  MdAdminPanelSettings,
-  MdMonitorWeight,
-  MdBugReport,
-  MdSyncAlt,
-  MdSecurity,
-  MdWorkspaces,
-  MdCheck,
-  MdCheckCircle,
   MdAdd,
   MdArrowForward,
+  MdBuild,
+  MdCheckCircle,
+  MdDashboardCustomize,
+  MdDevices,
   MdErrorOutline,
+  MdManageSearch,
+  MdOutlineEmail,
+  MdQueryStats,
+  MdShield,
+  MdSupportAgent,
+  MdViewModule,
 } from "react-icons/md";
-
-interface ServicesSectionProps {
-  onStartProject?: (data: { plan: "ESSENTIAL" | "GROWTH" | null; subscription: boolean }) => void;
-}
+import { useEntranceStagger, useIsMobile } from "@lib/hooks";
 
 type SelectionItem = {
   id: string;
@@ -35,18 +27,54 @@ type SelectionItem = {
   className?: string;
 };
 
-const ServicesSection = forwardRef<HTMLDivElement, ServicesSectionProps>((props, ref) => {
+const planKeys = ["ESSENTIAL", "GROWTH"] as const;
+type PlanKey = (typeof planKeys)[number];
+
+const planFeatures = {
+  ESSENTIAL: [
+    { title: "Custom 5-page site", detail: "Mobile-first, on-brand design", icon: MdDevices },
+    { title: "Email + contact", detail: "Workspace setup and forms wired", icon: MdOutlineEmail },
+    { title: "Launch-ready SEO", detail: "Schema, sitemap, OG tags shipped", icon: MdManageSearch },
+  ],
+  GROWTH: [
+    { title: "10+ page system", detail: "Modular components, room to grow", icon: MdViewModule },
+    { title: "Editable dashboard", detail: "Update copy and images yourself", icon: MdDashboardCustomize },
+    { title: "Built-in analytics", detail: "GA4 events + conversion views", icon: MdQueryStats },
+  ],
+} as const;
+
+const planTaglines = {
+  ESSENTIAL: "A sharp marketing site, launch-ready.",
+  GROWTH: "A larger system with analytics and room to grow.",
+} as const;
+
+const supportFeatures = [
+  { title: "Website hosting", detail: "Site stays live and secure", icon: MdShield },
+  { title: "Workspace help", detail: "Email, calendars, accounts", icon: MdSupportAgent },
+  { title: "Small fixes", detail: "Copy, images, quick tweaks", icon: MdBuild },
+] as const;
+
+const ServicesSection = forwardRef<HTMLDivElement, object>((_, ref) => {
   const router = useRouter();
   const entranceRef = useRef<HTMLDivElement>(null);
-  useEntranceStagger(entranceRef, { baseDelay: 100, step: 50 });
+  const planSwiperRef = useRef<HTMLDivElement>(null);
+  useEntranceStagger(entranceRef, { baseDelay: 80, step: 45 });
 
-  // Selection State
-  const [selectedPlan, setSelectedPlan] = useState<"ESSENTIAL" | "GROWTH" | null>(null);
+  const [selectedPlan, setSelectedPlan] = useState<PlanKey | null>(null);
   const [hasSubscription, setHasSubscription] = useState(false);
   const [mounted, setMounted] = useState(false);
+  const [shakePlans, setShakePlans] = useState(false);
+  const [toastMessage, setToastMessage] = useState<string | null>(null);
+  const [showToast, setShowToast] = useState(false);
+  const [toastKey, setToastKey] = useState(0);
+  const [selectionTickerIndex, setSelectionTickerIndex] = useState(0);
+  const [activePlanSlide, setActivePlanSlide] = useState(0);
+  const [servicesEntered, setServicesEntered] = useState(false);
+  const isMobile = useIsMobile();
 
-  // Restore selection from sessionStorage on mount
   useEffect(() => {
+    setMounted(true);
+    const enterTimer = window.setTimeout(() => setServicesEntered(true), 40);
     const savedPlan = sessionStorage.getItem("selectedPlan");
     const savedSubscription = sessionStorage.getItem("hasSubscription");
 
@@ -56,24 +84,14 @@ const ServicesSection = forwardRef<HTMLDivElement, ServicesSectionProps>((props,
     if (savedSubscription === "true") {
       setHasSubscription(true);
     }
-  }, []);
-  const [shakePlans, setShakePlans] = useState(false);
-  const [toastMessage, setToastMessage] = useState<string | null>(null);
-  const [showToast, setShowToast] = useState(false);
-  const [toastKey, setToastKey] = useState(0);
-  const [navigatedToContact, setNavigatedToContact] = useState(false);
-  const [selectionTickerIndex, setSelectionTickerIndex] = useState(0);
-  const isMobile = useIsMobile();
 
-  useEffect(() => {
-    setMounted(true);
+    return () => window.clearTimeout(enterTimer);
   }, []);
 
   useEffect(() => {
-    if (shakePlans) {
-      const timer = setTimeout(() => setShakePlans(false), 600);
-      return () => clearTimeout(timer);
-    }
+    if (!shakePlans) return;
+    const timer = setTimeout(() => setShakePlans(false), 600);
+    return () => clearTimeout(timer);
   }, [shakePlans]);
 
   useEffect(() => {
@@ -82,41 +100,48 @@ const ServicesSection = forwardRef<HTMLDivElement, ServicesSectionProps>((props,
     return () => clearTimeout(timer);
   }, [showToast, toastKey]);
 
-  const handlePlanSelection = (plan: "ESSENTIAL" | "GROWTH") => {
-    setNavigatedToContact(false);
+  const handlePlanSelection = (plan: PlanKey) => {
     if (selectedPlan === plan) {
       setSelectedPlan(null);
       setHasSubscription(false);
       sessionStorage.removeItem("selectedPlan");
       sessionStorage.removeItem("hasSubscription");
-    } else {
-      setSelectedPlan(plan);
-      sessionStorage.setItem("selectedPlan", plan);
+      return;
     }
+
+    setSelectedPlan(plan);
+    sessionStorage.setItem("selectedPlan", plan);
+  };
+
+  const handlePlanSwiperScroll = () => {
+    const swiper = planSwiperRef.current;
+    if (!swiper) return;
+
+    const slide = swiper.querySelector<HTMLElement>(".service-plan-card");
+    if (!slide) return;
+
+    const slideWidth = slide.getBoundingClientRect().width;
+    const gap = parseFloat(window.getComputedStyle(swiper).columnGap || "0");
+    const nextIndex = Math.round(swiper.scrollLeft / Math.max(1, slideWidth + gap));
+    setActivePlanSlide(Math.max(0, Math.min(planKeys.length - 1, nextIndex)));
   };
 
   const handleSubscriptionToggle = () => {
     if (!selectedPlan) {
       setShakePlans(true);
-      document.getElementById("build-phase")?.scrollIntoView({ behavior: "smooth", block: "center" });
-      setToastMessage("Select a plan before adding managed support.");
+      setToastMessage("Select a build plan before adding hosting + maintenance.");
       setToastKey((prev) => prev + 1);
       setShowToast(true);
       return;
     }
-    const newValue = !hasSubscription;
-    setHasSubscription(newValue);
-    sessionStorage.setItem("hasSubscription", String(newValue));
-    setNavigatedToContact(false);
+
+    const nextValue = !hasSubscription;
+    setHasSubscription(nextValue);
+    sessionStorage.setItem("hasSubscription", String(nextValue));
   };
 
   const handleContact = () => {
-    setNavigatedToContact(true);
-    // Navigate to the new intake form page with plan info as URL params
-    const params = new URLSearchParams();
-    if (selectedPlan) params.set("plan", selectedPlan);
-    if (hasSubscription) params.set("support", "true");
-    router.push(`/get-started?${params.toString()}`);
+    router.push("/get-started");
   };
 
   const planLabel =
@@ -125,473 +150,225 @@ const ServicesSection = forwardRef<HTMLDivElement, ServicesSectionProps>((props,
       : selectedPlan === "GROWTH"
         ? "Growth Plan"
         : null;
+  const planPrice = selectedPlan === "ESSENTIAL" ? "$3,000" : selectedPlan === "GROWTH" ? "$5,000" : null;
+  const totalEstimate =
+    selectedPlan === "ESSENTIAL"
+      ? "$3,000"
+      : selectedPlan === "GROWTH"
+        ? "$5,000"
+        : "Pending";
 
   const planClassName = selectedPlan === "GROWTH" ? "text-purple-300" : "text-teal-300";
 
   const selectionItems: SelectionItem[] = [];
-  if (planLabel) {
-    selectionItems.push({
-      id: "plan",
-      label: planLabel,
-      className: planClassName,
-    });
-  }
-  if (hasSubscription) {
-    selectionItems.push({
-      id: "subscription",
-      label: "Peace of Mind",
-      className: "text-white",
-    });
-  }
+  if (planLabel) selectionItems.push({ id: "plan", label: planLabel, className: planClassName });
+  if (hasSubscription) selectionItems.push({ id: "subscription", label: "Hosting + Maintenance", className: "text-white" });
+  const hasSelection = Boolean(selectedPlan || hasSubscription);
 
   const shouldCycleSelections = isMobile && selectionItems.length > 1;
-  const tickerSequence = selectionItems;
-
-  const activeTickerItem = shouldCycleSelections && tickerSequence.length > 0
-    ? tickerSequence[selectionTickerIndex % tickerSequence.length]
+  const activeTickerItem = shouldCycleSelections && selectionItems.length > 0
+    ? selectionItems[selectionTickerIndex % selectionItems.length]
     : null;
 
-  const prevTickerLength = useRef(tickerSequence.length);
-
   useEffect(() => {
-    if (!shouldCycleSelections || tickerSequence.length === 0) {
+    if (!shouldCycleSelections || selectionItems.length === 0) {
       setSelectionTickerIndex(0);
       return;
     }
 
     const id = window.setInterval(() => {
-      setSelectionTickerIndex((prev) => (prev + 1) % tickerSequence.length);
+      setSelectionTickerIndex((prev) => (prev + 1) % selectionItems.length);
     }, 3500);
 
     return () => window.clearInterval(id);
-  }, [shouldCycleSelections, tickerSequence.length]);
-
-  useEffect(() => {
-    if (!shouldCycleSelections || tickerSequence.length === 0) {
-      setSelectionTickerIndex(0);
-      prevTickerLength.current = tickerSequence.length;
-      return;
-    }
-
-    const previousLength = prevTickerLength.current;
-
-    if (tickerSequence.length > previousLength) {
-      setSelectionTickerIndex(tickerSequence.length - 1);
-    } else if (tickerSequence.length < previousLength) {
-      setSelectionTickerIndex((prev) => Math.min(prev, tickerSequence.length - 1));
-    } else {
-      setSelectionTickerIndex((prev) => prev % tickerSequence.length);
-    }
-
-    prevTickerLength.current = tickerSequence.length;
-  }, [shouldCycleSelections, tickerSequence.length]);
+  }, [shouldCycleSelections, selectionItems.length]);
 
   return (
-    <section
-      ref={ref}
-      id="services"
-      className="section services-section min-h-screen flex flex-col justify-center py-32 md:py-40"
-    >
+    <section ref={ref} id="services" className="section services-section">
       <div
         ref={entranceRef}
-        className="w-full max-w-5xl mx-auto"
-        data-entrance="stagger"
+        className={`services-cockpit ${servicesEntered ? "is-entered" : ""}`}
+        data-entrance="services-cockpit"
       >
-        <div className="portfolio-header md:mb-12 text-center md:text-left">
-          <h2 className="text-[2rem] font-bold mb-3" data-entrance-item>
-            Services
-          </h2>
-          <p className="portfolio-subcopy" data-entrance-item>
-            Comprehensive web development solutions tailored to your business needs.
+        <div className="cockpit-header" data-entrance-item>
+          <div>
+            <p className="hero-eyebrow">Web Development &amp; Design Services</p>
+            <h2>Design-forward websites engineered to win customers.</h2>
+          </div>
+          <p>
+            Choose from two web development and design packages: Essentials and Growth—plus
+            an optional $150/month support plan for ongoing maintenance and operations.
           </p>
         </div>
 
-        <div className="mt-6 md:mt-10 pt-6 md:pt-10 border-t border-white/10 space-y-14">
-          <div data-entrance-item className="text-center md:text-left">
-            <p className="text-base md:text-lg tracking-[0.2em] uppercase text-white/70 font-space-grotesk font-semibold">
-              Web Design & Development
-            </p>
-            <p className="text-base md:text-lg text-white/80 mt-3 max-w-2xl mx-auto md:mx-0">
-              I break Web Design & Development into two tracks so it’s clear what we’re working on together.
-            </p>
+        <div className={`service-plan-grid ${selectedPlan ? "has-card-focus" : ""}`} data-entrance-item>
+          <div
+            ref={planSwiperRef}
+            className="service-plan-swiper"
+            aria-label="Build package options"
+            onScroll={handlePlanSwiperScroll}
+          >
+            {planKeys.map((plan) => {
+              const isSelected = selectedPlan === plan;
+              return (
+                <motion.button
+                  key={plan}
+                  type="button"
+                  onClick={() => handlePlanSelection(plan)}
+                  aria-pressed={isSelected}
+                  className={`service-plan-card ${plan === "ESSENTIAL" ? "is-essential" : "is-growth"} ${isSelected ? "is-selected" : "is-dimmed"} ${shakePlans ? "shake" : ""}`}
+                  whileTap={{ scale: 0.98 }}
+                >
+                  <div className="plan-card-header">
+                    <span className="service-plan-title">{plan}</span>
+                    <div className="plan-card-price-row">
+                      <span className="service-plan-price">{plan === "ESSENTIAL" ? "$3,000" : "$5,000"}</span>
+                      <span className="plan-price-suffix">one-time</span>
+                    </div>
+                  </div>
+                  <p className="service-plan-copy">{planTaglines[plan]}</p>
+                  <ul className="service-feature-rail" aria-label={`${plan.toLowerCase()} plan details`}>
+                    {planFeatures[plan].map((feature) => {
+                      const FeatureIcon = feature.icon;
+                      return (
+                        <li key={feature.title} className="service-feature-column">
+                          <span className="service-feature-icon" aria-hidden="true">
+                            <FeatureIcon />
+                          </span>
+                          <span className="service-feature-text">
+                            <span className="service-feature-title">{feature.title}</span>
+                            <span className="service-feature-detail">{feature.detail}</span>
+                          </span>
+                        </li>
+                      );
+                    })}
+                  </ul>
+                  <span className="service-plan-action">
+                    {isSelected ? <><MdCheckCircle /> Selected</> : "Select plan"}
+                  </span>
+                </motion.button>
+              );
+            })}
           </div>
 
-          {/* 1. The Build Phase */}
-          <div id="build-phase" className="mb-20" data-entrance-item>
-            <p className="text-xs font-semibold tracking-[0.4em] uppercase text-white/40 mb-3 font-space-grotesk">
-              ONE TIME PURCHASE
-            </p>
-            <h3 className="text-2xl font-bold mb-8 text-white/90 flex items-center gap-3 font-space-grotesk">
-              <span className="flex items-center justify-center w-8 h-8 rounded-full bg-white/10 text-sm font-manrope">1</span>
-              The Build Phase
-            </h3>
-
-            <div className="grid md:grid-cols-2 gap-6">
-              {/* Essential Plan */}
-              <div className="glass-card !m-0 !w-full !max-w-none flex flex-col h-full relative group overflow-hidden">
-                <div className="absolute inset-0 bg-gradient-to-br from-teal-500/5 to-blue-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-
-                <div className="relative z-10 flex flex-col h-full">
-                  <div className="mb-6">
-                    <div className="flex justify-between items-start">
-                      <h4 className="text-xl font-bold text-teal-300 mb-2 font-space-grotesk">ESSENTIAL</h4>
-                      {selectedPlan === "ESSENTIAL" && (
-                        <motion.div
-                          initial={{ scale: 0 }}
-                          animate={{ scale: 1 }}
-                          className="text-teal-400"
-                        >
-                          <MdCheckCircle size={24} />
-                        </motion.div>
-                      )}
-                    </div>
-                    <div className="flex items-baseline gap-1">
-                      <span className="text-4xl font-bold text-white font-space-grotesk">$3,000</span>
-                    </div>
-                    <p className="text-white/60 mt-2 text-sm">Perfect for establishing a professional digital presence.</p>
-                  </div>
-
-                  <ul className="space-y-4 mb-8 flex-grow">
-                    {[
-                      "Fully Custom Design (No Templates)",
-                      "5 Core Pages (Home, About, Services, etc.)",
-                      "Ultra-Fast Loading Speeds",
-                      "Professional Email Setup (Google Workspace)",
-                      "Contact Form & Map Integration"
-                    ].map((item, i) => (
-                      <li key={i} className="flex items-start gap-3 text-sm text-white/80">
-                        <MdCheck size={18} className="text-teal-400 mt-0.5 flex-shrink-0" aria-hidden="true" />
-                        {item}
-                      </li>
-                    ))
-                    }
-                  </ul>
-
-                  <button
-                    onClick={() => handlePlanSelection("ESSENTIAL")}
-                    className={`w-full py-3 px-6 rounded-xl border font-semibold transition-all duration-300 hover:scale-[1.02] active:scale-[0.98] mt-auto flex items-center justify-center gap-2 relative isolate transform-gpu ${selectedPlan === "ESSENTIAL"
-                      ? "bg-teal-500 text-white border-teal-500 shadow-[0_0_20px_rgba(20,184,166,0.3)]"
-                      : "bg-white/5 hover:bg-white/10 border-white/10 text-white"
-                      }`}
-                    style={{ backfaceVisibility: "hidden" }}
-                  >
-                    {selectedPlan === "ESSENTIAL" ? "Plan Selected" : "Select Plan"}
-                  </button>
-                </div>
-              </div>
-
-              {/* Growth Plan */}
-              <div className="glass-card !m-0 !w-full !max-w-none flex flex-col h-full relative group overflow-hidden border-teal-500/30">
-                <div className="absolute inset-0 bg-gradient-to-br from-teal-500/10 to-purple-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-
-                <div className="relative z-10 flex flex-col h-full">
-                  <div className="mb-6">
-                    <div className="flex justify-between items-start">
-                      <h4 className="text-xl font-bold text-purple-300 mb-2 font-space-grotesk">GROWTH</h4>
-                      {selectedPlan === "GROWTH" && (
-                        <motion.div
-                          initial={{ scale: 0 }}
-                          animate={{ scale: 1 }}
-                          className="text-purple-400"
-                        >
-                          <MdCheckCircle size={24} />
-                        </motion.div>
-                      )}
-                    </div>
-                    <div className="flex items-baseline gap-1">
-                      <span className="text-4xl font-bold text-white font-space-grotesk">$5,000</span>
-                    </div>
-                    <p className="text-white/60 mt-2 text-sm">Best for businesses that need to update content frequently.</p>
-                  </div>
-
-                  <ul className="space-y-4 mb-8 flex-grow">
-                    <li className="flex items-start gap-3 text-sm text-white font-medium bg-white/5 p-2 rounded-lg -mx-2">
-                      <MdCheck size={18} className="text-purple-400 mt-0.5 flex-shrink-0" aria-hidden="true" />
-                      Everything in Essential
-                    </li>
-                    {[
-                      "10+ Custom Pages",
-                      "Easy-to-Use Content Editor",
-                      "Analytics Dashboard Setup"
-                    ].map((item, i) => (
-                      <li key={i} className="flex items-start gap-3 text-sm text-white/80">
-                        <MdCheck size={18} className="text-purple-400 mt-0.5 flex-shrink-0" aria-hidden="true" />
-                        {item}
-                      </li>
-                    ))
-                    }
-                  </ul>
-
-                  <button
-                    onClick={() => handlePlanSelection("GROWTH")}
-                    className={`w-full py-3 px-6 rounded-xl font-bold border transition-all duration-300 hover:scale-[1.02] active:scale-[0.98] mt-auto flex items-center justify-center gap-2 relative isolate transform-gpu overflow-hidden ${selectedPlan === "GROWTH"
-                      ? "border-transparent text-white shadow-[0_0_20px_rgba(168,85,247,0.4)]"
-                      : "bg-white/5 hover:bg-white/10 border-white/10 text-white"
-                      }`}
-                    style={{ backfaceVisibility: "hidden" }}
-                  >
-                    <div
-                      className={`absolute inset-0 bg-gradient-to-r from-blue-400 via-purple-400 to-pink-300 transition-opacity duration-300 ${selectedPlan === "GROWTH" ? "opacity-100" : "opacity-0"
-                        }`}
-                    />
-                    <span className="relative z-10">
-                      {selectedPlan === "GROWTH" ? "Plan Selected" : "Select Plan"}
-                    </span>
-                  </button>
-                </div>
-              </div>
-            </div>
-
-            {/* Key Differentiator */}
-            {/* Key Differentiator */}
-            <div className="mt-12 grid md:grid-cols-2 gap-6" data-entrance-item>
-              {/* Essential Differentiator */}
-              <div
-                className="hidden p-6 rounded-2xl bg-teal-500/5 border border-teal-500/10 backdrop-blur-sm"
-                aria-hidden="true"
-              >
-                <div className="flex items-center gap-3 mb-4">
-                  <div className="p-2 rounded-lg bg-teal-500/10 text-teal-400">
-                    <MdSpeed size={24} />
-                  </div>
-                  <h5 className="text-lg font-bold text-teal-300 font-space-grotesk">Essential</h5>
-                </div>
-                <p className="text-white/80 leading-relaxed">
-                  "I build it, I set up your email, and it sits there looking pretty and loading fast."
-                </p>
-              </div>
-
-              {/* Growth Differentiator */}
-              <div
-                className="hidden p-6 rounded-2xl bg-purple-500/5 border border-purple-500/10 backdrop-blur-sm"
-                aria-hidden="true"
-              >
-                <div className="flex items-center gap-3 mb-4">
-                  <div className="p-2 rounded-lg bg-purple-500/10 text-purple-400">
-                    <MdEditDocument size={24} />
-                  </div>
-                  <h5 className="text-lg font-bold text-purple-300 font-space-grotesk">Growth</h5>
-                </div>
-                <p className="text-white/80 leading-relaxed">
-                  "I build it, I set up your email, and <strong className="text-white">YOU</strong> can log in to a dashboard to write blog posts or change your prices without emailing me."
-                </p>
-              </div>
+          <div className="service-plan-pagination" aria-hidden="true">
+            <span>Swipe plans</span>
+            <div>
+              {planKeys.map((plan, index) => (
+                <i key={plan} className={activePlanSlide === index ? "is-active" : ""} />
+              ))}
             </div>
           </div>
 
-          {/* 2. The "Peace of Mind" Plan */}
-          <div data-entrance-item>
-            <p className="text-xs font-semibold tracking-[0.4em] uppercase text-white/40 mb-3 font-space-grotesk">
-              MONTHLY SUBSCRIPTION
-            </p>
-            <h3 className="text-2xl font-bold mb-8 text-white/90 flex items-center gap-3 font-space-grotesk">
-              <span className="flex items-center justify-center w-8 h-8 rounded-full bg-white/10 text-sm font-manrope">2</span>
-              The "Peace of Mind" Plan
-            </h3>
-
-            <div className="glass-card !m-0 !w-full !max-w-none relative overflow-hidden !p-0">
-              <div className="p-8 md:p-10">
-                <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-8 border-b border-white/10 pb-8">
-                  <div>
-                    <h4
-                      className="text-xl md:text-2xl font-bold text-white mb-2 flex items-start md:items-center gap-2 font-space-grotesk"
-                    >
-                      <span className="-ml-3 md:ml-0 flex items-center text-teal-300" aria-hidden="true">
-                        <MdSecurity size={28} />
+          <div className="service-lower-panels">
+            <motion.button
+              type="button"
+              onClick={handleSubscriptionToggle}
+              aria-pressed={hasSubscription}
+              className={`service-support-card ${hasSubscription ? "is-selected" : ""} ${!selectedPlan ? "is-unavailable" : ""}`}
+              whileTap={{ scale: 0.985 }}
+            >
+              <div className="plan-card-header">
+                <span className="service-plan-title support-eyebrow">Hosting + Maintenance</span>
+                <div className="plan-card-price-row">
+                  <span className="service-plan-price">$150</span>
+                  <span className="plan-price-suffix">/ month</span>
+                </div>
+              </div>
+              <p className="service-plan-copy">
+                Monthly maintenance, hosting, and support.
+              </p>
+              <ul className="service-feature-rail support-feature-rail" aria-label="Managed support details">
+                {supportFeatures.map((feature) => {
+                  const FeatureIcon = feature.icon;
+                  return (
+                    <li key={feature.title} className="service-feature-column support-feature-column">
+                      <span className="service-feature-icon support-feature-icon" aria-hidden="true">
+                        <FeatureIcon />
                       </span>
-                      <span className="leading-tight md:leading-none">Managed Hosting & Support</span>
-                    </h4>
+                      <span className="service-feature-text support-feature-text">
+                        <span className="service-feature-title support-feature-title">{feature.title}</span>
+                        <span className="service-feature-detail support-feature-detail">{feature.detail}</span>
+                      </span>
+                    </li>
+                  );
+                })}
+              </ul>
+              <span className={`service-plan-action support-toggle ${hasSubscription ? "is-selected" : ""}`}>
+                {hasSubscription ? <><MdCheckCircle /> Added</> : <><MdAdd /> Add support</>}
+              </span>
+            </motion.button>
+
+            <div className={`service-selection-card ${hasSelection ? "has-selection" : ""} ${hasSubscription ? "has-support" : ""} ${selectedPlan === "GROWTH" ? "is-growth" : selectedPlan === "ESSENTIAL" ? "is-essential" : ""}`}>
+              <div className="selection-dock-content">
+                <div className="selection-dock-copy">
+                  <div className="selection-dock-eyebrow">
+                    Your Selection
                   </div>
-                  <div className="w-full md:w-auto flex flex-col gap-3 items-center text-center md:text-right md:items-end">
+                  <div className={`selection-dock-label ${hasSelection ? "" : "is-empty"}`}>
+                    {!hasSelection ? (
+                      <span>Choose a plan to start.</span>
+                    ) : shouldCycleSelections ? (
+                      <div className="selection-ticker">
+                        <AnimatePresence mode="wait">
+                          {activeTickerItem && (
+                            <motion.span
+                              key={activeTickerItem.id}
+                              initial={{ opacity: 0, y: 8 }}
+                              animate={{ opacity: 1, y: 0 }}
+                              exit={{ opacity: 0, y: -8 }}
+                              transition={{ duration: 0.3 }}
+                              className={`block truncate ${activeTickerItem.className ?? ""}`}
+                            >
+                              {activeTickerItem.label}
+                            </motion.span>
+                          )}
+                        </AnimatePresence>
+                      </div>
+                    ) : (
+                      <>
+                        {planLabel && <span className={planClassName}>{planLabel}</span>}
+                        {selectedPlan && hasSubscription && <span className="selection-dock-plus">+</span>}
+                        {hasSubscription && <span>Hosting + Maintenance</span>}
+                      </>
+                    )}
+                  </div>
+                  <div className="selection-summary" aria-label="Selection summary">
                     <div>
-                      <div className="text-3xl font-bold text-white font-space-grotesk">$150 <span className="text-lg text-white/40 font-normal font-manrope">/ month</span></div>
-                      <div className="text-xs text-teal-400 mt-1">Cancel anytime. You own your assets.</div>
+                      <span>Build</span>
+                      <strong>{planLabel ?? "Not selected"}</strong>
                     </div>
-
-                    <button
-                      onClick={handleSubscriptionToggle}
-                      className={`py-2 px-4 rounded-lg font-semibold text-sm transition-all duration-300 hover:scale-[1.02] active:scale-[0.98] flex items-center gap-2 border ${hasSubscription
-                        ? "bg-teal-500/20 border-teal-500 text-teal-300"
-                        : "bg-white/5 hover:bg-white/10 border-white/10 text-white"
-                        }`}
-                    >
-                      {hasSubscription ? (
-                        <>
-                          <MdCheckCircle size={16} /> Added
-                        </>
-                      ) : (
-                        <>
-                          <MdAdd size={16} /> Add Support
-                        </>
-                      )}
-                    </button>
+                    <div>
+                      <span>Project fee</span>
+                      <strong>{planPrice ?? "--"}</strong>
+                    </div>
+                    <div>
+                      <span>Support</span>
+                      <strong>{hasSubscription ? "$150 / month" : "Optional"}</strong>
+                    </div>
+                    <div>
+                      <span>Total</span>
+                      <strong>{totalEstimate}</strong>
+                    </div>
                   </div>
                 </div>
 
-                <div className="grid md:grid-cols-3 gap-8">
-                  {/* Infrastructure */}
-                  <div>
-                    <h5 className="text-xs font-bold text-white/40 uppercase tracking-widest mb-4 font-space-grotesk">Infrastructure</h5>
-                    <ul className="space-y-3">
-                      <li className="text-sm text-white/80">
-                        <strong className="text-white block mb-0.5 flex items-center gap-2">
-                          <MdRocketLaunch size={18} className="text-teal-300 flex-shrink-0" aria-hidden="true" />
-                          Enterprise Hosting
-                        </strong>
-                        Vercel Edge Network (Global CDN).
-                      </li>
-                      <li className="text-sm text-white/80">
-                        <strong className="text-white block mb-0.5 flex items-center gap-2">
-                          <MdLanguage size={18} className="text-teal-300 flex-shrink-0" aria-hidden="true" />
-                          Domain Management
-                        </strong>
-                        Annual <code className="bg-white/10 px-1 py-0.5 rounded text-xs">.com</code> renewals included.
-                      </li>
-                      <li className="text-sm text-white/80">
-                        <strong className="text-white block mb-0.5 flex items-center gap-2">
-                          <MdShield size={18} className="text-teal-300 flex-shrink-0" aria-hidden="true" />
-                          Security
-                        </strong>
-                        SSL Encryption & DDoS protection.
-                      </li>
-                    </ul>
-                  </div>
-
-                  {/* Business Suite */}
-                  <div>
-                    <h5 className="text-xs font-bold text-white/40 uppercase tracking-widest mb-4 font-space-grotesk">Business Suite</h5>
-                    <ul className="space-y-3">
-                      <li className="text-sm text-white/80">
-                        <strong className="text-white block mb-0.5 flex items-center gap-2">
-                          <MdWorkspaces size={18} className="text-teal-300 flex-shrink-0" aria-hidden="true" />
-                          3 Google Workspace Seats
-                        </strong>
-                        Included (value of ~$25/mo).
-                      </li>
-                      <li className="text-sm text-white/80">
-                        <strong className="text-white block mb-0.5 flex items-center gap-2">
-                          <MdAdminPanelSettings size={18} className="text-teal-300 flex-shrink-0" aria-hidden="true" />
-                          Admin Management
-                        </strong>
-                        I handle user setup, password resets, and DNS records.
-                      </li>
-                    </ul>
-                  </div>
-
-                  {/* Support */}
-                  <div>
-                    <h5 className="text-xs font-bold text-white/40 uppercase tracking-widest mb-4 font-space-grotesk">Support</h5>
-                    <ul className="space-y-3">
-                      <li className="text-sm text-white/80">
-                        <strong className="text-white block mb-0.5 flex items-center gap-2">
-                          <MdMonitorWeight size={18} className="text-teal-300 flex-shrink-0" aria-hidden="true" />
-                          Uptime Monitoring
-                        </strong>
-                        24/7 automated checks.
-                      </li>
-                      <li className="text-sm text-white/80">
-                        <strong className="text-white block mb-0.5 flex items-center gap-2">
-                          <MdBugReport size={18} className="text-teal-300 flex-shrink-0" aria-hidden="true" />
-                          Bug Fixes
-                        </strong>
-                        Lifetime warranty on my code.
-                      </li>
-                      <li className="text-sm text-white/80">
-                        <strong className="text-white block mb-0.5 flex items-center gap-2">
-                          <MdSyncAlt size={18} className="text-teal-300 flex-shrink-0" aria-hidden="true" />
-                          Asset Transfer
-                        </strong>
-                        If you leave, you get the code, domain, and email accounts.
-                      </li>
-                    </ul>
-                  </div>
-                </div>
+                <button
+                  type="button"
+                  onClick={handleContact}
+                  disabled={!hasSelection}
+                  className="selection-dock-button"
+                >
+                  Let&apos;s Start <MdArrowForward aria-hidden="true" />
+                </button>
               </div>
-            </div>
-          </div>
-
-          {/* FAQ Section */}
-          <div className="mt-24" data-entrance-item>
-            <h3 className="text-2xl font-bold mb-8 text-white/90 font-space-grotesk text-center">
-              Frequently Asked Questions
-            </h3>
-            <div className="grid md:grid-cols-2 gap-6">
-              <FAQItem
-                question="Do I own the code?"
-                answer="Yes! Once the project is paid for, you own 100% of the code and assets. If you ever want to move to another developer, I'll package everything up for you."
-              />
-              <FAQItem
-                question="Why is there a monthly fee?"
-                answer="Websites need hosting, security updates, and domain renewals. My monthly plan covers all of this plus 24/7 monitoring and small content updates, so you never have to worry about your site going down."
-              />
-              <FAQItem
-                question="Can I edit the content myself?"
-                answer="On the Growth plan, yes! You get a simple dashboard to edit text and images. On the Essential plan, I handle updates for you to keep things simple and fast."
-              />
-              <FAQItem
-                question="What technology do you use?"
-                answer="I use modern, enterprise-grade tools that big tech companies use. This ensures your site is incredibly fast, secure, and ranks well on Google."
-              />
             </div>
           </div>
         </div>
       </div>
 
-      {/* Sticky Project Bar - Rendered via Portal to ensure top Z-Index */}
       {mounted && createPortal(
         <>
-          <AnimatePresence>
-            {(selectedPlan || hasSubscription) && !navigatedToContact && (
-              <motion.div
-                initial={{ y: 100, opacity: 0 }}
-                animate={{ y: 0, opacity: 1 }}
-                exit={{ y: 100, opacity: 0 }}
-                transition={{ type: "spring", stiffness: 300, damping: 30 }}
-                className="fixed bottom-6 inset-x-0 z-[9999] flex justify-center px-4 pointer-events-none"
-              >
-                <div className="pointer-events-auto bg-[#0a0a0a]/90 backdrop-blur-xl border border-white/10 rounded-2xl shadow-2xl shadow-black/50 p-4 pl-6 flex items-center gap-6 max-w-2xl w-full ring-1 ring-white/5">
-                  <div className="flex-grow min-w-0">
-                    <div className="text-xs font-bold text-white/40 uppercase tracking-wider mb-1">
-                      Your Selection
-                    </div>
-                    <div className="flex items-center gap-2 text-white font-space-grotesk truncate min-h-[1.5rem]">
-                      {shouldCycleSelections ? (
-                        <div className="relative h-6 flex items-center overflow-hidden">
-                          <AnimatePresence mode="wait">
-                            {activeTickerItem && (
-                              <motion.span
-                                key={activeTickerItem.id}
-                                initial={{ opacity: 0, y: 8 }}
-                                animate={{ opacity: 1, y: 0 }}
-                                exit={{ opacity: 0, y: -8 }}
-                                transition={{ duration: 0.3 }}
-                                className={`block truncate ${activeTickerItem.className ?? ""}`}
-                              >
-                                {activeTickerItem.label}
-                              </motion.span>
-                            )}
-                          </AnimatePresence>
-                        </div>
-                      ) : (
-                        <>
-                          {planLabel && <span className={planClassName}>{planLabel}</span>}
-                          {selectedPlan && hasSubscription && <span className="text-white/30">+</span>}
-                          {hasSubscription && <span>Peace of Mind</span>}
-                        </>
-                      )}
-                    </div>
-                  </div>
-
-                  <button
-                    onClick={handleContact}
-                    className="flex-shrink-0 bg-white text-black px-6 py-3 rounded-xl font-bold hover:scale-105 transition-transform flex items-center gap-2 shadow-[0_0_20px_rgba(255,255,255,0.3)]"
-                  >
-                    Let's Start <MdArrowForward />
-                  </button>
-                </div>
-              </motion.div>
-            )}
-          </AnimatePresence>
           <AnimatePresence>
             {showToast && toastMessage && (
               <motion.div
@@ -602,11 +379,11 @@ const ServicesSection = forwardRef<HTMLDivElement, ServicesSectionProps>((props,
                 transition={{ type: "spring", stiffness: 220, damping: 25 }}
                 role="status"
                 aria-live="polite"
-                className="fixed bottom-28 right-6 left-6 md:left-auto z-[9999] pointer-events-auto"
+                className="service-toast"
               >
-                <div className="rounded-2xl bg-white/10 border border-white/15 shadow-2xl shadow-black/60 backdrop-blur-xl px-5 py-4 flex items-center gap-3 text-sm text-white font-semibold">
-                  <MdErrorOutline size={20} className="text-teal-300" aria-hidden="true" />
-                  <span className="leading-snug">{toastMessage}</span>
+                <div className="service-toast-panel">
+                  <MdErrorOutline aria-hidden="true" />
+                  <span>{toastMessage}</span>
                 </div>
               </motion.div>
             )}
@@ -621,28 +398,3 @@ const ServicesSection = forwardRef<HTMLDivElement, ServicesSectionProps>((props,
 ServicesSection.displayName = "ServicesSection";
 
 export default ServicesSection;
-
-function FAQItem({ question, answer }: { question: string; answer: string }) {
-  const [isOpen, setIsOpen] = useState(false);
-
-  return (
-    <div
-      className="bg-white/5 border border-white/10 rounded-xl overflow-hidden cursor-pointer transition-all hover:bg-white/10"
-      onClick={() => setIsOpen(!isOpen)}
-    >
-      <div className="p-6 flex justify-between items-center gap-4">
-        <h4 className="font-bold text-white/90 font-space-grotesk">{question}</h4>
-        <MdExpandMore
-          className={`text-white/50 transition-transform duration-300 ${isOpen ? 'rotate-180' : ''}`}
-          size={24}
-        />
-      </div>
-      <div
-        className={`px-6 text-white/60 text-sm leading-relaxed overflow-hidden transition-all duration-300 ${isOpen ? 'max-h-40 pb-6 opacity-100' : 'max-h-0 opacity-0'
-          }`}
-      >
-        {answer}
-      </div>
-    </div>
-  );
-}

@@ -16,6 +16,8 @@
     "@typescript-eslint/parser": "8.32.1",
     "autoprefixer": "^10.4.19",
     "clsx": "^2.1.1",
+    "embla-carousel-react": "^8.6.0",
+    "embla-carousel-wheel-gestures": "^8.1.0",
     "framer-motion": "^12.7.2",
     "lodash": "^4.17.21",
     "next": "^15.3.6",

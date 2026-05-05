@@ -1,170 +1,235 @@
-# AGENTS.md — Max Burleigh Portfolio
+# AGENTS.md - Max Burleigh Portfolio
 
-A focused guide for coding agents working in this repo.
+Focused guidance for coding agents working in this repo.
 
-**Stack**: Next.js 15 (App Router) + React 19 + TypeScript + Tailwind CSS v4 + Motion/Framer Motion + Next Fonts + Next Image  
-**Primary goals**: Fast, smooth portfolio site with tasteful animation, excellent a11y and mobile perf.
+## Prime Directive
 
----
+This is a polished portfolio site. Treat visual behavior as product behavior.
 
-## Quickstart (local)
+- Preserve the current design unless the user explicitly asks for a visual change.
+- CSS organization changes must be visual no-op refactors: same pixels, same motion, same breakpoints, same hover/focus states.
+- If exact visual equivalence conflicts with reducing or "cleaning up" CSS, exact visual equivalence wins.
+- Keep changes small, scoped, and reversible.
 
-- **Node**: Use **≥18.18** (Next.js 15 minimum). Prefer **Node 20+** on dev machines to match Tailwind v4 tooling.  
-  _Refs: Next 15 min version; Tailwind v4 upgrade tool requires Node 20+._  
-- **Install**: `npm install`
-- **Dev**: `npm run dev` → open http://localhost:3000
-- **Build / Start**: `npm run build` → `npm start`
-- **Lint**: `npm run lint` (uses `next lint` today; consider migrating to `eslint` CLI soon)
-- **React performance scan (optional, dev only)**: `npm run scan`  
-  This runs Next dev and `react-scan` concurrently.
+## Local Tool Rules
 
-> **Environment**  
-> - This app uses the App Router with a Server `layout.tsx` and client `page.tsx`.  
-> - Fonts (Geist, Manrope, Space Grotesk) are managed with `next/font`.  
-> - Global styles live in `app/globals.css` (Tailwind v4, CSS‑first config).
+- Do not run `npx next dev`. The user will already be running the dev server when needed.
+- Do not run `npm run build` in this project unless the user explicitly asks for a build.
+- Do not run Playwright.
+- Do not use Browser Use or Computer Use unless the user specifically asks.
+- If Computer Use is specifically requested and you open an app/window yourself, close it when finished.
+- For normal code verification, use `npm run lint` only.
 
-**Why these versions?**  
-- Next.js 15 bumps the minimum Node to **18.18** and ships other breaking/behavioral changes. *Keep Node in range to avoid subtle build/runtime differences.* :contentReference[oaicite:0]{index=0}  
-- Tailwind **v4** moves to **CSS‑first configuration** and ships faster builds. Our CSS already follows v4 (`@import "tailwindcss";` and `@theme inline`). :contentReference[oaicite:1]{index=1}
+## Stack
 
----
+- Next.js 15 App Router
+- React 19
+- TypeScript
+- Tailwind CSS v4 with CSS-first config
+- Framer Motion / Motion-style animation
+- Next Fonts
+- Next Image
 
-## Repository map (what to edit)
+Node should be >=18.18. Prefer Node 20+ on dev machines.
 
-- **Pages / Shell**
-  - `app/layout.tsx`: Fonts, `<html>` classes, metadata, intro gating script.
-  - `app/page.tsx`: Top-level client page; renders sections + cursor effect.
-- **Sections**
-  - `app/sections/AboutSection.tsx`
-  - `app/sections/PortfolioSection.tsx`
-  - `app/sections/ContactSection.tsx`
-- **Components**
-  - `app/components/navigation/Navigation.tsx` (desktop side‑nav + mobile hamburger/menu)
-  - `app/components/Phone.tsx` (phone mockup wrapper)
-  - `app/components/AuroraBackground.tsx` (CSS blobs + iOS canvas fallback)
-  - `app/components/IntroReveal.tsx` (first‑load “wash” gate)
-  - `app/components/projects/ProjectCard.tsx`
-  - `app/components/projects/BasedChat.tsx`
-- **Content**
-  - `content/projects.tsx` ← **Add/edit project entries here** (images live in `/public`)
-- **Site constants**
-  - `lib/constants.ts` (email, LinkedIn)
-  - `lib/hooks.ts` (rafThrottle, media query, active section, entrance stagger, micro‑parallax)
-- **Styles**
-  - `app/globals.css` (Tailwind v4; CSS variables, P3 color fallbacks, animations)
+## Commands
 
----
+- Install: `npm install`
+- Dev: `npm run dev`
+- Build: `npm run build`
+- Start production build: `npm start`
+- Lint: `npm run lint`
+- React scan: `npm run scan`
 
-## Do‑not‑break invariants (project‑specific)
+Notes:
+- Agents should not run `npm run dev` unless explicitly asked, and should never run `npx next dev`.
+- Agents should not run `npm run build` unless explicitly asked.
+- `npm run lint` currently uses `next lint`, which is deprecated in newer Next versions, but it is still the repo's current script.
 
-1. **Intro gating**: The `data-intro-played` attribute + `IntroReveal` overlay gate initial paint and reduce heavy background work. Keep the attribute flow intact (`Script id="intro-wash-boot"` in `layout.tsx` sets/clears it).  
-2. **iOS performance path**: `AuroraBackground` switches from CSS blur to a lightweight **canvas** on iOS. Do not remove the `is-ios-device` class logic in `layout.tsx` or the canvas fallback.  
-3. **Animation budgets**: We rely on `rafThrottle` + transform‑only animations (translate/rotate/opacity) and respect `prefers-reduced-motion`. When adding effects, prefer transform/compositor‑friendly changes and throttle pointer handlers.  
-4. **Navigation behavior**: `useActiveSection` uses a **45% viewport anchor** and a safe zone for section activation. Changes should keep the “feels right while scrolling” behavior.  
-5. **Tailwind v4 style**: Keep configuration **in CSS** (`@import "tailwindcss";`, `@theme inline`). Don’t reintroduce `tailwind.config.js`. :contentReference[oaicite:2]{index=2}  
-6. **Image hygiene**: Use `next/image` with **descriptive `alt`**, correct `sizes`, and `priority` only for above‑the‑fold assets. Note: Next 15’s image pipeline prefers `sharp` (Squoosh removed). :contentReference[oaicite:3]{index=3}
+## Current Repository Map
 
----
+Pages and shell:
+- `app/layout.tsx`: fonts, metadata, viewport, and iOS user-agent class on `<html>`.
+- `app/page.tsx`: top-level client portfolio screen, section state, wheel navigation, scrollbar navigation, and CSS module imports for the portfolio surface.
+- `app/get-started/page.tsx`: standalone intake route.
 
-## Common tasks (exact steps & files)
+Sections:
+- `app/sections/AboutSection.tsx`
+- `app/sections/ServicesSection.tsx`
+- `app/sections/PortfolioSection.tsx`
+- `app/sections/ContactSection.tsx`
 
-### A) Add a new project card
-1. **Images/video** → add to `/public/project-images` or `/public/webp` (prefer WebP/optimized PNG/JPEG).  
-2. **Content** → create a new entry in `content/projects.tsx` (see existing entries for patterns: `imageUrl`, `imageAlt`, `imageBlurDataURL`, `techStack`).  
-3. **Layout nuance** → if you need a custom preview/UI, create a component in `app/components/portfolio/` and render it **after** the mapped cards in `PortfolioSection` (see `BasedChat.tsx`).  
-4. **Visit overlay** → if linking out, use the `overlay` prop `{ href, emoji?, text?, className? }` on `ProjectCard`.
+Components:
+- `app/components/AuroraBackground.tsx`
+- `app/components/IOSViewportOverlay.tsx`
+- `app/components/Phone.tsx`
+- `app/components/TechStack.tsx`
+- `app/components/navigation/Navigation.tsx`
+- `app/components/projects/ProjectCard.tsx`
+- `app/components/projects/BasedChat.tsx`
+- `app/components/projects/Colorbookorama.tsx`
 
-### B) Update contact details
-- Edit `lib/constants.ts` and re-run `npm run dev`. Ensure `mailto:` still works and LinkedIn link opens in a new tab.
+Content and constants:
+- `content/projects.tsx`: project entries and project assets.
+- `lib/constants.ts`: email and LinkedIn constants.
+- `lib/hooks.ts`: media query, entrance stagger, RAF throttle, and motion helpers.
 
-### C) Tweak hero copy or portrait tilt
-- Edit `app/sections/AboutSection.tsx`. Tilt/glare uses `framer-motion` and `useMotionValue`; keep transforms GPU‑friendly (`rotateX`, `rotateY`, `translateZ`) and throttle pointer events via `rafThrottle`.
+## Styling Ownership
 
-### D) Navigation labels/sections
-- Add/remove section keys in `app/page.tsx` (the `sectionKeys` array) and wire a new ref in `sectionRefs`. Update `Navigation.tsx` if adding a new button.
+`app/globals.css` is intentionally small. Keep it that way.
 
----
+Globals should contain only:
+- `@import "tailwindcss";`
+- `:root` tokens and safe-area variables
+- Display-P3 color fallbacks
+- `@theme inline`
+- base `html`, `body`, `a`, and heading font rules
+- true document-level scroll ownership for `html`, `body`, and `#site-root`
+- standalone route scroll exceptions such as `.get-started-page`
 
-## Code style & patterns
+Do not move component or section styling back into `globals.css`.
 
-- **TypeScript** everywhere; prefer **function components**.
-- Mark client files with `"use client"` only when needed (components that read browser APIs, use state/effects, or rely on event handlers/refs).
-- **Imports & aliases**: Follow existing `@components`, `@sections`, `@lib` usage. If you move files, keep import paths coherent.
-- **Animations**: Currently using `framer-motion@^12`. Consider adopting **Motion for React** (`import { motion } from "motion/react"`) when convenient; the project should migrate smoothly per the official upgrade guide. :contentReference[oaicite:4]{index=4}
-- **React 19 notes**:
-  - React 19 is **stable** and adds **Actions**, `use`, `useOptimistic`, metadata in components, and `ref` as a prop (eventual `forwardRef` deprecation). Prefer idiomatic React 19 features in new code where they simplify logic. :contentReference[oaicite:5]{index=5}
+Current colocated CSS ownership:
+- `app/page.module.css`: master card shell, section stack, scrollbar, shared hero/stage rules, global contained-scroll styling.
+- `app/components/AuroraBackground.module.css`: aurora background, blobs, keyframes, iOS canvas visibility, reduced-motion background behavior.
+- `app/components/navigation/Navigation.module.css`: hamburger and mobile menu styling.
+- `app/sections/ServicesSection.module.css`: services cockpit, plans, selection dock, and toast styling.
+- `app/sections/PortfolioSection.module.css`: portfolio cockpit, horizontal phone deck, project pills, preview shadows, and store links.
+- `app/sections/ContactSection.module.css`: contact cockpit, channels, promise grid, and contact form styling.
+- `app/components/Phone.module.css`: phone mockup frame and content fade-in.
+- `app/components/projects/ProjectCard.module.css`: legacy project card, overlay, glass card, and project-media rules.
 
----
+Important CSS Modules detail:
+- Some modules intentionally contain legacy global selectors using `:global(...)`.
+- The `:where(:not(.moduleScope))` marker is there to satisfy Next CSS Modules pure mode while keeping selector specificity effectively unchanged.
+- Do not remove or simplify that marker unless you verify the compiled CSS remains visually identical.
 
-## Styling (Tailwind v4 + custom CSS)
+## Styling Rules
 
-- Tailwind is configured **in CSS**. Tokens live in `:root` variables; project‑specific tokens live under `@theme inline` in `globals.css`. Keep wide‑gamut color fallbacks (sRGB + Display‑P3 blocks).  
-- Use Tailwind utilities first; keep custom CSS for the Aurora background, overlay components, and phone mockups.  
-- v4 highlights we rely on: CSS‑first config, automatic content detection, and modern color/OKLCH palette. :contentReference[oaicite:6]{index=6}
-- If you need to add a new source directory for class scanning, use Tailwind’s `@source` directive in CSS (not a JS config file). :contentReference[oaicite:7]{index=7}
+- Prefer Tailwind utilities for new straightforward layout, spacing, typography, and state styling.
+- Use CSS Modules for pseudo-elements, keyframes, complex gradients, masks, scrollbars, platform gates, and fragile responsive behavior.
+- Keep Tailwind v4 configuration in CSS. Do not add `tailwind.config.js`.
+- Keep wide-gamut fallbacks and safe-area variables intact.
+- Do not casually normalize colors, shadows, borders, radii, timing curves, or breakpoints.
+- Avoid broad global selectors. If a style belongs to a component or section, colocate it.
 
----
+## Do-Not-Break Invariants
 
-## Accessibility & UX checklist (Definition of Done)
+1. iOS performance path:
+   - `layout.tsx` sets `is-ios-device` / `not-ios-device` on `<html>`.
+   - `AuroraBackground` uses the canvas fallback on iOS.
+   - Do not remove the iOS class logic or the canvas fallback.
 
-- **Alt text**: Every `next/image` has specific, human‑meaningful `alt`.  
-- **Keyboard**: All interactive elements reachable and operable by keyboard.  
-- **Reduced motion**: Honor `prefers-reduced-motion`; do not block content behind non‑dismissible animations.  
-- **Contrast**: Maintain contrast for text atop gradients/noise overlays.  
-- **Focus**: Visible focus styles (Tailwind v4 changed some outline/ring utilities; test focus states after changes). :contentReference[oaicite:8]{index=8}
+2. Master-card screen model:
+   - The homepage is a contained portfolio card, not a normal document scroll page on desktop.
+   - Desktop section changes are state-driven and animated through the section stack.
+   - Mobile and touch devices fall back to native vertical scrolling.
 
----
+3. Section navigation:
+   - Desktop wheel handling intentionally prevents accidental partial-section drift.
+   - The custom section scrollbar is keyboard and pointer operable.
+   - Preserve active-section state behavior unless the user explicitly asks to change navigation.
 
-## Performance guardrails
+4. Motion:
+   - Use transform/opacity/filter carefully.
+   - Respect `prefers-reduced-motion`.
+   - Keep pointer handlers throttled when they can fire frequently.
 
-- **Images**: Provide `sizes`, prefer WebP; only `priority` above the fold; avoid layout shift (width/height or constrained parent).  
-- **Video**: Use `preload="none"`, `muted`, `playsInline`, `poster`.  
-- **Animation**: Avoid layout thrash; prefer transform/opacity; throttle pointer handlers (`rafThrottle` in `lib/hooks.ts`).  
-- **Next/Image pipeline**: Uses `sharp` by default in Next 15. Ensure `sharp` is installed in environments that build images. :contentReference[oaicite:9]{index=9}
+5. Images:
+   - Use `next/image`.
+   - Provide meaningful alt text.
+   - Use correct `sizes`.
+   - Use `priority` only for above-the-fold assets.
 
----
+6. Standalone routes:
+   - Routes like `/get-started` must keep normal page scrolling through the `.get-started-page` exception.
 
-## Linting, types, and tests
+## Common Tasks
 
-- **Lint**: `npm run lint` (currently `next lint`). Starting with **Next 15.5**, `next lint` is **deprecated**; migrate to `eslint` CLI soon (codemod available).  
-  - Recommended future scripts:
-    - `"lint": "eslint ."`
-    - `"lint:fix": "eslint . --fix"`  
-  _Ref: Next 15.5 blog, `next lint` deprecation._ :contentReference[oaicite:10]{index=10}
-- **Typecheck**: Add `"type-check": "tsc --noEmit"` for CI safety (not present yet).
-- **Unit/e2e tests**: None at present. If adding, prefer lightweight tools and keep CI fast.
+### Add or edit a project
 
----
+1. Put optimized images in `public/project-images` or `public/webp`.
+2. Edit `content/projects.tsx`.
+3. Use existing project entry patterns for `imageUrl`, `imageAlt`, `imageBlurDataURL`, `techStack`, and `websiteUrl`.
+4. If a project needs a custom visual component, add it under `app/components/projects/` and wire it from the portfolio section or project content.
+5. If linking out from a legacy `ProjectCard`, use its `overlay` prop.
 
-## SEO & metadata
+### Update contact details
 
-- `layout.tsx` defines `metadata` (title/description). Update this for major content changes.  
-- React 19 supports **document metadata tags in components**; in this app we continue using Next’s metadata for page‑level SEO. Use component metadata only for local, route‑specific overrides as needed. :contentReference[oaicite:11]{index=11}
+1. Edit `lib/constants.ts`.
+2. Check `ContactSection.tsx` and `/get-started` if copy or routing also needs to change.
+3. Preserve `mailto:` behavior and external LinkedIn behavior.
 
----
+### Change hero/about content
 
-## Deployment
+1. Edit `app/sections/AboutSection.tsx`.
+2. Keep portrait tilt/glare GPU-friendly.
+3. Preserve `rafThrottle` use for pointer-driven effects.
 
-- Standard Next build: `npm run build` then `npm start`.  
-- For Vercel, ensure build env uses Node ≥18.18 and that the image optimizer has `sharp` available.  
-- No server actions or middleware are used; static hosting works fine.
+### Change sections or navigation
 
----
+1. Update `SectionKey`, `sectionKeys`, refs, and section rendering in `app/page.tsx`.
+2. Update `Navigation.tsx` menu items.
+3. Update section stack/scrollbar behavior only if the new section requires it.
 
-## Agent etiquette (how to propose changes)
+### Change styling
 
-- Keep PRs small and scoped (one feature/fix per change).
-- When you add a project tile, include **optimized assets** and a **before/after** note in the PR description (FPS/CLS if animation/image related).
-- If you touch `globals.css` or animation hooks, run a quick manual QA on **iOS Safari** (to verify canvas fallback / perf) and on **reduced motion**.
-- Commit/push flow: always `git add .`, then `git commit -m "<message>"`, then `git push` (the user expects this exact sequence).
+1. Identify the owning CSS Module first.
+2. Keep `globals.css` reserved for true global foundations.
+3. For refactors, preserve visual output exactly.
+4. For intentional visual changes, keep them isolated to the affected section/component.
 
----
+## Accessibility Checklist
 
-## References (for agents)
+- All interactive elements must be keyboard reachable.
+- Focus states must remain visible.
+- Text contrast must remain strong on gradients and glass surfaces.
+- Reduced-motion users must not be blocked by animations.
+- Forms must retain labels, accessible names, error messaging, and disabled states.
+- Images need specific, human-readable alt text.
 
-- **AGENTS.md spec & examples**: Short, actionable, and file‑scoped guidance. :contentReference[oaicite:12]{index=12}  
-- **Next.js 15 (breaking & changes, Node ≥18.18, imaging)**: :contentReference[oaicite:13]{index=13}  
-- **Next.js 15.5 (`next lint` deprecation, TS improvements)**: :contentReference[oaicite:14]{index=14}  
-- **React 19 (stable + Actions, `use`, metadata, `ref` prop)**: :contentReference[oaicite:15]{index=15}  
-- **Tailwind CSS v4 (CSS‑first config, auto content detection, upgrade guide)**: :contentReference[oaicite:16]{index=16}  
-- **Motion/Framer Motion upgrade** (future‑proofing imports): :contentReference[oaicite:17]{index=17}
+## Performance Guardrails
+
+- Prefer compositor-friendly animation: transform, opacity, and carefully controlled filter.
+- Avoid layout thrash in scroll/pointer handlers.
+- Keep the iOS aurora path lightweight.
+- Use `preload="none"`, `muted`, `playsInline`, and `poster` for videos if added.
+- Avoid introducing client components unless browser APIs, state, refs, or event handlers are needed.
+
+## Verification
+
+For code changes, normally run:
+
+```bash
+npm run lint
+```
+
+Expected current warnings:
+- `next lint` deprecation warning.
+- Possible stale Browserslist data warning.
+- Possible local Node `--localstorage-file` warning.
+
+These warnings are not automatically blockers unless the command exits nonzero.
+
+For visual work:
+- Do not run Playwright.
+- Use Browser Use or Computer Use only if the user specifically asks.
+- If visual verification is requested, compare the same route and viewport before and after.
+
+## Git Etiquette
+
+- Preserve user changes. Do not reset or revert unrelated work.
+- Keep commits scoped.
+- If the user asks for the full publish flow, use:
+
+```bash
+git add .
+git commit -m "<message>"
+git push
+```
+
+- If a fresh branch has no upstream, recover with:
+
+```bash
+git push --set-upstream origin <branch>
+```
