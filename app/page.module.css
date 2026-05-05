@@ -1076,6 +1076,7 @@
   :global(.section):where(:not(.moduleScope)) {
     scroll-snap-align: start !important;
     scroll-snap-stop: always !important;
+    overflow: hidden;
     touch-action: pan-y;
   }
 
