@@ -1414,3 +1414,38 @@
     font-size: max(0.68rem, 0.72em);
   }
 }
+
+/* Mobile polish: let iOS own touch physics, then settle the card cleanly. */
+@media (max-width: 768px), (hover: none) {
+  :global(.portfolio-container):where(:not(.moduleScope)) {
+    scroll-behavior: smooth !important;
+    scroll-snap-type: y mandatory !important;
+    scroll-padding-top: 0 !important;
+    contain: layout paint;
+  }
+
+  :global(.section):where(:not(.moduleScope)) {
+    scroll-snap-stop: normal !important;
+    contain: layout paint;
+  }
+
+  :global(.hero-portrait):where(:not(.moduleScope)) {
+    touch-action: pan-y;
+    transform-style: flat !important;
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
+    -webkit-mask-image: -webkit-radial-gradient(white, black);
+    mask-image: radial-gradient(white, black);
+  }
+
+  :global(.hero-portrait .portrait-glare):where(:not(.moduleScope)) {
+    display: none;
+  }
+
+  :global(.hero-portrait .portrait-image):where(:not(.moduleScope)) {
+    transform: none !important;
+    border-radius: inherit !important;
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
+  }
+}

@@ -38,7 +38,7 @@
   padding-bottom: clamp(0.75rem, 1.5vh, 1.25rem);
   border-bottom: 1px solid rgba(255, 255, 255, 0.11);
 }
-:global(.cockpit-header .hero-eyebrow):where(:not(.moduleScope)) {
+:global(.cockpit-header .services-eyebrow):where(:not(.moduleScope)) {
   margin-bottom: 0.5rem;
 }
 :global(.cockpit-header h2):where(:not(.moduleScope)) {
@@ -730,7 +730,7 @@
     padding-bottom: clamp(0.55rem, 1.1vh, 0.8rem);
   }
 
-  :global(.cockpit-header .hero-eyebrow):where(:not(.moduleScope)) {
+  :global(.cockpit-header .services-eyebrow):where(:not(.moduleScope)) {
     margin-bottom: 0.35rem;
   }
 
@@ -1292,7 +1292,7 @@
     padding-bottom: 0.48rem;
   }
 
-  :global(.cockpit-header .hero-eyebrow):where(:not(.moduleScope)) {
+  :global(.cockpit-header .services-eyebrow):where(:not(.moduleScope)) {
     margin-bottom: 0.46rem;
     font-size: clamp(0.56rem, 2.35vw, 0.66rem);
     letter-spacing: 0.36em;
@@ -1530,7 +1530,7 @@
     padding-bottom: 0.42rem;
   }
 
-  :global(.cockpit-header .hero-eyebrow):where(:not(.moduleScope)) {
+  :global(.cockpit-header .services-eyebrow):where(:not(.moduleScope)) {
     margin-bottom: 0.22rem;
     font-size: 0.48rem;
     letter-spacing: 0.32em;
@@ -1776,5 +1776,848 @@
       overscroll-behavior: contain;
       scrollbar-width: thin;
     }
+  }
+}
+
+/* Services mobile redesign: readable plan cards inside the contained card. */
+:global(.cockpit-header .services-eyebrow):where(:not(.moduleScope)) {
+  margin: 0 0 0.5rem;
+  color: rgba(230, 238, 248, 0.58);
+  font-family: var(--font-space-grotesk), var(--font-fallback);
+  font-size: clamp(0.78rem, 0.92vw, 0.95rem);
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  line-height: 1.25;
+  text-transform: uppercase;
+}
+
+:global(.service-copy-mobile):where(:not(.moduleScope)),
+:global(.mobile-service-configurator):where(:not(.moduleScope)) {
+  display: none;
+}
+
+@media (max-width: 768px) {
+  :global(.services-section > .services-cockpit):where(:not(.moduleScope)) {
+    height: 100%;
+    min-height: 0;
+    gap: clamp(0.42rem, 1.08vh, 0.66rem);
+    overflow-y: hidden;
+    overflow-x: hidden;
+    overscroll-behavior: contain;
+  }
+
+  :global(.cockpit-header):where(:not(.moduleScope)) {
+    gap: 0.34rem;
+    padding-right: clamp(3.75rem, 14vw, 4.75rem);
+    padding-bottom: 0.48rem;
+  }
+
+  :global(.cockpit-header .services-eyebrow):where(:not(.moduleScope)) {
+    margin-bottom: 0.32rem;
+    color: rgba(230, 238, 248, 0.58);
+    font-size: clamp(0.62rem, 2.58vw, 0.74rem);
+    letter-spacing: 0.22em;
+    line-height: 1.3;
+  }
+
+  :global(.cockpit-header h2):where(:not(.moduleScope)) {
+    max-width: 12.8em;
+    font-size: clamp(1.62rem, 7.45vw, 2.12rem);
+    line-height: 0.98;
+    letter-spacing: -0.055em;
+  }
+
+  :global(.cockpit-header > p):where(:not(.moduleScope)) {
+    max-width: 100%;
+    transform: none;
+    color: rgba(230, 238, 248, 0.74);
+    font-size: clamp(0.82rem, 3.35vw, 0.94rem);
+    line-height: 1.28;
+  }
+
+  :global(.service-copy-desktop):where(:not(.moduleScope)) {
+    display: none;
+  }
+
+  :global(.service-copy-mobile):where(:not(.moduleScope)) {
+    display: block;
+  }
+
+  :global(.service-plan-grid):where(:not(.moduleScope)) {
+    display: none !important;
+  }
+
+  :global(.mobile-service-configurator):where(:not(.moduleScope)) {
+    --mobile-accent: #53fff1;
+    --mobile-accent-muted: rgba(83, 255, 241, 0.18);
+    display: grid;
+    flex: 1 1 auto;
+    min-height: 0;
+    grid-template-rows: auto auto auto minmax(0, 1fr) auto auto;
+    gap: clamp(0.42rem, 1.05vh, 0.64rem);
+    padding: clamp(0.74rem, 3vw, 0.94rem);
+    border: 1px solid rgba(148, 177, 210, 0.2);
+    border-radius: 22px;
+    background:
+      radial-gradient(circle at 0% 0%, rgba(83, 255, 241, 0.08), transparent 32%),
+      radial-gradient(circle at 92% 6%, rgba(210, 156, 255, 0.12), transparent 36%),
+      linear-gradient(145deg, rgba(255, 255, 255, 0.07), rgba(255, 255, 255, 0.026));
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.09), 0 22px 44px rgba(0, 0, 0, 0.14);
+    overflow: hidden;
+  }
+
+  :global(.mobile-service-configurator.is-growth):where(:not(.moduleScope)) {
+    --mobile-accent: #d29cff;
+    --mobile-accent-muted: rgba(210, 156, 255, 0.2);
+  }
+
+  :global(.mobile-plan-tabs):where(:not(.moduleScope)) {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.26rem;
+    padding: 0.28rem;
+    border: 1px solid rgba(255, 255, 255, 0.11);
+    border-radius: 15px;
+    background: rgba(6, 14, 29, 0.34);
+  }
+
+  :global(.mobile-plan-tab):where(:not(.moduleScope)) {
+    display: grid;
+    min-width: 0;
+    min-height: clamp(2.7rem, 7vh, 3.35rem);
+    place-items: center;
+    gap: 0.14rem;
+    border: 1px solid transparent;
+    border-radius: 12px;
+    background: transparent;
+    color: rgba(230, 238, 248, 0.48);
+    font-family: var(--font-space-grotesk), var(--font-fallback);
+    font-weight: 700;
+    cursor: pointer;
+  }
+
+  :global(.mobile-plan-tab span):where(:not(.moduleScope)) {
+    font-size: clamp(0.82rem, 3.35vw, 0.98rem);
+    line-height: 1;
+  }
+
+  :global(.mobile-plan-tab strong):where(:not(.moduleScope)) {
+    font-size: clamp(0.72rem, 2.95vw, 0.86rem);
+    font-weight: 600;
+    line-height: 1;
+  }
+
+  :global(.mobile-plan-tab.is-active):where(:not(.moduleScope)) {
+    color: var(--mobile-accent);
+    border-color: color-mix(in srgb, var(--mobile-accent) 48%, transparent);
+    background:
+      radial-gradient(circle at 18% 0%, var(--mobile-accent-muted), transparent 52%),
+      rgba(255, 255, 255, 0.055);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.11), 0 0 24px color-mix(in srgb, var(--mobile-accent) 14%, transparent);
+  }
+
+  :global(.mobile-plan-tab.is-preview):where(:not(.moduleScope)) {
+    color: rgba(230, 238, 248, 0.72);
+    border-color: rgba(255, 255, 255, 0.16);
+    background: rgba(255, 255, 255, 0.035);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08);
+  }
+
+  :global(.mobile-plan-summary):where(:not(.moduleScope)) {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: start;
+    gap: 0.74rem;
+    padding: 0.12rem 0.06rem 0;
+  }
+
+  :global(.mobile-plan-kicker):where(:not(.moduleScope)) {
+    display: block;
+    margin-bottom: 0.26rem;
+    color: var(--mobile-accent);
+    font-family: var(--font-space-grotesk), var(--font-fallback);
+    font-size: clamp(0.72rem, 3vw, 0.84rem);
+    font-weight: 800;
+    letter-spacing: 0.18em;
+  }
+
+  :global(.mobile-plan-summary p):where(:not(.moduleScope)) {
+    margin: 0;
+    color: rgba(230, 238, 248, 0.68);
+    font-size: clamp(0.78rem, 3.2vw, 0.92rem);
+    line-height: 1.25;
+  }
+
+  :global(.mobile-plan-price):where(:not(.moduleScope)) {
+    display: grid;
+    justify-items: end;
+    gap: 0.14rem;
+    white-space: nowrap;
+  }
+
+  :global(.mobile-plan-price strong):where(:not(.moduleScope)) {
+    color: rgba(255, 255, 255, 0.96);
+    font-family: var(--font-space-grotesk), var(--font-fallback);
+    font-size: clamp(1.8rem, 7.6vw, 2.34rem);
+    line-height: 0.92;
+  }
+
+  :global(.mobile-plan-price span):where(:not(.moduleScope)) {
+    color: rgba(230, 238, 248, 0.52);
+    font-size: clamp(0.62rem, 2.5vw, 0.74rem);
+  }
+
+  :global(.mobile-feature-chips):where(:not(.moduleScope)) {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 0.38rem;
+    margin: 0.1rem 0 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  :global(.mobile-feature-chips li):where(:not(.moduleScope)) {
+    display: grid;
+    min-height: clamp(3rem, 8vh, 3.75rem);
+    place-items: center;
+    align-content: center;
+    gap: 0.24rem;
+    padding: 0.4rem 0.28rem;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 13px;
+    background: rgba(255, 255, 255, 0.04);
+    color: rgba(244, 249, 255, 0.9);
+    text-align: center;
+  }
+
+  :global(.mobile-feature-chips svg):where(:not(.moduleScope)) {
+    color: var(--mobile-accent);
+    font-size: clamp(1.3rem, 5.4vw, 1.72rem);
+    filter: drop-shadow(0 0 11px color-mix(in srgb, var(--mobile-accent) 24%, transparent));
+  }
+
+  :global(.mobile-feature-chips span):where(:not(.moduleScope)) {
+    font-size: clamp(0.68rem, 2.85vw, 0.82rem);
+    font-weight: 750;
+    line-height: 1.08;
+  }
+
+  :global(.mobile-plan-details):where(:not(.moduleScope)) {
+    display: grid;
+    min-height: 0;
+    align-content: center;
+    gap: clamp(0.42rem, 1vh, 0.64rem);
+    padding: clamp(0.72rem, 2.7vw, 0.98rem) clamp(0.82rem, 3vw, 1.08rem);
+    border: 1px solid rgba(255, 255, 255, 0.085);
+    border-radius: 15px;
+    background:
+      radial-gradient(circle at 0% 0%, color-mix(in srgb, var(--mobile-accent) 8%, transparent), transparent 42%),
+      rgba(7, 17, 32, 0.26);
+  }
+
+  :global(.mobile-plan-details ul):where(:not(.moduleScope)) {
+    display: grid;
+    gap: clamp(0.38rem, 0.95vh, 0.56rem);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  :global(.mobile-plan-details li):where(:not(.moduleScope)) {
+    position: relative;
+    min-width: 0;
+    padding-left: 1.16rem;
+    color: rgba(230, 238, 248, 0.76);
+    font-size: clamp(0.9rem, 3.58vw, 1.04rem);
+    line-height: 1.24;
+  }
+
+  :global(.mobile-plan-details li):where(:not(.moduleScope))::before {
+    content: "";
+    position: absolute;
+    top: 0.12em;
+    left: 0.08rem;
+    width: 0.36rem;
+    height: 0.68rem;
+    border-color: var(--mobile-accent);
+    border-style: solid;
+    border-width: 0 2px 2px 0;
+    transform: rotate(45deg);
+    filter: drop-shadow(0 0 8px color-mix(in srgb, var(--mobile-accent) 34%, transparent));
+  }
+
+  :global(.mobile-support-row):where(:not(.moduleScope)) {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.7rem;
+    min-height: clamp(3rem, 7vh, 3.55rem);
+    padding: 0.62rem 0.72rem;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 15px;
+    background: rgba(8, 18, 35, 0.28);
+    color: white;
+    text-align: left;
+    cursor: pointer;
+  }
+
+  :global(.mobile-support-row > span:first-child):where(:not(.moduleScope)) {
+    display: grid;
+    min-width: 0;
+    gap: 0.16rem;
+  }
+
+  :global(.mobile-support-row strong):where(:not(.moduleScope)) {
+    overflow: hidden;
+    color: rgba(244, 249, 255, 0.88);
+    font-family: var(--font-space-grotesk), var(--font-fallback);
+    font-size: clamp(0.68rem, 2.8vw, 0.78rem);
+    font-weight: 800;
+    letter-spacing: 0.14em;
+    text-overflow: ellipsis;
+    text-transform: uppercase;
+    white-space: nowrap;
+  }
+
+  :global(.mobile-support-row small):where(:not(.moduleScope)) {
+    color: rgba(230, 238, 248, 0.58);
+    font-size: clamp(0.7rem, 2.85vw, 0.82rem);
+  }
+
+  :global(.mobile-support-pill):where(:not(.moduleScope)) {
+    display: inline-flex;
+    flex: 0 0 auto;
+    align-items: center;
+    justify-content: center;
+    gap: 0.32rem;
+    min-height: 2.1rem;
+    padding: 0 0.72rem;
+    border: 1px solid rgba(255, 255, 255, 0.13);
+    border-radius: 11px;
+    background:
+      radial-gradient(circle at 0% 0%, rgba(83, 255, 241, 0.08), transparent 62%),
+      rgba(255, 255, 255, 0.055);
+    color: rgba(244, 249, 255, 0.86);
+    font-family: var(--font-space-grotesk), var(--font-fallback);
+    font-size: clamp(0.74rem, 3vw, 0.86rem);
+    font-weight: 800;
+    white-space: nowrap;
+  }
+
+  :global(.mobile-support-row.is-selected):where(:not(.moduleScope)) {
+    border-color: rgba(255, 255, 255, 0.28);
+    background: rgba(255, 255, 255, 0.075);
+  }
+
+  :global(.mobile-support-row.is-selected .mobile-support-pill):where(:not(.moduleScope)) {
+    border-color: color-mix(in srgb, var(--mobile-accent) 42%, transparent);
+    color: var(--mobile-accent);
+    background: color-mix(in srgb, var(--mobile-accent) 13%, transparent);
+  }
+
+  :global(.mobile-support-row.is-unavailable):where(:not(.moduleScope)) {
+    opacity: 0.72;
+  }
+
+  :global(.mobile-start-button):where(:not(.moduleScope)) {
+    display: inline-flex;
+    min-height: clamp(2.75rem, 7vh, 3.25rem);
+    align-items: center;
+    justify-content: center;
+    gap: 0.56rem;
+    border: 0;
+    border-radius: 14px;
+    background: rgba(241, 245, 255, 0.68);
+    color: rgba(8, 12, 26, 0.94);
+    font-family: var(--font-space-grotesk), var(--font-fallback);
+    font-size: clamp(0.9rem, 3.75vw, 1.04rem);
+    font-weight: 800;
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.45), 0 18px 34px rgba(0, 0, 0, 0.16);
+    cursor: pointer;
+  }
+
+  /*
+    Legacy mobile card layout is hidden above; rules below are kept for tablet
+    fallbacks and desktop-adjacent breakpoints.
+  */
+  :global(.service-plan-grid):where(:not(.moduleScope)) {
+    --service-action-bottom-gap: 0.56rem;
+    --service-action-height: 38px;
+    flex: 1 1 auto;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: clamp(0.32rem, 0.86vh, 0.5rem);
+    overflow: hidden;
+  }
+
+  :global(.service-plan-swiper):where(:not(.moduleScope)) {
+    display: flex;
+    flex: 0 0 clamp(12.8rem, 31vh, 15.6rem);
+    max-height: 15.6rem;
+    gap: 0.5rem;
+    overflow-x: auto;
+    overflow-y: hidden;
+    padding: 0.04rem 0 0.08rem;
+    scroll-snap-type: x mandatory;
+    scroll-padding-inline: 0;
+    scrollbar-width: none;
+    overscroll-behavior-x: contain;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  :global(.service-plan-swiper):where(:not(.moduleScope))::-webkit-scrollbar {
+    display: none;
+  }
+
+  :global(.service-plan-card):where(:not(.moduleScope)) {
+    flex: 0 0 100%;
+    min-width: 0;
+    min-height: 0;
+    scroll-snap-align: start;
+    transform: none !important;
+  }
+
+  :global(.service-plan-card):where(:not(.moduleScope)),
+  :global(.service-support-card):where(:not(.moduleScope)),
+  :global(.service-selection-card):where(:not(.moduleScope)) {
+    border-radius: 17px;
+  }
+
+  :global(.service-plan-card):where(:not(.moduleScope)),
+  :global(.service-support-card):where(:not(.moduleScope)) {
+    gap: clamp(0.28rem, 0.75vh, 0.46rem);
+    padding: clamp(0.62rem, 2.7vw, 0.82rem);
+    padding-bottom: var(--service-action-bottom-gap);
+    overflow: hidden;
+  }
+
+  :global(.service-plan-grid.has-card-focus .service-plan-card.is-dimmed):where(:not(.moduleScope)) {
+    filter: none;
+    opacity: 1;
+    transform: none;
+  }
+
+  :global(.service-plan-card):where(:not(.moduleScope)):hover,
+  :global(.service-plan-card):where(:not(.moduleScope)):focus-visible {
+    transform: none;
+  }
+
+  :global(.plan-card-header):where(:not(.moduleScope)) {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: start;
+    gap: 0.44rem;
+  }
+
+  :global(.service-plan-title):where(:not(.moduleScope)) {
+    font-size: clamp(0.66rem, 2.75vw, 0.78rem);
+    letter-spacing: 0.16em;
+  }
+
+  :global(.service-plan-price):where(:not(.moduleScope)) {
+    font-size: clamp(1.42rem, 6.1vw, 1.82rem);
+  }
+
+  :global(.plan-price-suffix):where(:not(.moduleScope)) {
+    font-size: clamp(0.62rem, 2.55vw, 0.72rem);
+  }
+
+  :global(.service-plan-copy):where(:not(.moduleScope)) {
+    color: rgba(230, 238, 248, 0.74);
+    font-size: clamp(0.76rem, 3.08vw, 0.88rem);
+    line-height: 1.24;
+  }
+
+  :global(.service-plan-card .service-feature-rail):where(:not(.moduleScope)) {
+    display: grid;
+    flex: 1 1 auto;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    align-items: stretch;
+    gap: 0.34rem;
+    margin: 0.18rem 0 0.22rem;
+    padding: 0;
+  }
+
+  :global(.service-plan-card .service-feature-column):where(:not(.moduleScope)) {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 0;
+    gap: 0.24rem;
+    padding: 0.44rem 0.28rem;
+    border: 1px solid rgba(255, 255, 255, 0.09);
+    border-radius: 12px;
+    background: rgba(255, 255, 255, 0.04);
+    text-align: center;
+  }
+
+  :global(.service-feature-column + .service-feature-column):where(:not(.moduleScope))::before,
+  :global(.service-plan-card .service-feature-column:nth-child(3)):where(:not(.moduleScope))::before {
+    display: none;
+  }
+
+  :global(.service-plan-card .service-feature-column:nth-child(3)):where(:not(.moduleScope)) {
+    grid-column: auto;
+    justify-self: stretch;
+    width: auto;
+  }
+
+  :global(.service-feature-icon):where(:not(.moduleScope)) {
+    width: clamp(1.72rem, 7.2vw, 2.15rem);
+    height: clamp(1.72rem, 7.2vw, 2.15rem);
+    margin: 0;
+    font-size: clamp(1.48rem, 6vw, 1.86rem);
+  }
+
+  :global(.service-feature-text):where(:not(.moduleScope)),
+  :global(.support-feature-text):where(:not(.moduleScope)) {
+    align-items: center;
+    gap: 0.1rem;
+    text-align: center;
+  }
+
+  :global(.service-feature-title):where(:not(.moduleScope)),
+  :global(.support-feature-title):where(:not(.moduleScope)) {
+    font-size: clamp(0.72rem, 3vw, 0.84rem);
+    line-height: 1.08;
+  }
+
+  :global(.service-feature-detail):where(:not(.moduleScope)),
+  :global(.support-feature-detail):where(:not(.moduleScope)) {
+    display: block;
+    max-width: 8.6rem;
+    color: rgba(230, 238, 248, 0.62);
+    font-size: clamp(0.6rem, 2.45vw, 0.7rem);
+    line-height: 1.12;
+  }
+
+  :global(.service-plan-action):where(:not(.moduleScope)),
+  :global(.selection-dock-button):where(:not(.moduleScope)) {
+    min-height: var(--service-action-height);
+    border-radius: 11px;
+    font-size: clamp(0.78rem, 3.2vw, 0.9rem);
+  }
+
+  :global(.service-plan-pagination):where(:not(.moduleScope)) {
+    display: flex;
+    gap: 0.46rem;
+    color: rgba(230, 238, 248, 0.52);
+    font-size: 0.58rem;
+    letter-spacing: 0.15em;
+  }
+
+  :global(.service-plan-pagination i):where(:not(.moduleScope)) {
+    width: 0.4rem;
+    height: 0.4rem;
+  }
+
+  :global(.service-plan-pagination i.is-active):where(:not(.moduleScope)) {
+    width: 1.15rem;
+  }
+
+  :global(.service-lower-panels):where(:not(.moduleScope)) {
+    display: grid;
+    grid-template-rows: auto auto;
+    gap: clamp(0.32rem, 0.82vh, 0.48rem);
+    min-height: 0;
+  }
+
+  :global(.service-support-card):where(:not(.moduleScope)) {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    grid-template-rows: auto auto auto;
+    column-gap: 0.48rem;
+    row-gap: 0.32rem;
+    align-items: center;
+    min-height: 0;
+    padding-block: 0.58rem;
+  }
+
+  :global(.service-support-card .plan-card-header):where(:not(.moduleScope)) {
+    display: contents;
+  }
+
+  :global(.service-support-card .service-plan-title):where(:not(.moduleScope)) {
+    grid-column: 1;
+    grid-row: 1;
+  }
+
+  :global(.service-support-card .plan-card-price-row):where(:not(.moduleScope)) {
+    grid-column: 2;
+    grid-row: 1;
+  }
+
+  :global(.service-support-card .service-plan-copy):where(:not(.moduleScope)) {
+    grid-column: 1 / -1;
+    grid-row: 2;
+  }
+
+  :global(.support-feature-rail):where(:not(.moduleScope)) {
+    display: none;
+  }
+
+  :global(.service-support-card .service-plan-action):where(:not(.moduleScope)) {
+    grid-column: 1 / -1;
+    grid-row: 3;
+    width: 100%;
+    margin: 0;
+  }
+
+  :global(.service-support-card.is-unavailable):where(:not(.moduleScope)) {
+    opacity: 0.72;
+    filter: none;
+  }
+
+  :global(.service-selection-card):where(:not(.moduleScope)) {
+    display: block;
+    min-height: 0;
+    padding: clamp(0.62rem, 2.7vw, 0.82rem);
+    padding-bottom: var(--service-action-bottom-gap);
+    overflow: hidden;
+  }
+
+  :global(.selection-dock-content):where(:not(.moduleScope)) {
+    display: grid;
+    height: auto;
+    grid-template-rows: auto auto;
+    gap: 0.48rem;
+  }
+
+  :global(.selection-dock-eyebrow):where(:not(.moduleScope)) {
+    margin-bottom: 0.16rem;
+    font-size: 0.56rem;
+    letter-spacing: 0.12em;
+  }
+
+  :global(.selection-dock-label):where(:not(.moduleScope)) {
+    min-height: 1.05rem;
+    gap: 0.4rem;
+    font-size: clamp(0.82rem, 3.35vw, 0.94rem);
+    line-height: 1.18;
+  }
+
+  :global(.selection-dock-label.is-empty):where(:not(.moduleScope)) {
+    font-size: clamp(0.78rem, 3.18vw, 0.88rem);
+    line-height: 1.28;
+  }
+
+  :global(.selection-ticker):where(:not(.moduleScope)) {
+    height: 1.1rem;
+  }
+
+  :global(.selection-summary):where(:not(.moduleScope)) {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.34rem;
+    margin-top: 0.42rem;
+  }
+
+  :global(.selection-summary div):where(:not(.moduleScope)) {
+    min-height: 2.32rem;
+    padding: 0.38rem 0.46rem;
+    border-radius: 11px;
+  }
+
+  :global(.selection-summary span):where(:not(.moduleScope)) {
+    margin-bottom: 0.12rem;
+    font-size: 0.5rem;
+    letter-spacing: 0.09em;
+  }
+
+  :global(.selection-summary strong):where(:not(.moduleScope)) {
+    font-size: clamp(0.72rem, 2.95vw, 0.84rem);
+    line-height: 1.12;
+    white-space: normal;
+  }
+
+  :global(.selection-dock-button):where(:not(.moduleScope)) {
+    grid-row: auto;
+    margin-top: 0;
+    width: 100%;
+  }
+}
+
+@media (max-width: 420px) and (max-height: 740px) {
+  :global(.services-section > .services-cockpit):where(:not(.moduleScope)) {
+    gap: 0.3rem;
+  }
+
+  :global(.cockpit-header):where(:not(.moduleScope)) {
+    gap: 0.24rem;
+    padding-bottom: 0.34rem;
+  }
+
+  :global(.cockpit-header .services-eyebrow):where(:not(.moduleScope)) {
+    font-size: 0.56rem;
+    letter-spacing: 0.18em;
+  }
+
+  :global(.cockpit-header h2):where(:not(.moduleScope)) {
+    font-size: clamp(1.36rem, 6.4vw, 1.66rem);
+  }
+
+  :global(.cockpit-header > p):where(:not(.moduleScope)) {
+    font-size: 0.74rem;
+    line-height: 1.22;
+  }
+
+  :global(.mobile-service-configurator):where(:not(.moduleScope)) {
+    grid-template-rows: auto auto auto minmax(3.8rem, 1fr) auto auto;
+    gap: 0.28rem;
+    padding: 0.54rem;
+    border-radius: 18px;
+  }
+
+  :global(.mobile-plan-tabs):where(:not(.moduleScope)) {
+    padding: 0.2rem;
+    border-radius: 13px;
+  }
+
+  :global(.mobile-plan-tab):where(:not(.moduleScope)) {
+    min-height: 2.28rem;
+    border-radius: 10px;
+  }
+
+  :global(.mobile-plan-tab span):where(:not(.moduleScope)) {
+    font-size: 0.78rem;
+  }
+
+  :global(.mobile-plan-tab strong):where(:not(.moduleScope)) {
+    font-size: 0.68rem;
+  }
+
+  :global(.mobile-plan-summary):where(:not(.moduleScope)) {
+    gap: 0.46rem;
+    padding-top: 0;
+  }
+
+  :global(.mobile-plan-kicker):where(:not(.moduleScope)) {
+    margin-bottom: 0.16rem;
+    font-size: 0.66rem;
+  }
+
+  :global(.mobile-plan-summary p):where(:not(.moduleScope)) {
+    font-size: 0.72rem;
+    line-height: 1.18;
+  }
+
+  :global(.mobile-plan-price strong):where(:not(.moduleScope)) {
+    font-size: 1.62rem;
+  }
+
+  :global(.mobile-feature-chips):where(:not(.moduleScope)) {
+    gap: 0.24rem;
+  }
+
+  :global(.mobile-feature-chips li):where(:not(.moduleScope)) {
+    min-height: 2.46rem;
+    gap: 0.14rem;
+    padding: 0.28rem 0.18rem;
+    border-radius: 10px;
+  }
+
+  :global(.mobile-feature-chips svg):where(:not(.moduleScope)) {
+    font-size: 1.18rem;
+  }
+
+  :global(.mobile-feature-chips span):where(:not(.moduleScope)) {
+    font-size: 0.64rem;
+  }
+
+  :global(.mobile-plan-details):where(:not(.moduleScope)) {
+    gap: 0.28rem;
+    padding: 0.54rem 0.62rem;
+    border-radius: 12px;
+  }
+
+  :global(.mobile-plan-details ul):where(:not(.moduleScope)) {
+    gap: 0.24rem;
+  }
+
+  :global(.mobile-plan-details li):where(:not(.moduleScope)) {
+    padding-left: 1rem;
+    font-size: 0.78rem;
+    line-height: 1.18;
+  }
+
+  :global(.mobile-support-row):where(:not(.moduleScope)) {
+    min-height: 2.5rem;
+    padding: 0.44rem 0.54rem;
+    border-radius: 12px;
+  }
+
+  :global(.mobile-support-row strong):where(:not(.moduleScope)) {
+    font-size: 0.58rem;
+    letter-spacing: 0.1em;
+  }
+
+  :global(.mobile-support-row small):where(:not(.moduleScope)) {
+    font-size: 0.66rem;
+  }
+
+  :global(.mobile-support-pill):where(:not(.moduleScope)) {
+    min-height: 1.86rem;
+    padding: 0 0.54rem;
+    font-size: 0.7rem;
+  }
+
+  :global(.mobile-start-button):where(:not(.moduleScope)) {
+    min-height: 2.48rem;
+    border-radius: 12px;
+    font-size: 0.84rem;
+  }
+
+  :global(.service-plan-grid):where(:not(.moduleScope)) {
+    --service-action-bottom-gap: 0.42rem;
+    --service-action-height: 32px;
+    gap: 0.22rem;
+  }
+
+  :global(.service-plan-swiper):where(:not(.moduleScope)) {
+    flex-basis: clamp(10.4rem, 29vh, 12.2rem);
+    max-height: 12.2rem;
+  }
+
+  :global(.service-plan-card):where(:not(.moduleScope)),
+  :global(.service-support-card):where(:not(.moduleScope)),
+  :global(.service-selection-card):where(:not(.moduleScope)) {
+    border-radius: 18px;
+  }
+
+  :global(.service-plan-card):where(:not(.moduleScope)),
+  :global(.service-support-card):where(:not(.moduleScope)),
+  :global(.service-selection-card):where(:not(.moduleScope)) {
+    padding: 0.82rem;
+  }
+
+  :global(.service-plan-card):where(:not(.moduleScope)),
+  :global(.service-support-card):where(:not(.moduleScope)),
+  :global(.service-selection-card):where(:not(.moduleScope)) {
+    padding: 0.48rem;
+  }
+
+  :global(.service-feature-icon):where(:not(.moduleScope)) {
+    width: 1.45rem;
+    height: 1.45rem;
+    font-size: 1.28rem;
+  }
+
+  :global(.service-feature-title):where(:not(.moduleScope)),
+  :global(.support-feature-title):where(:not(.moduleScope)) {
+    font-size: 0.68rem;
+    line-height: 1.08;
+  }
+
+  :global(.service-feature-detail):where(:not(.moduleScope)),
+  :global(.support-feature-detail):where(:not(.moduleScope)) {
+    display: none;
+  }
+}
+
+@media (max-width: 768px) {
+  :global(.service-plan-grid):where(:not(.moduleScope)) {
+    display: none !important;
   }
 }
