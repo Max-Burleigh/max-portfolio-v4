@@ -578,13 +578,14 @@
 
 @media (max-width: 768px) {
   :global(.contact-section):where(:not(.moduleScope)) {
-    min-height: 100%;
+    min-height: var(--mobile-section-card-height, 100%);
     overflow: hidden;
   }
 
   :global(.contact-section > [data-entrance]):where(:not(.moduleScope)) {
-    height: 100% !important;
+    height: auto !important;
     min-height: 0;
+    max-height: none !important;
     align-items: stretch !important;
     justify-content: stretch !important;
   }
@@ -593,8 +594,9 @@
     grid-template-rows: auto minmax(0, 1fr);
     gap: clamp(0.58rem, 1.7vh, 0.85rem);
     min-height: 0;
-    height: 100%;
-    overflow: hidden;
+    height: auto;
+    max-height: none;
+    overflow: visible;
   }
 
   :global(.contact-cockpit-header):where(:not(.moduleScope)) {
@@ -624,7 +626,7 @@
     justify-self: stretch;
     align-self: stretch;
     min-height: 0;
-    overflow: hidden;
+    overflow: visible;
     padding-right: 0;
     overscroll-behavior: contain;
   }
@@ -633,8 +635,8 @@
     grid-template-columns: 1fr;
     gap: clamp(0.82rem, 2.15vh, 1.18rem);
     min-height: 0;
-    height: 100%;
-    overflow: hidden;
+    height: auto;
+    overflow: visible;
   }
 
   :global(.contact-pitch):where(:not(.moduleScope)) {
@@ -929,15 +931,17 @@
   font-size: max(0.68rem, 0.72em) !important;
 }
 
-@container portfolio-card (max-height: 680px) {
-  :global(.contact-cockpit):where(:not(.moduleScope)) {
-    overflow: hidden;
-  }
+@media (min-width: 769px) {
+  @container portfolio-card (max-height: 680px) {
+    :global(.contact-cockpit):where(:not(.moduleScope)) {
+      overflow: hidden;
+    }
 
-  :global(.contact-panel):where(:not(.moduleScope)) {
-    min-height: 0;
-    overflow-y: auto;
-    overscroll-behavior: contain;
-    scrollbar-width: thin;
+    :global(.contact-panel):where(:not(.moduleScope)) {
+      min-height: 0;
+      overflow-y: auto;
+      overscroll-behavior: contain;
+      scrollbar-width: thin;
+    }
   }
 }

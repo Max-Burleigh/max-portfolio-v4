@@ -23,6 +23,12 @@ import ContactSection from "@sections/ContactSection";
 
 const SECTION_TRANSITION_MS = 640;
 
+const getSectionScrollTop = (container: HTMLElement, target: HTMLElement) => {
+  const containerRect = container.getBoundingClientRect();
+  const targetRect = target.getBoundingClientRect();
+  return container.scrollTop + targetRect.top - containerRect.top;
+};
+
 // Main Portfolio component
 const Portfolio = () => {
   // About section logic moved into AboutSection component
@@ -95,9 +101,65 @@ const Portfolio = () => {
   const activeRef = useRef<SectionKey>(activeSection);
   const isProgrammaticNativeScrollRef = useRef(false);
   const isNativeScrollSyncRef = useRef(false);
+  const lastNativeScrollAtRef = useRef(0);
   useEffect(() => {
     activeRef.current = activeSection;
   }, [activeSection]);
+
+  useEffect(() => {
+    let syncFrame: number | undefined;
+    const timeoutIds: number[] = [];
+
+    const syncCurrentSection = (force = false) => {
+      if (canUseSectionStack) return;
+      if (!force && Date.now() - lastNativeScrollAtRef.current < 320) return;
+      if (syncFrame) {
+        window.cancelAnimationFrame(syncFrame);
+      }
+
+      syncFrame = window.requestAnimationFrame(() => {
+        syncFrame = undefined;
+        const section = sectionRefs[activeRef.current]?.current;
+        const container = containerRef.current;
+        if (!section || !container) return;
+
+        isProgrammaticNativeScrollRef.current = true;
+        container.scrollTo({ top: getSectionScrollTop(container, section), left: 0, behavior: "auto" });
+        window.setTimeout(() => {
+          isProgrammaticNativeScrollRef.current = false;
+        }, 80);
+      });
+    };
+
+    const updateVisualViewportHeight = (forceSync = false) => {
+      const visualHeight = Math.floor(window.visualViewport?.height ?? window.innerHeight);
+      document.documentElement.style.setProperty("--portfolio-visual-vh", `${visualHeight}px`);
+      syncCurrentSection(forceSync);
+    };
+
+    const handleViewportResize = () => updateVisualViewportHeight(false);
+    const handleOrientationChange = () => updateVisualViewportHeight(true);
+
+    updateVisualViewportHeight(true);
+
+    window.addEventListener("resize", handleViewportResize);
+    window.addEventListener("orientationchange", handleOrientationChange);
+    window.visualViewport?.addEventListener("resize", handleViewportResize);
+
+    [120, 420, 900].forEach((delay) => {
+      timeoutIds.push(window.setTimeout(() => updateVisualViewportHeight(true), delay));
+    });
+
+    return () => {
+      window.removeEventListener("resize", handleViewportResize);
+      window.removeEventListener("orientationchange", handleOrientationChange);
+      window.visualViewport?.removeEventListener("resize", handleViewportResize);
+      timeoutIds.forEach((timeoutId) => window.clearTimeout(timeoutId));
+      if (syncFrame) {
+        window.cancelAnimationFrame(syncFrame);
+      }
+    };
+  }, [canUseSectionStack, sectionRefs]);
 
   useEffect(() => {
     if (canUseSectionStack) return;
@@ -112,7 +174,7 @@ const Portfolio = () => {
 
       if (section && container) {
         isProgrammaticNativeScrollRef.current = true;
-        container.scrollTo({ top: section.offsetTop, left: 0, behavior: "smooth" });
+        container.scrollTo({ top: getSectionScrollTop(container, section), left: 0, behavior: "smooth" });
         window.setTimeout(() => {
           isProgrammaticNativeScrollRef.current = false;
         }, 700);
@@ -137,7 +199,6 @@ const Portfolio = () => {
     if (!scrollParent) return;
 
     let syncFrame: number | undefined;
-    let settleTimer: number | undefined;
 
     const findNearestSection = () => {
       const currentTop = scrollParent.scrollTop;
@@ -146,7 +207,7 @@ const Portfolio = () => {
           const node = sectionRefs[section]?.current;
           if (!node) return nearest;
 
-          const distance = Math.abs(node.offsetTop - currentTop);
+          const distance = Math.abs(getSectionScrollTop(scrollParent, node) - currentTop);
           return distance < nearest.distance ? { section, distance } : nearest;
         },
         { section: activeRef.current, distance: Number.POSITIVE_INFINITY }
@@ -164,34 +225,12 @@ const Portfolio = () => {
       setActiveSection(nearestSection);
     };
 
-    const settleOnSection = () => {
-      settleTimer = undefined;
-      if (isProgrammaticNativeScrollRef.current) return;
-
-      const nearestSection = findNearestSection();
-      const target = sectionRefs[nearestSection]?.current;
-      if (!target) return;
-
-      const distance = Math.abs(target.offsetTop - scrollParent.scrollTop);
-      if (distance <= 1) return;
-
-      isProgrammaticNativeScrollRef.current = true;
-      scrollParent.scrollTo({ top: target.offsetTop, left: 0, behavior: "smooth" });
-      window.setTimeout(() => {
-        isProgrammaticNativeScrollRef.current = false;
-      }, 360);
-    };
-
     const handleScroll = () => {
+      lastNativeScrollAtRef.current = Date.now();
       if (syncFrame) {
         window.cancelAnimationFrame(syncFrame);
       }
       syncFrame = window.requestAnimationFrame(syncActiveSection);
-
-      if (settleTimer) {
-        window.clearTimeout(settleTimer);
-      }
-      settleTimer = window.setTimeout(settleOnSection, 180);
     };
 
     scrollParent.addEventListener("scroll", handleScroll, { passive: true });
@@ -200,9 +239,6 @@ const Portfolio = () => {
       scrollParent.removeEventListener("scroll", handleScroll);
       if (syncFrame) {
         window.cancelAnimationFrame(syncFrame);
-      }
-      if (settleTimer) {
-        window.clearTimeout(settleTimer);
       }
     };
   }, [canUseSectionStack, sectionKeys, sectionRefs]);
@@ -239,7 +275,10 @@ const Portfolio = () => {
         isNativeScrollSyncRef.current = true;
         setActiveSection(section);
         isProgrammaticNativeScrollRef.current = true;
-        containerRef.current?.scrollTo({ top: targetElement.offsetTop, left: 0, behavior: "smooth" });
+        const container = containerRef.current;
+        if (container) {
+          container.scrollTo({ top: getSectionScrollTop(container, targetElement), left: 0, behavior: "smooth" });
+        }
         window.setTimeout(() => {
           isProgrammaticNativeScrollRef.current = false;
         }, 640);

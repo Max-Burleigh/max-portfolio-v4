@@ -680,25 +680,37 @@
 
 @media (max-width: 768px) {
   :global(.portfolio-cockpit):where(:not(.moduleScope)) {
+    height: auto;
+    min-height: 0;
+    max-height: none;
     gap: clamp(0.45rem, 1.35vh, 0.7rem);
+    overflow: visible;
   }
 
   :global(.portfolio-deck-shell):where(:not(.moduleScope)) {
-    min-height: 0;
-    height: 100%;
+    min-height: min(34rem, calc(var(--mobile-section-card-height, 100svh) - 6.5rem));
+    height: auto;
   }
 
   :global(.portfolio-phone-deck):where(:not(.moduleScope)) {
+    height: auto;
+    align-items: stretch;
     gap: 0.62rem;
-    padding: 0.1rem 0.05rem 0.25rem;
+    padding: 0.1rem clamp(0.35rem, 2vw, 0.55rem) 0.25rem;
   }
 
   :global(.portfolio-phone-card):where(:not(.moduleScope)) {
     flex-basis: 88%;
-    grid-template-rows: 8.15rem minmax(0, 1fr) auto;
+    height: auto;
+    min-height: min(34rem, calc(var(--mobile-section-card-height, 100svh) - 6.5rem));
+    grid-template-rows: auto minmax(0, 1fr) auto;
     gap: 0.45rem;
     padding: 0.68rem;
     border-radius: 18px;
+  }
+
+  :global(.portfolio-phone-copy):where(:not(.moduleScope)) {
+    overflow: visible;
   }
 
   :global(.portfolio-phone-card h3):where(:not(.moduleScope)) {
@@ -826,7 +838,7 @@
 
   :global(.portfolio-phone-card):where(:not(.moduleScope)) {
     flex-basis: clamp(17.25rem, 39.5vw, 18.85rem);
-    grid-template-rows: 6.55rem minmax(0, 1fr) auto;
+    grid-template-rows: auto minmax(0, 1fr) auto;
     gap: 0.42rem;
     padding: 0.62rem;
     border-radius: 16px;

@@ -730,20 +730,22 @@
   :global(.site-stage-shell):where(:not(.moduleScope)) {
     --stage-pad-inline: 0.55rem;
     --stage-pad-block: 0.55rem;
+    --stage-vh: var(--portfolio-visual-vh, 100svh);
     --card-max-h: 820px;
     --card-min-h: 0px;
     --card-radius: 22px;
     --section-pad: clamp(0.82rem, 3.4vw, 1.05rem);
+    --mobile-card-h: calc(var(--stage-vh) - max(1.1rem, var(--safe-top)) - max(1.1rem, var(--safe-bottom)));
     --card-h: min(
       var(--card-max-h),
-      calc(100dvh - max(1.1rem, var(--safe-top)) - max(1.1rem, var(--safe-bottom)))
+      var(--mobile-card-h)
     );
     padding: max(0.55rem, var(--safe-top)) max(0.55rem, var(--safe-right)) max(0.55rem, var(--safe-bottom)) max(0.55rem, var(--safe-left));
   }
 
   :global(.portfolio-master-card):where(:not(.moduleScope)) {
-    --mobile-master-card-height: calc(100dvh - max(1.1rem, var(--safe-top)) - max(1.1rem, var(--safe-bottom)));
-    --mobile-section-card-height: var(--card-h);
+    --mobile-master-card-height: var(--mobile-card-h);
+    --mobile-section-card-height: min(var(--card-max-h), var(--mobile-master-card-height));
     width: 100%;
     height: var(--mobile-section-card-height) !important;
     max-height: var(--mobile-section-card-height) !important;
@@ -758,9 +760,8 @@
     align-items: flex-start;
   }
 
-  /* The container is the card-shaped scroll viewport; the inner stack grows
-     with content so the browser can scroll it; each section is exactly one
-     card tall so snap lands one section per page. */
+  /* The container is the card-shaped scroll viewport; mobile sections are at
+     least one card high but may grow so iOS Safari does not clip content. */
   :global(.portfolio-container):where(:not(.moduleScope)) {
     height: var(--mobile-section-card-height) !important;
     max-height: var(--mobile-section-card-height) !important;
@@ -774,9 +775,9 @@
   }
 
   :global(.section):where(:not(.moduleScope)) {
-    height: var(--mobile-section-card-height) !important;
+    height: auto !important;
     min-height: var(--mobile-section-card-height) !important;
-    max-height: var(--mobile-section-card-height) !important;
+    max-height: none !important;
   }
 
   :global(.portfolio-stage):where(:not(.moduleScope)),
@@ -914,7 +915,7 @@
   }
 
   :global(.portfolio-master-card):where(:not(.moduleScope)) {
-    --mobile-master-card-height: calc(100dvh - max(0.9rem, var(--safe-top)) - max(0.9rem, var(--safe-bottom)));
+    --mobile-master-card-height: calc(var(--portfolio-visual-vh, 100svh) - max(0.9rem, var(--safe-top)) - max(0.9rem, var(--safe-bottom)));
   }
 
   :global(.section):where(:not(.moduleScope)) {
@@ -932,7 +933,7 @@
   }
 
   :global(.portfolio-master-card):where(:not(.moduleScope)) {
-    --mobile-master-card-height: calc(100dvh - max(0.72rem, var(--safe-top)) - max(0.72rem, var(--safe-bottom)));
+    --mobile-master-card-height: calc(var(--portfolio-visual-vh, 100svh) - max(0.72rem, var(--safe-top)) - max(0.72rem, var(--safe-bottom)));
   }
 
   :global(.section):where(:not(.moduleScope)) {
@@ -1056,15 +1057,20 @@
    scrolling inside the master card. The custom transform is bypassed and each
    section snaps via native CSS scroll-snap. */
 @media (max-width: 768px), (hover: none) {
+  :global(.site-stage-shell):where(:not(.moduleScope)) {
+    height: var(--portfolio-visual-vh, 100svh);
+    max-height: var(--portfolio-visual-vh, 100svh);
+  }
+
   :global(.portfolio-container):where(:not(.moduleScope)) {
     overflow-y: auto !important;
     overflow-x: clip;
-    scroll-snap-type: y mandatory !important;
+    scroll-snap-type: y proximity !important;
     scroll-padding-top: 0 !important;
-    scroll-behavior: smooth;
+    scroll-behavior: auto;
     touch-action: pan-y;
     -webkit-overflow-scrolling: touch;
-    overscroll-behavior: contain;
+    overscroll-behavior-y: contain;
   }
 
   :global(.portfolio-sections):where(:not(.moduleScope)) {
@@ -1075,7 +1081,7 @@
 
   :global(.section):where(:not(.moduleScope)) {
     scroll-snap-align: start !important;
-    scroll-snap-stop: always !important;
+    scroll-snap-stop: normal !important;
     overflow: hidden;
     touch-action: pan-y;
   }
@@ -1416,18 +1422,19 @@
   }
 }
 
-/* Mobile polish: let iOS own touch physics, then settle the card cleanly. */
+/* Mobile polish: let iOS own touch physics and keep section edges isolated. */
 @media (max-width: 768px), (hover: none) {
   :global(.portfolio-container):where(:not(.moduleScope)) {
-    scroll-behavior: smooth !important;
-    scroll-snap-type: y mandatory !important;
+    scroll-behavior: auto !important;
+    scroll-snap-type: y proximity !important;
     scroll-padding-top: 0 !important;
-    contain: layout paint;
+    contain: layout;
   }
 
   :global(.section):where(:not(.moduleScope)) {
     scroll-snap-stop: normal !important;
-    contain: layout paint;
+    overflow: hidden;
+    contain: layout;
   }
 
   :global(.hero-portrait):where(:not(.moduleScope)) {
