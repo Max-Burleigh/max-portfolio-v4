@@ -56,11 +56,6 @@ const COLOR_PALETTES = [
   { id: "coffee", name: "Coffee", colors: ["#78350f", "#92400e", "#fef3c7", "#1c1917"] },
 ];
 
-const INITIAL_PALETTE_IDS = ["lavender", "ocean", "noir", "forest", "arctic", "mono"];
-const INITIAL_PALETTES = INITIAL_PALETTE_IDS.map(id =>
-  COLOR_PALETTES.find(palette => palette.id === id)
-).filter((palette): palette is (typeof COLOR_PALETTES)[number] => Boolean(palette));
-
 const GOAL_OPTIONS = [
   { value: "contact", label: "Get people to contact me" },
   { value: "book", label: "Book appointments/calls" },
@@ -112,7 +107,7 @@ function GetStartedForm() {
     return shuffled.slice(0, 6);
   }, []);
 
-  const [displayedPalettes, setDisplayedPalettes] = useState(INITIAL_PALETTES);
+  const [displayedPalettes, setDisplayedPalettes] = useState(() => getRandomPalettes());
 
   const shufflePalettes = () => {
     setDisplayedPalettes(getRandomPalettes());
@@ -270,7 +265,7 @@ function GetStartedForm() {
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        className="get-started-page min-h-screen flex items-center justify-center p-6"
+        className="min-h-screen flex items-center justify-center p-6"
       >
         <div className="bg-[#0d1117]/90 backdrop-blur-xl border border-white/10 rounded-2xl max-w-lg w-full text-center py-16 px-8">
           <motion.div
@@ -297,7 +292,7 @@ function GetStartedForm() {
   }
 
   return (
-    <div className="get-started-page min-h-screen py-12 md:py-20 px-4">
+    <div className="min-h-screen py-12 md:py-20 px-4">
       <div className="max-w-2xl mx-auto">
         {/* Header */}
         <motion.div
@@ -306,10 +301,10 @@ function GetStartedForm() {
           className="text-center mb-10"
         >
           <Link
-            href="/"
+            href="/#services"
             className="inline-flex items-center gap-2 text-white hover:text-teal-300 transition-colors mb-6 text-sm font-semibold drop-shadow-[0_2px_4px_rgba(0,0,0,0.5)]"
           >
-            <MdArrowBack /> Back to site
+            <MdArrowBack /> Back to services
           </Link>
           <h1 className="text-3xl md:text-4xl font-bold mb-3 font-space-grotesk text-white drop-shadow-[0_2px_10px_rgba(0,0,0,0.5)]">
             Let&apos;s get the basics
