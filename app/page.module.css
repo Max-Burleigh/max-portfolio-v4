@@ -1,21 +1,42 @@
 .moduleScope { --module-scope: initial; }
 
+/*
+  Card sizing contract — the master card is the real viewport for the homepage.
+  All breakpoint adjustments override these vars rather than re-declaring sizes.
+*/
 :global(.site-stage-shell):where(:not(.moduleScope)) {
+  --stage-pad-inline: 1.25rem;
+  --stage-pad-block: 1.25rem;
+  --card-max-w: 1432px;
+  --card-max-h: 874px;
+  --card-min-h: 620px;
+  --card-radius: 30px;
+  --section-pad: clamp(1.5rem, 3.8vw, 3.4rem);
+  --card-h: min(
+    var(--card-max-h),
+    calc(100dvh - max(var(--stage-pad-block), var(--safe-top)) - max(var(--stage-pad-block), var(--safe-bottom)))
+  );
+
   min-height: 100dvh;
   width: 100%;
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: max(1.25rem, var(--safe-top)) max(1.25rem, var(--safe-right)) max(1.25rem, var(--safe-bottom)) max(1.25rem, var(--safe-left));
+  padding:
+    max(var(--stage-pad-block), var(--safe-top))
+    max(var(--stage-pad-inline), var(--safe-right))
+    max(var(--stage-pad-block), var(--safe-bottom))
+    max(var(--stage-pad-inline), var(--safe-left));
   overflow: hidden;
 }
 
 :global(.portfolio-master-card):where(:not(.moduleScope)) {
   position: relative;
-  width: min(1432px, 100%);
-  height: min(874px, calc(100dvh - max(2.5rem, var(--safe-top)) - max(2.5rem, var(--safe-bottom))));
-  min-height: 620px;
-  border-radius: 30px;
+  width: min(var(--card-max-w), 100%);
+  height: var(--card-h);
+  min-height: min(var(--card-min-h), var(--card-h));
+  container: portfolio-card / size;
+  border-radius: var(--card-radius);
   border: 1px solid rgba(148, 177, 210, 0.22);
   background:
     radial-gradient(circle at 84% 10%, rgba(120, 72, 194, 0.28), transparent 35%),
@@ -428,15 +449,22 @@
   transform: translateY(var(--parallax-y, 0px)) translateZ(0) !important;
 }
 
-/* Card-native redesign pass: every section is a contained screen inside the master card. */
-:global(.portfolio-master-card):where(:not(.moduleScope)) {
-  height: min(874px, calc(100dvh - 3rem));
+/* Large-display upscale: bump the card-size vars; sizing flows from the contract. */
+@media (min-width: 2200px) and (min-height: 1200px) {
+  :global(.site-stage-shell):where(:not(.moduleScope)) {
+    --stage-pad-inline: 4rem;
+    --stage-pad-block: 3rem;
+    --card-max-w: 1960px;
+    --card-max-h: 1136px;
+  }
 }
 
-@media (min-width: 2200px) and (min-height: 1200px) {
-  :global(.portfolio-master-card):where(:not(.moduleScope)) {
-    width: min(1960px, calc(100vw - max(4rem, var(--safe-left)) - max(4rem, var(--safe-right))));
-    height: min(1136px, calc(100dvh - max(3rem, var(--safe-top)) - max(3rem, var(--safe-bottom))));
+/* Compressed-height layouts (short laptops / browser zoom): tighten padding and minimums. */
+@media (max-height: 680px) {
+  :global(.site-stage-shell):where(:not(.moduleScope)) {
+    --stage-pad-block: 0.55rem;
+    --card-min-h: 0px;
+    --section-pad: clamp(0.55rem, 2.4vmin, 1rem);
   }
 }
 
@@ -525,116 +553,6 @@
   margin: 0;
   font-size: clamp(0.95rem, 1.2vw, 1.1rem);
   line-height: 1.45;
-}
-
-:global(.services-section .mt-6.md\:mt-10):where(:not(.moduleScope)) {
-  height: calc(100% - clamp(5rem, 15vh, 8rem));
-  min-height: 0;
-  margin-top: 0 !important;
-  padding-top: 0 !important;
-  border-top: 0 !important;
-  display: grid;
-  grid-template-columns: minmax(0, 1.05fr) minmax(280px, 0.95fr);
-  grid-template-rows: auto minmax(0, 1fr);
-  gap: clamp(1rem, 2vw, 1.5rem);
-}
-
-:global(.services-section .mt-6.md\:mt-10 > [data-entrance-item]:first-child):where(:not(.moduleScope)) {
-  grid-column: 1 / -1;
-  display: flex;
-  align-items: baseline;
-  justify-content: space-between;
-  gap: 1rem;
-  padding: 0.9rem 1rem;
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 18px;
-  background: rgba(255, 255, 255, 0.035);
-}
-
-:global(.services-section .mt-6.md\:mt-10 > [data-entrance-item]:first-child p:last-child):where(:not(.moduleScope)) {
-  max-width: 42rem;
-  margin: 0;
-  font-size: 0.95rem;
-}
-
-:global(.services-section #build-phase):where(:not(.moduleScope)),
-:global(.services-section #build-phase + [data-entrance-item]):where(:not(.moduleScope)) {
-  min-height: 0;
-  height: 100%;
-  margin: 0 !important;
-  overflow: hidden;
-}
-
-:global(.services-section #build-phase):where(:not(.moduleScope)) {
-  display: flex;
-  flex-direction: column;
-}
-
-:global(.services-section #build-phase > h3):where(:not(.moduleScope)),
-:global(.services-section #build-phase + [data-entrance-item] > h3):where(:not(.moduleScope)) {
-  margin-bottom: 0.9rem !important;
-  font-size: clamp(1.3rem, 2vw, 1.8rem) !important;
-}
-
-:global(.services-section #build-phase > .grid):where(:not(.moduleScope)) {
-  min-height: 0;
-  flex: 1;
-  gap: 0.9rem !important;
-}
-
-:global(.services-section #build-phase .glass-card):where(:not(.moduleScope)) {
-  padding: clamp(1rem, 1.6vw, 1.35rem) !important;
-  min-height: 0;
-}
-
-:global(.services-section #build-phase .glass-card ul):where(:not(.moduleScope)) {
-  margin-bottom: 1rem !important;
-  display: grid;
-  gap: 0.55rem !important;
-}
-
-:global(.services-section #build-phase .glass-card li):where(:not(.moduleScope)) {
-  font-size: 0.82rem !important;
-  line-height: 1.25;
-}
-
-:global(.services-section #build-phase .text-4xl):where(:not(.moduleScope)) {
-  font-size: clamp(2rem, 3vw, 2.65rem) !important;
-}
-
-:global(.services-section #build-phase .mb-6):where(:not(.moduleScope)) {
-  margin-bottom: 1rem !important;
-}
-
-:global(.services-section #build-phase + [data-entrance-item] .glass-card):where(:not(.moduleScope)) {
-  height: calc(100% - 3.6rem);
-  padding: 0 !important;
-}
-
-:global(.services-section #build-phase + [data-entrance-item] .glass-card > div):where(:not(.moduleScope)) {
-  height: 100%;
-  padding: clamp(1rem, 1.8vw, 1.5rem) !important;
-  overflow: auto;
-  scrollbar-width: thin;
-}
-
-:global(.services-section #build-phase + [data-entrance-item] .grid.md\:grid-cols-3):where(:not(.moduleScope)) {
-  grid-template-columns: 1fr !important;
-  gap: 1rem !important;
-}
-
-:global(.services-section #build-phase + [data-entrance-item] .border-b):where(:not(.moduleScope)) {
-  padding-bottom: 1rem !important;
-  margin-bottom: 1rem !important;
-}
-
-:global(.services-section #build-phase + [data-entrance-item] li):where(:not(.moduleScope)) {
-  font-size: 0.82rem !important;
-  line-height: 1.3;
-}
-
-:global(.services-section .mt-24):where(:not(.moduleScope)) {
-  display: none !important;
 }
 
 :global(.portfolio-section):where(:not(.moduleScope)) {
@@ -803,11 +721,6 @@
     font-size: 1.55rem;
   }
 
-  :global(.services-section .mt-6.md\:mt-10):where(:not(.moduleScope)) {
-    grid-template-columns: 1fr;
-    grid-template-rows: auto minmax(0, 1fr) minmax(0, 0.8fr);
-  }
-
   :global(.portfolio-section .project-grid):where(:not(.moduleScope)) {
     grid-auto-columns: minmax(280px, 62%);
   }
@@ -815,32 +728,54 @@
 
 @media (max-width: 768px) {
   :global(.site-stage-shell):where(:not(.moduleScope)) {
+    --stage-pad-inline: 0.55rem;
+    --stage-pad-block: 0.55rem;
+    --card-max-h: 820px;
+    --card-min-h: 0px;
+    --card-radius: 22px;
+    --section-pad: clamp(0.82rem, 3.4vw, 1.05rem);
+    --card-h: min(
+      var(--card-max-h),
+      calc(100dvh - max(1.1rem, var(--safe-top)) - max(1.1rem, var(--safe-bottom)))
+    );
     padding: max(0.55rem, var(--safe-top)) max(0.55rem, var(--safe-right)) max(0.55rem, var(--safe-bottom)) max(0.55rem, var(--safe-left));
   }
 
   :global(.portfolio-master-card):where(:not(.moduleScope)) {
     --mobile-master-card-height: calc(100dvh - max(1.1rem, var(--safe-top)) - max(1.1rem, var(--safe-bottom)));
-    --mobile-section-card-height: min(820px, var(--mobile-master-card-height));
+    --mobile-section-card-height: var(--card-h);
     width: 100%;
     height: var(--mobile-section-card-height) !important;
     max-height: var(--mobile-section-card-height) !important;
     min-height: 0;
-    border-radius: 22px;
   }
 
   :global(.section):where(:not(.moduleScope)) {
-    padding: clamp(0.82rem, 3.4vw, 1.05rem);
+    padding: var(--section-pad);
   }
 
   :global(.portfolio-master-card[data-active-section] .section):where(:not(.moduleScope)) {
     align-items: flex-start;
   }
 
-  :global(.portfolio-container):where(:not(.moduleScope)),
-  :global(.portfolio-sections):where(:not(.moduleScope)),
+  /* The container is the card-shaped scroll viewport; the inner stack grows
+     with content so the browser can scroll it; each section is exactly one
+     card tall so snap lands one section per page. */
+  :global(.portfolio-container):where(:not(.moduleScope)) {
+    height: var(--mobile-section-card-height) !important;
+    max-height: var(--mobile-section-card-height) !important;
+    min-height: 0 !important;
+  }
+
+  :global(.portfolio-sections):where(:not(.moduleScope)) {
+    height: auto !important;
+    min-height: 100%;
+    max-height: none !important;
+  }
+
   :global(.section):where(:not(.moduleScope)) {
     height: var(--mobile-section-card-height) !important;
-    min-height: 0 !important;
+    min-height: var(--mobile-section-card-height) !important;
     max-height: var(--mobile-section-card-height) !important;
   }
 
@@ -968,23 +903,6 @@
     gap: 0.5rem;
   }
 
-  :global(.services-section .mt-6.md\:mt-10):where(:not(.moduleScope)),
-  :global(.services-section .mt-6.md\:mt-10 > [data-entrance-item]:first-child):where(:not(.moduleScope)) {
-    display: flex;
-    flex-direction: column;
-  }
-
-  :global(.services-section .mt-6.md\:mt-10):where(:not(.moduleScope)) {
-    overflow-y: auto;
-    height: auto;
-  }
-
-  :global(.services-section #build-phase):where(:not(.moduleScope)),
-  :global(.services-section #build-phase + [data-entrance-item]):where(:not(.moduleScope)) {
-    overflow: visible;
-    height: auto;
-  }
-
   :global(.portfolio-section .project-grid):where(:not(.moduleScope)) {
     grid-auto-columns: minmax(255px, 86%);
   }
@@ -1022,86 +940,6 @@
   }
 }
 
-/* Services cockpit correction: tablet/desktop must remain a contained two-column screen. */
-@media (min-width: 769px) {
-  :global(.services-section .mt-6.md\:mt-10):where(:not(.moduleScope)) {
-    height: calc(100% - clamp(5rem, 15vh, 8rem)) !important;
-    display: grid !important;
-    grid-template-columns: minmax(0, 1fr) minmax(260px, 0.82fr) !important;
-    grid-template-rows: auto minmax(0, 1fr) !important;
-    gap: clamp(0.75rem, 1.7vw, 1.2rem) !important;
-    overflow: hidden !important;
-  }
-
-  :global(.services-section .mt-6.md\:mt-10 > [data-entrance-item]:first-child):where(:not(.moduleScope)) {
-    grid-column: 1 / -1 !important;
-    min-height: 0;
-    padding: 0.75rem 0.9rem !important;
-  }
-
-  :global(.services-section #build-phase):where(:not(.moduleScope)),
-  :global(.services-section #build-phase + [data-entrance-item]):where(:not(.moduleScope)) {
-    min-height: 0 !important;
-    height: 100% !important;
-    overflow: hidden !important;
-  }
-
-  :global(.services-section #build-phase > .grid):where(:not(.moduleScope)) {
-    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
-    align-items: stretch;
-  }
-
-  :global(.services-section #build-phase .glass-card):where(:not(.moduleScope)) {
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    border-radius: 18px;
-  }
-
-  :global(.services-section #build-phase .glass-card ul):where(:not(.moduleScope)) {
-    display: none !important;
-  }
-
-  :global(.services-section #build-phase .glass-card p):where(:not(.moduleScope)) {
-    font-size: 0.82rem !important;
-    line-height: 1.3 !important;
-  }
-
-  :global(.services-section #build-phase .glass-card button):where(:not(.moduleScope)) {
-    padding-block: 0.72rem !important;
-  }
-
-  :global(.services-section #build-phase + [data-entrance-item] .glass-card):where(:not(.moduleScope)) {
-    height: calc(100% - 3.15rem) !important;
-    min-height: 0 !important;
-  }
-
-  :global(.services-section #build-phase + [data-entrance-item] .glass-card > div):where(:not(.moduleScope)) {
-    overflow: hidden !important;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-  }
-
-  :global(.services-section #build-phase + [data-entrance-item] .grid.md\:grid-cols-3):where(:not(.moduleScope)) {
-    display: grid !important;
-    grid-template-columns: 1fr !important;
-    gap: 0.6rem !important;
-  }
-
-  :global(.services-section #build-phase + [data-entrance-item] .grid.md\:grid-cols-3 ul):where(:not(.moduleScope)) {
-    display: none !important;
-  }
-
-  :global(.services-section #build-phase + [data-entrance-item] .grid.md\:grid-cols-3 h5):where(:not(.moduleScope)) {
-    margin-bottom: 0 !important;
-    padding: 0.55rem 0.7rem;
-    border-radius: 999px;
-    background: rgba(255, 255, 255, 0.055);
-    border: 1px solid rgba(255, 255, 255, 0.08);
-  }
-}
-
 :global(.site-stage-shell):where(:not(.moduleScope)) {
   height: 100dvh;
   max-height: 100dvh;
@@ -1111,15 +949,20 @@
   overscroll-behavior: contain;
 }
 
-:global(.portfolio-container):where(:not(.moduleScope)) {
-  scroll-snap-type: none !important;
-  scroll-padding-top: 0 !important;
-  overflow-y: hidden !important;
-}
+/* Stack mode (desktop fine-pointer): the custom transform owns scrolling, so the
+   native scroll on the container must be disabled. Native-scroll mode below
+   reverses these rules. */
+@media (hover: hover) and (pointer: fine) and (min-width: 769px) {
+  :global(.portfolio-container):where(:not(.moduleScope)) {
+    scroll-snap-type: none !important;
+    scroll-padding-top: 0 !important;
+    overflow-y: hidden !important;
+  }
 
-:global(.section):where(:not(.moduleScope)) {
-  scroll-margin-top: 0 !important;
-  scroll-snap-align: none !important;
+  :global(.section):where(:not(.moduleScope)) {
+    scroll-margin-top: 0 !important;
+    scroll-snap-align: none !important;
+  }
 }
 
 :global(.portfolio-sections):where(:not(.moduleScope)) {
@@ -1209,14 +1052,31 @@
   }
 }
 
+/* Native-scroll mode (touch / no-hover / narrow): the browser owns vertical
+   scrolling inside the master card. The custom transform is bypassed and each
+   section snaps via native CSS scroll-snap. */
 @media (max-width: 768px), (hover: none) {
   :global(.portfolio-container):where(:not(.moduleScope)) {
-    overflow-y: hidden !important;
+    overflow-y: auto !important;
+    overflow-x: clip;
+    scroll-snap-type: y mandatory !important;
+    scroll-padding-top: 0 !important;
+    scroll-behavior: smooth;
+    touch-action: pan-y;
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior: contain;
   }
 
   :global(.portfolio-sections):where(:not(.moduleScope)) {
-    height: 100%;
-    will-change: transform;
+    transition: none;
+    transform: none !important;
+    will-change: auto;
+  }
+
+  :global(.section):where(:not(.moduleScope)) {
+    scroll-snap-align: start !important;
+    scroll-snap-stop: always !important;
+    touch-action: pan-y;
   }
 
   :global(.section-scrollbar):where(:not(.moduleScope)) {
@@ -1491,4 +1351,66 @@
 :global(.services-cockpit):where(:not(.moduleScope))::-webkit-scrollbar-thumb {
   border-radius: 999px;
   background: rgba(120, 135, 190, 0.38);
+}
+
+/*##########################################################
+#
+#  CARD-LEVEL CONTAINER QUERIES
+#
+#  The master card is the real viewport. Use container size,
+#  not the browser window, to decide when content compresses.
+#  Falls back gracefully on browsers without container queries.
+#
+##########################################################*/
+
+@container portfolio-card (max-width: 720px) {
+  :global(.about-stage-content):where(:not(.moduleScope)) {
+    grid-template-columns: 1fr;
+    text-align: center;
+    justify-items: center;
+  }
+}
+
+@container portfolio-card (max-height: 680px) {
+  :global(.hero-stats):where(:not(.moduleScope)) {
+    gap: 0.5rem;
+    margin-top: clamp(0.6rem, 1.5vh, 1rem);
+  }
+
+  :global(.hero-portrait):where(:not(.moduleScope)) {
+    width: clamp(7rem, 28cqw, 9rem);
+    height: clamp(8.5rem, 34cqw, 11rem);
+  }
+}
+
+@media (min-width: 769px) {
+  @container portfolio-card (max-height: 680px) {
+    /* When the desktop card is short, prefer scrolling inner panels over crushing fonts. */
+    :global(.services-cockpit):where(:not(.moduleScope)),
+    :global(.contact-cockpit):where(:not(.moduleScope)) {
+      overflow: hidden;
+    }
+
+    :global(.service-plan-grid):where(:not(.moduleScope)),
+    :global(.contact-panel):where(:not(.moduleScope)) {
+      min-height: 0;
+      overflow-y: auto;
+      overscroll-behavior: contain;
+      scrollbar-width: thin;
+    }
+  }
+}
+
+/*
+  Font-floor safety net: prevent emergency tiny-font breakpoints from
+  pushing detail text below readable size. The reviewer flagged 0.4rem
+  cascades; this raises the floor without touching every breakpoint.
+*/
+@media (min-width: 769px) {
+  :global(.service-feature-detail):where(:not(.moduleScope)),
+  :global(.support-feature-detail):where(:not(.moduleScope)),
+  :global(.selection-summary span):where(:not(.moduleScope)),
+  :global(.selection-summary strong):where(:not(.moduleScope)) {
+    font-size: max(0.68rem, 0.72em);
+  }
 }

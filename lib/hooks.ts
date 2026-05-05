@@ -39,6 +39,13 @@ export function useIsMobile() {
   return useMediaQuery("(max-width: 767px)");
 }
 
+// True when the device can drive the desktop animated section-stack model:
+// fine pointer + hover (mouse / trackpad) at tablet-landscape width or larger.
+// On touch / coarse-pointer / narrow viewports we fall back to native contained scroll.
+export function useCanUseSectionStack() {
+  return useMediaQuery("(hover: hover) and (pointer: fine) and (min-width: 769px)");
+}
+
 // ===== useCursorFollower =====
 export function useCursorFollower(spring = { damping: 25, stiffness: 700 }) {
   const mouseX = useMotionValue(0);

@@ -21,11 +21,6 @@ import {
 } from "react-icons/md";
 import { useEntranceStagger, useIsMobile } from "@lib/hooks";
 
-interface ServicesSectionProps {
-  isActive?: boolean;
-  onStartProject?: (data: { plan: PlanKey | null; subscription: boolean }) => void;
-}
-
 type SelectionItem = {
   id: string;
   label: string;
@@ -59,7 +54,7 @@ const supportFeatures = [
   { title: "Small fixes", detail: "Copy, images, quick tweaks", icon: MdBuild },
 ] as const;
 
-const ServicesSection = forwardRef<HTMLDivElement, ServicesSectionProps>((_, ref) => {
+const ServicesSection = forwardRef<HTMLDivElement, object>((_, ref) => {
   const router = useRouter();
   const entranceRef = useRef<HTMLDivElement>(null);
   const planSwiperRef = useRef<HTMLDivElement>(null);
@@ -72,7 +67,6 @@ const ServicesSection = forwardRef<HTMLDivElement, ServicesSectionProps>((_, ref
   const [toastMessage, setToastMessage] = useState<string | null>(null);
   const [showToast, setShowToast] = useState(false);
   const [toastKey, setToastKey] = useState(0);
-  const [navigatedToContact, setNavigatedToContact] = useState(false);
   const [selectionTickerIndex, setSelectionTickerIndex] = useState(0);
   const [activePlanSlide, setActivePlanSlide] = useState(0);
   const [servicesEntered, setServicesEntered] = useState(false);
@@ -107,7 +101,6 @@ const ServicesSection = forwardRef<HTMLDivElement, ServicesSectionProps>((_, ref
   }, [showToast, toastKey]);
 
   const handlePlanSelection = (plan: PlanKey) => {
-    setNavigatedToContact(false);
     if (selectedPlan === plan) {
       setSelectedPlan(null);
       setHasSubscription(false);
@@ -145,15 +138,10 @@ const ServicesSection = forwardRef<HTMLDivElement, ServicesSectionProps>((_, ref
     const nextValue = !hasSubscription;
     setHasSubscription(nextValue);
     sessionStorage.setItem("hasSubscription", String(nextValue));
-    setNavigatedToContact(false);
   };
 
   const handleContact = () => {
-    setNavigatedToContact(true);
-    const params = new URLSearchParams();
-    if (selectedPlan) params.set("plan", selectedPlan);
-    if (hasSubscription) params.set("support", "true");
-    router.push(`/get-started?${params.toString()}`);
+    router.push("/get-started");
   };
 
   const planLabel =
@@ -175,7 +163,7 @@ const ServicesSection = forwardRef<HTMLDivElement, ServicesSectionProps>((_, ref
   const selectionItems: SelectionItem[] = [];
   if (planLabel) selectionItems.push({ id: "plan", label: planLabel, className: planClassName });
   if (hasSubscription) selectionItems.push({ id: "subscription", label: "Hosting + Maintenance", className: "text-white" });
-  const hasSelection = Boolean((selectedPlan || hasSubscription) && !navigatedToContact);
+  const hasSelection = Boolean(selectedPlan || hasSubscription);
 
   const shouldCycleSelections = isMobile && selectionItems.length > 1;
   const activeTickerItem = shouldCycleSelections && selectionItems.length > 0

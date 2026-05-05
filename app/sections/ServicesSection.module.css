@@ -1751,3 +1751,30 @@
     padding: 0.18rem 0.24rem;
   }
 }
+
+/*
+  Readable-text floor: viewport-pressure rules above can shrink labels into
+  unreadable territory. Enforce a floor on the highest-risk text. Where the
+  card is too short to fit content, panels scroll instead of compressing
+  further (see @container rule below).
+*/
+@media (min-width: 769px) {
+  :global(.service-feature-detail):where(:not(.moduleScope)),
+  :global(.support-feature-detail):where(:not(.moduleScope)),
+  :global(.selection-summary span):where(:not(.moduleScope)) {
+    font-size: max(0.68rem, 0.72em) !important;
+  }
+
+  @container portfolio-card (max-height: 680px) {
+    :global(.services-cockpit):where(:not(.moduleScope)) {
+      overflow: hidden;
+    }
+
+    :global(.service-plan-grid):where(:not(.moduleScope)) {
+      min-height: 0;
+      overflow-y: auto;
+      overscroll-behavior: contain;
+      scrollbar-width: thin;
+    }
+  }
+}

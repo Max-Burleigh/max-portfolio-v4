@@ -10,7 +10,7 @@ import "./components/Phone.module.css";
 import "./sections/ServicesSection.module.css";
 import "./sections/ContactSection.module.css";
 // import { throttle } from "lodash";
-import { useIsMobile } from "@lib/hooks";
+import { useCanUseSectionStack, useIsMobile } from "@lib/hooks";
 import AuroraBackground from "@components/AuroraBackground";
 import IOSViewportOverlay from "@components/IOSViewportOverlay";
 import Navigation from "@components/navigation/Navigation";
@@ -30,6 +30,7 @@ const Portfolio = () => {
   // About section logic moved into AboutSection component
   // Mobile detection (for cursor circle overlay and menu overlay)
   const isMobile = useIsMobile();
+  const canUseSectionStack = useCanUseSectionStack();
   const [menuOpen, setMenuOpen] = useState(false);
   // Guard to prevent the opening tap from immediately closing via overlay
   const [overlayReady, setOverlayReady] = useState(false);
@@ -94,6 +95,7 @@ const Portfolio = () => {
   const [draggedScrollbarIndex, setDraggedScrollbarIndex] = useState<number | null>(null);
   const [isScrollbarDragging, setIsScrollbarDragging] = useState(false);
   const activeRef = useRef<SectionKey>(activeSection);
+  const isProgrammaticNativeScrollRef = useRef(false);
   const mobileSwipeRef = useRef<{
     pointerId: number;
     startX: number;
@@ -107,11 +109,20 @@ const Portfolio = () => {
   }, [activeSection]);
 
   useEffect(() => {
-    if (!isMobile) return;
+    if (canUseSectionStack) return;
 
     const frame = window.requestAnimationFrame(() => {
       const section = sectionRefs[activeSection]?.current;
-      section?.scrollTo({ top: 0, left: 0, behavior: "auto" });
+      const container = containerRef.current;
+
+      if (section && container) {
+        isProgrammaticNativeScrollRef.current = true;
+        container.scrollTo({ top: section.offsetTop, left: 0, behavior: "smooth" });
+        window.setTimeout(() => {
+          isProgrammaticNativeScrollRef.current = false;
+        }, 360);
+      }
+
       section
         ?.querySelectorAll<HTMLElement>(
           ".about-stage, .services-cockpit, .portfolio-cockpit, .contact-cockpit"
@@ -122,7 +133,7 @@ const Portfolio = () => {
     });
 
     return () => window.cancelAnimationFrame(frame);
-  }, [activeSection, isMobile, sectionRefs]);
+  }, [activeSection, canUseSectionStack, sectionRefs]);
 
   useEffect(() => {
     const resetHashScroll = () => {
@@ -153,8 +164,16 @@ const Portfolio = () => {
       if (!targetElement) return;
 
       setActiveSection(section);
+
+      if (!canUseSectionStack) {
+        isProgrammaticNativeScrollRef.current = true;
+        containerRef.current?.scrollTo({ top: targetElement.offsetTop, left: 0, behavior: "smooth" });
+        window.setTimeout(() => {
+          isProgrammaticNativeScrollRef.current = false;
+        }, 360);
+      }
     },
-    [sectionRefs]
+    [canUseSectionStack, sectionRefs]
   );
 
   const snapMobileSection = useCallback(
@@ -202,7 +221,9 @@ const Portfolio = () => {
 
   const handleMobilePointerDown = useCallback(
     (event: React.PointerEvent<HTMLDivElement>) => {
-      if (!isMobile || event.pointerType === "mouse") return;
+      // In native-scroll mode, touch swipes advance the card one section at a time.
+      if (canUseSectionStack) return;
+      if (event.pointerType === "mouse") return;
       if (event.target instanceof HTMLElement) {
         const formField = event.target.closest("input, textarea, select");
         if (formField) return;
@@ -217,13 +238,13 @@ const Portfolio = () => {
         didNavigate: false,
       };
     },
-    [isMobile]
+    [canUseSectionStack]
   );
 
   const handleMobilePointerMove = useCallback(
     (event: React.PointerEvent<HTMLDivElement>) => {
       const swipe = mobileSwipeRef.current;
-      if (!isMobile || !swipe || swipe.pointerId !== event.pointerId) return;
+      if (canUseSectionStack || !swipe || swipe.pointerId !== event.pointerId) return;
 
       const deltaX = event.clientX - swipe.startX;
       const deltaY = event.clientY - swipe.startY;
@@ -249,7 +270,7 @@ const Portfolio = () => {
         snapMobileSection(deltaY < 0 ? 1 : -1);
       }
     },
-    [canScrollVerticallyWithin, isMobile, snapMobileSection]
+    [canScrollVerticallyWithin, canUseSectionStack, snapMobileSection]
   );
 
   const clearMobileSwipe = useCallback((event: React.PointerEvent<HTMLDivElement>) => {
@@ -345,30 +366,39 @@ const Portfolio = () => {
     [activeIndex, isMobile, sectionKeys]
   );
 
-  // Inquiry State
-  const [inquiryData, setInquiryData] = useState<{ plan: "ESSENTIAL" | "GROWTH" | null; subscription: boolean } | null>(null);
+  // Keyboard navigation for the focused card. Only intercepts in stack mode;
+  // native-scroll mode lets the browser own arrow/page/home/end.
+  const handleContainerKeyDown = useCallback(
+    (event: React.KeyboardEvent<HTMLDivElement>) => {
+      if (!canUseSectionStack) return;
 
-  const handleStartProject = (data: { plan: "ESSENTIAL" | "GROWTH" | null; subscription: boolean }) => {
-    setInquiryData(data);
-    const target = sectionRefs.contact.current ?? document.getElementById("contact");
-    if (!target) return;
+      // Don't hijack keys while typing in a form field.
+      if (event.target instanceof HTMLElement) {
+        const formField = event.target.closest("input, textarea, select, [contenteditable='true']");
+        if (formField) return;
+      }
 
-    const scrollToContact = () => {
-      setActiveSection("contact");
-    };
-
-    // Wait one frame for inquiry state to render before targeting the section.
-    requestAnimationFrame(() => {
-      scrollToContact();
-    });
-  };
+      if (event.key === "ArrowDown" || event.key === "PageDown") {
+        event.preventDefault();
+        setActiveSection(sectionKeys[Math.min(sectionKeys.length - 1, activeIndex + 1)]);
+      } else if (event.key === "ArrowUp" || event.key === "PageUp") {
+        event.preventDefault();
+        setActiveSection(sectionKeys[Math.max(0, activeIndex - 1)]);
+      } else if (event.key === "Home") {
+        event.preventDefault();
+        setActiveSection(sectionKeys[0]);
+      } else if (event.key === "End") {
+        event.preventDefault();
+        setActiveSection(sectionKeys[sectionKeys.length - 1]);
+      }
+    },
+    [activeIndex, canUseSectionStack, sectionKeys]
+  );
 
   useEffect(() => {
+    if (!canUseSectionStack) return;
     const scrollParent = containerRef.current;
     if (!scrollParent) return;
-
-    const canHover = window.matchMedia("(hover: hover) and (pointer: fine)");
-    if (!canHover.matches) return;
 
     let accumulatedDelta = 0;
     let isAnimating = false;
@@ -489,7 +519,87 @@ const Portfolio = () => {
         window.clearTimeout(releaseAnimationTimer);
       }
     };
-  }, [sectionKeys, setActiveSection]);
+  }, [canUseSectionStack, sectionKeys, setActiveSection]);
+
+  useEffect(() => {
+    if (canUseSectionStack) return;
+
+    const scrollParent = containerRef.current;
+    if (!scrollParent) return;
+
+    let accumulatedDelta = 0;
+    let isAnimating = false;
+    let resetAccumulatorTimer: number | undefined;
+    let releaseAnimationTimer: number | undefined;
+
+    const releaseAnimation = () => {
+      isAnimating = false;
+      accumulatedDelta = 0;
+    };
+
+    const resetAccumulatorSoon = () => {
+      if (resetAccumulatorTimer) {
+        window.clearTimeout(resetAccumulatorTimer);
+      }
+      resetAccumulatorTimer = window.setTimeout(() => {
+        accumulatedDelta = 0;
+      }, 140);
+    };
+
+    const handleWheel = (event: WheelEvent) => {
+      if (event.ctrlKey || event.metaKey) return;
+
+      const absX = Math.abs(event.deltaX);
+      const absY = Math.abs(event.deltaY);
+      if (absX > absY) return;
+      if (absY < 2) return;
+
+      const direction = event.deltaY > 0 ? 1 : -1;
+      if (canScrollVerticallyWithin(event.target, direction)) return;
+
+      event.preventDefault();
+      if (isAnimating) return;
+
+      accumulatedDelta += event.deltaY;
+      resetAccumulatorSoon();
+
+      if (Math.abs(accumulatedDelta) < 36) return;
+
+      const currentIndex = Math.max(
+        0,
+        Math.min(
+          sectionKeys.length - 1,
+          Math.round(scrollParent.scrollTop / Math.max(1, scrollParent.clientHeight))
+        )
+      );
+      const nextIndex = Math.max(
+        0,
+        Math.min(sectionKeys.length - 1, currentIndex + direction)
+      );
+
+      accumulatedDelta = 0;
+      if (nextIndex === currentIndex) return;
+
+      isAnimating = true;
+      setActiveSection(sectionKeys[nextIndex]);
+      if (releaseAnimationTimer) {
+        window.clearTimeout(releaseAnimationTimer);
+      }
+      releaseAnimationTimer = window.setTimeout(releaseAnimation, 460);
+    };
+
+    scrollParent.addEventListener("wheel", handleWheel, { passive: false });
+
+    return () => {
+      scrollParent.removeEventListener("wheel", handleWheel);
+      if (resetAccumulatorTimer) {
+        window.clearTimeout(resetAccumulatorTimer);
+      }
+      if (releaseAnimationTimer) {
+        window.clearTimeout(releaseAnimationTimer);
+      }
+    };
+  }, [canScrollVerticallyWithin, canUseSectionStack, sectionKeys]);
 
   // Active section is state-driven so desktop wheel navigation never fights native scroll.
 
@@ -535,9 +645,11 @@ const Portfolio = () => {
           <div
             aria-label="Section navigation"
             aria-controls="portfolio-sections"
+            aria-orientation="vertical"
             aria-valuemax={sectionKeys.length}
             aria-valuemin={1}
             aria-valuenow={activeIndex + 1}
+            aria-valuetext={`${activeIndex + 1} of ${sectionKeys.length}: ${activeSection}`}
             className={`section-scrollbar${isScrollbarDragging ? " is-dragging" : ""}`}
             onKeyDown={handleScrollbarKeyDown}
             onPointerDown={handleScrollbarPointerDown}
@@ -556,6 +668,8 @@ const Portfolio = () => {
             ref={containerRef}
             id="portfolio-sections"
             className="portfolio-container"
+            tabIndex={canUseSectionStack ? 0 : -1}
+            onKeyDown={handleContainerKeyDown}
             onPointerCancel={clearMobileSwipe}
             onPointerDown={handleMobilePointerDown}
             onPointerLeave={clearMobileSwipe}
@@ -585,9 +699,11 @@ const Portfolio = () => {
 
             <div
               className="portfolio-sections"
-              style={{
-                transform: `translate3d(0, -${activeIndex * 100}%, 0)`,
-              }}
+              style={
+                canUseSectionStack
+                  ? { transform: `translate3d(0, -${activeIndex * 100}%, 0)` }
+                  : undefined
+              }
             >
               <AboutSection
                 ref={sectionRefs.about}
@@ -595,15 +711,11 @@ const Portfolio = () => {
                 onContact={() => scrollToSection("contact")}
               />
 
-              <ServicesSection
-                ref={sectionRefs.services}
-                isActive={activeSection === "services"}
-                onStartProject={handleStartProject}
-              />
+              <ServicesSection ref={sectionRefs.services} />
 
               <PortfolioSection ref={sectionRefs.portfolio} />
 
-              <ContactSection ref={sectionRefs.contact} inquiryData={inquiryData} />
+              <ContactSection ref={sectionRefs.contact} />
             </div>
           </motion.div>
         </div>

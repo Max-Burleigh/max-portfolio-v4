@@ -920,3 +920,24 @@
     min-height: 2.46rem;
   }
 }
+
+/*
+  Readable-text floor + container-query overflow. See ServicesSection comment.
+*/
+:global(.contact-form-header):where(:not(.moduleScope)),
+:global(.contact-meta-row):where(:not(.moduleScope)) {
+  font-size: max(0.68rem, 0.72em) !important;
+}
+
+@container portfolio-card (max-height: 680px) {
+  :global(.contact-cockpit):where(:not(.moduleScope)) {
+    overflow: hidden;
+  }
+
+  :global(.contact-panel):where(:not(.moduleScope)) {
+    min-height: 0;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    scrollbar-width: thin;
+  }
+}
