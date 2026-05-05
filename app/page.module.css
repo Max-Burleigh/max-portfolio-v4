@@ -1075,7 +1075,6 @@
 
   :global(.portfolio-sections):where(:not(.moduleScope)) {
     transition: none;
-    transform: none !important;
     will-change: auto;
   }
 
@@ -1455,5 +1454,73 @@
     border-radius: inherit !important;
     -webkit-backface-visibility: hidden;
     backface-visibility: hidden;
+  }
+}
+
+/* Mobile page-lock: phones use the same fixed-card section stack as desktop.
+   Section content stays clipped to the master card; only named inner panels may scroll. */
+@media (max-width: 768px), (hover: none) {
+  :global(.portfolio-container):where(:not(.moduleScope)) {
+    height: 100% !important;
+    max-height: 100% !important;
+    overflow: hidden !important;
+    scroll-snap-type: none !important;
+    touch-action: pan-y;
+  }
+
+  :global(.portfolio-sections):where(:not(.moduleScope)) {
+    height: 100% !important;
+    min-height: 100% !important;
+    max-height: 100% !important;
+    transition: transform 640ms cubic-bezier(0.22, 1, 0.36, 1);
+    will-change: transform;
+  }
+
+  :global(.section):where(:not(.moduleScope)) {
+    height: 100% !important;
+    min-height: 100% !important;
+    max-height: 100% !important;
+    scroll-snap-align: none !important;
+    scroll-snap-stop: normal !important;
+    overflow: hidden !important;
+  }
+
+  :global(.portfolio-stage):where(:not(.moduleScope)),
+  :global(.about-stage):where(:not(.moduleScope)),
+  :global(.services-section > .services-cockpit):where(:not(.moduleScope)),
+  :global(.portfolio-cockpit):where(:not(.moduleScope)),
+  :global(.contact-section > [data-entrance]):where(:not(.moduleScope)),
+  :global(.contact-cockpit):where(:not(.moduleScope)) {
+    height: 100% !important;
+    min-height: 0 !important;
+    max-height: 100% !important;
+    overflow: hidden !important;
+  }
+
+  :global(.services-section > .services-cockpit):where(:not(.moduleScope)),
+  :global(.portfolio-cockpit):where(:not(.moduleScope)),
+  :global(.contact-cockpit):where(:not(.moduleScope)) {
+    align-content: stretch;
+  }
+
+  :global(.mobile-service-configurator):where(:not(.moduleScope)),
+  :global(.portfolio-phone-deck):where(:not(.moduleScope)),
+  :global(.contact-panel):where(:not(.moduleScope)) {
+    min-height: 0 !important;
+    overflow-y: auto !important;
+    overscroll-behavior: contain;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  :global(.portfolio-deck-shell):where(:not(.moduleScope)),
+  :global(.portfolio-phone-card):where(:not(.moduleScope)),
+  :global(.contact-link-panel):where(:not(.moduleScope)) {
+    min-height: 0 !important;
+    height: 100% !important;
+    max-height: 100% !important;
+  }
+
+  :global(.portfolio-phone-copy):where(:not(.moduleScope)) {
+    overflow: hidden !important;
   }
 }

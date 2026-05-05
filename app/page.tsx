@@ -10,7 +10,7 @@ import "./components/Phone.module.css";
 import "./sections/ServicesSection.module.css";
 import "./sections/ContactSection.module.css";
 // import { throttle } from "lodash";
-import { useCanUseSectionStack, useIsMobile } from "@lib/hooks";
+import { useIsMobile } from "@lib/hooks";
 import AuroraBackground from "@components/AuroraBackground";
 import IOSViewportOverlay from "@components/IOSViewportOverlay";
 import Navigation from "@components/navigation/Navigation";
@@ -22,6 +22,7 @@ import ContactSection from "@sections/ContactSection";
 //
 
 const SECTION_TRANSITION_MS = 640;
+const TOUCH_SECTION_THRESHOLD_PX = 54;
 
 const getSectionScrollTop = (container: HTMLElement, target: HTMLElement) => {
   const containerRect = container.getBoundingClientRect();
@@ -34,7 +35,7 @@ const Portfolio = () => {
   // About section logic moved into AboutSection component
   // Mobile detection (for cursor circle overlay and menu overlay)
   const isMobile = useIsMobile();
-  const canUseSectionStack = useCanUseSectionStack();
+  const canUseSectionStack = true;
   const [menuOpen, setMenuOpen] = useState(false);
   // Guard to prevent the opening tap from immediately closing via overlay
   const [overlayReady, setOverlayReady] = useState(false);
@@ -102,6 +103,7 @@ const Portfolio = () => {
   const isProgrammaticNativeScrollRef = useRef(false);
   const isNativeScrollSyncRef = useRef(false);
   const lastNativeScrollAtRef = useRef(0);
+  const touchStartRef = useRef<{ x: number; y: number; target: EventTarget | null } | null>(null);
   useEffect(() => {
     activeRef.current = activeSection;
   }, [activeSection]);
@@ -406,6 +408,77 @@ const Portfolio = () => {
     [activeIndex, canUseSectionStack, sectionKeys]
   );
 
+  const canScrollVerticallyWithin = useCallback(
+    (target: EventTarget | null, direction: number) => {
+      const scrollParent = containerRef.current;
+      if (!(target instanceof Element) || !scrollParent) return false;
+
+      let el: Element | null = target;
+      while (el && el !== scrollParent) {
+        if (el instanceof HTMLElement) {
+          const style = window.getComputedStyle(el);
+          const canOverflowY = /(auto|scroll)/.test(style.overflowY);
+
+          if (canOverflowY && el.scrollHeight > el.clientHeight + 1) {
+            const atTop = el.scrollTop <= 1;
+            const atBottom = el.scrollTop + el.clientHeight >= el.scrollHeight - 1;
+            if ((direction < 0 && !atTop) || (direction > 0 && !atBottom)) {
+              return true;
+            }
+          }
+        }
+
+        el = el.parentElement;
+      }
+
+      return false;
+    },
+    []
+  );
+
+  const goToSectionByOffset = useCallback(
+    (offset: number) => {
+      const currentIndex = Math.max(0, sectionKeys.indexOf(activeRef.current));
+      const nextIndex = Math.max(
+        0,
+        Math.min(sectionKeys.length - 1, currentIndex + offset)
+      );
+
+      if (nextIndex !== currentIndex) {
+        setActiveSection(sectionKeys[nextIndex]);
+      }
+    },
+    [sectionKeys]
+  );
+
+  const handleContainerTouchStart = useCallback((event: React.TouchEvent<HTMLDivElement>) => {
+    if (event.touches.length !== 1) return;
+    const touch = event.touches[0];
+    touchStartRef.current = { x: touch.clientX, y: touch.clientY, target: event.target };
+  }, []);
+
+  const handleContainerTouchEnd = useCallback(
+    (event: React.TouchEvent<HTMLDivElement>) => {
+      const start = touchStartRef.current;
+      touchStartRef.current = null;
+      if (!start || event.changedTouches.length !== 1) return;
+
+      const touch = event.changedTouches[0];
+      const deltaX = touch.clientX - start.x;
+      const deltaY = touch.clientY - start.y;
+      const absX = Math.abs(deltaX);
+      const absY = Math.abs(deltaY);
+
+      if (absY < TOUCH_SECTION_THRESHOLD_PX || absY <= absX * 1.2) return;
+
+      const direction = deltaY < 0 ? 1 : -1;
+      if (canScrollVerticallyWithin(start.target, direction)) return;
+
+      goToSectionByOffset(direction);
+    },
+    [canScrollVerticallyWithin, goToSectionByOffset]
+  );
+
   useEffect(() => {
     if (!canUseSectionStack) return;
     const scrollParent = containerRef.current;
@@ -435,30 +508,6 @@ const Portfolio = () => {
       resetAccumulatorTimer = window.setTimeout(() => {
         accumulatedDelta = 0;
       }, 160);
-    };
-
-    const canScrollVerticallyWithin = (target: EventTarget | null, direction: number) => {
-      if (!(target instanceof Element)) return false;
-
-      let el: Element | null = target;
-      while (el && el !== scrollParent) {
-        if (el instanceof HTMLElement) {
-          const style = window.getComputedStyle(el);
-          const canOverflowY = /(auto|scroll)/.test(style.overflowY);
-
-          if (canOverflowY && el.scrollHeight > el.clientHeight + 1) {
-            const atTop = el.scrollTop <= 1;
-            const atBottom = el.scrollTop + el.clientHeight >= el.scrollHeight - 1;
-            if ((direction < 0 && !atTop) || (direction > 0 && !atBottom)) {
-              return true;
-            }
-          }
-        }
-
-        el = el.parentElement;
-      }
-
-      return false;
     };
 
     const releaseAnimation = () => {
@@ -530,7 +579,7 @@ const Portfolio = () => {
         window.clearTimeout(releaseAnimationTimer);
       }
     };
-  }, [canUseSectionStack, sectionKeys, setActiveSection]);
+  }, [canScrollVerticallyWithin, canUseSectionStack, sectionKeys, setActiveSection]);
 
   // Active section is state-driven so desktop wheel navigation never fights native scroll.
 
@@ -601,6 +650,8 @@ const Portfolio = () => {
             className="portfolio-container"
             tabIndex={canUseSectionStack ? 0 : -1}
             onKeyDown={handleContainerKeyDown}
+            onTouchEnd={handleContainerTouchEnd}
+            onTouchStart={handleContainerTouchStart}
           >
         {/* Add overlay when mobile menu is open */}
         <AnimatePresence>
