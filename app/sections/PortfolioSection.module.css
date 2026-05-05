@@ -689,8 +689,15 @@
   }
 
   :global(.portfolio-deck-shell):where(:not(.moduleScope)) {
-    min-height: var(--portfolio-mobile-deck-height);
-    height: var(--portfolio-mobile-deck-height);
+    min-height: var(--portfolio-mobile-deck-height) !important;
+    height: var(--portfolio-mobile-deck-height) !important;
+    max-height: var(--portfolio-mobile-deck-height) !important;
+    overflow-x: auto !important;
+    overflow-y: hidden !important;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    touch-action: pan-x pan-y;
+    cursor: default;
   }
 
   :global(.portfolio-phone-deck):where(:not(.moduleScope)) {
@@ -698,6 +705,9 @@
     align-items: stretch;
     gap: 0.62rem;
     padding: 0.1rem clamp(0.35rem, 2vw, 0.55rem) 0.25rem;
+    overflow: visible !important;
+    transform: none !important;
+    will-change: auto;
   }
 
   :global(.portfolio-phone-card):where(:not(.moduleScope)) {
@@ -708,6 +718,7 @@
     gap: 0.45rem;
     padding: 0.68rem;
     border-radius: 18px;
+    scroll-snap-align: start;
   }
 
   :global(.portfolio-phone-copy):where(:not(.moduleScope)) {

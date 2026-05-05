@@ -7,7 +7,7 @@ import { WheelGesturesPlugin } from "embla-carousel-wheel-gestures";
 import { MdArrowForward, MdOpenInNew } from "react-icons/md";
 import { projects, type ProjectEntry } from "@/content/projects";
 import { PROJECT_MOCKUP_HEIGHT, PROJECT_MOCKUP_WIDTH } from "@components/projects/ProjectCard";
-import { useEntranceStagger } from "@lib/hooks";
+import { useEntranceStagger, useMediaQuery } from "@lib/hooks";
 
 const FALLBACK_BLUR_DATA_URL =
   "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAwIiBoZWlnaHQ9IjEyMDAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZyI+PHJlY3Qgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgZmlsbD0iIzIwMjAyMCIvPjwvc3ZnPg==";
@@ -95,13 +95,15 @@ const PortfolioSection = React.memo(forwardRef<HTMLDivElement>(function Portfoli
   const shellRef = useRef<HTMLDivElement | null>(null);
   const lastShadowBoundsRef = useRef({ top: "", height: "" });
   const lastEdgeStateRef = useRef({ left: false, right: false });
+  const useNativeMobileScroll = useMediaQuery("(max-width: 768px), (hover: none)");
   const emblaOptions = useMemo(
     () => ({
+      active: !useNativeMobileScroll,
       align: "start" as const,
       containScroll: "trimSnaps" as const,
       dragFree: true,
     }),
-    []
+    [useNativeMobileScroll]
   );
   const wheelGestures = useMemo(() => WheelGesturesPlugin({ forceWheelAxis: "x" }), []);
   const [emblaRef, emblaApi] = useEmblaCarousel(emblaOptions, [wheelGestures]);
@@ -111,13 +113,13 @@ const PortfolioSection = React.memo(forwardRef<HTMLDivElement>(function Portfoli
   const setShellRef = useCallback(
     (node: HTMLDivElement | null) => {
       shellRef.current = node;
-      emblaRef(node);
+      emblaRef(useNativeMobileScroll ? null : node);
     },
-    [emblaRef]
+    [emblaRef, useNativeMobileScroll]
   );
 
   useEffect(() => {
-    if (!emblaApi) return;
+    if (!emblaApi || useNativeMobileScroll) return;
     const shell = shellRef.current;
     if (!shell) return;
 
@@ -187,7 +189,7 @@ const PortfolioSection = React.memo(forwardRef<HTMLDivElement>(function Portfoli
       emblaApi.off("select", updateEdgeShadows);
       resizeObserver.disconnect();
     };
-  }, [emblaApi]);
+  }, [emblaApi, useNativeMobileScroll]);
 
   return (
     <section ref={ref} id="portfolio" className="section portfolio-section">
