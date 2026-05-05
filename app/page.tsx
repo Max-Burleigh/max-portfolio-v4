@@ -1,8 +1,16 @@
 "use client";
-import React, { useState, useRef, useCallback, useMemo } from "react";
+import React, { useState, useRef, useCallback, useMemo, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import "./components/AuroraBackground.module.css";
+import "./page.module.css";
+import "./components/navigation/Navigation.module.css";
+import "./sections/PortfolioSection.module.css";
+import "./components/projects/ProjectCard.module.css";
+import "./components/Phone.module.css";
+import "./sections/ServicesSection.module.css";
+import "./sections/ContactSection.module.css";
 // import { throttle } from "lodash";
-import { useActiveSection, useIsMobile, useCursorFollower } from "@lib/hooks";
+import { useCanUseSectionStack, useIsMobile } from "@lib/hooks";
 import AuroraBackground from "@components/AuroraBackground";
 import IOSViewportOverlay from "@components/IOSViewportOverlay";
 import Navigation from "@components/navigation/Navigation";
@@ -13,14 +21,14 @@ import ContactSection from "@sections/ContactSection";
 // Import modularized project components
 //
 
+const SECTION_TRANSITION_MS = 640;
+
 // Main Portfolio component
 const Portfolio = () => {
-  // For optimized cursor following
-  const { cursorX, cursorY, handleMouseMove, cursorOpacity } = useCursorFollower({ damping: 25, stiffness: 700 });
-
   // About section logic moved into AboutSection component
   // Mobile detection (for cursor circle overlay and menu overlay)
   const isMobile = useIsMobile();
+  const canUseSectionStack = useCanUseSectionStack();
   const [menuOpen, setMenuOpen] = useState(false);
   // Guard to prevent the opening tap from immediately closing via overlay
   const [overlayReady, setOverlayReady] = useState(false);
@@ -60,7 +68,10 @@ const Portfolio = () => {
   // Removed unused card message states
 
   type SectionKey = "about" | "services" | "portfolio" | "contact";
-  const sectionKeys: SectionKey[] = ["about", "services", "portfolio", "contact"];
+  const sectionKeys = useMemo<SectionKey[]>(
+    () => ["about", "services", "portfolio", "contact"],
+    []
+  );
 
   const aboutSectionRef = useRef<HTMLDivElement>(null);
   const portfolioSectionRef = useRef<HTMLDivElement>(null);
@@ -77,12 +88,145 @@ const Portfolio = () => {
     [aboutSectionRef, portfolioSectionRef, servicesSectionRef, contactSectionRef]
   );
 
-  const { activeSection, setActiveSection } = useActiveSection(
-    { about: aboutSectionRef, services: servicesSectionRef, portfolio: portfolioSectionRef, contact: contactSectionRef },
-    containerRef
-  );
+  const [activeSection, setActiveSection] = useState<SectionKey>("about");
+  const activeIndex = Math.max(0, sectionKeys.indexOf(activeSection));
+  const [draggedScrollbarIndex, setDraggedScrollbarIndex] = useState<number | null>(null);
+  const [isScrollbarDragging, setIsScrollbarDragging] = useState(false);
+  const activeRef = useRef<SectionKey>(activeSection);
+  const isProgrammaticNativeScrollRef = useRef(false);
+  const isNativeScrollSyncRef = useRef(false);
+  useEffect(() => {
+    activeRef.current = activeSection;
+  }, [activeSection]);
 
-  const throttledMouseMove = handleMouseMove;
+  useEffect(() => {
+    if (canUseSectionStack) return;
+    if (isNativeScrollSyncRef.current) {
+      isNativeScrollSyncRef.current = false;
+      return;
+    }
+
+    const frame = window.requestAnimationFrame(() => {
+      const section = sectionRefs[activeSection]?.current;
+      const container = containerRef.current;
+
+      if (section && container) {
+        isProgrammaticNativeScrollRef.current = true;
+        container.scrollTo({ top: section.offsetTop, left: 0, behavior: "smooth" });
+        window.setTimeout(() => {
+          isProgrammaticNativeScrollRef.current = false;
+        }, 700);
+      }
+
+      section
+        ?.querySelectorAll<HTMLElement>(
+          ".about-stage, .services-cockpit, .portfolio-cockpit, .contact-cockpit"
+        )
+        .forEach((element) => {
+          element.scrollTo({ top: 0, left: 0, behavior: "auto" });
+        });
+    });
+
+    return () => window.cancelAnimationFrame(frame);
+  }, [activeSection, canUseSectionStack, sectionRefs]);
+
+  useEffect(() => {
+    if (canUseSectionStack) return;
+
+    const scrollParent = containerRef.current;
+    if (!scrollParent) return;
+
+    let syncFrame: number | undefined;
+    let settleTimer: number | undefined;
+
+    const findNearestSection = () => {
+      const currentTop = scrollParent.scrollTop;
+      return sectionKeys.reduce(
+        (nearest, section) => {
+          const node = sectionRefs[section]?.current;
+          if (!node) return nearest;
+
+          const distance = Math.abs(node.offsetTop - currentTop);
+          return distance < nearest.distance ? { section, distance } : nearest;
+        },
+        { section: activeRef.current, distance: Number.POSITIVE_INFINITY }
+      ).section;
+    };
+
+    const syncActiveSection = () => {
+      syncFrame = undefined;
+      if (isProgrammaticNativeScrollRef.current) return;
+
+      const nearestSection = findNearestSection();
+      if (nearestSection === activeRef.current) return;
+
+      isNativeScrollSyncRef.current = true;
+      setActiveSection(nearestSection);
+    };
+
+    const settleOnSection = () => {
+      settleTimer = undefined;
+      if (isProgrammaticNativeScrollRef.current) return;
+
+      const nearestSection = findNearestSection();
+      const target = sectionRefs[nearestSection]?.current;
+      if (!target) return;
+
+      const distance = Math.abs(target.offsetTop - scrollParent.scrollTop);
+      if (distance <= 1) return;
+
+      isProgrammaticNativeScrollRef.current = true;
+      scrollParent.scrollTo({ top: target.offsetTop, left: 0, behavior: "smooth" });
+      window.setTimeout(() => {
+        isProgrammaticNativeScrollRef.current = false;
+      }, 360);
+    };
+
+    const handleScroll = () => {
+      if (syncFrame) {
+        window.cancelAnimationFrame(syncFrame);
+      }
+      syncFrame = window.requestAnimationFrame(syncActiveSection);
+
+      if (settleTimer) {
+        window.clearTimeout(settleTimer);
+      }
+      settleTimer = window.setTimeout(settleOnSection, 180);
+    };
+
+    scrollParent.addEventListener("scroll", handleScroll, { passive: true });
+
+    return () => {
+      scrollParent.removeEventListener("scroll", handleScroll);
+      if (syncFrame) {
+        window.cancelAnimationFrame(syncFrame);
+      }
+      if (settleTimer) {
+        window.clearTimeout(settleTimer);
+      }
+    };
+  }, [canUseSectionStack, sectionKeys, sectionRefs]);
+
+  useEffect(() => {
+    const resetHashScroll = () => {
+      if (!window.location.hash) return;
+
+      const hashSection = window.location.hash.slice(1);
+      if (!sectionKeys.includes(hashSection as SectionKey)) return;
+
+      window.history.replaceState(null, "", `${window.location.pathname}${window.location.search}`);
+      setActiveSection("about");
+
+      requestAnimationFrame(() => {
+        window.scrollTo({ top: 0, left: 0, behavior: "auto" });
+        containerRef.current?.scrollTo({ top: 0, left: 0, behavior: "auto" });
+      });
+    };
+
+    resetHashScroll();
+    window.addEventListener("hashchange", resetHashScroll);
+    return () => window.removeEventListener("hashchange", resetHashScroll);
+  }, [sectionKeys]);
 
   // Portrait tilt/glare logic is encapsulated inside AboutSection now
 
@@ -91,62 +235,265 @@ const Portfolio = () => {
       const targetElement = sectionRefs[section]?.current;
       if (!targetElement) return;
 
-      const prefersReduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-      const behavior: ScrollBehavior = prefersReduced ? "auto" : "smooth";
-      const safeTop =
-        parseFloat(
-          getComputedStyle(document.documentElement).getPropertyValue("--safe-top")
-        ) || 0;
+      if (!canUseSectionStack) {
+        isNativeScrollSyncRef.current = true;
+        setActiveSection(section);
+        isProgrammaticNativeScrollRef.current = true;
+        containerRef.current?.scrollTo({ top: targetElement.offsetTop, left: 0, behavior: "smooth" });
+        window.setTimeout(() => {
+          isProgrammaticNativeScrollRef.current = false;
+        }, 640);
+        return;
+      }
 
-      const scrollOnce = () => {
-        const rect = targetElement.getBoundingClientRect();
-        const top = rect.top + window.scrollY - safeTop - 12;
-        window.scrollTo({ top, behavior });
-      };
-
-      // Defer a single scroll until after the next paint and a brief settle window
-      // so images/fonts have time to claim layout. This keeps the motion one glide.
-      requestAnimationFrame(() => {
-        const delay = prefersReduced ? 0 : 140;
-        window.setTimeout(scrollOnce, delay);
-      });
+      setActiveSection(section);
     },
-    [sectionRefs]
+    [canUseSectionStack, sectionRefs]
   );
 
-  // Inquiry State
-  const [inquiryData, setInquiryData] = useState<{ plan: "ESSENTIAL" | "GROWTH" | null; subscription: boolean } | null>(null);
+  const handleScrollbarPointerDown = useCallback(
+    (event: React.PointerEvent<HTMLDivElement>) => {
+      if (isMobile || (event.pointerType === "mouse" && event.button !== 0)) return;
 
-  const handleStartProject = (data: { plan: "ESSENTIAL" | "GROWTH" | null; subscription: boolean }) => {
-    setInquiryData(data);
-    const target = sectionRefs.contact.current ?? document.getElementById("contact");
-    if (!target) return;
+      event.preventDefault();
+      event.currentTarget.focus();
 
-    const prefersReduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    const behavior: ScrollBehavior = prefersReduced ? "auto" : "smooth";
-    const safeTop =
-      parseFloat(
-        getComputedStyle(document.documentElement).getPropertyValue("--safe-top")
-      ) || 0;
+      const track = event.currentTarget;
+      const rect = track.getBoundingClientRect();
+      const thumbHeight = rect.height / sectionKeys.length;
+      const currentIndex = Math.max(0, sectionKeys.indexOf(activeRef.current));
+      const currentThumbTop = currentIndex * thumbHeight;
+      const startedOnThumb =
+        event.target instanceof Element &&
+        Boolean(event.target.closest(".section-scrollbar-thumb"));
+      const grabOffset = startedOnThumb
+        ? Math.max(0, Math.min(thumbHeight, event.clientY - rect.top - currentThumbTop))
+        : thumbHeight / 2;
 
-    const scrollToContact = () => {
-      const top = target.getBoundingClientRect().top + window.scrollY - safeTop - 12;
-      window.scrollTo({ top, behavior });
+      const updateDragPosition = (clientY: number) => {
+        const maxThumbTop = Math.max(0, rect.height - thumbHeight);
+        const nextThumbTop = Math.max(
+          0,
+          Math.min(maxThumbTop, clientY - rect.top - grabOffset)
+        );
+        const nextProgress = maxThumbTop > 0
+          ? (nextThumbTop / maxThumbTop) * (sectionKeys.length - 1)
+          : 0;
+        const nextIndex = Math.max(
+          0,
+          Math.min(sectionKeys.length - 1, Math.round(nextProgress))
+        );
+
+        setDraggedScrollbarIndex(nextProgress);
+        setActiveSection(sectionKeys[nextIndex]);
+      };
+
+      const handlePointerMove = (moveEvent: PointerEvent) => {
+        moveEvent.preventDefault();
+        updateDragPosition(moveEvent.clientY);
+      };
+
+      const stopDragging = (upEvent: PointerEvent) => {
+        upEvent.preventDefault();
+        window.removeEventListener("pointermove", handlePointerMove);
+        window.removeEventListener("pointerup", stopDragging);
+        window.removeEventListener("pointercancel", stopDragging);
+        setDraggedScrollbarIndex(null);
+        setIsScrollbarDragging(false);
+      };
+
+      setIsScrollbarDragging(true);
+      updateDragPosition(event.clientY);
+      window.addEventListener("pointermove", handlePointerMove, { passive: false });
+      window.addEventListener("pointerup", stopDragging);
+      window.addEventListener("pointercancel", stopDragging);
+    },
+    [isMobile, sectionKeys]
+  );
+
+  const handleScrollbarKeyDown = useCallback(
+    (event: React.KeyboardEvent<HTMLDivElement>) => {
+      if (isMobile) return;
+
+      if (event.key === "ArrowDown" || event.key === "PageDown") {
+        event.preventDefault();
+        setActiveSection(sectionKeys[Math.min(sectionKeys.length - 1, activeIndex + 1)]);
+      }
+
+      if (event.key === "ArrowUp" || event.key === "PageUp") {
+        event.preventDefault();
+        setActiveSection(sectionKeys[Math.max(0, activeIndex - 1)]);
+      }
+
+      if (event.key === "Home") {
+        event.preventDefault();
+        setActiveSection(sectionKeys[0]);
+      }
+
+      if (event.key === "End") {
+        event.preventDefault();
+        setActiveSection(sectionKeys[sectionKeys.length - 1]);
+      }
+    },
+    [activeIndex, isMobile, sectionKeys]
+  );
+
+  // Keyboard navigation for the focused card. Only intercepts in stack mode;
+  // native-scroll mode lets the browser own arrow/page/home/end.
+  const handleContainerKeyDown = useCallback(
+    (event: React.KeyboardEvent<HTMLDivElement>) => {
+      if (!canUseSectionStack) return;
+
+      // Don't hijack keys while typing in a form field.
+      if (event.target instanceof HTMLElement) {
+        const formField = event.target.closest("input, textarea, select, [contenteditable='true']");
+        if (formField) return;
+      }
+
+      if (event.key === "ArrowDown" || event.key === "PageDown") {
+        event.preventDefault();
+        setActiveSection(sectionKeys[Math.min(sectionKeys.length - 1, activeIndex + 1)]);
+      } else if (event.key === "ArrowUp" || event.key === "PageUp") {
+        event.preventDefault();
+        setActiveSection(sectionKeys[Math.max(0, activeIndex - 1)]);
+      } else if (event.key === "Home") {
+        event.preventDefault();
+        setActiveSection(sectionKeys[0]);
+      } else if (event.key === "End") {
+        event.preventDefault();
+        setActiveSection(sectionKeys[sectionKeys.length - 1]);
+      }
+    },
+    [activeIndex, canUseSectionStack, sectionKeys]
+  );
+
+  useEffect(() => {
+    if (!canUseSectionStack) return;
+    const scrollParent = containerRef.current;
+    if (!scrollParent) return;
+
+    let accumulatedDelta = 0;
+    let isAnimating = false;
+    let resetAccumulatorTimer: number | undefined;
+    let releaseAnimationTimer: number | undefined;
+
+    const normalizeWheelDelta = (event: WheelEvent) => {
+      if (event.deltaMode === WheelEvent.DOM_DELTA_LINE) {
+        return event.deltaY * 18;
+      }
+
+      if (event.deltaMode === WheelEvent.DOM_DELTA_PAGE) {
+        return event.deltaY * scrollParent.clientHeight;
+      }
+
+      return event.deltaY;
     };
 
-    // Run once after the sticky bar begins unmounting, then nudge again after
-    // the contact section expands (form/typewriter) so the glide completes.
-    requestAnimationFrame(() => {
-      window.setTimeout(() => {
-        scrollToContact();
-        if (!prefersReduced) {
-          window.setTimeout(scrollToContact, 260);
-        }
-      }, prefersReduced ? 0 : 120);
-    });
-  };
+    const resetAccumulatorSoon = () => {
+      if (resetAccumulatorTimer) {
+        window.clearTimeout(resetAccumulatorTimer);
+      }
+      resetAccumulatorTimer = window.setTimeout(() => {
+        accumulatedDelta = 0;
+      }, 160);
+    };
 
-  // Active section logic moved into useActiveSection hook
+    const canScrollVerticallyWithin = (target: EventTarget | null, direction: number) => {
+      if (!(target instanceof Element)) return false;
+
+      let el: Element | null = target;
+      while (el && el !== scrollParent) {
+        if (el instanceof HTMLElement) {
+          const style = window.getComputedStyle(el);
+          const canOverflowY = /(auto|scroll)/.test(style.overflowY);
+
+          if (canOverflowY && el.scrollHeight > el.clientHeight + 1) {
+            const atTop = el.scrollTop <= 1;
+            const atBottom = el.scrollTop + el.clientHeight >= el.scrollHeight - 1;
+            if ((direction < 0 && !atTop) || (direction > 0 && !atBottom)) {
+              return true;
+            }
+          }
+        }
+
+        el = el.parentElement;
+      }
+
+      return false;
+    };
+
+    const releaseAnimation = () => {
+      isAnimating = false;
+      accumulatedDelta = 0;
+    };
+
+    const snapToIndex = (index: number) => {
+      isAnimating = true;
+      setActiveSection(sectionKeys[index]);
+      if (releaseAnimationTimer) {
+        window.clearTimeout(releaseAnimationTimer);
+      }
+      releaseAnimationTimer = window.setTimeout(releaseAnimation, SECTION_TRANSITION_MS + 140);
+    };
+
+    const handleWheel = (event: WheelEvent) => {
+      if (event.ctrlKey || event.metaKey) return;
+
+      const absX = Math.abs(event.deltaX);
+      const absY = Math.abs(event.deltaY);
+      const isHorizontalGesture = absX > absY;
+      if (isHorizontalGesture) {
+        accumulatedDelta = 0;
+        return;
+      }
+
+      const normalizedDelta = normalizeWheelDelta(event);
+      if (Math.abs(normalizedDelta) < 2) return;
+
+      const direction = normalizedDelta > 0 ? 1 : -1;
+      if (canScrollVerticallyWithin(event.target, direction)) {
+        accumulatedDelta = 0;
+        return;
+      }
+
+      if (isAnimating) {
+        event.preventDefault();
+        return;
+      }
+
+      event.preventDefault();
+      accumulatedDelta += normalizedDelta;
+      resetAccumulatorSoon();
+
+      const intentThreshold = event.deltaMode === WheelEvent.DOM_DELTA_PIXEL ? 52 : 1;
+      if (Math.abs(accumulatedDelta) < intentThreshold) return;
+
+      const currentIndex = Math.max(0, sectionKeys.indexOf(activeRef.current));
+      const nextIndex = Math.max(
+        0,
+        Math.min(sectionKeys.length - 1, currentIndex + direction)
+      );
+
+      accumulatedDelta = 0;
+      if (nextIndex === currentIndex) return;
+
+      snapToIndex(nextIndex);
+    };
+
+    scrollParent.addEventListener("wheel", handleWheel, { passive: false });
+
+    return () => {
+      scrollParent.removeEventListener("wheel", handleWheel);
+      if (resetAccumulatorTimer) {
+        window.clearTimeout(resetAccumulatorTimer);
+      }
+      if (releaseAnimationTimer) {
+        window.clearTimeout(releaseAnimationTimer);
+      }
+    };
+  }, [canUseSectionStack, sectionKeys, setActiveSection]);
+
+  // Active section is state-driven so desktop wheel navigation never fights native scroll.
 
   // Remove unused hover/click message state and handlers
 
@@ -176,20 +523,46 @@ const Portfolio = () => {
       {/* Moved outside of motion.div to ensure fixed positioning works correctly relative to viewport */}
       <AuroraBackground />
 
-      {/* PlatformDetector removed; SSR sets <html> classes */}
-      <Navigation
-        activeSection={activeSection}
-        scrollToSection={scrollToSection}
-        sections={sectionKeys}
-        menuOpen={menuOpen}
-        setMenuOpen={setMenuOpen}
-        setActiveSection={setActiveSection}
-      />
-      <motion.div
-        ref={containerRef}
-        className="portfolio-container"
-        onMouseMove={throttledMouseMove}
-      >
+      <main className="site-stage-shell">
+        <div className="portfolio-master-card" data-active-section={activeSection}>
+          {/* PlatformDetector removed; SSR sets <html> classes */}
+          <Navigation
+            activeSection={activeSection}
+            scrollToSection={scrollToSection}
+            sections={sectionKeys}
+            menuOpen={menuOpen}
+            setMenuOpen={setMenuOpen}
+            setActiveSection={setActiveSection}
+          />
+          <div
+            aria-label="Section navigation"
+            aria-controls="portfolio-sections"
+            aria-orientation="vertical"
+            aria-valuemax={sectionKeys.length}
+            aria-valuemin={1}
+            aria-valuenow={activeIndex + 1}
+            aria-valuetext={`${activeIndex + 1} of ${sectionKeys.length}: ${activeSection}`}
+            className={`section-scrollbar${isScrollbarDragging ? " is-dragging" : ""}`}
+            onKeyDown={handleScrollbarKeyDown}
+            onPointerDown={handleScrollbarPointerDown}
+            role="scrollbar"
+            tabIndex={0}
+          >
+            <div
+              className="section-scrollbar-thumb"
+              style={{
+                height: `${100 / sectionKeys.length}%`,
+                transform: `translate3d(0, ${(draggedScrollbarIndex ?? activeIndex) * 100}%, 0)`,
+              }}
+            />
+          </div>
+          <motion.div
+            ref={containerRef}
+            id="portfolio-sections"
+            className="portfolio-container"
+            tabIndex={canUseSectionStack ? 0 : -1}
+            onKeyDown={handleContainerKeyDown}
+          >
         {/* Add overlay when mobile menu is open */}
         <AnimatePresence>
           {menuOpen && isMobile && (
@@ -211,26 +584,29 @@ const Portfolio = () => {
           The primary Navigation component is already rendered outside this scrollable container.
         */}
 
-        {!isMobile && (
-          <motion.div
-            className="cursor-circle"
-            style={{
-              x: cursorX,
-              y: cursorY,
-              opacity: cursorOpacity,
-              willChange: "transform, opacity",
-            }}
-          />
-        )}
+            <div
+              className="portfolio-sections"
+              style={
+                canUseSectionStack
+                  ? { transform: `translate3d(0, -${activeIndex * 100}%, 0)` }
+                  : undefined
+              }
+            >
+              <AboutSection
+                ref={sectionRefs.about}
+                onViewPortfolio={() => scrollToSection("portfolio")}
+                onContact={() => scrollToSection("contact")}
+              />
 
-        <AboutSection ref={sectionRefs.about} onViewServices={() => scrollToSection("services")} />
+              <ServicesSection ref={sectionRefs.services} />
 
-        <ServicesSection ref={sectionRefs.services} onStartProject={handleStartProject} />
+              <PortfolioSection ref={sectionRefs.portfolio} />
 
-        <PortfolioSection ref={sectionRefs.portfolio} />
-
-        <ContactSection ref={sectionRefs.contact} inquiryData={inquiryData} />
-      </motion.div>
+              <ContactSection ref={sectionRefs.contact} />
+            </div>
+          </motion.div>
+        </div>
+      </main>
     </>
   );
 };
