@@ -69,24 +69,6 @@ const compactDetailLabels = {
   ],
 } as const;
 
-const mobilePlanDetailsVariants = {
-  initial: (direction: number) => ({
-    opacity: 0,
-    x: direction * 18,
-    rotateY: direction * -5,
-  }),
-  animate: {
-    opacity: 1,
-    x: 0,
-    rotateY: 0,
-  },
-  exit: (direction: number) => ({
-    opacity: 0,
-    x: direction * -18,
-    rotateY: direction * 5,
-  }),
-} as const;
-
 const supportFeatures = [
   { title: "Website hosting", detail: "Site stays live and secure", icon: MdShield },
   { title: "Workspace help", detail: "Email, calendars, accounts", icon: MdSupportAgent },
@@ -108,7 +90,6 @@ const ServicesSection = forwardRef<HTMLDivElement, object>((_, ref) => {
   const [toastKey, setToastKey] = useState(0);
   const [selectionTickerIndex, setSelectionTickerIndex] = useState(0);
   const [activePlanSlide, setActivePlanSlide] = useState(0);
-  const [planTransitionDirection, setPlanTransitionDirection] = useState(0);
   const [servicesEntered, setServicesEntered] = useState(false);
   const isMobile = useIsMobile();
 
@@ -141,11 +122,6 @@ const ServicesSection = forwardRef<HTMLDivElement, object>((_, ref) => {
   }, [showToast, toastKey]);
 
   const handlePlanSelection = (plan: PlanKey) => {
-    const currentPlan = selectedPlan ?? "GROWTH";
-    if (currentPlan !== plan) {
-      setPlanTransitionDirection(planKeys.indexOf(plan) > planKeys.indexOf(currentPlan) ? 1 : -1);
-    }
-
     if (selectedPlan === plan) {
       setSelectedPlan(null);
       setHasSubscription(false);
@@ -255,7 +231,8 @@ const ServicesSection = forwardRef<HTMLDivElement, object>((_, ref) => {
         </div>
 
         <div className={`mobile-service-configurator ${mobilePlanThemeClass} ${selectedPlan ? "has-selection" : "is-previewing"}`} data-entrance-item>
-          <div className="mobile-plan-tabs" aria-label="Build package options">
+          <div className={`mobile-plan-tabs ${mobilePlanThemeClass}`} aria-label="Build package options">
+            <span className="mobile-plan-tab-indicator" aria-hidden="true" />
             {planKeys.map((plan) => {
               const isActive = selectedPlan === plan;
               const isPreview = isMobilePlanPreview && mobileDisplayPlan === plan;
@@ -269,14 +246,6 @@ const ServicesSection = forwardRef<HTMLDivElement, object>((_, ref) => {
                     if (selectedPlan !== plan) handlePlanSelection(plan);
                   }}
                 >
-                  {(isActive || isPreview) && (
-                    <motion.i
-                      layoutId="mobile-plan-tab-indicator"
-                      className="mobile-plan-tab-indicator"
-                      aria-hidden="true"
-                      transition={{ type: "spring", stiffness: 430, damping: 34 }}
-                    />
-                  )}
                   <span>{plan === "ESSENTIAL" ? "Essential" : "Growth"}</span>
                   <strong>{plan === "ESSENTIAL" ? "$3,000" : "$5,000"}</strong>
                 </button>
@@ -284,45 +253,37 @@ const ServicesSection = forwardRef<HTMLDivElement, object>((_, ref) => {
             })}
           </div>
 
-          <div className="mobile-plan-summary">
-            <div>
-              <span className="mobile-plan-kicker">{mobileDisplayPlan}</span>
-              <p>{planTaglines[mobileDisplayPlan]}</p>
+          <div key={mobileDisplayPlan} className="mobile-plan-content">
+            <div className="mobile-plan-summary">
+              <div>
+                <span className="mobile-plan-kicker">{mobileDisplayPlan}</span>
+                <p>{planTaglines[mobileDisplayPlan]}</p>
+              </div>
+              <div className="mobile-plan-price">
+                <strong>{mobileDisplayPrice}</strong>
+                <span>one-time</span>
+              </div>
             </div>
-            <div className="mobile-plan-price">
-              <strong>{mobileDisplayPrice}</strong>
-              <span>one-time</span>
-            </div>
-          </div>
 
-          <ul className="mobile-feature-chips" aria-label={`${mobileDisplayPlan.toLowerCase()} plan highlights`}>
-            {planFeatures[mobileDisplayPlan].map((feature, index) => {
-              const FeatureIcon = feature.icon;
-              return (
-                <li key={feature.title}>
-                  <FeatureIcon aria-hidden="true" />
-                  <span>{compactFeatureLabels[mobileDisplayPlan][index]}</span>
-                </li>
-              );
-            })}
-          </ul>
+            <ul className="mobile-feature-chips" aria-label={`${mobileDisplayPlan.toLowerCase()} plan highlights`}>
+              {planFeatures[mobileDisplayPlan].map((feature, index) => {
+                const FeatureIcon = feature.icon;
+                return (
+                  <li key={feature.title}>
+                    <FeatureIcon aria-hidden="true" />
+                    <span>{compactFeatureLabels[mobileDisplayPlan][index]}</span>
+                  </li>
+                );
+              })}
+            </ul>
 
-          <div className="mobile-plan-details" aria-label={`${mobileDisplayPlan.toLowerCase()} plan details`}>
-            <AnimatePresence initial={false} mode="popLayout" custom={planTransitionDirection}>
-              <motion.ul
-                key={mobileDisplayPlan}
-                custom={planTransitionDirection}
-                variants={mobilePlanDetailsVariants}
-                initial="initial"
-                animate="animate"
-                exit="exit"
-                transition={{ duration: 0.26, ease: [0.22, 1, 0.36, 1] }}
-              >
+            <div className="mobile-plan-details" aria-label={`${mobileDisplayPlan.toLowerCase()} plan details`}>
+              <ul>
               {compactDetailLabels[mobileDisplayPlan].map((detail) => (
                 <li key={detail}>{detail}</li>
               ))}
-              </motion.ul>
-            </AnimatePresence>
+              </ul>
+            </div>
           </div>
 
           <button
