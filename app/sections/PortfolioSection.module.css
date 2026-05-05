@@ -689,6 +689,8 @@
   }
 
   :global(.portfolio-deck-shell):where(:not(.moduleScope)) {
+    --portfolio-left-shadow: 0 !important;
+    --portfolio-right-shadow: 0 !important;
     min-height: var(--portfolio-mobile-deck-height) !important;
     height: var(--portfolio-mobile-deck-height) !important;
     max-height: var(--portfolio-mobile-deck-height) !important;
@@ -698,6 +700,11 @@
     -webkit-overflow-scrolling: touch;
     touch-action: pan-x pan-y;
     cursor: default;
+  }
+
+  :global(.portfolio-deck-shell):where(:not(.moduleScope))::before,
+  :global(.portfolio-deck-shell):where(:not(.moduleScope))::after {
+    display: none;
   }
 
   :global(.portfolio-phone-deck):where(:not(.moduleScope)) {
