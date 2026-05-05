@@ -2068,7 +2068,7 @@
 
   :global(.mobile-plan-details):where(:not(.moduleScope)) {
     display: grid;
-    block-size: clamp(8.8rem, 18svh, 10.8rem);
+    block-size: clamp(7.2rem, 14.2svh, 8.6rem);
     align-content: center;
     gap: clamp(0.42rem, 1vh, 0.64rem);
     padding: clamp(0.72rem, 2.7vw, 0.98rem) clamp(0.82rem, 3vw, 1.08rem);
@@ -2796,5 +2796,13 @@
 
   :global(.mobile-feature-chips):where(:not(.moduleScope)) {
     gap: 0.2rem;
+  }
+
+  :global(.mobile-support-row):where(:not(.moduleScope)) {
+    min-height: 2.5rem;
+  }
+
+  :global(.mobile-start-button):where(:not(.moduleScope)) {
+    min-height: 2.48rem;
   }
 }
