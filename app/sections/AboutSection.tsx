@@ -4,7 +4,7 @@ import Image from "next/image";
 import { animate, motion, useMotionValue, useReducedMotion, useSpring, useTransform, useMotionTemplate } from "framer-motion";
 import { SiGithub, SiLinkedin } from "react-icons/si";
 import { MdArrowForward, MdCode, MdMood, MdOutlineMail, MdRocketLaunch, MdStar } from "react-icons/md";
-import { rafThrottle, useIsMobile, useEntranceStagger, useMicroParallax } from "@lib/hooks";
+import { rafThrottle, useIsMobile, useEntranceStagger } from "@lib/hooks";
 import { CONTACT_EMAIL, LINKEDIN_URL } from "@lib/constants";
 import { projects } from "@/content/projects";
 
@@ -84,7 +84,6 @@ const AboutSection = forwardRef<HTMLDivElement, AboutSectionProps>(function Abou
 
   const [glare, setGlare] = useState({ x: 50, y: 50, opacity: 0 });
   const entranceRef = useRef<HTMLDivElement>(null);
-  const titleRef = useRef<HTMLHeadingElement>(null);
 
   const handlePortraitMouseMove = useCallback(
     (e: React.MouseEvent<HTMLDivElement>) => {
@@ -405,9 +404,6 @@ const AboutSection = forwardRef<HTMLDivElement, AboutSectionProps>(function Abou
 
   // Entrance stagger for hero elements (runs after intro reveal completes)
   useEntranceStagger(entranceRef, { baseDelay: 0, step: 90 });
-  // Micro parallax on the main heading (disabled on mobile)
-  useMicroParallax(titleRef, { maxPx: 12, factor: 0.015, disabled: isMobile });
-
   return (
     <section ref={ref} id="about" className="section about-section relative w-screen min-h-dvh mx-auto flex flex-col justify-center items-center z-[2]">
       <div className="portfolio-stage about-stage">
@@ -438,7 +434,7 @@ const AboutSection = forwardRef<HTMLDivElement, AboutSectionProps>(function Abou
             <p data-entrance-item className="hero-eyebrow">
               Hey there <span aria-hidden="true">👋</span>
             </p>
-            <h1 ref={titleRef} data-entrance-item className="hero-title">
+            <h1 data-entrance-item className="hero-title">
               I&apos;m Max<br />Burleigh
             </h1>
             <div data-entrance-item className="hero-title-rule" aria-hidden="true" />
