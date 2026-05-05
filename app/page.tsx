@@ -22,8 +22,6 @@ import ContactSection from "@sections/ContactSection";
 //
 
 const SECTION_TRANSITION_MS = 640;
-const MOBILE_SWIPE_THRESHOLD_PX = 48;
-const MOBILE_SWIPE_AXIS_LOCK_PX = 12;
 
 // Main Portfolio component
 const Portfolio = () => {
@@ -96,20 +94,17 @@ const Portfolio = () => {
   const [isScrollbarDragging, setIsScrollbarDragging] = useState(false);
   const activeRef = useRef<SectionKey>(activeSection);
   const isProgrammaticNativeScrollRef = useRef(false);
-  const mobileSwipeRef = useRef<{
-    pointerId: number;
-    startX: number;
-    startY: number;
-    isHorizontal: boolean;
-    isVertical: boolean;
-    didNavigate: boolean;
-  } | null>(null);
+  const isNativeScrollSyncRef = useRef(false);
   useEffect(() => {
     activeRef.current = activeSection;
   }, [activeSection]);
 
   useEffect(() => {
     if (canUseSectionStack) return;
+    if (isNativeScrollSyncRef.current) {
+      isNativeScrollSyncRef.current = false;
+      return;
+    }
 
     const frame = window.requestAnimationFrame(() => {
       const section = sectionRefs[activeSection]?.current;
@@ -120,7 +115,7 @@ const Portfolio = () => {
         container.scrollTo({ top: section.offsetTop, left: 0, behavior: "smooth" });
         window.setTimeout(() => {
           isProgrammaticNativeScrollRef.current = false;
-        }, 360);
+        }, 700);
       }
 
       section
@@ -134,6 +129,83 @@ const Portfolio = () => {
 
     return () => window.cancelAnimationFrame(frame);
   }, [activeSection, canUseSectionStack, sectionRefs]);
+
+  useEffect(() => {
+    if (canUseSectionStack) return;
+
+    const scrollParent = containerRef.current;
+    if (!scrollParent) return;
+
+    let syncFrame: number | undefined;
+    let settleTimer: number | undefined;
+
+    const findNearestSection = () => {
+      const currentTop = scrollParent.scrollTop;
+      return sectionKeys.reduce(
+        (nearest, section) => {
+          const node = sectionRefs[section]?.current;
+          if (!node) return nearest;
+
+          const distance = Math.abs(node.offsetTop - currentTop);
+          return distance < nearest.distance ? { section, distance } : nearest;
+        },
+        { section: activeRef.current, distance: Number.POSITIVE_INFINITY }
+      ).section;
+    };
+
+    const syncActiveSection = () => {
+      syncFrame = undefined;
+      if (isProgrammaticNativeScrollRef.current) return;
+
+      const nearestSection = findNearestSection();
+      if (nearestSection === activeRef.current) return;
+
+      isNativeScrollSyncRef.current = true;
+      setActiveSection(nearestSection);
+    };
+
+    const settleOnSection = () => {
+      settleTimer = undefined;
+      if (isProgrammaticNativeScrollRef.current) return;
+
+      const nearestSection = findNearestSection();
+      const target = sectionRefs[nearestSection]?.current;
+      if (!target) return;
+
+      const distance = Math.abs(target.offsetTop - scrollParent.scrollTop);
+      if (distance <= 1) return;
+
+      isProgrammaticNativeScrollRef.current = true;
+      scrollParent.scrollTo({ top: target.offsetTop, left: 0, behavior: "smooth" });
+      window.setTimeout(() => {
+        isProgrammaticNativeScrollRef.current = false;
+      }, 360);
+    };
+
+    const handleScroll = () => {
+      if (syncFrame) {
+        window.cancelAnimationFrame(syncFrame);
+      }
+      syncFrame = window.requestAnimationFrame(syncActiveSection);
+
+      if (settleTimer) {
+        window.clearTimeout(settleTimer);
+      }
+      settleTimer = window.setTimeout(settleOnSection, 180);
+    };
+
+    scrollParent.addEventListener("scroll", handleScroll, { passive: true });
+
+    return () => {
+      scrollParent.removeEventListener("scroll", handleScroll);
+      if (syncFrame) {
+        window.cancelAnimationFrame(syncFrame);
+      }
+      if (settleTimer) {
+        window.clearTimeout(settleTimer);
+      }
+    };
+  }, [canUseSectionStack, sectionKeys, sectionRefs]);
 
   useEffect(() => {
     const resetHashScroll = () => {
@@ -163,121 +235,21 @@ const Portfolio = () => {
       const targetElement = sectionRefs[section]?.current;
       if (!targetElement) return;
 
-      setActiveSection(section);
-
       if (!canUseSectionStack) {
+        isNativeScrollSyncRef.current = true;
+        setActiveSection(section);
         isProgrammaticNativeScrollRef.current = true;
         containerRef.current?.scrollTo({ top: targetElement.offsetTop, left: 0, behavior: "smooth" });
         window.setTimeout(() => {
           isProgrammaticNativeScrollRef.current = false;
-        }, 360);
+        }, 640);
+        return;
       }
+
+      setActiveSection(section);
     },
     [canUseSectionStack, sectionRefs]
   );
-
-  const snapMobileSection = useCallback(
-    (direction: 1 | -1) => {
-      const currentIndex = Math.max(0, sectionKeys.indexOf(activeRef.current));
-      const nextIndex = Math.max(
-        0,
-        Math.min(sectionKeys.length - 1, currentIndex + direction)
-      );
-
-      if (nextIndex !== currentIndex) {
-        setActiveSection(sectionKeys[nextIndex]);
-      }
-    },
-    [sectionKeys]
-  );
-
-  const canScrollVerticallyWithin = useCallback(
-    (target: EventTarget | null, direction: 1 | -1) => {
-      const scrollParent = containerRef.current;
-      if (!scrollParent || !(target instanceof Element)) return false;
-
-      let el: Element | null = target;
-      while (el && el !== scrollParent) {
-        if (el instanceof HTMLElement) {
-          const style = window.getComputedStyle(el);
-          const canOverflowY = /(auto|scroll)/.test(style.overflowY);
-
-          if (canOverflowY && el.scrollHeight > el.clientHeight + 1) {
-            const atTop = el.scrollTop <= 1;
-            const atBottom = el.scrollTop + el.clientHeight >= el.scrollHeight - 1;
-            if ((direction < 0 && !atTop) || (direction > 0 && !atBottom)) {
-              return true;
-            }
-          }
-        }
-
-        el = el.parentElement;
-      }
-
-      return false;
-    },
-    []
-  );
-
-  const handleMobilePointerDown = useCallback(
-    (event: React.PointerEvent<HTMLDivElement>) => {
-      // In native-scroll mode, touch swipes advance the card one section at a time.
-      if (canUseSectionStack) return;
-      if (event.pointerType === "mouse") return;
-      if (event.target instanceof HTMLElement) {
-        const formField = event.target.closest("input, textarea, select");
-        if (formField) return;
-      }
-
-      mobileSwipeRef.current = {
-        pointerId: event.pointerId,
-        startX: event.clientX,
-        startY: event.clientY,
-        isHorizontal: false,
-        isVertical: false,
-        didNavigate: false,
-      };
-    },
-    [canUseSectionStack]
-  );
-
-  const handleMobilePointerMove = useCallback(
-    (event: React.PointerEvent<HTMLDivElement>) => {
-      const swipe = mobileSwipeRef.current;
-      if (canUseSectionStack || !swipe || swipe.pointerId !== event.pointerId) return;
-
-      const deltaX = event.clientX - swipe.startX;
-      const deltaY = event.clientY - swipe.startY;
-      const absX = Math.abs(deltaX);
-      const absY = Math.abs(deltaY);
-
-      if (!swipe.isHorizontal && !swipe.isVertical) {
-        if (absX < MOBILE_SWIPE_AXIS_LOCK_PX && absY < MOBILE_SWIPE_AXIS_LOCK_PX) return;
-        swipe.isHorizontal = absX > absY * 1.15;
-        swipe.isVertical = absY > absX * 1.15;
-      }
-
-      if (swipe.isHorizontal) return;
-
-      if (swipe.isVertical) {
-        const direction = deltaY < 0 ? 1 : -1;
-        if (canScrollVerticallyWithin(event.target, direction)) return;
-        event.preventDefault();
-      }
-
-      if (!swipe.didNavigate && absY >= MOBILE_SWIPE_THRESHOLD_PX) {
-        swipe.didNavigate = true;
-        snapMobileSection(deltaY < 0 ? 1 : -1);
-      }
-    },
-    [canScrollVerticallyWithin, canUseSectionStack, snapMobileSection]
-  );
-
-  const clearMobileSwipe = useCallback((event: React.PointerEvent<HTMLDivElement>) => {
-    const swipe = mobileSwipeRef.current;
-    if (!swipe || swipe.pointerId !== event.pointerId) return;
-    mobileSwipeRef.current = null;
-  }, []);
 
   const handleScrollbarPointerDown = useCallback(
     (event: React.PointerEvent<HTMLDivElement>) => {
@@ -521,86 +493,6 @@ const Portfolio = () => {
     };
   }, [canUseSectionStack, sectionKeys, setActiveSection]);
 
-  useEffect(() => {
-    if (canUseSectionStack) return;
-
-    const scrollParent = containerRef.current;
-    if (!scrollParent) return;
-
-    let accumulatedDelta = 0;
-    let isAnimating = false;
-    let resetAccumulatorTimer: number | undefined;
-    let releaseAnimationTimer: number | undefined;
-
-    const releaseAnimation = () => {
-      isAnimating = false;
-      accumulatedDelta = 0;
-    };
-
-    const resetAccumulatorSoon = () => {
-      if (resetAccumulatorTimer) {
-        window.clearTimeout(resetAccumulatorTimer);
-      }
-      resetAccumulatorTimer = window.setTimeout(() => {
-        accumulatedDelta = 0;
-      }, 140);
-    };
-
-    const handleWheel = (event: WheelEvent) => {
-      if (event.ctrlKey || event.metaKey) return;
-
-      const absX = Math.abs(event.deltaX);
-      const absY = Math.abs(event.deltaY);
-      if (absX > absY) return;
-      if (absY < 2) return;
-
-      const direction = event.deltaY > 0 ? 1 : -1;
-      if (canScrollVerticallyWithin(event.target, direction)) return;
-
-      event.preventDefault();
-      if (isAnimating) return;
-
-      accumulatedDelta += event.deltaY;
-      resetAccumulatorSoon();
-
-      if (Math.abs(accumulatedDelta) < 36) return;
-
-      const currentIndex = Math.max(
-        0,
-        Math.min(
-          sectionKeys.length - 1,
-          Math.round(scrollParent.scrollTop / Math.max(1, scrollParent.clientHeight))
-        )
-      );
-      const nextIndex = Math.max(
-        0,
-        Math.min(sectionKeys.length - 1, currentIndex + direction)
-      );
-
-      accumulatedDelta = 0;
-      if (nextIndex === currentIndex) return;
-
-      isAnimating = true;
-      setActiveSection(sectionKeys[nextIndex]);
-      if (releaseAnimationTimer) {
-        window.clearTimeout(releaseAnimationTimer);
-      }
-      releaseAnimationTimer = window.setTimeout(releaseAnimation, 460);
-    };
-
-    scrollParent.addEventListener("wheel", handleWheel, { passive: false });
-
-    return () => {
-      scrollParent.removeEventListener("wheel", handleWheel);
-      if (resetAccumulatorTimer) {
-        window.clearTimeout(resetAccumulatorTimer);
-      }
-      if (releaseAnimationTimer) {
-        window.clearTimeout(releaseAnimationTimer);
-      }
-    };
-  }, [canScrollVerticallyWithin, canUseSectionStack, sectionKeys]);
-
   // Active section is state-driven so desktop wheel navigation never fights native scroll.
 
   // Remove unused hover/click message state and handlers
@@ -670,11 +562,6 @@ const Portfolio = () => {
             className="portfolio-container"
             tabIndex={canUseSectionStack ? 0 : -1}
             onKeyDown={handleContainerKeyDown}
-            onPointerCancel={clearMobileSwipe}
-            onPointerDown={handleMobilePointerDown}
-            onPointerLeave={clearMobileSwipe}
-            onPointerMove={handleMobilePointerMove}
-            onPointerUp={clearMobileSwipe}
           >
         {/* Add overlay when mobile menu is open */}
         <AnimatePresence>

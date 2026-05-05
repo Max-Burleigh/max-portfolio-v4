@@ -48,6 +48,27 @@ const planTaglines = {
   GROWTH: "A larger system with analytics and room to grow.",
 } as const;
 
+const compactFeatureLabels = {
+  ESSENTIAL: ["5-page site", "Email + forms", "SEO"],
+  GROWTH: ["10+ pages", "Editable", "Analytics"],
+} as const;
+
+const compactDetailLabels = {
+  ESSENTIAL: [
+    "Fully custom design, no templates",
+    "5 core pages",
+    "Fast loading",
+    "Google Workspace email setup",
+    "Contact form + map integration",
+  ],
+  GROWTH: [
+    "Everything in Essential",
+    "10+ custom pages",
+    "Easy-to-use content editor",
+    "Analytics dashboard setup",
+  ],
+} as const;
+
 const supportFeatures = [
   { title: "Website hosting", detail: "Site stays live and secure", icon: MdShield },
   { title: "Workspace help", detail: "Email, calendars, accounts", icon: MdSupportAgent },
@@ -164,6 +185,11 @@ const ServicesSection = forwardRef<HTMLDivElement, object>((_, ref) => {
   if (planLabel) selectionItems.push({ id: "plan", label: planLabel, className: planClassName });
   if (hasSubscription) selectionItems.push({ id: "subscription", label: "Hosting + Maintenance", className: "text-white" });
   const hasSelection = Boolean(selectedPlan || hasSubscription);
+  const mobileDisplayPlan = selectedPlan ?? "GROWTH";
+  const mobileDisplayPlanLabel = mobileDisplayPlan === "ESSENTIAL" ? "Essential" : "Growth";
+  const mobileDisplayPrice = mobileDisplayPlan === "ESSENTIAL" ? "$3,000" : "$5,000";
+  const mobilePlanThemeClass = mobileDisplayPlan === "GROWTH" ? "is-growth" : "is-essential";
+  const isMobilePlanPreview = !selectedPlan;
 
   const shouldCycleSelections = isMobile && selectionItems.length > 1;
   const activeTickerItem = shouldCycleSelections && selectionItems.length > 0
@@ -192,13 +218,94 @@ const ServicesSection = forwardRef<HTMLDivElement, object>((_, ref) => {
       >
         <div className="cockpit-header" data-entrance-item>
           <div>
-            <p className="hero-eyebrow">Web Development &amp; Design Services</p>
+            <p className="services-eyebrow">Web Development &amp; Design Services</p>
             <h2>Design-forward websites engineered to win customers.</h2>
           </div>
-          <p>
+          <p className="service-copy-desktop">
             Choose from two web development and design packages: Essentials and Growth—plus
             an optional $150/month support plan for ongoing maintenance and operations.
           </p>
+          <p className="service-copy-mobile">
+            Choose from two website packages, then add support if needed.
+          </p>
+        </div>
+
+        <div className={`mobile-service-configurator ${mobilePlanThemeClass} ${selectedPlan ? "has-selection" : "is-previewing"}`} data-entrance-item>
+          <div className="mobile-plan-tabs" aria-label="Build package options">
+            {planKeys.map((plan) => {
+              const isActive = selectedPlan === plan;
+              const isPreview = isMobilePlanPreview && mobileDisplayPlan === plan;
+              return (
+                <button
+                  key={plan}
+                  type="button"
+                  aria-pressed={selectedPlan === plan}
+                  className={`mobile-plan-tab ${isActive ? "is-active" : ""} ${isPreview ? "is-preview" : ""} ${plan === "GROWTH" ? "is-growth" : "is-essential"}`}
+                  onClick={() => {
+                    if (selectedPlan !== plan) handlePlanSelection(plan);
+                  }}
+                >
+                  <span>{plan === "ESSENTIAL" ? "Essential" : "Growth"}</span>
+                  <strong>{plan === "ESSENTIAL" ? "$3,000" : "$5,000"}</strong>
+                </button>
+              );
+            })}
+          </div>
+
+          <div className="mobile-plan-summary">
+            <div>
+              <span className="mobile-plan-kicker">{mobileDisplayPlan}</span>
+              <p>{planTaglines[mobileDisplayPlan]}</p>
+            </div>
+            <div className="mobile-plan-price">
+              <strong>{mobileDisplayPrice}</strong>
+              <span>one-time</span>
+            </div>
+          </div>
+
+          <ul className="mobile-feature-chips" aria-label={`${mobileDisplayPlan.toLowerCase()} plan highlights`}>
+            {planFeatures[mobileDisplayPlan].map((feature, index) => {
+              const FeatureIcon = feature.icon;
+              return (
+                <li key={feature.title}>
+                  <FeatureIcon aria-hidden="true" />
+                  <span>{compactFeatureLabels[mobileDisplayPlan][index]}</span>
+                </li>
+              );
+            })}
+          </ul>
+
+          <div className="mobile-plan-details" aria-label={`${mobileDisplayPlan.toLowerCase()} plan details`}>
+            <ul>
+              {compactDetailLabels[mobileDisplayPlan].map((detail) => (
+                <li key={detail}>{detail}</li>
+              ))}
+            </ul>
+          </div>
+
+          <button
+            type="button"
+            onClick={handleSubscriptionToggle}
+            aria-pressed={hasSubscription}
+            className={`mobile-support-row ${hasSubscription ? "is-selected" : ""} ${!selectedPlan ? "is-unavailable" : ""}`}
+          >
+            <span>
+              <strong>Hosting + Maintenance</strong>
+              <small>$150 / month</small>
+            </span>
+            <span className="mobile-support-pill">
+              {hasSubscription ? <MdCheckCircle aria-hidden="true" /> : <MdAdd aria-hidden="true" />}
+              {hasSubscription ? "Added" : "Add support"}
+            </span>
+          </button>
+
+          <button
+            type="button"
+            onClick={selectedPlan ? handleContact : () => handlePlanSelection(mobileDisplayPlan)}
+            className="mobile-start-button"
+          >
+            {selectedPlan ? "Let's Start" : `Select ${mobileDisplayPlanLabel}`} <MdArrowForward aria-hidden="true" />
+          </button>
         </div>
 
         <div className={`service-plan-grid ${selectedPlan ? "has-card-focus" : ""}`} data-entrance-item>
