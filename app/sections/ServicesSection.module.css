@@ -1885,6 +1885,7 @@
   }
 
   :global(.mobile-plan-tab):where(:not(.moduleScope)) {
+    position: relative;
     display: grid;
     min-width: 0;
     min-height: clamp(2.7rem, 7vh, 3.35rem);
@@ -1896,7 +1897,35 @@
     color: rgba(230, 238, 248, 0.48);
     font-family: var(--font-space-grotesk), var(--font-fallback);
     font-weight: 700;
+    isolation: isolate;
+    overflow: hidden;
     cursor: pointer;
+    transition: color 220ms ease, transform 220ms ease;
+  }
+
+  :global(.mobile-plan-tab-indicator):where(:not(.moduleScope)) {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    border: 1px solid color-mix(in srgb, var(--mobile-accent) 48%, transparent);
+    border-radius: inherit;
+    background:
+      radial-gradient(circle at 18% 0%, var(--mobile-accent-muted), transparent 52%),
+      rgba(255, 255, 255, 0.055);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.11), 0 0 24px color-mix(in srgb, var(--mobile-accent) 14%, transparent);
+    pointer-events: none;
+  }
+
+  :global(.mobile-plan-tab.is-preview .mobile-plan-tab-indicator):where(:not(.moduleScope)) {
+    border-color: rgba(255, 255, 255, 0.16);
+    background: rgba(255, 255, 255, 0.035);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08);
+  }
+
+  :global(.mobile-plan-tab span):where(:not(.moduleScope)),
+  :global(.mobile-plan-tab strong):where(:not(.moduleScope)) {
+    position: relative;
+    z-index: 1;
   }
 
   :global(.mobile-plan-tab span):where(:not(.moduleScope)) {
@@ -1912,18 +1941,11 @@
 
   :global(.mobile-plan-tab.is-active):where(:not(.moduleScope)) {
     color: var(--mobile-accent);
-    border-color: color-mix(in srgb, var(--mobile-accent) 48%, transparent);
-    background:
-      radial-gradient(circle at 18% 0%, var(--mobile-accent-muted), transparent 52%),
-      rgba(255, 255, 255, 0.055);
-    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.11), 0 0 24px color-mix(in srgb, var(--mobile-accent) 14%, transparent);
+    transform: translateY(-1px);
   }
 
   :global(.mobile-plan-tab.is-preview):where(:not(.moduleScope)) {
     color: rgba(230, 238, 248, 0.72);
-    border-color: rgba(255, 255, 255, 0.16);
-    background: rgba(255, 255, 255, 0.035);
-    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08);
   }
 
   :global(.mobile-plan-summary):where(:not(.moduleScope)) {
@@ -1946,6 +1968,7 @@
 
   :global(.mobile-plan-summary p):where(:not(.moduleScope)) {
     margin: 0;
+    min-height: 2.36em;
     color: rgba(230, 238, 248, 0.68);
     font-size: clamp(0.78rem, 3.2vw, 0.92rem);
     line-height: 1.25;
@@ -2007,7 +2030,7 @@
 
   :global(.mobile-plan-details):where(:not(.moduleScope)) {
     display: grid;
-    min-height: 0;
+    min-height: clamp(8.8rem, 18svh, 10.8rem);
     align-content: center;
     gap: clamp(0.42rem, 1vh, 0.64rem);
     padding: clamp(0.72rem, 2.7vw, 0.98rem) clamp(0.82rem, 3vw, 1.08rem);
@@ -2016,6 +2039,8 @@
     background:
       radial-gradient(circle at 0% 0%, color-mix(in srgb, var(--mobile-accent) 8%, transparent), transparent 42%),
       rgba(7, 17, 32, 0.26);
+    overflow: hidden;
+    perspective: 900px;
   }
 
   :global(.mobile-plan-details ul):where(:not(.moduleScope)) {
@@ -2024,6 +2049,9 @@
     margin: 0;
     padding: 0;
     list-style: none;
+    width: 100%;
+    transform-style: preserve-3d;
+    will-change: transform, opacity;
   }
 
   :global(.mobile-plan-details li):where(:not(.moduleScope)) {
@@ -2531,6 +2559,7 @@
 
   :global(.mobile-plan-details):where(:not(.moduleScope)) {
     gap: 0.28rem;
+    min-height: 6.75rem;
     padding: 0.54rem 0.62rem;
     border-radius: 12px;
   }
@@ -2723,6 +2752,10 @@
     min-height: clamp(20.5rem, 58svh, 26rem);
     gap: 0.3rem;
     padding: 0.58rem;
+  }
+
+  :global(.mobile-plan-details):where(:not(.moduleScope)) {
+    min-height: 6.75rem;
   }
 
   :global(.mobile-feature-chips):where(:not(.moduleScope)) {
