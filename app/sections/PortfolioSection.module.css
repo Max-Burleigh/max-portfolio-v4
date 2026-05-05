@@ -680,6 +680,7 @@
 
 @media (max-width: 768px) {
   :global(.portfolio-cockpit):where(:not(.moduleScope)) {
+    --portfolio-mobile-deck-height: min(34rem, calc(var(--mobile-section-card-height, 100svh) - 6.5rem));
     height: auto;
     min-height: 0;
     max-height: none;
@@ -688,12 +689,12 @@
   }
 
   :global(.portfolio-deck-shell):where(:not(.moduleScope)) {
-    min-height: min(34rem, calc(var(--mobile-section-card-height, 100svh) - 6.5rem));
-    height: auto;
+    min-height: var(--portfolio-mobile-deck-height);
+    height: var(--portfolio-mobile-deck-height);
   }
 
   :global(.portfolio-phone-deck):where(:not(.moduleScope)) {
-    height: auto;
+    height: 100%;
     align-items: stretch;
     gap: 0.62rem;
     padding: 0.1rem clamp(0.35rem, 2vw, 0.55rem) 0.25rem;
@@ -701,9 +702,9 @@
 
   :global(.portfolio-phone-card):where(:not(.moduleScope)) {
     flex-basis: 88%;
-    height: auto;
-    min-height: min(34rem, calc(var(--mobile-section-card-height, 100svh) - 6.5rem));
-    grid-template-rows: auto minmax(0, 1fr) auto;
+    height: 100%;
+    min-height: 0;
+    grid-template-rows: clamp(8.75rem, 28svh, 12.2rem) minmax(0, 1fr) auto;
     gap: 0.45rem;
     padding: 0.68rem;
     border-radius: 18px;
@@ -838,7 +839,7 @@
 
   :global(.portfolio-phone-card):where(:not(.moduleScope)) {
     flex-basis: clamp(17.25rem, 39.5vw, 18.85rem);
-    grid-template-rows: auto minmax(0, 1fr) auto;
+    grid-template-rows: clamp(7.4rem, 16svh, 9.7rem) minmax(0, 1fr) auto;
     gap: 0.42rem;
     padding: 0.62rem;
     border-radius: 16px;
