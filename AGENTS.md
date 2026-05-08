@@ -13,7 +13,6 @@ This is a polished portfolio site. Treat visual behavior as product behavior.
 
 ## Local Tool Rules
 
-- Do not run `npx next dev`. The user will already be running the dev server when needed.
 - Do not run `npm run build` in this project unless the user explicitly asks for a build.
 - Do not run Playwright.
 - Do not use Browser Use or Computer Use unless the user specifically asks.
@@ -42,7 +41,7 @@ Node should be >=18.18. Prefer Node 20+ on dev machines.
 - React scan: `npm run scan`
 
 Notes:
-- Agents should not run `npm run dev` unless explicitly asked, and should never run `npx next dev`.
+- Agents should not run `npm run dev` unless explicitly asked.
 - Agents should not run `npm run build` unless explicitly asked.
 - `npm run lint` currently uses `next lint`, which is deprecated in newer Next versions, but it is still the repo's current script.
 
