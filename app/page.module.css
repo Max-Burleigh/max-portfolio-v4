@@ -1382,7 +1382,9 @@
     gap: 0.5rem;
     margin-top: clamp(0.6rem, 1.5vh, 1rem);
   }
+}
 
+@container portfolio-card (max-width: 720px) and (max-height: 680px) {
   :global(.hero-portrait):where(:not(.moduleScope)) {
     width: clamp(7rem, 28cqw, 9rem);
     height: clamp(8.5rem, 34cqw, 11rem);
