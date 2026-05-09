@@ -90,20 +90,28 @@ const PortfolioProjectCard = React.memo(function PortfolioProjectCard({
   );
 });
 
-const PortfolioSection = React.memo(forwardRef<HTMLDivElement>(function PortfolioSection(_, ref) {
+type PortfolioSectionProps = {
+  useNativeDesktopScroll?: boolean;
+};
+
+const PortfolioSection = React.memo(forwardRef<HTMLDivElement, PortfolioSectionProps>(function PortfolioSection(
+  { useNativeDesktopScroll = false },
+  ref
+) {
   const entranceRef = useRef<HTMLDivElement>(null);
   const shellRef = useRef<HTMLDivElement | null>(null);
   const lastShadowBoundsRef = useRef({ top: "", height: "" });
   const lastEdgeStateRef = useRef({ left: false, right: false });
   const useNativeMobileScroll = useMediaQuery("(max-width: 768px), (hover: none)");
+  const useNativeScroll = useNativeMobileScroll || useNativeDesktopScroll;
   const emblaOptions = useMemo(
     () => ({
-      active: !useNativeMobileScroll,
+      active: !useNativeScroll,
       align: "start" as const,
       containScroll: "trimSnaps" as const,
       dragFree: true,
     }),
-    [useNativeMobileScroll]
+    [useNativeScroll]
   );
   const wheelGestures = useMemo(() => WheelGesturesPlugin({ forceWheelAxis: "x" }), []);
   const [emblaRef, emblaApi] = useEmblaCarousel(emblaOptions, [wheelGestures]);
@@ -113,13 +121,13 @@ const PortfolioSection = React.memo(forwardRef<HTMLDivElement>(function Portfoli
   const setShellRef = useCallback(
     (node: HTMLDivElement | null) => {
       shellRef.current = node;
-      emblaRef(useNativeMobileScroll ? null : node);
+      emblaRef(useNativeScroll ? null : node);
     },
-    [emblaRef, useNativeMobileScroll]
+    [emblaRef, useNativeScroll]
   );
 
   useEffect(() => {
-    if (!emblaApi || useNativeMobileScroll) return;
+    if (!emblaApi || useNativeScroll) return;
     const shell = shellRef.current;
     if (!shell) return;
 
@@ -189,7 +197,26 @@ const PortfolioSection = React.memo(forwardRef<HTMLDivElement>(function Portfoli
       emblaApi.off("select", updateEdgeShadows);
       resizeObserver.disconnect();
     };
-  }, [emblaApi, useNativeMobileScroll]);
+  }, [emblaApi, useNativeScroll]);
+
+  const handleDeckWheel = useCallback(
+    (event: React.WheelEvent<HTMLDivElement>) => {
+      if (!useNativeDesktopScroll) return;
+
+      const shell = event.currentTarget;
+      if (shell.scrollWidth <= shell.clientWidth + 1) return;
+
+      const primaryDelta =
+        Math.abs(event.deltaX) > Math.abs(event.deltaY) ? event.deltaX : event.deltaY;
+
+      if (primaryDelta === 0) return;
+
+      event.preventDefault();
+      event.stopPropagation();
+      shell.scrollLeft += primaryDelta;
+    },
+    [useNativeDesktopScroll]
+  );
 
   return (
     <section ref={ref} id="portfolio" className="section portfolio-section">
@@ -204,7 +231,12 @@ const PortfolioSection = React.memo(forwardRef<HTMLDivElement>(function Portfoli
           </p>
         </div>
 
-        <div ref={setShellRef} className="portfolio-deck-shell" data-entrance-item>
+        <div
+          ref={setShellRef}
+          className="portfolio-deck-shell"
+          data-entrance-item
+          onWheel={handleDeckWheel}
+        >
           <div className="portfolio-phone-deck">
             {visibleProjects.map((project, index) => (
               <PortfolioProjectCard

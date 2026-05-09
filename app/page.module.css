@@ -1090,6 +1090,189 @@
   }
 }
 
+/* Resized desktop fallback: after a real height shrink, keep the one-card
+   model but let the active section scroll inside the card instead of changing
+   sections from wheel input. */
+@media (hover: hover) and (pointer: fine) and (min-width: 769px) {
+  :global(.site-stage-shell[data-section-mode="section-scroll"] .portfolio-container):where(:not(.moduleScope)) {
+    overflow: hidden !important;
+    scroll-snap-type: none !important;
+    scroll-padding-top: 0 !important;
+    overscroll-behavior: contain;
+  }
+
+  :global(.site-stage-shell[data-section-mode="section-scroll"] .section):where(:not(.moduleScope)) {
+    align-items: stretch;
+    justify-content: flex-start;
+    scroll-snap-align: none !important;
+    overflow: hidden;
+  }
+
+  :global(.portfolio-master-card[data-section-mode="section-scroll"][data-active-section="about"] .about-section):where(:not(.moduleScope)),
+  :global(.portfolio-master-card[data-section-mode="section-scroll"][data-active-section="services"] .services-section):where(:not(.moduleScope)),
+  :global(.portfolio-master-card[data-section-mode="section-scroll"][data-active-section="portfolio"] .portfolio-section):where(:not(.moduleScope)),
+  :global(.portfolio-master-card[data-section-mode="section-scroll"][data-active-section="contact"] .contact-section):where(:not(.moduleScope)) {
+    overflow-x: hidden !important;
+    overflow-y: auto !important;
+    overscroll-behavior: contain;
+    scrollbar-width: thin;
+  }
+
+  :global(.portfolio-master-card[data-section-mode="section-scroll"][data-active-section="contact"] .contact-section):where(:not(.moduleScope)) {
+    padding-bottom: clamp(6rem, 15vh, 8.5rem) !important;
+  }
+
+  :global(.portfolio-master-card[data-section-mode="section-scroll"][data-active-section="about"] .about-section):where(:not(.moduleScope)) {
+    padding-bottom: clamp(6rem, 15vh, 8.5rem) !important;
+  }
+
+  :global(.portfolio-master-card[data-section-mode="section-scroll"][data-active-section="about"] .about-section > *):where(:not(.moduleScope)),
+  :global(.portfolio-master-card[data-section-mode="section-scroll"][data-active-section="services"] .services-section > *):where(:not(.moduleScope)),
+  :global(.portfolio-master-card[data-section-mode="section-scroll"][data-active-section="portfolio"] .portfolio-section > *):where(:not(.moduleScope)),
+  :global(.portfolio-master-card[data-section-mode="section-scroll"][data-active-section="contact"] .contact-section > *):where(:not(.moduleScope)) {
+    height: auto !important;
+    min-height: 0 !important;
+    max-height: none !important;
+    overflow: visible !important;
+  }
+
+  :global(.site-stage-shell[data-section-mode="section-scroll"] .section-scrollbar):where(:not(.moduleScope)) {
+    display: none;
+  }
+
+  :global(.portfolio-master-card[data-section-mode="section-scroll"][data-active-section="about"] .about-stage):where(:not(.moduleScope)) {
+    display: block;
+    height: auto !important;
+    min-height: 0 !important;
+    max-height: none !important;
+    overflow: visible !important;
+  }
+
+  :global(.portfolio-master-card[data-section-mode="section-scroll"][data-active-section="about"] .about-stage-content):where(:not(.moduleScope)) {
+    flex: none;
+    align-self: stretch;
+    align-items: center;
+    margin: 0;
+    padding: 0;
+  }
+
+  :global(.portfolio-master-card[data-section-mode="section-scroll"][data-active-section="about"] .hero-stats):where(:not(.moduleScope)) {
+    position: relative;
+    z-index: 1;
+    margin-top: clamp(2rem, 4vh, 3rem);
+    padding-top: clamp(1rem, 2vh, 1.5rem);
+    padding-bottom: clamp(2.5rem, 8vh, 4rem);
+  }
+
+  :global(.portfolio-master-card[data-section-mode="section-scroll"][data-active-section="about"] .hero-stat):where(:not(.moduleScope)) {
+    grid-template-columns: auto auto minmax(0, max-content);
+  }
+
+  :global(.portfolio-master-card[data-section-mode="section-scroll"][data-active-section="services"] .services-cockpit):where(:not(.moduleScope)),
+  :global(.portfolio-master-card[data-section-mode="section-scroll"][data-active-section="portfolio"] .portfolio-cockpit):where(:not(.moduleScope)),
+  :global(.portfolio-master-card[data-section-mode="section-scroll"][data-active-section="contact"] .contact-cockpit):where(:not(.moduleScope)) {
+    height: auto !important;
+    min-height: 0 !important;
+    max-height: none !important;
+    overflow: visible !important;
+  }
+
+  :global(.portfolio-master-card[data-section-mode="section-scroll"][data-active-section="portfolio"] .portfolio-cockpit):where(:not(.moduleScope)) {
+    display: block;
+  }
+
+  :global(.portfolio-master-card[data-section-mode="section-scroll"][data-active-section="services"] .service-plan-grid):where(:not(.moduleScope)) {
+    flex: 0 0 auto;
+    min-height: 0;
+    max-height: none !important;
+    grid-template-rows: auto auto !important;
+    overflow: visible !important;
+  }
+
+  :global(.portfolio-master-card[data-section-mode="section-scroll"][data-active-section="services"] .service-plan-card):where(:not(.moduleScope)),
+  :global(.portfolio-master-card[data-section-mode="section-scroll"][data-active-section="services"] .service-support-card):where(:not(.moduleScope)),
+  :global(.portfolio-master-card[data-section-mode="section-scroll"][data-active-section="services"] .service-selection-card):where(:not(.moduleScope)) {
+    height: auto !important;
+    min-height: 0 !important;
+    max-height: none !important;
+    overflow: visible !important;
+  }
+
+  :global(.portfolio-master-card[data-section-mode="section-scroll"][data-active-section="services"] .service-feature-rail):where(:not(.moduleScope)),
+  :global(.portfolio-master-card[data-section-mode="section-scroll"][data-active-section="services"] .selection-dock-content):where(:not(.moduleScope)) {
+    flex: 0 0 auto;
+    height: auto !important;
+    min-height: 0 !important;
+    max-height: none !important;
+    grid-template-rows: auto !important;
+    overflow: visible !important;
+  }
+
+  :global(.portfolio-master-card[data-section-mode="section-scroll"][data-active-section="services"] .selection-summary):where(:not(.moduleScope)) {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  :global(.portfolio-master-card[data-section-mode="section-scroll"][data-active-section="portfolio"] .portfolio-deck-shell):where(:not(.moduleScope)) {
+    display: block;
+    height: auto !important;
+    min-height: 0 !important;
+    max-height: none !important;
+    margin-top: clamp(0.75rem, 1.6vh, 1rem);
+    overflow-x: auto !important;
+    overflow-y: hidden !important;
+    scroll-snap-type: x proximity;
+    -webkit-overflow-scrolling: touch;
+    touch-action: pan-x pan-y;
+    cursor: default;
+    contain: layout paint;
+  }
+
+  :global(.portfolio-master-card[data-section-mode="section-scroll"][data-active-section="portfolio"] .portfolio-deck-shell):where(:not(.moduleScope))::before,
+  :global(.portfolio-master-card[data-section-mode="section-scroll"][data-active-section="portfolio"] .portfolio-deck-shell):where(:not(.moduleScope))::after {
+    display: none;
+  }
+
+  :global(.portfolio-master-card[data-section-mode="section-scroll"][data-active-section="portfolio"] .portfolio-phone-deck):where(:not(.moduleScope)) {
+    width: max-content;
+    height: auto !important;
+    min-height: 0 !important;
+    max-height: none !important;
+    align-items: stretch;
+    overflow: visible !important;
+    padding-bottom: 0.65rem;
+    transform: none !important;
+    will-change: auto;
+  }
+
+  :global(.portfolio-master-card[data-section-mode="section-scroll"][data-active-section="portfolio"] .portfolio-phone-card):where(:not(.moduleScope)) {
+    height: auto !important;
+    min-height: 26rem;
+    max-height: none !important;
+    grid-template-rows: clamp(9rem, 22vh, 11rem) auto auto;
+    overflow: hidden;
+    contain: none;
+  }
+
+  :global(.portfolio-master-card[data-section-mode="section-scroll"][data-active-section="portfolio"] .portfolio-phone-copy):where(:not(.moduleScope)),
+  :global(.portfolio-master-card[data-section-mode="section-scroll"][data-active-section="contact"] .contact-panel):where(:not(.moduleScope)) {
+    height: auto !important;
+    min-height: 0 !important;
+    max-height: none !important;
+    overflow: visible !important;
+  }
+
+  :global(.portfolio-master-card[data-section-mode="section-scroll"][data-active-section="contact"] .contact-panel):where(:not(.moduleScope)) {
+    padding-bottom: clamp(2.5rem, 8vh, 4rem);
+  }
+
+  :global(.portfolio-master-card[data-section-mode="section-scroll"][data-active-section="portfolio"] .portfolio-phone-card .portfolio-description):where(:not(.moduleScope)) {
+    display: block;
+    max-height: none;
+    overflow: visible;
+    -webkit-line-clamp: unset;
+  }
+}
+
 /* Contact belongs to the master card canvas, not another card inside it. */
 
 :global(.stage-topline):where(:not(.moduleScope)) {

@@ -10,7 +10,7 @@ import "./components/Phone.module.css";
 import "./sections/ServicesSection.module.css";
 import "./sections/ContactSection.module.css";
 // import { throttle } from "lodash";
-import { useIsMobile } from "@lib/hooks";
+import { useIsMobile, useMediaQuery } from "@lib/hooks";
 import AuroraBackground from "@components/AuroraBackground";
 import IOSViewportOverlay from "@components/IOSViewportOverlay";
 import Navigation from "@components/navigation/Navigation";
@@ -23,6 +23,7 @@ import ContactSection from "@sections/ContactSection";
 
 const SECTION_TRANSITION_MS = 640;
 const TOUCH_SECTION_THRESHOLD_PX = 54;
+const VIEWPORT_HEIGHT_SHRINK_THRESHOLD_PX = 12;
 
 const getSectionScrollTop = (container: HTMLElement, target: HTMLElement) => {
   const containerRect = container.getBoundingClientRect();
@@ -35,6 +36,10 @@ const Portfolio = () => {
   // About section logic moved into AboutSection component
   // Mobile detection (for cursor circle overlay and menu overlay)
   const isMobile = useIsMobile();
+  const isDesktopFinePointer = useMediaQuery(
+    "(hover: hover) and (pointer: fine) and (min-width: 769px)"
+  );
+  const [hasUserHeightResizeFallback, setHasUserHeightResizeFallback] = useState(false);
   const canUseSectionStack = true;
   const [menuOpen, setMenuOpen] = useState(false);
   // Guard to prevent the opening tap from immediately closing via overlay
@@ -109,6 +114,33 @@ const Portfolio = () => {
   }, [activeSection]);
 
   useEffect(() => {
+    if (!isDesktopFinePointer) {
+      setHasUserHeightResizeFallback(false);
+      return;
+    }
+
+    const getViewportHeight = () => window.visualViewport?.height ?? window.innerHeight;
+    const initialViewportHeight = getViewportHeight();
+
+    const updateHeightResizeFallback = () => {
+      const currentViewportHeight = getViewportHeight();
+      const hasUserShrunkViewport =
+        initialViewportHeight - currentViewportHeight >= VIEWPORT_HEIGHT_SHRINK_THRESHOLD_PX;
+
+      setHasUserHeightResizeFallback(hasUserShrunkViewport);
+    };
+
+    updateHeightResizeFallback();
+    window.addEventListener("resize", updateHeightResizeFallback);
+    window.visualViewport?.addEventListener("resize", updateHeightResizeFallback);
+
+    return () => {
+      window.removeEventListener("resize", updateHeightResizeFallback);
+      window.visualViewport?.removeEventListener("resize", updateHeightResizeFallback);
+    };
+  }, [isDesktopFinePointer]);
+
+  useEffect(() => {
     let syncFrame: number | undefined;
     const timeoutIds: number[] = [];
 
@@ -173,8 +205,16 @@ const Portfolio = () => {
     const frame = window.requestAnimationFrame(() => {
       const section = sectionRefs[activeSection]?.current;
       const container = containerRef.current;
+      const isPageScrollMode =
+        document.querySelector(".site-stage-shell")?.getAttribute("data-section-mode") === "native-scroll";
 
-      if (section && container) {
+      if (section && isPageScrollMode) {
+        isProgrammaticNativeScrollRef.current = true;
+        section.scrollIntoView({ block: "start", behavior: "smooth" });
+        window.setTimeout(() => {
+          isProgrammaticNativeScrollRef.current = false;
+        }, 700);
+      } else if (section && container) {
         isProgrammaticNativeScrollRef.current = true;
         container.scrollTo({ top: getSectionScrollTop(container, section), left: 0, behavior: "smooth" });
         window.setTimeout(() => {
@@ -199,10 +239,28 @@ const Portfolio = () => {
 
     const scrollParent = containerRef.current;
     if (!scrollParent) return;
+    const isPageScrollMode =
+      document.querySelector(".site-stage-shell")?.getAttribute("data-section-mode") === "native-scroll";
 
     let syncFrame: number | undefined;
 
     const findNearestSection = () => {
+      if (isPageScrollMode) {
+        const anchorTop = window.innerHeight * 0.38;
+
+        return sectionKeys.reduce(
+          (nearest, section) => {
+            const node = sectionRefs[section]?.current;
+            if (!node) return nearest;
+
+            const rect = node.getBoundingClientRect();
+            const distance = Math.abs(rect.top - anchorTop);
+            return distance < nearest.distance ? { section, distance } : nearest;
+          },
+          { section: activeRef.current, distance: Number.POSITIVE_INFINITY }
+        ).section;
+      }
+
       const currentTop = scrollParent.scrollTop;
       return sectionKeys.reduce(
         (nearest, section) => {
@@ -235,10 +293,11 @@ const Portfolio = () => {
       syncFrame = window.requestAnimationFrame(syncActiveSection);
     };
 
-    scrollParent.addEventListener("scroll", handleScroll, { passive: true });
+    const scrollTarget: HTMLElement | Window = isPageScrollMode ? window : scrollParent;
+    scrollTarget.addEventListener("scroll", handleScroll, { passive: true });
 
     return () => {
-      scrollParent.removeEventListener("scroll", handleScroll);
+      scrollTarget.removeEventListener("scroll", handleScroll);
       if (syncFrame) {
         window.cancelAnimationFrame(syncFrame);
       }
@@ -277,8 +336,13 @@ const Portfolio = () => {
         isNativeScrollSyncRef.current = true;
         setActiveSection(section);
         isProgrammaticNativeScrollRef.current = true;
+        const isPageScrollMode =
+          document.querySelector(".site-stage-shell")?.getAttribute("data-section-mode") === "native-scroll";
         const container = containerRef.current;
-        if (container) {
+
+        if (isPageScrollMode) {
+          targetElement.scrollIntoView({ block: "start", behavior: "smooth" });
+        } else if (container) {
           container.scrollTo({ top: getSectionScrollTop(container, targetElement), left: 0, behavior: "smooth" });
         }
         window.setTimeout(() => {
@@ -383,6 +447,7 @@ const Portfolio = () => {
   // native-scroll mode lets the browser own arrow/page/home/end.
   const handleContainerKeyDown = useCallback(
     (event: React.KeyboardEvent<HTMLDivElement>) => {
+      if (hasUserHeightResizeFallback) return;
       if (!canUseSectionStack) return;
 
       // Don't hijack keys while typing in a form field.
@@ -405,7 +470,7 @@ const Portfolio = () => {
         setActiveSection(sectionKeys[sectionKeys.length - 1]);
       }
     },
-    [activeIndex, canUseSectionStack, sectionKeys]
+    [activeIndex, canUseSectionStack, hasUserHeightResizeFallback, sectionKeys]
   );
 
   const canScrollVerticallyWithin = useCallback(
@@ -459,6 +524,7 @@ const Portfolio = () => {
 
   const handleContainerTouchEnd = useCallback(
     (event: React.TouchEvent<HTMLDivElement>) => {
+      if (hasUserHeightResizeFallback) return;
       const start = touchStartRef.current;
       touchStartRef.current = null;
       if (!start || event.changedTouches.length !== 1) return;
@@ -476,10 +542,11 @@ const Portfolio = () => {
 
       goToSectionByOffset(direction);
     },
-    [canScrollVerticallyWithin, goToSectionByOffset]
+    [canScrollVerticallyWithin, goToSectionByOffset, hasUserHeightResizeFallback]
   );
 
   useEffect(() => {
+    if (hasUserHeightResizeFallback) return;
     if (!canUseSectionStack) return;
     const scrollParent = containerRef.current;
     if (!scrollParent) return;
@@ -579,7 +646,7 @@ const Portfolio = () => {
         window.clearTimeout(releaseAnimationTimer);
       }
     };
-  }, [canScrollVerticallyWithin, canUseSectionStack, sectionKeys, setActiveSection]);
+  }, [canScrollVerticallyWithin, canUseSectionStack, hasUserHeightResizeFallback, sectionKeys, setActiveSection]);
 
   // Active section is state-driven so desktop wheel navigation never fights native scroll.
 
@@ -611,8 +678,15 @@ const Portfolio = () => {
       {/* Moved outside of motion.div to ensure fixed positioning works correctly relative to viewport */}
       <AuroraBackground />
 
-      <main className="site-stage-shell">
-        <div className="portfolio-master-card" data-active-section={activeSection}>
+      <main
+        className="site-stage-shell"
+        data-section-mode={hasUserHeightResizeFallback ? "section-scroll" : "stack"}
+      >
+        <div
+          className="portfolio-master-card"
+          data-active-section={activeSection}
+          data-section-mode={hasUserHeightResizeFallback ? "section-scroll" : "stack"}
+        >
           {/* PlatformDetector removed; SSR sets <html> classes */}
           <Navigation
             activeSection={activeSection}
@@ -634,7 +708,7 @@ const Portfolio = () => {
             onKeyDown={handleScrollbarKeyDown}
             onPointerDown={handleScrollbarPointerDown}
             role="scrollbar"
-            tabIndex={0}
+            tabIndex={hasUserHeightResizeFallback ? -1 : 0}
           >
             <div
               className="section-scrollbar-thumb"
@@ -690,7 +764,10 @@ const Portfolio = () => {
 
               <ServicesSection ref={sectionRefs.services} />
 
-              <PortfolioSection ref={sectionRefs.portfolio} />
+              <PortfolioSection
+                ref={sectionRefs.portfolio}
+                useNativeDesktopScroll={hasUserHeightResizeFallback}
+              />
 
               <ContactSection ref={sectionRefs.contact} />
             </div>

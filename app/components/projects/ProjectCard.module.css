@@ -530,13 +530,13 @@
 
 @media (max-width: 768px) {
   :global(.site-stage-shell):where(:not(.moduleScope)) {
-    min-height: 100dvh;
+    min-height: var(--portfolio-visual-vh, 100svh);
     padding: max(0.55rem, var(--safe-top)) max(0.55rem, var(--safe-right)) max(0.55rem, var(--safe-bottom)) max(0.55rem, var(--safe-left));
   }
 
   :global(.portfolio-master-card):where(:not(.moduleScope)) {
     width: 100%;
-    height: calc(100dvh - max(1.1rem, var(--safe-top)) - max(1.1rem, var(--safe-bottom)));
+    height: calc(var(--portfolio-visual-vh, 100svh) - max(1.1rem, var(--safe-top)) - max(1.1rem, var(--safe-bottom)));
     min-height: 0;
     border-radius: 22px;
     border-left: 1px solid rgba(148, 177, 210, 0.22);
