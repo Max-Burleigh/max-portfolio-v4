@@ -2733,9 +2733,11 @@
 
   :global(.mobile-plan-summary):where(:not(.moduleScope)) {
     gap: 0.58rem;
+    padding-top: clamp(0.34rem, 1.25vh, 0.62rem);
   }
 
   :global(.mobile-plan-summary p):where(:not(.moduleScope)) {
+    min-height: 0;
     font-size: clamp(0.72rem, 2.95vw, 0.86rem);
     line-height: 1.18;
   }
