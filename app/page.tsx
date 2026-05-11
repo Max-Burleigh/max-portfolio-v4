@@ -53,7 +53,12 @@ const getActiveSectionLayoutPressure = (section: HTMLElement) => {
   }
 
   const aboutContent = section.querySelector<HTMLElement>(".about-stage-content");
+  const heroActions = section.querySelector<HTMLElement>(".hero-actions");
   const heroStats = section.querySelector<HTMLElement>(".hero-stats");
+
+  if (aboutContent) {
+    pressure = Math.max(pressure, aboutContent.scrollHeight - aboutContent.clientHeight);
+  }
 
   if (aboutContent && heroStats) {
     const contentRect = aboutContent.getBoundingClientRect();
@@ -61,6 +66,15 @@ const getActiveSectionLayoutPressure = (section: HTMLElement) => {
     pressure = Math.max(
       pressure,
       contentRect.bottom - statsRect.top + ABOUT_SECTION_MIN_BLOCK_GAP_PX
+    );
+  }
+
+  if (heroActions && heroStats) {
+    const actionsRect = heroActions.getBoundingClientRect();
+    const statsRect = heroStats.getBoundingClientRect();
+    pressure = Math.max(
+      pressure,
+      actionsRect.bottom - statsRect.top + ABOUT_SECTION_MIN_BLOCK_GAP_PX
     );
   }
 
@@ -74,6 +88,8 @@ const getSectionPressureTargets = (section: HTMLElement) => [
       [
         ".about-stage",
         ".about-stage-content",
+        ".hero-copy",
+        ".hero-actions",
         ".hero-stats",
         ".services-cockpit",
         ".service-plan-grid",
