@@ -162,7 +162,17 @@ const ServicesSection = forwardRef<HTMLDivElement, object>((_, ref) => {
   };
 
   const handleContact = () => {
-    router.push("/get-started");
+    const params = new URLSearchParams();
+
+    if (selectedPlan) {
+      params.set("plan", selectedPlan);
+    }
+    if (hasSubscription) {
+      params.set("support", "true");
+    }
+
+    const query = params.toString();
+    router.push(query ? `/get-started?${query}` : "/get-started");
   };
 
   const planLabel =
