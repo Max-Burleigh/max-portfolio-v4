@@ -24,12 +24,67 @@ import ContactSection from "@sections/ContactSection";
 const SECTION_TRANSITION_MS = 640;
 const TOUCH_SECTION_THRESHOLD_PX = 54;
 const VIEWPORT_HEIGHT_SHRINK_THRESHOLD_PX = 12;
+const SECTION_PRESSURE_ENABLE_PX = 24;
+const SECTION_PRESSURE_DISABLE_PX = 8;
+const SECTION_PRESSURE_RELEASE_GROWTH_PX = 32;
+const ABOUT_SECTION_MIN_BLOCK_GAP_PX = 16;
 
 const getSectionScrollTop = (container: HTMLElement, target: HTMLElement) => {
   const containerRect = container.getBoundingClientRect();
   const targetRect = target.getBoundingClientRect();
   return container.scrollTop + targetRect.top - containerRect.top;
 };
+
+const getActiveSectionLayoutPressure = (section: HTMLElement) => {
+  const sectionRect = section.getBoundingClientRect();
+  const primaryBlock = section.querySelector<HTMLElement>(
+    ".about-stage, .services-cockpit, .portfolio-cockpit, .contact-cockpit"
+  );
+  let pressure = Math.max(0, section.scrollHeight - section.clientHeight);
+
+  if (primaryBlock) {
+    const blockRect = primaryBlock.getBoundingClientRect();
+    pressure = Math.max(
+      pressure,
+      blockRect.bottom - sectionRect.bottom,
+      sectionRect.top - blockRect.top,
+      primaryBlock.scrollHeight - Math.max(primaryBlock.clientHeight, section.clientHeight)
+    );
+  }
+
+  const aboutContent = section.querySelector<HTMLElement>(".about-stage-content");
+  const heroStats = section.querySelector<HTMLElement>(".hero-stats");
+
+  if (aboutContent && heroStats) {
+    const contentRect = aboutContent.getBoundingClientRect();
+    const statsRect = heroStats.getBoundingClientRect();
+    pressure = Math.max(
+      pressure,
+      contentRect.bottom - statsRect.top + ABOUT_SECTION_MIN_BLOCK_GAP_PX
+    );
+  }
+
+  return pressure;
+};
+
+const getSectionPressureTargets = (section: HTMLElement) => [
+  section,
+  ...Array.from(
+    section.querySelectorAll<HTMLElement>(
+      [
+        ".about-stage",
+        ".about-stage-content",
+        ".hero-stats",
+        ".services-cockpit",
+        ".service-plan-grid",
+        ".portfolio-cockpit",
+        ".portfolio-deck-shell",
+        ".contact-cockpit",
+        ".contact-panel",
+      ].join(", ")
+    )
+  ),
+];
 
 // Main Portfolio component
 const Portfolio = () => {
@@ -40,6 +95,8 @@ const Portfolio = () => {
     "(hover: hover) and (pointer: fine) and (min-width: 769px)"
   );
   const [hasUserHeightResizeFallback, setHasUserHeightResizeFallback] = useState(false);
+  const [hasSectionOverflowFallback, setHasSectionOverflowFallback] = useState(false);
+  const usesSectionScrollFallback = hasUserHeightResizeFallback || hasSectionOverflowFallback;
   const canUseSectionStack = true;
   const [menuOpen, setMenuOpen] = useState(false);
   // Guard to prevent the opening tap from immediately closing via overlay
@@ -105,6 +162,8 @@ const Portfolio = () => {
   const [draggedScrollbarIndex, setDraggedScrollbarIndex] = useState<number | null>(null);
   const [isScrollbarDragging, setIsScrollbarDragging] = useState(false);
   const activeRef = useRef<SectionKey>(activeSection);
+  const sectionOverflowFallbackRef = useRef(false);
+  const sectionOverflowTriggerHeightRef = useRef<number | null>(null);
   const isProgrammaticNativeScrollRef = useRef(false);
   const isNativeScrollSyncRef = useRef(false);
   const lastNativeScrollAtRef = useRef(0);
@@ -112,6 +171,10 @@ const Portfolio = () => {
   useEffect(() => {
     activeRef.current = activeSection;
   }, [activeSection]);
+
+  useEffect(() => {
+    sectionOverflowFallbackRef.current = hasSectionOverflowFallback;
+  }, [hasSectionOverflowFallback]);
 
   useEffect(() => {
     if (!isDesktopFinePointer) {
@@ -139,6 +202,98 @@ const Portfolio = () => {
       window.visualViewport?.removeEventListener("resize", updateHeightResizeFallback);
     };
   }, [isDesktopFinePointer]);
+
+  useEffect(() => {
+    if (!isDesktopFinePointer) {
+      sectionOverflowFallbackRef.current = false;
+      sectionOverflowTriggerHeightRef.current = null;
+      setHasSectionOverflowFallback(false);
+      return;
+    }
+
+    let syncFrame: number | undefined;
+    const timeoutIds: number[] = [];
+    const resizeObserver =
+      typeof ResizeObserver !== "undefined"
+        ? new ResizeObserver(() => queuePressureCheck())
+        : undefined;
+
+    const getActiveSection = () => sectionRefs[activeSection]?.current;
+    const getCardHeight = () =>
+      document.querySelector<HTMLElement>(".portfolio-master-card")?.clientHeight ??
+      Math.floor(window.visualViewport?.height ?? window.innerHeight);
+
+    const updateSectionOverflowFallback = () => {
+      syncFrame = undefined;
+      const section = getActiveSection();
+      if (!section) return;
+
+      const pressure = getActiveSectionLayoutPressure(section);
+      const isFallbackActive = sectionOverflowFallbackRef.current;
+      const cardHeight = getCardHeight();
+      let nextFallbackActive = isFallbackActive;
+
+      if (!isFallbackActive && pressure > SECTION_PRESSURE_ENABLE_PX) {
+        sectionOverflowTriggerHeightRef.current = cardHeight;
+        nextFallbackActive = true;
+      } else if (isFallbackActive) {
+        const triggerHeight = sectionOverflowTriggerHeightRef.current;
+        const hasRecoveredHeight =
+          triggerHeight === null ||
+          cardHeight - triggerHeight >= SECTION_PRESSURE_RELEASE_GROWTH_PX;
+
+        if (hasRecoveredHeight && pressure <= SECTION_PRESSURE_DISABLE_PX) {
+          sectionOverflowTriggerHeightRef.current = null;
+          nextFallbackActive = false;
+        }
+      }
+
+      if (nextFallbackActive !== isFallbackActive) {
+        sectionOverflowFallbackRef.current = nextFallbackActive;
+        setHasSectionOverflowFallback(nextFallbackActive);
+      }
+    };
+
+    function queuePressureCheck() {
+      if (syncFrame) {
+        window.cancelAnimationFrame(syncFrame);
+      }
+
+      syncFrame = window.requestAnimationFrame(updateSectionOverflowFallback);
+    }
+
+    const observeCurrentSection = () => {
+      const section = getActiveSection();
+      resizeObserver?.disconnect();
+
+      if (section) {
+        getSectionPressureTargets(section).forEach((target) => {
+          resizeObserver?.observe(target);
+        });
+      }
+
+      queuePressureCheck();
+    };
+
+    observeCurrentSection();
+    window.addEventListener("resize", observeCurrentSection);
+    window.visualViewport?.addEventListener("resize", observeCurrentSection);
+
+    [80, 220, 480, 900].forEach((delay) => {
+      timeoutIds.push(window.setTimeout(observeCurrentSection, delay));
+    });
+
+    return () => {
+      window.removeEventListener("resize", observeCurrentSection);
+      window.visualViewport?.removeEventListener("resize", observeCurrentSection);
+      resizeObserver?.disconnect();
+      timeoutIds.forEach((timeoutId) => window.clearTimeout(timeoutId));
+
+      if (syncFrame) {
+        window.cancelAnimationFrame(syncFrame);
+      }
+    };
+  }, [activeSection, isDesktopFinePointer, sectionRefs]);
 
   useEffect(() => {
     let syncFrame: number | undefined;
@@ -447,7 +602,7 @@ const Portfolio = () => {
   // native-scroll mode lets the browser own arrow/page/home/end.
   const handleContainerKeyDown = useCallback(
     (event: React.KeyboardEvent<HTMLDivElement>) => {
-      if (hasUserHeightResizeFallback) return;
+      if (usesSectionScrollFallback) return;
       if (!canUseSectionStack) return;
 
       // Don't hijack keys while typing in a form field.
@@ -470,7 +625,7 @@ const Portfolio = () => {
         setActiveSection(sectionKeys[sectionKeys.length - 1]);
       }
     },
-    [activeIndex, canUseSectionStack, hasUserHeightResizeFallback, sectionKeys]
+    [activeIndex, canUseSectionStack, usesSectionScrollFallback, sectionKeys]
   );
 
   const canScrollVerticallyWithin = useCallback(
@@ -524,7 +679,7 @@ const Portfolio = () => {
 
   const handleContainerTouchEnd = useCallback(
     (event: React.TouchEvent<HTMLDivElement>) => {
-      if (hasUserHeightResizeFallback) return;
+      if (usesSectionScrollFallback) return;
       const start = touchStartRef.current;
       touchStartRef.current = null;
       if (!start || event.changedTouches.length !== 1) return;
@@ -542,11 +697,11 @@ const Portfolio = () => {
 
       goToSectionByOffset(direction);
     },
-    [canScrollVerticallyWithin, goToSectionByOffset, hasUserHeightResizeFallback]
+    [canScrollVerticallyWithin, goToSectionByOffset, usesSectionScrollFallback]
   );
 
   useEffect(() => {
-    if (hasUserHeightResizeFallback) return;
+    if (usesSectionScrollFallback) return;
     if (!canUseSectionStack) return;
     const scrollParent = containerRef.current;
     if (!scrollParent) return;
@@ -646,7 +801,7 @@ const Portfolio = () => {
         window.clearTimeout(releaseAnimationTimer);
       }
     };
-  }, [canScrollVerticallyWithin, canUseSectionStack, hasUserHeightResizeFallback, sectionKeys, setActiveSection]);
+  }, [canScrollVerticallyWithin, canUseSectionStack, usesSectionScrollFallback, sectionKeys, setActiveSection]);
 
   // Active section is state-driven so desktop wheel navigation never fights native scroll.
 
@@ -680,12 +835,12 @@ const Portfolio = () => {
 
       <main
         className="site-stage-shell"
-        data-section-mode={hasUserHeightResizeFallback ? "section-scroll" : "stack"}
+        data-section-mode={usesSectionScrollFallback ? "section-scroll" : "stack"}
       >
         <div
           className="portfolio-master-card"
           data-active-section={activeSection}
-          data-section-mode={hasUserHeightResizeFallback ? "section-scroll" : "stack"}
+          data-section-mode={usesSectionScrollFallback ? "section-scroll" : "stack"}
         >
           {/* PlatformDetector removed; SSR sets <html> classes */}
           <Navigation
@@ -708,7 +863,7 @@ const Portfolio = () => {
             onKeyDown={handleScrollbarKeyDown}
             onPointerDown={handleScrollbarPointerDown}
             role="scrollbar"
-            tabIndex={hasUserHeightResizeFallback ? -1 : 0}
+            tabIndex={usesSectionScrollFallback ? -1 : 0}
           >
             <div
               className="section-scrollbar-thumb"
@@ -766,7 +921,7 @@ const Portfolio = () => {
 
               <PortfolioSection
                 ref={sectionRefs.portfolio}
-                useNativeDesktopScroll={hasUserHeightResizeFallback}
+                useNativeDesktopScroll={usesSectionScrollFallback}
               />
 
               <ContactSection ref={sectionRefs.contact} />
