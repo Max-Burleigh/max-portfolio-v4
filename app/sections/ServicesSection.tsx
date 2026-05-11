@@ -32,25 +32,25 @@ type PlanKey = (typeof planKeys)[number];
 
 const planFeatures = {
   ESSENTIAL: [
-    { title: "Custom 5-page site", detail: "Mobile-first, on-brand design", icon: MdDevices },
-    { title: "Email + contact", detail: "Workspace setup and forms wired", icon: MdOutlineEmail },
-    { title: "Launch-ready SEO", detail: "Schema, sitemap, OG tags shipped", icon: MdManageSearch },
+    { title: "Up to 5 pages", detail: "Built around your content", icon: MdDevices },
+    { title: "Custom email address + contact form", detail: "Set up and ready to use", icon: MdOutlineEmail },
+    { title: "SEO optimized", detail: "Easier to find on Google", icon: MdManageSearch },
   ],
   GROWTH: [
-    { title: "10+ page system", detail: "Modular components, room to grow", icon: MdViewModule },
-    { title: "Editable dashboard", detail: "Update copy and images yourself", icon: MdDashboardCustomize },
-    { title: "Built-in analytics", detail: "GA4 events + conversion views", icon: MdQueryStats },
+    { title: "10+ pages", detail: "For larger sites and brands", icon: MdViewModule },
+    { title: "Easy site updates", detail: "Change content yourself, no code required", icon: MdDashboardCustomize },
+    { title: "Analytics setup", detail: "See how visitors use your site", icon: MdQueryStats },
   ],
 } as const;
 
 const planTaglines = {
-  ESSENTIAL: "A sharp marketing site, launch-ready.",
-  GROWTH: "A larger system with analytics and room to grow.",
+  ESSENTIAL: "A custom site with the essentials handled.",
+  GROWTH: "A larger site with more control and insight.",
 } as const;
 
 const compactFeatureLabels = {
-  ESSENTIAL: ["5-page site", "Email + forms", "SEO"],
-  GROWTH: ["10+ pages", "Editable", "Analytics"],
+  ESSENTIAL: ["Up to 5 pages", "Email + form", "SEO"],
+  GROWTH: ["10+ pages", "Easy updates", "Analytics"],
 } as const;
 
 const compactDetailLabels = {
@@ -174,9 +174,13 @@ const ServicesSection = forwardRef<HTMLDivElement, object>((_, ref) => {
   const planPrice = selectedPlan === "ESSENTIAL" ? "$3,000" : selectedPlan === "GROWTH" ? "$5,000" : null;
   const totalEstimate =
     selectedPlan === "ESSENTIAL"
-      ? "$3,000"
+      ? hasSubscription
+        ? "$3,000 + $150 / month"
+        : "$3,000"
       : selectedPlan === "GROWTH"
-        ? "$5,000"
+        ? hasSubscription
+          ? "$5,000 + $150 / month"
+          : "$5,000"
         : "Pending";
 
   const planClassName = selectedPlan === "GROWTH" ? "text-purple-300" : "text-teal-300";
