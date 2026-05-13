@@ -176,6 +176,24 @@
   gap: clamp(2.5rem, 5.8vw, 5.4rem);
 }
 
+@media (min-width: 769px) {
+  :global(.contact-panel):where(:not(.moduleScope)) {
+    align-self: stretch;
+    display: grid;
+    align-content: safe center;
+  }
+
+  :global(.contact-link-panel):where(:not(.moduleScope)) {
+    width: 100%;
+  }
+}
+
+@media (hover: hover) and (pointer: fine) and (min-width: 769px) {
+  :global(.portfolio-master-card[data-section-mode="section-scroll"][data-active-section="contact"] .contact-panel):where(:not(.moduleScope)) {
+    padding-top: clamp(2.5rem, 8vh, 4rem);
+  }
+}
+
 :global(.contact-pitch):where(:not(.moduleScope)) {
   min-width: 0;
   max-width: 29.8rem;

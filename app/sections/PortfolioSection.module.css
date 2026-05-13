@@ -680,20 +680,21 @@
 
 @media (max-width: 768px) {
   :global(.portfolio-cockpit):where(:not(.moduleScope)) {
-    --portfolio-mobile-deck-height: min(34rem, calc(var(--mobile-section-card-height, 100svh) - 6.5rem));
-    height: auto;
+    display: grid;
+    height: 100%;
     min-height: 0;
-    max-height: none;
+    max-height: 100%;
+    grid-template-rows: auto minmax(0, 1fr);
     gap: clamp(0.45rem, 1.35vh, 0.7rem);
-    overflow: visible;
+    overflow: hidden;
   }
 
   :global(.portfolio-deck-shell):where(:not(.moduleScope)) {
     --portfolio-left-shadow: 0 !important;
     --portfolio-right-shadow: 0 !important;
-    min-height: var(--portfolio-mobile-deck-height) !important;
-    height: var(--portfolio-mobile-deck-height) !important;
-    max-height: var(--portfolio-mobile-deck-height) !important;
+    min-height: 0 !important;
+    height: 100% !important;
+    max-height: 100% !important;
     overflow-x: auto !important;
     overflow-y: hidden !important;
     scroll-snap-type: x mandatory;

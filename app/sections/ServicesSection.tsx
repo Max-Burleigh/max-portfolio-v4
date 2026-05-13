@@ -3,11 +3,10 @@
 import React, { forwardRef, useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { useRouter } from "next/navigation";
-import { AnimatePresence, motion } from "framer-motion";
+import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import {
   MdAdd,
   MdArrowForward,
-  MdBuild,
   MdCheckCircle,
   MdDashboardCustomize,
   MdDevices,
@@ -15,30 +14,24 @@ import {
   MdManageSearch,
   MdOutlineEmail,
   MdQueryStats,
-  MdShield,
+  MdReceiptLong,
   MdSupportAgent,
   MdViewModule,
 } from "react-icons/md";
-import { useEntranceStagger, useIsMobile } from "@lib/hooks";
-
-type SelectionItem = {
-  id: string;
-  label: string;
-  className?: string;
-};
+import { useEntranceStagger } from "@lib/hooks";
 
 const planKeys = ["ESSENTIAL", "GROWTH"] as const;
 type PlanKey = (typeof planKeys)[number];
 
-const planFeatures = {
+const desktopPlanHighlights = {
   ESSENTIAL: [
-    { title: "Up to 5 pages", detail: "Built around your content", icon: MdDevices },
-    { title: "Custom email address + contact form", detail: "Set up and ready to use", icon: MdOutlineEmail },
+    { title: "Up to 5 pages", detail: "For smaller sites and local businesses", icon: MdDevices },
+    { title: "Custom email + contact form", detail: "Look professional from day one", icon: MdOutlineEmail },
     { title: "SEO optimized", detail: "Easier to find on Google", icon: MdManageSearch },
   ],
   GROWTH: [
     { title: "10+ pages", detail: "For larger sites and brands", icon: MdViewModule },
-    { title: "Easy site updates", detail: "Change content yourself, no code required", icon: MdDashboardCustomize },
+    { title: "Easy site updates", detail: "Change content yourself", icon: MdDashboardCustomize },
     { title: "Analytics setup", detail: "See how visitors use your site", icon: MdQueryStats },
   ],
 } as const;
@@ -46,11 +39,6 @@ const planFeatures = {
 const planTaglines = {
   ESSENTIAL: "A custom site with the essentials handled.",
   GROWTH: "A larger site with more control and insight.",
-} as const;
-
-const compactFeatureLabels = {
-  ESSENTIAL: ["Up to 5 pages", "Email + form", "SEO"],
-  GROWTH: ["10+ pages", "Easy updates", "Analytics"],
 } as const;
 
 const compactDetailLabels = {
@@ -69,29 +57,21 @@ const compactDetailLabels = {
   ],
 } as const;
 
-const supportFeatures = [
-  { title: "Website hosting", detail: "Site stays live and secure", icon: MdShield },
-  { title: "Workspace help", detail: "Email, calendars, accounts", icon: MdSupportAgent },
-  { title: "Small fixes", detail: "Copy, images, quick tweaks", icon: MdBuild },
-] as const;
-
 const ServicesSection = forwardRef<HTMLDivElement, object>((_, ref) => {
   const router = useRouter();
   const entranceRef = useRef<HTMLDivElement>(null);
-  const planSwiperRef = useRef<HTMLDivElement>(null);
+  const shouldReduceMotion = useReducedMotion();
   useEntranceStagger(entranceRef, { baseDelay: 80, step: 45 });
 
   const [selectedPlan, setSelectedPlan] = useState<PlanKey | null>(null);
+  const [previewPlan, setPreviewPlan] = useState<PlanKey>("ESSENTIAL");
   const [hasSubscription, setHasSubscription] = useState(false);
   const [mounted, setMounted] = useState(false);
   const [shakePlans, setShakePlans] = useState(false);
   const [toastMessage, setToastMessage] = useState<string | null>(null);
   const [showToast, setShowToast] = useState(false);
   const [toastKey, setToastKey] = useState(0);
-  const [selectionTickerIndex, setSelectionTickerIndex] = useState(0);
-  const [activePlanSlide, setActivePlanSlide] = useState(0);
   const [servicesEntered, setServicesEntered] = useState(false);
-  const isMobile = useIsMobile();
 
   useEffect(() => {
     setMounted(true);
@@ -101,6 +81,7 @@ const ServicesSection = forwardRef<HTMLDivElement, object>((_, ref) => {
 
     if (savedPlan === "ESSENTIAL" || savedPlan === "GROWTH") {
       setSelectedPlan(savedPlan);
+      setPreviewPlan(savedPlan);
     }
     if (savedSubscription === "true") {
       setHasSubscription(true);
@@ -122,6 +103,8 @@ const ServicesSection = forwardRef<HTMLDivElement, object>((_, ref) => {
   }, [showToast, toastKey]);
 
   const handlePlanSelection = (plan: PlanKey) => {
+    setPreviewPlan(plan);
+
     if (selectedPlan === plan) {
       setSelectedPlan(null);
       setHasSubscription(false);
@@ -132,19 +115,6 @@ const ServicesSection = forwardRef<HTMLDivElement, object>((_, ref) => {
 
     setSelectedPlan(plan);
     sessionStorage.setItem("selectedPlan", plan);
-  };
-
-  const handlePlanSwiperScroll = () => {
-    const swiper = planSwiperRef.current;
-    if (!swiper) return;
-
-    const slide = swiper.querySelector<HTMLElement>(".service-plan-card");
-    if (!slide) return;
-
-    const slideWidth = slide.getBoundingClientRect().width;
-    const gap = parseFloat(window.getComputedStyle(swiper).columnGap || "0");
-    const nextIndex = Math.round(swiper.scrollLeft / Math.max(1, slideWidth + gap));
-    setActivePlanSlide(Math.max(0, Math.min(planKeys.length - 1, nextIndex)));
   };
 
   const handleSubscriptionToggle = () => {
@@ -175,53 +145,20 @@ const ServicesSection = forwardRef<HTMLDivElement, object>((_, ref) => {
     router.push(query ? `/get-started?${query}` : "/get-started");
   };
 
-  const planLabel =
+  const shortPlanLabel =
     selectedPlan === "ESSENTIAL"
-      ? "Essential Plan"
+      ? "Essential"
       : selectedPlan === "GROWTH"
-        ? "Growth Plan"
+        ? "Growth"
         : null;
   const planPrice = selectedPlan === "ESSENTIAL" ? "$3,000" : selectedPlan === "GROWTH" ? "$5,000" : null;
-  const totalEstimate =
-    selectedPlan === "ESSENTIAL"
-      ? hasSubscription
-        ? "$3,000 + $150 / month"
-        : "$3,000"
-      : selectedPlan === "GROWTH"
-        ? hasSubscription
-          ? "$5,000 + $150 / month"
-          : "$5,000"
-        : "Pending";
-
-  const planClassName = selectedPlan === "GROWTH" ? "text-purple-300" : "text-teal-300";
-
-  const selectionItems: SelectionItem[] = [];
-  if (planLabel) selectionItems.push({ id: "plan", label: planLabel, className: planClassName });
-  if (hasSubscription) selectionItems.push({ id: "subscription", label: "Hosting + Maintenance", className: "text-white" });
   const hasSelection = Boolean(selectedPlan || hasSubscription);
+  const activeDesktopPlan = selectedPlan ?? previewPlan;
   const mobileDisplayPlan = selectedPlan ?? "GROWTH";
   const mobileDisplayPlanLabel = mobileDisplayPlan === "ESSENTIAL" ? "Essential" : "Growth";
   const mobileDisplayPrice = mobileDisplayPlan === "ESSENTIAL" ? "$3,000" : "$5,000";
   const mobilePlanThemeClass = mobileDisplayPlan === "GROWTH" ? "is-growth" : "is-essential";
   const isMobilePlanPreview = !selectedPlan;
-
-  const shouldCycleSelections = isMobile && selectionItems.length > 1;
-  const activeTickerItem = shouldCycleSelections && selectionItems.length > 0
-    ? selectionItems[selectionTickerIndex % selectionItems.length]
-    : null;
-
-  useEffect(() => {
-    if (!shouldCycleSelections || selectionItems.length === 0) {
-      setSelectionTickerIndex(0);
-      return;
-    }
-
-    const id = window.setInterval(() => {
-      setSelectionTickerIndex((prev) => (prev + 1) % selectionItems.length);
-    }, 3500);
-
-    return () => window.clearInterval(id);
-  }, [shouldCycleSelections, selectionItems.length]);
 
   return (
     <section ref={ref} id="services" className="section services-section">
@@ -280,12 +217,15 @@ const ServicesSection = forwardRef<HTMLDivElement, object>((_, ref) => {
             </div>
 
             <ul className="mobile-feature-chips" aria-label={`${mobileDisplayPlan.toLowerCase()} plan highlights`}>
-              {planFeatures[mobileDisplayPlan].map((feature, index) => {
+              {desktopPlanHighlights[mobileDisplayPlan].map((feature) => {
                 const FeatureIcon = feature.icon;
                 return (
                   <li key={feature.title}>
                     <FeatureIcon aria-hidden="true" />
-                    <span>{compactFeatureLabels[mobileDisplayPlan][index]}</span>
+                    <span className="mobile-feature-chip-copy">
+                      <span>{feature.title}</span>
+                      <small>{feature.detail}</small>
+                    </span>
                   </li>
                 );
               })}
@@ -327,61 +267,64 @@ const ServicesSection = forwardRef<HTMLDivElement, object>((_, ref) => {
 
         <div className={`service-plan-grid ${selectedPlan ? "has-card-focus" : ""}`} data-entrance-item>
           <div
-            ref={planSwiperRef}
             className="service-plan-swiper"
             aria-label="Build package options"
-            onScroll={handlePlanSwiperScroll}
           >
             {planKeys.map((plan) => {
               const isSelected = selectedPlan === plan;
+              const isExpanded = activeDesktopPlan === plan;
               return (
                 <motion.button
                   key={plan}
                   type="button"
                   onClick={() => handlePlanSelection(plan)}
                   aria-pressed={isSelected}
-                  className={`service-plan-card ${plan === "ESSENTIAL" ? "is-essential" : "is-growth"} ${isSelected ? "is-selected" : "is-dimmed"} ${shakePlans ? "shake" : ""}`}
-                  whileTap={{ scale: 0.98 }}
+                  className={`service-plan-card ${plan === "ESSENTIAL" ? "is-essential" : "is-growth"} ${isSelected ? "is-selected" : "is-dimmed"} ${isExpanded ? "is-expanded" : ""} ${shakePlans ? "shake" : ""}`}
+                  whileTap={shouldReduceMotion ? undefined : { scale: 0.98 }}
                 >
-                  <div className="plan-card-header">
-                    <span className="service-plan-title">{plan}</span>
-                    <div className="plan-card-price-row">
-                      <span className="service-plan-price">{plan === "ESSENTIAL" ? "$3,000" : "$5,000"}</span>
-                      <span className="plan-price-suffix">one-time</span>
+                  <div className="desktop-plan-shell">
+                    <div className="desktop-plan-main">
+                      <div className="desktop-plan-header">
+                        <div className="desktop-plan-copy">
+                          <span className="service-plan-title">{plan}</span>
+                          <p className="service-plan-copy">{planTaglines[plan]}</p>
+                        </div>
+                        <div className="plan-card-price-row">
+                          <span className="service-plan-price">{plan === "ESSENTIAL" ? "$3,000" : "$5,000"}</span>
+                          <span className="plan-price-suffix">one-time</span>
+                        </div>
+                        <span className="desktop-plan-state" aria-hidden="true">
+                          {isSelected ? <MdCheckCircle /> : "View"}
+                        </span>
+                      </div>
+                      <div className="desktop-plan-details" aria-hidden={!isExpanded}>
+                        <div className="desktop-plan-details-inner">
+                          <ul className="service-feature-rail" aria-label={`${plan.toLowerCase()} plan details`}>
+                            {desktopPlanHighlights[plan].map((feature) => {
+                              const FeatureIcon = feature.icon;
+                              return (
+                                <li key={feature.title} className="service-feature-column">
+                                  <span className="service-feature-icon" aria-hidden="true">
+                                    <FeatureIcon />
+                                  </span>
+                                  <span className="service-feature-text">
+                                    <span className="service-feature-title">{feature.title}</span>
+                                    <span className="service-feature-detail">{feature.detail}</span>
+                                  </span>
+                                </li>
+                              );
+                            })}
+                          </ul>
+                          <span className="service-plan-action">
+                            {isSelected ? <><MdCheckCircle /> Selected</> : <>Select {plan === "ESSENTIAL" ? "Essential" : "Growth"} <MdArrowForward aria-hidden="true" /></>}
+                          </span>
+                        </div>
+                      </div>
                     </div>
                   </div>
-                  <p className="service-plan-copy">{planTaglines[plan]}</p>
-                  <ul className="service-feature-rail" aria-label={`${plan.toLowerCase()} plan details`}>
-                    {planFeatures[plan].map((feature) => {
-                      const FeatureIcon = feature.icon;
-                      return (
-                        <li key={feature.title} className="service-feature-column">
-                          <span className="service-feature-icon" aria-hidden="true">
-                            <FeatureIcon />
-                          </span>
-                          <span className="service-feature-text">
-                            <span className="service-feature-title">{feature.title}</span>
-                            <span className="service-feature-detail">{feature.detail}</span>
-                          </span>
-                        </li>
-                      );
-                    })}
-                  </ul>
-                  <span className="service-plan-action">
-                    {isSelected ? <><MdCheckCircle /> Selected</> : "Select plan"}
-                  </span>
                 </motion.button>
               );
             })}
-          </div>
-
-          <div className="service-plan-pagination" aria-hidden="true">
-            <span>Swipe plans</span>
-            <div>
-              {planKeys.map((plan, index) => (
-                <i key={plan} className={activePlanSlide === index ? "is-active" : ""} />
-              ))}
-            </div>
           </div>
 
           <div className="service-lower-panels">
@@ -392,89 +335,70 @@ const ServicesSection = forwardRef<HTMLDivElement, object>((_, ref) => {
               className={`service-support-card ${hasSubscription ? "is-selected" : ""} ${!selectedPlan ? "is-unavailable" : ""}`}
               whileTap={{ scale: 0.985 }}
             >
-              <div className="plan-card-header">
-                <span className="service-plan-title support-eyebrow">Hosting + Maintenance</span>
-                <div className="plan-card-price-row">
-                  <span className="service-plan-price">$150</span>
-                  <span className="plan-price-suffix">/ month</span>
+              <div className="desktop-plan-shell">
+                <div className="desktop-plan-main">
+                  <div className="desktop-plan-header">
+                    <div className="desktop-plan-copy">
+                      <span className="service-plan-title support-eyebrow">Hosting + Maintenance</span>
+                      <p className="service-plan-copy">Website hosting, security patches, and small content changes/updates.</p>
+                    </div>
+                    <div className="plan-card-price-row">
+                      <span className="service-plan-price">$150</span>
+                      <span className="plan-price-suffix">/ month</span>
+                    </div>
+                    <span className={`support-toggle-switch ${hasSubscription ? "is-selected" : ""}`} aria-hidden="true">
+                      <span />
+                    </span>
+                  </div>
                 </div>
               </div>
-              <p className="service-plan-copy">
-                Monthly maintenance, hosting, and support.
-              </p>
-              <ul className="service-feature-rail support-feature-rail" aria-label="Managed support details">
-                {supportFeatures.map((feature) => {
-                  const FeatureIcon = feature.icon;
-                  return (
-                    <li key={feature.title} className="service-feature-column support-feature-column">
-                      <span className="service-feature-icon support-feature-icon" aria-hidden="true">
-                        <FeatureIcon />
-                      </span>
-                      <span className="service-feature-text support-feature-text">
-                        <span className="service-feature-title support-feature-title">{feature.title}</span>
-                        <span className="service-feature-detail support-feature-detail">{feature.detail}</span>
-                      </span>
-                    </li>
-                  );
-                })}
-              </ul>
-              <span className={`service-plan-action support-toggle ${hasSubscription ? "is-selected" : ""}`}>
-                {hasSubscription ? <><MdCheckCircle /> Added</> : <><MdAdd /> Add support</>}
-              </span>
             </motion.button>
 
             <div className={`service-selection-card ${hasSelection ? "has-selection" : ""} ${hasSubscription ? "has-support" : ""} ${selectedPlan === "GROWTH" ? "is-growth" : selectedPlan === "ESSENTIAL" ? "is-essential" : ""}`}>
               <div className="selection-dock-content">
-                <div className="selection-dock-copy">
-                  <div className="selection-dock-eyebrow">
-                    Your Selection
+                <div className="selection-panel-heading">
+                  <span className="selection-panel-icon" aria-hidden="true">
+                    <MdReceiptLong />
+                  </span>
+                  <div>
+                    <div className="selection-dock-eyebrow">Your Estimate</div>
+                    <p>{selectedPlan ? "Ready when you are" : "Choose a package to begin"}</p>
                   </div>
-                  <div className={`selection-dock-label ${hasSelection ? "" : "is-empty"}`}>
-                    {!hasSelection ? (
-                      <span>Choose a plan to start.</span>
-                    ) : shouldCycleSelections ? (
-                      <div className="selection-ticker">
-                        <AnimatePresence mode="wait">
-                          {activeTickerItem && (
-                            <motion.span
-                              key={activeTickerItem.id}
-                              initial={{ opacity: 0, y: 8 }}
-                              animate={{ opacity: 1, y: 0 }}
-                              exit={{ opacity: 0, y: -8 }}
-                              transition={{ duration: 0.3 }}
-                              className={`block truncate ${activeTickerItem.className ?? ""}`}
-                            >
-                              {activeTickerItem.label}
-                            </motion.span>
-                          )}
-                        </AnimatePresence>
-                      </div>
-                    ) : (
-                      <>
-                        {planLabel && <span className={planClassName}>{planLabel}</span>}
-                        {selectedPlan && hasSubscription && <span className="selection-dock-plus">+</span>}
-                        {hasSubscription && <span>Hosting + Maintenance</span>}
-                      </>
-                    )}
-                  </div>
-                  <div className="selection-summary" aria-label="Selection summary">
-                    <div>
+                </div>
+
+                <div className="selection-summary" aria-label="Selection summary">
+                  <div className="selection-summary-row">
+                    <span className="selection-summary-icon" aria-hidden="true"><MdViewModule /></span>
+                    <span className="selection-summary-copy">
                       <span>Build</span>
-                      <strong>{planLabel ?? "Not selected"}</strong>
-                    </div>
-                    <div>
-                      <span>Project fee</span>
-                      <strong>{planPrice ?? "--"}</strong>
-                    </div>
-                    <div>
-                      <span>Support</span>
-                      <strong>{hasSubscription ? "$150 / month" : "Optional"}</strong>
-                    </div>
-                    <div>
-                      <span>Total</span>
-                      <strong>{totalEstimate}</strong>
+                      <strong>{shortPlanLabel ?? "Not selected"}</strong>
+                    </span>
+                    <em>{planPrice ?? "--"}</em>
+                  </div>
+                  <div
+                    className={`selection-summary-collapsible ${hasSubscription ? "is-open" : ""}`}
+                    aria-hidden={!hasSubscription}
+                  >
+                    <div className="selection-summary-collapsible-inner">
+                      <div className="selection-summary-row selection-summary-row-support">
+                        <span className="selection-summary-icon" aria-hidden="true"><MdSupportAgent /></span>
+                        <span className="selection-summary-copy">
+                          <span>Support</span>
+                          <strong>Added</strong>
+                        </span>
+                        <em>$150 / mo</em>
+                      </div>
                     </div>
                   </div>
+                </div>
+
+                <div className="selection-total">
+                  <span>Total</span>
+                  <strong>
+                    {planPrice ?? "$0"}
+                    <small>one-time</small>
+                  </strong>
+                  <p>{hasSubscription ? "+ $150 / month support" : "Support optional"}</p>
                 </div>
 
                 <button

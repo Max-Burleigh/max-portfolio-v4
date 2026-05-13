@@ -1209,7 +1209,7 @@
   }
 
   :global(.portfolio-master-card[data-section-mode="section-scroll"][data-active-section="services"] .selection-summary):where(:not(.moduleScope)) {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-columns: minmax(0, 1fr);
   }
 
   :global(.portfolio-master-card[data-section-mode="section-scroll"][data-active-section="portfolio"] .portfolio-deck-shell):where(:not(.moduleScope)) {

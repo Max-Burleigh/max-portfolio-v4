@@ -133,6 +133,16 @@ Important CSS Modules detail:
    - Use transform/opacity/filter carefully.
    - Respect `prefers-reduced-motion`.
    - Keep pointer handlers throttled when they can fire frequently.
+   - For collapse/expand UI, do not animate Framer Motion to `height: "auto"`.
+     It can snap at the end when the inline height becomes the literal `auto`.
+     Use the CSS grid pattern instead: wrapper `display: grid`,
+     `grid-template-rows: 0fr`, open state `grid-template-rows: 1fr`, and an
+     inner wrapper with `overflow: hidden; min-height: 0`.
+   - When using the grid collapsible pattern inside a parent with broad
+     descendant rules such as `.parent div`, reset the wrapper and inner wrapper
+     with a two-class selector such as `.parent .collapsible` and
+     `.parent .collapsible-inner` so inherited card/border/background styles do
+     not break the reveal.
 
 5. Images:
    - Use `next/image`.
