@@ -2517,7 +2517,13 @@
 }
 
 @media (max-width: 768px) {
+  :global(.services-section):where(:not(.moduleScope)) {
+    display: flex;
+    flex-direction: column;
+  }
+
   :global(.services-section > .services-cockpit):where(:not(.moduleScope)) {
+    flex: 1 1 auto;
     height: auto;
     min-height: 0;
     max-height: none;
@@ -2573,10 +2579,10 @@
     --mobile-accent: #53fff1;
     --mobile-accent-muted: rgba(83, 255, 241, 0.18);
     display: grid;
-    flex: 0 0 auto;
+    flex: 1 1 auto;
     min-height: 0;
-    grid-template-rows: auto auto auto auto auto auto;
-    align-content: start;
+    grid-template-rows: auto auto auto minmax(min-content, 1fr) auto auto;
+    align-content: stretch;
     gap: clamp(0.42rem, 1.05vh, 0.64rem);
     padding: clamp(0.74rem, 3vw, 0.94rem);
     border: 1px solid rgba(148, 177, 210, 0.2);
@@ -2802,7 +2808,7 @@
 
   :global(.mobile-plan-details):where(:not(.moduleScope)) {
     display: grid;
-    block-size: clamp(7.2rem, 14.2svh, 8.6rem);
+    min-block-size: clamp(7.2rem, 14.2svh, 8.6rem);
     align-content: center;
     gap: clamp(0.42rem, 1vh, 0.64rem);
     padding: clamp(0.72rem, 2.7vw, 0.98rem) clamp(0.82rem, 3vw, 1.08rem);
@@ -3296,7 +3302,7 @@
   }
 
   :global(.mobile-service-configurator):where(:not(.moduleScope)) {
-    grid-template-rows: auto auto auto auto auto auto;
+    grid-template-rows: auto auto auto minmax(min-content, 1fr) auto auto;
     gap: 0.28rem;
     padding: 0.54rem;
     border-radius: 18px;
@@ -3361,7 +3367,7 @@
 
   :global(.mobile-plan-details):where(:not(.moduleScope)) {
     gap: 0.28rem;
-    block-size: 6.75rem;
+    min-block-size: 6.75rem;
     padding: 0.54rem 0.62rem;
     border-radius: 12px;
   }
@@ -3485,10 +3491,10 @@
   }
 
   :global(.mobile-service-configurator):where(:not(.moduleScope)) {
-    flex: 0 0 auto;
+    flex: 1 1 auto;
     min-height: 0;
-    grid-template-rows: min-content min-content min-content min-content min-content min-content;
-    align-content: start;
+    grid-template-rows: min-content min-content min-content minmax(min-content, 1fr) min-content min-content;
+    align-content: stretch;
     gap: clamp(0.48rem, 1.2vh, 0.72rem);
     padding: clamp(0.76rem, 3vw, 1rem);
     overflow: visible !important;
@@ -3558,7 +3564,7 @@
   :global(.mobile-plan-details):where(:not(.moduleScope)) {
     block-size: auto;
     min-block-size: 0;
-    align-content: start;
+    align-content: center;
     gap: clamp(0.36rem, 0.95vh, 0.56rem);
     padding: clamp(0.62rem, 2.55vw, 0.86rem) clamp(0.68rem, 2.9vw, 0.98rem);
   }
@@ -3596,10 +3602,10 @@
   }
 
   :global(.mobile-service-configurator):where(:not(.moduleScope)) {
-    flex: 0 0 auto;
+    flex: 1 1 auto;
     min-height: 0;
-    grid-template-rows: min-content min-content min-content min-content min-content min-content;
-    align-content: start;
+    grid-template-rows: min-content min-content min-content minmax(min-content, 1fr) min-content min-content;
+    align-content: stretch;
     gap: 0.34rem;
     padding: 0.5rem;
     overflow: visible !important;
