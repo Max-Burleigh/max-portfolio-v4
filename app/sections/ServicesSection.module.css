@@ -99,7 +99,7 @@
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08), 0 24px 52px rgba(0, 0, 0, 0.16);
   color: white;
   text-align: left;
-  transition: border-color 260ms ease, box-shadow 260ms ease, background 260ms ease, filter 260ms ease, opacity 260ms ease, transform 260ms ease;
+  transition: min-height 420ms cubic-bezier(0.22, 1, 0.36, 1), border-color 320ms cubic-bezier(0.22, 1, 0.36, 1), box-shadow 320ms cubic-bezier(0.22, 1, 0.36, 1), background 260ms ease, filter 260ms ease, opacity 260ms ease, transform 260ms ease;
 }
 
 :global(.service-plan-card):where(:not(.moduleScope)),
@@ -145,7 +145,7 @@
 }
 
 :global(.service-plan-grid.has-card-focus .service-plan-card.is-dimmed):where(:not(.moduleScope)) {
-  filter: blur(1.15px) saturate(0.82);
+  filter: saturate(0.82);
   opacity: 0.54;
   transform: scale(0.992);
 }
@@ -476,11 +476,7 @@
     0 0 32px rgba(210, 156, 255, 0.12);
 }
 
-:global(.service-selection-card.has-selection.has-support):where(:not(.moduleScope)) {
-  border-color: transparent;
-}
-
-:global(.service-selection-card.has-selection.has-support):where(:not(.moduleScope))::before {
+:global(.service-selection-card.has-selection):where(:not(.moduleScope))::before {
   content: "";
   position: absolute;
   inset: 0;
@@ -488,11 +484,21 @@
   padding: 1px;
   border-radius: inherit;
   pointer-events: none;
+  opacity: 0;
   -webkit-mask:
     linear-gradient(#000 0 0) content-box,
     linear-gradient(#000 0 0);
   -webkit-mask-composite: xor;
   mask-composite: exclude;
+  transition: opacity 320ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+:global(.service-selection-card.has-selection.has-support):where(:not(.moduleScope)) {
+  border-color: transparent;
+}
+
+:global(.service-selection-card.has-selection.has-support):where(:not(.moduleScope))::before {
+  opacity: 1;
 }
 
 :global(.service-selection-card.has-selection.has-support.is-essential):where(:not(.moduleScope)) {
@@ -1779,6 +1785,720 @@
   }
 }
 
+/* Services desktop redesign: plan stack plus persistent selection panel. */
+@media (min-width: 769px) {
+  :global(.services-section > .services-cockpit):where(:not(.moduleScope)) {
+    gap: clamp(0.92rem, 1.9vh, 1.42rem);
+    padding-bottom: clamp(0.22rem, 0.7vh, 0.54rem);
+  }
+
+  :global(.cockpit-header):where(:not(.moduleScope)) {
+    grid-template-columns: minmax(0, 1.16fr) minmax(280px, 0.84fr);
+    align-items: center;
+    gap: clamp(1.25rem, 3.35vw, 3.6rem);
+    padding-bottom: clamp(0.18rem, 0.7vh, 0.5rem);
+    border-bottom: 0;
+  }
+
+  :global(.cockpit-header h2):where(:not(.moduleScope)) {
+    max-width: 12.4em;
+    font-size: clamp(2rem, min(4.6vw, 5.7vh), 3.55rem);
+    line-height: 0.98;
+  }
+
+  :global(.cockpit-header > p):where(:not(.moduleScope)) {
+    max-width: 34rem;
+    padding-left: clamp(1rem, 2vw, 1.65rem);
+    border-left: 1px solid rgba(255, 255, 255, 0.16);
+    transform: none;
+  }
+
+  :global(.service-plan-grid):where(:not(.moduleScope)) {
+    --service-action-bottom-gap: 0;
+    --service-action-height: clamp(2.7rem, 5.4vh, 3.35rem);
+    display: grid;
+    flex: 1 1 auto;
+    min-height: 0;
+    grid-template-columns: minmax(0, 1fr) clamp(17.5rem, 27vw, 24.5rem);
+    grid-template-rows: minmax(0, 1fr) auto;
+    gap: clamp(0.78rem, 1.55vw, 1.15rem);
+    overflow: hidden;
+  }
+
+  :global(.service-plan-swiper):where(:not(.moduleScope)) {
+    display: grid;
+    grid-column: 1;
+    grid-row: 1;
+    align-content: start;
+    gap: clamp(0.72rem, 1.35vh, 1rem);
+    min-height: 0;
+    overflow: visible;
+  }
+
+  :global(.service-lower-panels):where(:not(.moduleScope)) {
+    display: contents;
+  }
+
+  :global(.service-support-card):where(:not(.moduleScope)) {
+    grid-column: 1;
+    grid-row: 2;
+  }
+
+  :global(.service-selection-card):where(:not(.moduleScope)) {
+    grid-column: 2;
+    grid-row: 1 / 3;
+  }
+
+  :global(.service-plan-card):where(:not(.moduleScope)),
+  :global(.service-support-card):where(:not(.moduleScope)),
+  :global(.service-selection-card):where(:not(.moduleScope)) {
+    border-radius: 22px;
+    background:
+      radial-gradient(circle at 0% 0%, rgba(83, 255, 241, 0.065), transparent 35%),
+      linear-gradient(145deg, rgba(255, 255, 255, 0.074), rgba(255, 255, 255, 0.025));
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.09),
+      0 22px 48px rgba(0, 0, 0, 0.14);
+  }
+
+  :global(.service-plan-card):where(:not(.moduleScope)),
+  :global(.service-support-card):where(:not(.moduleScope)) {
+    display: grid;
+    min-height: clamp(5.35rem, 9.3vh, 6.65rem);
+    padding: clamp(0.82rem, 1.18vw, 1.08rem);
+    overflow: hidden;
+  }
+
+  :global(.service-plan-card.is-expanded):where(:not(.moduleScope)) {
+    min-height: clamp(13.2rem, 28vh, 18rem);
+  }
+
+  :global(.service-plan-card.is-essential.is-expanded):where(:not(.moduleScope)) {
+    background:
+      radial-gradient(circle at 0% 0%, rgba(83, 255, 241, 0.13), transparent 36%),
+      linear-gradient(145deg, rgba(255, 255, 255, 0.084), rgba(255, 255, 255, 0.03));
+  }
+
+  :global(.service-plan-card.is-growth):where(:not(.moduleScope)),
+  :global(.service-selection-card.is-growth):where(:not(.moduleScope)) {
+    background:
+      radial-gradient(circle at 0% 0%, rgba(210, 156, 255, 0.13), transparent 36%),
+      linear-gradient(145deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.028));
+  }
+
+  :global(.service-support-card):where(:not(.moduleScope)) {
+    min-height: clamp(5.6rem, 9.7vh, 6.85rem);
+  }
+
+  :global(.service-support-card.is-unavailable):where(:not(.moduleScope)) {
+    opacity: 0.72;
+    filter: saturate(0.72);
+  }
+
+  :global(.desktop-plan-shell):where(:not(.moduleScope)) {
+    display: block;
+    width: 100%;
+    height: 100%;
+  }
+
+  :global(.desktop-plan-main):where(:not(.moduleScope)) {
+    display: grid;
+    align-content: start;
+    min-width: 0;
+    height: 100%;
+  }
+
+  :global(.desktop-plan-details):where(:not(.moduleScope)) {
+    display: grid;
+    grid-template-rows: 0fr;
+    padding-top: 0;
+    min-width: 0;
+    opacity: 0;
+    overflow: hidden;
+    pointer-events: none;
+    transform: translate3d(0, -0.28rem, 0);
+    transition:
+      grid-template-rows 420ms cubic-bezier(0.22, 1, 0.36, 1),
+      padding-top 420ms cubic-bezier(0.22, 1, 0.36, 1),
+      opacity 240ms ease,
+      transform 420ms cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  :global(.service-plan-card.is-expanded .desktop-plan-details):where(:not(.moduleScope)) {
+    grid-template-rows: 1fr;
+    padding-top: clamp(0.7rem, 1.35vh, 1rem);
+    opacity: 1;
+    pointer-events: auto;
+    transform: translate3d(0, 0, 0);
+  }
+
+  :global(.desktop-plan-details-inner):where(:not(.moduleScope)) {
+    display: grid;
+    gap: clamp(0.7rem, 1.35vh, 1rem);
+    min-height: 0;
+    min-width: 0;
+    overflow: hidden;
+  }
+
+  :global(.desktop-plan-header):where(:not(.moduleScope)) {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto auto;
+    align-items: center;
+    gap: clamp(0.75rem, 1.45vw, 1.2rem);
+    min-width: 0;
+  }
+
+  :global(.desktop-plan-copy):where(:not(.moduleScope)) {
+    min-width: 0;
+  }
+
+  :global(.service-plan-title):where(:not(.moduleScope)) {
+    display: block;
+    margin-bottom: 0.22rem;
+    font-size: clamp(0.82rem, 1vw, 1.02rem);
+    letter-spacing: 0.22em;
+  }
+
+  :global(.service-plan-copy):where(:not(.moduleScope)) {
+    max-width: 32rem;
+    font-size: clamp(0.78rem, 0.92vw, 0.94rem);
+    line-height: 1.28;
+  }
+
+  :global(.service-plan-price):where(:not(.moduleScope)) {
+    font-size: clamp(1.55rem, 2.25vw, 2.35rem);
+  }
+
+  :global(.desktop-plan-state):where(:not(.moduleScope)) {
+    display: inline-grid;
+    min-width: clamp(3.3rem, 5.4vw, 4.6rem);
+    min-height: clamp(2.4rem, 4.8vh, 3.05rem);
+    place-items: center;
+    border: 1px solid rgba(255, 255, 255, 0.13);
+    border-radius: 999px;
+    background: rgba(7, 17, 32, 0.24);
+    color: rgba(230, 238, 248, 0.62);
+    font-size: clamp(0.64rem, 0.78vw, 0.75rem);
+    font-weight: 800;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  :global(.desktop-plan-state svg):where(:not(.moduleScope)) {
+    color: currentColor;
+    font-size: 1.3rem;
+  }
+
+  :global(.service-plan-card.is-selected .desktop-plan-state):where(:not(.moduleScope)) {
+    color: white;
+  }
+
+  :global(.service-plan-card.is-essential.is-selected .desktop-plan-state):where(:not(.moduleScope)) {
+    border-color: rgba(83, 255, 241, 0.42);
+    background: rgba(83, 255, 241, 0.12);
+    color: #53fff1;
+  }
+
+  :global(.service-plan-card.is-growth.is-selected .desktop-plan-state):where(:not(.moduleScope)) {
+    border-color: rgba(210, 156, 255, 0.42);
+    background: rgba(210, 156, 255, 0.14);
+    color: #d29cff;
+  }
+
+  :global(.service-plan-card .service-feature-rail):where(:not(.moduleScope)) {
+    display: none;
+  }
+
+  :global(.desktop-plan-details .service-feature-rail):where(:not(.moduleScope)) {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    align-items: stretch;
+    gap: 0;
+    margin: clamp(0.2rem, 0.45vh, 0.4rem) 0 0;
+    padding: clamp(0.82rem, 1.4vh, 1.05rem) 0;
+    border-block: 1px solid rgba(255, 255, 255, 0.095);
+  }
+
+  :global(.desktop-plan-details .service-feature-column):where(:not(.moduleScope)) {
+    justify-content: center;
+    min-height: clamp(5.2rem, 9.5vh, 6.4rem);
+    padding: 0 clamp(0.52rem, 1.1vw, 1rem);
+  }
+
+  :global(.desktop-plan-details .service-feature-column:nth-child(3)):where(:not(.moduleScope)) {
+    grid-column: auto;
+    justify-self: stretch;
+    width: auto;
+  }
+
+  :global(.desktop-plan-details .service-feature-column:nth-child(3)):where(:not(.moduleScope))::before {
+    display: block;
+  }
+
+  :global(.service-feature-icon):where(:not(.moduleScope)) {
+    width: clamp(2rem, 2.8vw, 2.65rem);
+    height: clamp(2rem, 2.8vw, 2.65rem);
+    margin-bottom: clamp(0.38rem, 0.8vh, 0.58rem);
+    font-size: clamp(1.65rem, 2.2vw, 2.18rem);
+  }
+
+  :global(.service-feature-title):where(:not(.moduleScope)) {
+    font-size: clamp(0.74rem, 0.88vw, 0.92rem);
+  }
+
+  :global(.service-feature-detail):where(:not(.moduleScope)) {
+    max-width: 10rem;
+    font-size: clamp(0.68rem, 0.78vw, 0.8rem);
+    line-height: 1.3;
+  }
+
+  :global(.service-plan-action):where(:not(.moduleScope)) {
+    width: 100%;
+    min-height: var(--service-action-height);
+    margin-top: 0;
+    border-radius: 14px;
+    font-size: clamp(0.86rem, 0.96vw, 1rem);
+  }
+
+  :global(.service-support-card .service-plan-action):where(:not(.moduleScope)) {
+    width: auto;
+    min-width: clamp(7.4rem, 10vw, 9rem);
+    padding-inline: 1rem;
+    font-size: clamp(0.78rem, 0.86vw, 0.9rem);
+    white-space: nowrap;
+  }
+
+  :global(.service-support-card .desktop-plan-header):where(:not(.moduleScope)) {
+    grid-template-columns: minmax(0, 1fr) auto auto;
+  }
+
+  :global(.service-support-card .service-plan-title):where(:not(.moduleScope)) {
+    color: #76b6ff;
+  }
+
+  :global(.support-toggle-switch):where(:not(.moduleScope)) {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    width: clamp(3rem, 4.8vw, 3.6rem);
+    height: clamp(1.7rem, 3.2vh, 2rem);
+    padding: 0.18rem;
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    border-radius: 999px;
+    background: rgba(7, 17, 32, 0.38);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.1);
+    transition: border-color 220ms ease, background 220ms ease, box-shadow 220ms ease;
+  }
+
+  :global(.support-toggle-switch > span):where(:not(.moduleScope)) {
+    display: block;
+    width: calc(50% - 0.09rem);
+    aspect-ratio: 1;
+    border-radius: 999px;
+    background: rgba(230, 238, 248, 0.74);
+    box-shadow: 0 6px 14px rgba(0, 0, 0, 0.22);
+    transform: translateX(0);
+    transition: transform 220ms cubic-bezier(0.22, 1, 0.36, 1), background 220ms ease;
+  }
+
+  :global(.support-toggle-switch.is-selected):where(:not(.moduleScope)) {
+    border-color: rgba(118, 182, 255, 0.62);
+    background: rgba(118, 182, 255, 0.22);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.16), 0 0 18px rgba(118, 182, 255, 0.2);
+  }
+
+  :global(.support-toggle-switch.is-selected > span):where(:not(.moduleScope)) {
+    background: #76b6ff;
+    transform: translateX(calc(100% + 0.18rem));
+  }
+
+  :global(.service-selection-card):where(:not(.moduleScope)) {
+    display: grid;
+    min-height: 0;
+    padding: clamp(1.05rem, 1.55vw, 1.42rem);
+    overflow: hidden;
+  }
+
+  :global(.service-selection-card::after):where(:not(.moduleScope)) {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    border-radius: inherit;
+    background:
+      radial-gradient(circle at 18% 0%, rgba(210, 156, 255, 0.16), transparent 36%),
+      radial-gradient(circle at 90% 20%, rgba(83, 255, 241, 0.08), transparent 34%);
+    opacity: 0.72;
+  }
+
+  :global(.selection-dock-content):where(:not(.moduleScope)) {
+    display: flex;
+    flex-direction: column;
+    gap: clamp(0.72rem, 1.4vh, 1.05rem);
+    height: 100%;
+    min-height: 0;
+  }
+
+  :global(.selection-panel-heading):where(:not(.moduleScope)) {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    align-items: center;
+    gap: 0.88rem;
+    padding-bottom: clamp(0.72rem, 1.35vh, 1rem);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+  }
+
+  :global(.selection-panel-icon):where(:not(.moduleScope)) {
+    display: inline-grid;
+    width: clamp(3.2rem, 4.8vw, 4rem);
+    aspect-ratio: 1;
+    place-items: center;
+    border: 1px solid rgba(210, 156, 255, 0.48);
+    border-radius: 999px;
+    background: rgba(210, 156, 255, 0.12);
+    color: #d29cff;
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.14), 0 0 24px rgba(210, 156, 255, 0.13);
+    transition: border-color 260ms ease, background 260ms ease, color 260ms ease, box-shadow 260ms ease;
+  }
+
+  :global(.service-selection-card.is-essential .selection-panel-icon):where(:not(.moduleScope)) {
+    border-color: rgba(83, 255, 241, 0.48);
+    background: rgba(83, 255, 241, 0.12);
+    color: #53fff1;
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.14), 0 0 24px rgba(83, 255, 241, 0.13);
+  }
+
+  :global(.selection-panel-icon svg):where(:not(.moduleScope)) {
+    font-size: clamp(1.55rem, 2.2vw, 1.9rem);
+  }
+
+  :global(.selection-panel-heading p):where(:not(.moduleScope)) {
+    margin: 0.18rem 0 0;
+    color: rgba(230, 238, 248, 0.72);
+    font-size: clamp(0.78rem, 0.9vw, 0.95rem);
+    line-height: 1.25;
+  }
+
+  :global(.selection-dock-eyebrow):where(:not(.moduleScope)) {
+    margin: 0;
+    color: rgba(230, 238, 248, 0.62);
+    font-size: clamp(0.68rem, 0.82vw, 0.82rem);
+    letter-spacing: 0.18em;
+  }
+
+  :global(.selection-summary):where(:not(.moduleScope)) {
+    display: grid;
+    flex: 1 1 auto;
+    grid-template-columns: 1fr;
+    align-content: start;
+    row-gap: 0;
+    margin: 0;
+    min-height: 0;
+    padding-top: clamp(0.16rem, 0.9vh, 0.62rem);
+  }
+
+  :global(.selection-summary .selection-summary-row):where(:not(.moduleScope)) {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 0.76rem;
+    min-height: clamp(3.5rem, 6vh, 4.4rem);
+    padding: clamp(0.55rem, 0.9vw, 0.78rem) clamp(0.7rem, 1.05vw, 0.9rem);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 16px;
+    background: rgba(7, 17, 32, 0.3);
+  }
+
+  :global(.selection-summary .selection-summary-collapsible):where(:not(.moduleScope)) {
+    display: grid;
+    grid-template-rows: 0fr;
+    min-height: 0;
+    padding: 0;
+    border: none;
+    border-radius: 0;
+    background: none;
+    opacity: 0;
+    transition:
+      grid-template-rows 320ms cubic-bezier(0.22, 1, 0.36, 1),
+      opacity 220ms ease;
+  }
+
+  :global(.selection-summary .selection-summary-collapsible.is-open):where(:not(.moduleScope)) {
+    grid-template-rows: 1fr;
+    opacity: 1;
+  }
+
+  :global(.selection-summary .selection-summary-collapsible-inner):where(:not(.moduleScope)) {
+    min-height: 0;
+    padding: 0;
+    border: none;
+    border-radius: 0;
+    background: none;
+    overflow: hidden;
+  }
+
+  :global(.selection-summary-collapsible .selection-summary-row-support):where(:not(.moduleScope)) {
+    margin-top: clamp(0.62rem, 1.2vh, 0.82rem);
+  }
+
+  :global(.selection-summary .selection-summary-icon):where(:not(.moduleScope)) {
+    display: inline-grid;
+    width: clamp(2.4rem, 3.4vw, 2.9rem);
+    aspect-ratio: 1;
+    place-items: center;
+    border-radius: 12px;
+    background: rgba(255, 255, 255, 0.045);
+    color: #d29cff;
+    font-size: clamp(1.45rem, 2vw, 1.8rem);
+    font-weight: 400;
+    letter-spacing: 0;
+    line-height: 1;
+    margin-bottom: 0;
+    text-transform: none;
+    transition: color 260ms ease, background 260ms ease;
+  }
+
+  :global(.service-selection-card.is-essential .selection-summary-icon):where(:not(.moduleScope)) {
+    color: #53fff1;
+  }
+
+  :global(.selection-summary-row-support .selection-summary-icon):where(:not(.moduleScope)) {
+    color: #76b6ff;
+  }
+
+  :global(.selection-summary .selection-summary-icon svg):where(:not(.moduleScope)) {
+    display: block;
+    width: clamp(1.35rem, 1.9vw, 1.72rem);
+    height: clamp(1.35rem, 1.9vw, 1.72rem);
+    color: currentColor;
+    flex: 0 0 auto;
+  }
+
+  :global(.selection-summary-copy):where(:not(.moduleScope)) {
+    display: grid;
+    gap: 0.18rem;
+    min-width: 0;
+  }
+
+  :global(.selection-summary-copy span):where(:not(.moduleScope)) {
+    margin: 0;
+    color: rgba(230, 238, 248, 0.58);
+    font-size: clamp(0.64rem, 0.78vw, 0.74rem) !important;
+    font-weight: 800;
+    letter-spacing: 0.14em;
+    line-height: 1;
+    text-transform: uppercase;
+  }
+
+  :global(.selection-summary-copy strong):where(:not(.moduleScope)) {
+    overflow: hidden;
+    color: rgba(255, 255, 255, 0.95);
+    font-size: clamp(0.92rem, 1.08vw, 1.08rem);
+    line-height: 1.14;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  :global(.selection-summary .selection-summary-row em):where(:not(.moduleScope)) {
+    color: rgba(244, 249, 255, 0.86);
+    font-size: clamp(0.82rem, 0.94vw, 1rem);
+    font-style: normal;
+    font-weight: 750;
+    white-space: nowrap;
+  }
+
+  :global(.selection-total):where(:not(.moduleScope)) {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: end;
+    column-gap: 0.75rem;
+    padding-top: clamp(0.75rem, 1.4vh, 1rem);
+    border-top: 1px solid rgba(255, 255, 255, 0.12);
+  }
+
+  :global(.selection-total > span):where(:not(.moduleScope)) {
+    color: rgba(230, 238, 248, 0.58);
+    font-size: clamp(0.72rem, 0.88vw, 0.85rem);
+    font-weight: 800;
+    letter-spacing: 0.14em;
+    line-height: 1;
+    text-transform: uppercase;
+  }
+
+  :global(.selection-total strong):where(:not(.moduleScope)) {
+    display: inline-flex;
+    align-items: baseline;
+    justify-content: flex-end;
+    gap: 0.38rem;
+    color: rgba(244, 249, 255, 0.96);
+    font-family: var(--font-space-grotesk), var(--font-fallback);
+    font-size: clamp(2rem, 3vw, 3rem);
+    line-height: 0.95;
+    letter-spacing: -0.02em;
+  }
+
+  :global(.selection-total small):where(:not(.moduleScope)) {
+    color: rgba(230, 238, 248, 0.5);
+    font-family: inherit;
+    font-size: clamp(0.62rem, 0.76vw, 0.78rem);
+    font-weight: 500;
+    letter-spacing: 0;
+  }
+
+  :global(.selection-total p):where(:not(.moduleScope)) {
+    grid-column: 1 / -1;
+    margin: 0.36rem 0 0;
+    color: rgba(230, 238, 248, 0.66);
+    font-size: clamp(0.76rem, 0.9vw, 0.88rem);
+    line-height: 1.25;
+    text-align: right;
+  }
+
+  :global(.selection-dock-button):where(:not(.moduleScope)) {
+    grid-row: auto;
+    min-height: var(--service-action-height);
+    border-radius: 16px;
+    background: linear-gradient(135deg, rgba(190, 128, 255, 0.95), rgba(91, 80, 255, 0.94));
+    color: white;
+    font-size: clamp(0.92rem, 1.05vw, 1.08rem);
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.28),
+      0 0 24px rgba(150, 91, 255, 0.32);
+    transition: transform 180ms ease, background 260ms ease, box-shadow 260ms ease, color 260ms ease;
+  }
+
+  :global(.service-selection-card.is-essential .selection-dock-button):where(:not(.moduleScope)) {
+    background: linear-gradient(135deg, rgba(83, 255, 241, 0.95), rgba(48, 168, 200, 0.94));
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.28),
+      0 0 24px rgba(83, 255, 241, 0.32);
+  }
+
+  :global(.selection-dock-button:disabled):where(:not(.moduleScope)) {
+    background: rgba(255, 255, 255, 0.12);
+    color: rgba(230, 238, 248, 0.52);
+    box-shadow: none;
+  }
+
+  :global(.service-plan-card):where(:not(.moduleScope)):focus-visible,
+  :global(.service-support-card):where(:not(.moduleScope)):focus-visible,
+  :global(.selection-dock-button):where(:not(.moduleScope)):focus-visible {
+    outline: 2px solid rgba(83, 255, 241, 0.8);
+    outline-offset: 3px;
+  }
+}
+
+@media (min-width: 769px) and (max-width: 1120px) {
+  :global(.service-plan-grid):where(:not(.moduleScope)) {
+    grid-template-columns: minmax(0, 1fr) clamp(16.5rem, 30vw, 20rem);
+  }
+
+  :global(.desktop-plan-header):where(:not(.moduleScope)),
+  :global(.service-support-card .desktop-plan-header):where(:not(.moduleScope)) {
+    grid-template-columns: minmax(0, 1fr) auto auto;
+  }
+
+  :global(.service-support-card .desktop-plan-header):where(:not(.moduleScope)) {
+    grid-template-columns: minmax(0, 1fr) auto auto;
+  }
+
+  :global(.support-toggle-switch):where(:not(.moduleScope)) {
+    justify-self: end;
+  }
+
+  :global(.desktop-plan-details .service-feature-rail):where(:not(.moduleScope)) {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    row-gap: 0;
+  }
+
+  :global(.desktop-plan-details .service-feature-column):where(:not(.moduleScope)) {
+    min-height: clamp(4.05rem, 7.4vh, 4.8rem);
+    padding-inline: clamp(0.28rem, 0.74vw, 0.52rem);
+  }
+
+  :global(.service-feature-title):where(:not(.moduleScope)) {
+    font-size: clamp(0.66rem, 0.82vw, 0.78rem);
+  }
+
+  :global(.service-feature-detail):where(:not(.moduleScope)) {
+    font-size: clamp(0.56rem, 0.72vw, 0.68rem);
+  }
+}
+
+@media (min-width: 769px) and (max-height: 760px) {
+  :global(.services-section > .services-cockpit):where(:not(.moduleScope)) {
+    gap: clamp(0.64rem, 1.25vh, 0.9rem);
+  }
+
+  :global(.cockpit-header h2):where(:not(.moduleScope)) {
+    font-size: clamp(1.75rem, min(4vw, 4.9vh), 2.75rem);
+  }
+
+  :global(.cockpit-header > p):where(:not(.moduleScope)) {
+    font-size: clamp(0.76rem, 0.9vw, 0.88rem);
+    line-height: 1.34;
+  }
+
+  :global(.service-plan-grid):where(:not(.moduleScope)) {
+    --service-action-height: 2.55rem;
+    gap: clamp(0.62rem, 1.2vw, 0.88rem);
+    overflow-x: hidden;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    scrollbar-width: thin;
+  }
+
+  :global(.service-plan-swiper):where(:not(.moduleScope)) {
+    gap: clamp(0.55rem, 1vh, 0.72rem);
+  }
+
+  :global(.service-plan-card.is-expanded):where(:not(.moduleScope)) {
+    min-height: clamp(11.5rem, 25vh, 14rem);
+  }
+
+  :global(.service-plan-card):where(:not(.moduleScope)),
+  :global(.service-support-card):where(:not(.moduleScope)) {
+    min-height: 5rem;
+    padding: clamp(0.66rem, 0.95vw, 0.86rem);
+  }
+
+  :global(.desktop-plan-details .service-feature-rail):where(:not(.moduleScope)) {
+    padding: clamp(0.54rem, 1vh, 0.78rem) 0;
+  }
+
+  :global(.desktop-plan-details .service-feature-column):where(:not(.moduleScope)) {
+    min-height: 4.55rem;
+  }
+
+  :global(.selection-summary .selection-summary-row):where(:not(.moduleScope)) {
+    min-height: clamp(3.4rem, 6.2vh, 4.2rem);
+    padding: clamp(0.52rem, 0.85vw, 0.7rem);
+  }
+
+  :global(.selection-total strong):where(:not(.moduleScope)) {
+    font-size: clamp(1.7rem, 2.5vw, 2.35rem);
+  }
+}
+
+@media (min-width: 769px) {
+  @container portfolio-card (max-height: 680px) {
+    :global(.service-plan-grid):where(:not(.moduleScope)) {
+      overflow-x: hidden;
+      overflow-y: auto;
+      overscroll-behavior: contain;
+      scrollbar-width: thin;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    :global(.desktop-plan-details):where(:not(.moduleScope)),
+    :global(.service-plan-card):where(:not(.moduleScope)) {
+      transition: none;
+      transform: none;
+    }
+  }
+}
+
 /* Services mobile redesign: readable plan cards inside the contained card. */
 :global(.cockpit-header .services-eyebrow):where(:not(.moduleScope)) {
   margin: 0 0 0.5rem;
@@ -2042,11 +2762,11 @@
 
   :global(.mobile-feature-chips li):where(:not(.moduleScope)) {
     display: grid;
-    min-height: clamp(3rem, 8vh, 3.75rem);
-    place-items: center;
+    min-height: clamp(4.25rem, 10.6vh, 5.35rem);
+    justify-items: center;
     align-content: center;
-    gap: 0.24rem;
-    padding: 0.4rem 0.28rem;
+    gap: 0.2rem;
+    padding: 0.42rem 0.24rem;
     border: 1px solid rgba(255, 255, 255, 0.1);
     border-radius: 13px;
     background: rgba(255, 255, 255, 0.04);
@@ -2056,13 +2776,27 @@
 
   :global(.mobile-feature-chips svg):where(:not(.moduleScope)) {
     color: var(--mobile-accent);
-    font-size: clamp(1.3rem, 5.4vw, 1.72rem);
+    font-size: clamp(1.1rem, 4.7vw, 1.45rem);
     filter: drop-shadow(0 0 11px color-mix(in srgb, var(--mobile-accent) 24%, transparent));
   }
 
-  :global(.mobile-feature-chips span):where(:not(.moduleScope)) {
-    font-size: clamp(0.68rem, 2.85vw, 0.82rem);
+  :global(.mobile-feature-chip-copy):where(:not(.moduleScope)) {
+    display: grid;
+    justify-items: center;
+    gap: 0.1rem;
+    min-width: 0;
+  }
+
+  :global(.mobile-feature-chip-copy span):where(:not(.moduleScope)) {
+    font-size: clamp(0.58rem, 2.42vw, 0.7rem);
     font-weight: 750;
+    line-height: 1.05;
+  }
+
+  :global(.mobile-feature-chip-copy small):where(:not(.moduleScope)) {
+    color: rgba(230, 238, 248, 0.58);
+    font-size: clamp(0.52rem, 2.18vw, 0.62rem);
+    font-weight: 650;
     line-height: 1.08;
   }
 
@@ -2191,15 +2925,47 @@
     align-items: center;
     justify-content: center;
     gap: 0.56rem;
-    border: 0;
+    border: 1px solid color-mix(in srgb, var(--mobile-accent) 52%, rgba(255, 255, 255, 0.34));
     border-radius: 14px;
-    background: rgba(241, 245, 255, 0.68);
-    color: rgba(8, 12, 26, 0.94);
+    background:
+      radial-gradient(circle at 22% 0%, rgba(255, 255, 255, 0.6), transparent 34%),
+      linear-gradient(
+        135deg,
+        color-mix(in srgb, var(--mobile-accent) 36%, white 64%) 0%,
+        color-mix(in srgb, var(--mobile-accent) 86%, white 14%) 58%,
+        color-mix(in srgb, var(--mobile-accent) 82%, #456383 18%) 100%
+      );
+    color: rgba(5, 10, 24, 0.95);
     font-family: var(--font-space-grotesk), var(--font-fallback);
     font-size: clamp(0.9rem, 3.75vw, 1.04rem);
     font-weight: 800;
-    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.45), 0 18px 34px rgba(0, 0, 0, 0.16);
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.72),
+      0 14px 30px color-mix(in srgb, var(--mobile-accent) 22%, transparent),
+      0 18px 34px rgba(0, 0, 0, 0.18);
     cursor: pointer;
+    transition: transform 180ms ease, border-color 220ms ease, box-shadow 220ms ease, filter 220ms ease;
+  }
+
+  :global(.mobile-service-configurator.is-previewing .mobile-start-button):where(:not(.moduleScope)) {
+    border-color: rgba(255, 255, 255, 0.18);
+    background:
+      radial-gradient(circle at 22% 0%, rgba(255, 255, 255, 0.22), transparent 34%),
+      rgba(241, 245, 255, 0.18);
+    color: rgba(244, 249, 255, 0.78);
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.2),
+      0 16px 30px rgba(0, 0, 0, 0.14);
+  }
+
+  :global(.mobile-start-button:hover):where(:not(.moduleScope)),
+  :global(.mobile-start-button:focus-visible):where(:not(.moduleScope)) {
+    filter: saturate(1.08) brightness(1.03);
+    transform: translateY(-1px);
+  }
+
+  :global(.mobile-start-button:active):where(:not(.moduleScope)) {
+    transform: translateY(0) scale(0.985);
   }
 
   /*
@@ -2720,20 +3486,28 @@
 
   :global(.mobile-service-configurator):where(:not(.moduleScope)) {
     flex: 1 1 auto;
-    min-height: clamp(23.5rem, 62svh, 31rem);
-    align-content: stretch;
-    gap: clamp(0.38rem, 1.05vh, 0.62rem);
-    padding: clamp(0.68rem, 2.75vw, 0.95rem);
+    min-height: 0;
+    grid-template-rows: min-content min-content min-content min-content min-content min-content;
+    align-content: space-between;
+    gap: clamp(0.48rem, 1.2vh, 0.72rem);
+    padding: clamp(0.76rem, 3vw, 1rem);
     overflow: hidden;
   }
 
+  :global(.mobile-plan-tabs):where(:not(.moduleScope)) {
+    --mobile-tab-padding: 0.2rem;
+    border-radius: 13px;
+  }
+
   :global(.mobile-plan-tab):where(:not(.moduleScope)) {
-    min-height: clamp(2.65rem, 7vh, 3.35rem);
+    min-height: clamp(2.18rem, 5.6vh, 2.72rem);
+    gap: 0.08rem;
+    border-radius: 10px;
   }
 
   :global(.mobile-plan-summary):where(:not(.moduleScope)) {
     gap: 0.58rem;
-    padding-top: clamp(0.34rem, 1.25vh, 0.62rem);
+    padding-top: clamp(0.22rem, 0.9vh, 0.42rem);
   }
 
   :global(.mobile-plan-summary p):where(:not(.moduleScope)) {
@@ -2747,16 +3521,19 @@
   }
 
   :global(.mobile-feature-chips li):where(:not(.moduleScope)) {
-    min-height: clamp(2.85rem, 7.6vh, 3.6rem);
+    min-height: clamp(4rem, 9.8vh, 5rem);
   }
 
   :global(.mobile-plan-details):where(:not(.moduleScope)) {
-    gap: clamp(0.28rem, 0.8vh, 0.46rem);
-    padding: clamp(0.54rem, 2.4vw, 0.82rem) clamp(0.62rem, 2.8vw, 0.96rem);
+    block-size: auto;
+    min-block-size: 0;
+    align-content: start;
+    gap: clamp(0.36rem, 0.95vh, 0.56rem);
+    padding: clamp(0.62rem, 2.55vw, 0.86rem) clamp(0.68rem, 2.9vw, 0.98rem);
   }
 
   :global(.mobile-plan-details ul):where(:not(.moduleScope)) {
-    gap: clamp(0.24rem, 0.75vh, 0.44rem);
+    gap: clamp(0.3rem, 0.85vh, 0.48rem);
   }
 
   :global(.mobile-plan-details li):where(:not(.moduleScope)) {
@@ -2769,7 +3546,8 @@
   }
 
   :global(.mobile-start-button):where(:not(.moduleScope)) {
-    min-height: clamp(2.72rem, 7vh, 3.45rem);
+    min-height: clamp(2.35rem, 5.8vh, 2.9rem);
+    line-height: 1.1;
   }
 }
 
@@ -2787,13 +3565,30 @@
   }
 
   :global(.mobile-service-configurator):where(:not(.moduleScope)) {
-    min-height: clamp(20.5rem, 58svh, 26rem);
-    gap: 0.3rem;
-    padding: 0.58rem;
+    min-height: 0;
+    grid-template-rows: min-content min-content min-content min-content min-content min-content;
+    align-content: start;
+    gap: 0.44rem;
+    padding: 0.62rem;
   }
 
-  :global(.mobile-plan-details):where(:not(.moduleScope)) {
-    block-size: 6.75rem;
+  :global(.mobile-plan-tab):where(:not(.moduleScope)) {
+    min-height: 2.1rem;
+  }
+
+  :global(.mobile-feature-chips li):where(:not(.moduleScope)) {
+    min-height: 3.7rem;
+    gap: 0.12rem;
+    padding: 0.32rem 0.18rem;
+  }
+
+  :global(.mobile-feature-chip-copy span):where(:not(.moduleScope)) {
+    font-size: 0.54rem;
+  }
+
+  :global(.mobile-feature-chip-copy small):where(:not(.moduleScope)) {
+    font-size: 0.49rem;
+    line-height: 1.04;
   }
 
   :global(.mobile-feature-chips):where(:not(.moduleScope)) {
@@ -2805,6 +3600,6 @@
   }
 
   :global(.mobile-start-button):where(:not(.moduleScope)) {
-    min-height: 2.48rem;
+    min-height: 2.28rem;
   }
 }
