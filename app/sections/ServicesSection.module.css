@@ -3557,8 +3557,8 @@
 
   :global(.mobile-plan-details):where(:not(.moduleScope)) {
     block-size: auto;
-    min-block-size: clamp(7.35rem, 18svh, 8.1rem);
-    align-content: center;
+    min-block-size: 0;
+    align-content: start;
     gap: clamp(0.36rem, 0.95vh, 0.56rem);
     padding: clamp(0.62rem, 2.55vw, 0.86rem) clamp(0.68rem, 2.9vw, 0.98rem);
   }
