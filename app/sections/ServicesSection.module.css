@@ -49,6 +49,10 @@
   line-height: 0.95;
   letter-spacing: -0.05em;
 }
+
+:global(.service-heading-mobile):where(:not(.moduleScope)) {
+  display: none;
+}
 :global(.cockpit-header p):where(:not(.moduleScope)) {
   margin: 0;
   color: rgba(230, 238, 248, 0.7);
@@ -2890,24 +2894,35 @@
     font-size: clamp(0.7rem, 2.85vw, 0.82rem);
   }
 
-  :global(.mobile-support-pill):where(:not(.moduleScope)) {
-    display: inline-flex;
+  :global(.mobile-support-switch):where(:not(.moduleScope)) {
+    position: relative;
+    display: inline-grid;
     flex: 0 0 auto;
     align-items: center;
-    justify-content: center;
-    gap: 0.32rem;
-    min-height: 2.1rem;
-    padding: 0 0.72rem;
-    border: 1px solid rgba(255, 255, 255, 0.13);
-    border-radius: 11px;
+    width: clamp(3.16rem, 13.2vw, 3.72rem);
+    height: clamp(1.72rem, 7vw, 2rem);
+    padding: 0.18rem;
+    border: 1px solid rgba(255, 255, 255, 0.16);
+    border-radius: 999px;
     background:
-      radial-gradient(circle at 0% 0%, rgba(83, 255, 241, 0.08), transparent 62%),
-      rgba(255, 255, 255, 0.055);
-    color: rgba(244, 249, 255, 0.86);
-    font-family: var(--font-space-grotesk), var(--font-fallback);
-    font-size: clamp(0.74rem, 3vw, 0.86rem);
-    font-weight: 800;
-    white-space: nowrap;
+      radial-gradient(circle at 18% 50%, rgba(255, 255, 255, 0.12), transparent 42%),
+      rgba(255, 255, 255, 0.075);
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.14),
+      inset 0 -10px 18px rgba(0, 0, 0, 0.14);
+    transition: background 180ms ease, border-color 180ms ease, box-shadow 180ms ease;
+  }
+
+  :global(.mobile-support-switch span):where(:not(.moduleScope)) {
+    width: calc(50% - 0.04rem);
+    aspect-ratio: 1;
+    border-radius: 999px;
+    background: rgba(244, 249, 255, 0.86);
+    box-shadow:
+      0 4px 10px rgba(0, 0, 0, 0.22),
+      inset 0 1px 0 rgba(255, 255, 255, 0.5);
+    transform: translateX(0);
+    transition: transform 180ms cubic-bezier(0.22, 1, 0.36, 1), background 180ms ease;
   }
 
   :global(.mobile-support-row.is-selected):where(:not(.moduleScope)) {
@@ -2915,10 +2930,19 @@
     background: rgba(255, 255, 255, 0.075);
   }
 
-  :global(.mobile-support-row.is-selected .mobile-support-pill):where(:not(.moduleScope)) {
-    border-color: color-mix(in srgb, var(--mobile-accent) 42%, transparent);
-    color: var(--mobile-accent);
-    background: color-mix(in srgb, var(--mobile-accent) 13%, transparent);
+  :global(.mobile-support-row.is-selected .mobile-support-switch):where(:not(.moduleScope)) {
+    border-color: color-mix(in srgb, var(--mobile-accent) 54%, transparent);
+    background:
+      radial-gradient(circle at 80% 50%, rgba(255, 255, 255, 0.2), transparent 44%),
+      color-mix(in srgb, var(--mobile-accent) 46%, rgba(255, 255, 255, 0.08));
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.28),
+      0 0 18px color-mix(in srgb, var(--mobile-accent) 18%, transparent);
+  }
+
+  :global(.mobile-support-row.is-selected .mobile-support-switch span):where(:not(.moduleScope)) {
+    background: rgba(5, 10, 24, 0.92);
+    transform: translateX(calc(100% + 0.08rem));
   }
 
   :global(.mobile-support-row.is-unavailable):where(:not(.moduleScope)) {
@@ -3397,10 +3421,10 @@
     font-size: 0.66rem;
   }
 
-  :global(.mobile-support-pill):where(:not(.moduleScope)) {
-    min-height: 1.86rem;
-    padding: 0 0.54rem;
-    font-size: 0.7rem;
+  :global(.mobile-support-switch):where(:not(.moduleScope)) {
+    width: 3rem;
+    height: 1.68rem;
+    padding: 0.16rem;
   }
 
   :global(.mobile-start-button):where(:not(.moduleScope)) {
@@ -3485,6 +3509,15 @@
     letter-spacing: -0.055em;
   }
 
+  :global(.services-section .service-heading-desktop):where(:not(.moduleScope)) {
+    display: none;
+  }
+
+  :global(.services-section .service-heading-mobile):where(:not(.moduleScope)) {
+    display: block;
+    max-width: 9.2em;
+  }
+
   :global(.services-section .cockpit-header > p):where(:not(.moduleScope)) {
     font-size: clamp(0.82rem, 3.35vw, 0.94rem);
     line-height: 1.28;
@@ -3517,7 +3550,7 @@
   }
 
   :global(.mobile-plan-summary p):where(:not(.moduleScope)) {
-    min-height: 0;
+    min-height: 2.36em;
     font-size: clamp(0.72rem, 2.95vw, 0.86rem);
     line-height: 1.18;
   }
@@ -3528,6 +3561,7 @@
 
   :global(.mobile-feature-chips):where(:not(.moduleScope)) {
     grid-template-columns: 1fr;
+    grid-auto-rows: clamp(4.3rem, 9.25vh, 4.88rem);
     gap: 0.32rem;
   }
 
@@ -3535,15 +3569,16 @@
     display: grid;
     grid-template-columns: auto minmax(0, 1fr);
     min-height: 0;
+    height: 100%;
     align-items: center;
     justify-items: start;
-    gap: 0.58rem;
-    padding: 0.56rem 0.66rem;
+    gap: 0.68rem;
+    padding: 0.72rem 0.78rem;
     text-align: left;
   }
 
   :global(.mobile-feature-chips svg):where(:not(.moduleScope)) {
-    font-size: 1.45rem;
+    font-size: clamp(1.52rem, 5.8vw, 1.86rem);
   }
 
   :global(.mobile-feature-chip-copy):where(:not(.moduleScope)) {
@@ -3552,30 +3587,31 @@
   }
 
   :global(.mobile-feature-chip-copy span):where(:not(.moduleScope)) {
-    font-size: 0.8rem;
+    font-size: clamp(0.86rem, 3.45vw, 1rem);
     line-height: 1.12;
   }
 
   :global(.mobile-feature-chip-copy small):where(:not(.moduleScope)) {
-    font-size: 0.68rem;
+    font-size: clamp(0.72rem, 2.9vw, 0.84rem);
     line-height: 1.16;
   }
 
   :global(.mobile-plan-details):where(:not(.moduleScope)) {
-    block-size: auto;
-    min-block-size: 0;
+    block-size: clamp(6.3rem, 13.5vh, 7.2rem);
+    min-block-size: clamp(6.3rem, 13.5vh, 7.2rem);
     align-content: center;
-    gap: clamp(0.36rem, 0.95vh, 0.56rem);
-    padding: clamp(0.62rem, 2.55vw, 0.86rem) clamp(0.68rem, 2.9vw, 0.98rem);
+    gap: clamp(0.24rem, 0.7vh, 0.4rem);
+    padding: clamp(0.5rem, 2vw, 0.66rem) clamp(0.62rem, 2.5vw, 0.82rem);
   }
 
   :global(.mobile-plan-details ul):where(:not(.moduleScope)) {
-    gap: clamp(0.3rem, 0.85vh, 0.48rem);
+    gap: clamp(0.22rem, 0.62vh, 0.34rem);
   }
 
   :global(.mobile-plan-details li):where(:not(.moduleScope)) {
-    font-size: clamp(0.82rem, 3.35vw, 1rem);
-    line-height: 1.18;
+    padding-left: 1.14rem;
+    font-size: clamp(0.74rem, 3vw, 0.88rem);
+    line-height: 1.14;
   }
 
   :global(.mobile-support-row):where(:not(.moduleScope)) {
@@ -3595,6 +3631,10 @@
 
   :global(.services-section .cockpit-header h2):where(:not(.moduleScope)) {
     font-size: clamp(1.36rem, 6.9vw, 1.78rem);
+  }
+
+  :global(.services-section .service-heading-mobile):where(:not(.moduleScope)) {
+    max-width: 8.8em;
   }
 
   :global(.services-section .cockpit-header > p):where(:not(.moduleScope)) {
@@ -3617,37 +3657,42 @@
 
   :global(.mobile-feature-chips li):where(:not(.moduleScope)) {
     min-height: 0;
-    gap: 0.42rem;
-    padding: 0.36rem 0.5rem;
+    height: 100%;
+    gap: 0.54rem;
+    padding: 0.52rem 0.62rem;
   }
 
   :global(.mobile-feature-chip-copy span):where(:not(.moduleScope)) {
-    font-size: 0.76rem;
+    font-size: 0.82rem;
     line-height: 1.12;
   }
 
   :global(.mobile-feature-chip-copy small):where(:not(.moduleScope)) {
-    font-size: 0.64rem;
+    font-size: 0.68rem;
     line-height: 1.14;
   }
 
   :global(.mobile-feature-chips):where(:not(.moduleScope)) {
     grid-template-columns: 1fr;
+    grid-auto-rows: 3.82rem;
     gap: 0.16rem;
   }
 
   :global(.mobile-plan-details):where(:not(.moduleScope)) {
-    gap: 0.28rem;
-    padding: 0.52rem 0.62rem;
+    block-size: 5.3rem;
+    min-block-size: 5.3rem;
+    gap: 0.18rem;
+    padding: 0.42rem 0.54rem;
   }
 
   :global(.mobile-plan-details ul):where(:not(.moduleScope)) {
-    gap: 0.24rem;
+    gap: 0.16rem;
   }
 
   :global(.mobile-plan-details li):where(:not(.moduleScope)) {
-    font-size: 0.78rem;
-    line-height: 1.18;
+    padding-left: 1rem;
+    font-size: 0.7rem;
+    line-height: 1.12;
   }
 
   :global(.mobile-support-row):where(:not(.moduleScope)) {

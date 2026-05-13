@@ -864,33 +864,33 @@
   }
 
   :global(.hero-stat):where(:not(.moduleScope)) {
-    min-height: 3.25rem;
+    min-height: 3.9rem;
     grid-template-columns: auto minmax(0, 1fr);
-    column-gap: 0.5rem;
+    column-gap: 0.62rem;
     row-gap: 0.05rem;
-    padding: 0.55rem 0.48rem;
+    padding: 0.68rem 0.62rem;
     border-radius: 16px;
     background: rgba(255, 255, 255, 0.045);
   }
 
   :global(.hero-stat:not(:last-child)):where(:not(.moduleScope)) {
-    padding-right: 0.48rem;
+    padding-right: 0.62rem;
   }
 
   :global(.hero-stat-icon):where(:not(.moduleScope)) {
     grid-row: 1 / 3;
-    width: 32px;
-    height: 32px;
-    font-size: 0.92rem;
+    width: 38px;
+    height: 38px;
+    font-size: 1.05rem;
   }
 
   :global(.hero-stat-value):where(:not(.moduleScope)) {
-    font-size: clamp(1.05rem, 5vw, 1.35rem);
+    font-size: clamp(1.34rem, 6.1vw, 1.7rem);
   }
 
   :global(.hero-stat-label):where(:not(.moduleScope)) {
     grid-column: 2;
-    font-size: 0.58rem;
+    font-size: 0.68rem;
     line-height: 1.12;
   }
 
@@ -1707,5 +1707,75 @@
 
   :global(.portfolio-phone-copy):where(:not(.moduleScope)) {
     overflow: hidden !important;
+  }
+}
+
+/* Final mobile About stats sizing: keep this after page-lock rules so the
+   active-section fallback cannot collapse the stat cards back down. */
+@media (max-width: 768px), (hover: none) {
+  :global(.portfolio-master-card[data-active-section="about"] .hero-eyebrow):where(:not(.moduleScope)) {
+    margin-bottom: 0.64rem !important;
+    font-size: 0.78rem !important;
+    letter-spacing: 0.38em !important;
+  }
+
+  :global(.portfolio-master-card[data-active-section="about"] .hero-title):where(:not(.moduleScope)) {
+    font-size: clamp(3.05rem, 17.6vw, 4.44rem) !important;
+    line-height: 0.88 !important;
+  }
+
+  :global(.portfolio-master-card[data-active-section="about"] .hero-title-rule):where(:not(.moduleScope)) {
+    width: min(9.25rem, 40vw) !important;
+    margin-top: 0.92rem !important;
+    margin-bottom: 1rem !important;
+  }
+
+  :global(.portfolio-master-card[data-active-section="about"] .hero-subcopy):where(:not(.moduleScope)) {
+    max-width: 23rem !important;
+    font-size: clamp(0.98rem, 4.15vw, 1.12rem) !important;
+    line-height: 1.42 !important;
+  }
+
+  :global(.portfolio-master-card[data-active-section="about"] .hero-actions):where(:not(.moduleScope)) {
+    margin-top: 1.08rem !important;
+  }
+
+  :global(.portfolio-master-card[data-active-section="about"] .hero-button):where(:not(.moduleScope)) {
+    min-width: min(10.15rem, 47.5%) !important;
+    min-height: 50px !important;
+    padding: 0.82rem 0.98rem !important;
+    font-size: 0.92rem !important;
+  }
+
+  :global(.portfolio-master-card[data-active-section="about"] .hero-stats):where(:not(.moduleScope)) {
+    gap: 0.62rem;
+  }
+
+  :global(.portfolio-master-card[data-active-section="about"] .hero-stat):where(:not(.moduleScope)) {
+    min-height: 4.55rem;
+    grid-template-columns: auto minmax(0, 1fr);
+    column-gap: 0.72rem;
+    padding: 0.78rem 0.72rem;
+    border-radius: 18px;
+  }
+
+  :global(.portfolio-master-card[data-active-section="about"] .hero-stat:not(:last-child)):where(:not(.moduleScope)) {
+    padding-right: 0.72rem;
+  }
+
+  :global(.portfolio-master-card[data-active-section="about"] .hero-stat-icon):where(:not(.moduleScope)) {
+    grid-row: 1 / 3;
+    width: 44px;
+    height: 44px;
+    font-size: 1.2rem;
+  }
+
+  :global(.portfolio-master-card[data-active-section="about"] .hero-stat-value):where(:not(.moduleScope)) {
+    font-size: clamp(1.58rem, 7.2vw, 1.98rem);
+  }
+
+  :global(.portfolio-master-card[data-active-section="about"] .hero-stat-label):where(:not(.moduleScope)) {
+    grid-column: 2;
+    font-size: 0.76rem;
   }
 }

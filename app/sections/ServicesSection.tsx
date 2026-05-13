@@ -5,7 +5,6 @@ import { createPortal } from "react-dom";
 import { useRouter } from "next/navigation";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import {
-  MdAdd,
   MdArrowForward,
   MdCheckCircle,
   MdDashboardCustomize,
@@ -170,7 +169,8 @@ const ServicesSection = forwardRef<HTMLDivElement, object>((_, ref) => {
         <div className="cockpit-header" data-entrance-item>
           <div>
             <p className="services-eyebrow">Web Development &amp; Design Services</p>
-            <h2>Design-forward websites engineered to win customers.</h2>
+            <h2 className="service-heading-desktop">Design-forward websites engineered to win customers.</h2>
+            <h2 className="service-heading-mobile">Websites that win customers.</h2>
           </div>
           <p className="service-copy-desktop">
             Choose from two web development and design packages: Essentials and Growth—plus
@@ -244,15 +244,15 @@ const ServicesSection = forwardRef<HTMLDivElement, object>((_, ref) => {
             type="button"
             onClick={handleSubscriptionToggle}
             aria-pressed={hasSubscription}
+            aria-label={hasSubscription ? "Remove hosting and maintenance support" : "Add hosting and maintenance support"}
             className={`mobile-support-row ${hasSubscription ? "is-selected" : ""} ${!selectedPlan ? "is-unavailable" : ""}`}
           >
             <span>
               <strong>Hosting + Maintenance</strong>
               <small>$150 / month</small>
             </span>
-            <span className="mobile-support-pill">
-              {hasSubscription ? <MdCheckCircle aria-hidden="true" /> : <MdAdd aria-hidden="true" />}
-              {hasSubscription ? "Added" : "Add support"}
+            <span className="mobile-support-switch" aria-hidden="true">
+              <span />
             </span>
           </button>
 
