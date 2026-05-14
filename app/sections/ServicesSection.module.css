@@ -3624,7 +3624,7 @@
   }
 
   :global(.mobile-service-configurator):where(:not(.moduleScope)) {
-    grid-template-rows: min-content min-content min-content min-content minmax(0, 1fr) min-content;
+    grid-template-rows: min-content min-content min-content minmax(0, 1fr) min-content min-content;
     gap: clamp(0.28rem, 0.78vh, 0.42rem);
     padding: clamp(0.58rem, 2.3vw, 0.76rem);
     max-height: 100%;
@@ -3811,7 +3811,7 @@
   :global(.mobile-service-configurator):where(:not(.moduleScope)) {
     flex: 1 1 auto;
     min-height: 0;
-    grid-template-rows: min-content min-content min-content min-content minmax(0, 1fr) min-content;
+    grid-template-rows: min-content min-content min-content minmax(0, 1fr) min-content min-content;
     align-content: stretch;
     gap: 0.34rem;
     padding: 0.5rem;
