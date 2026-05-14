@@ -3849,9 +3849,9 @@
   :global(.mobile-plan-details):where(:not(.moduleScope)) {
     block-size: auto;
     min-block-size: clamp(4.65rem, 12vh, 5.3rem);
-    gap: 0.18rem;
-    align-content: start;
-    padding: 0.42rem 0.54rem;
+    gap: clamp(0.24rem, 0.72vh, 0.36rem);
+    align-content: center;
+    padding: clamp(0.5rem, 1.65vh, 0.72rem) 0.62rem;
     overflow-y: auto;
     overscroll-behavior: contain;
     -webkit-overflow-scrolling: touch;
@@ -3863,13 +3863,13 @@
   }
 
   :global(.mobile-plan-details ul):where(:not(.moduleScope)) {
-    gap: 0.16rem;
+    gap: clamp(0.2rem, 0.64vh, 0.32rem);
   }
 
   :global(.mobile-plan-details li):where(:not(.moduleScope)) {
     padding-left: 1rem;
-    font-size: 0.7rem;
-    line-height: 1.12;
+    font-size: clamp(0.78rem, 3.18vw, 0.9rem);
+    line-height: 1.16;
   }
 
   :global(.mobile-support-row):where(:not(.moduleScope)) {
