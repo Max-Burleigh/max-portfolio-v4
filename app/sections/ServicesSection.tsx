@@ -198,7 +198,6 @@ const ServicesSection = forwardRef<HTMLDivElement, object>((_, ref) => {
                   }}
                 >
                   <span>{plan === "ESSENTIAL" ? "Essential" : "Growth"}</span>
-                  <strong>{plan === "ESSENTIAL" ? "$3,000" : "$5,000"}</strong>
                 </button>
               );
             })}
