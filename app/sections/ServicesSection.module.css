@@ -3848,10 +3848,10 @@
 
   :global(.mobile-plan-details):where(:not(.moduleScope)) {
     block-size: auto;
-    min-block-size: clamp(4.65rem, 12vh, 5.3rem);
+    min-block-size: clamp(4.28rem, 10.8vh, 4.92rem);
     gap: clamp(0.24rem, 0.72vh, 0.36rem);
     align-content: center;
-    padding: clamp(0.5rem, 1.65vh, 0.72rem) 0.62rem;
+    padding: clamp(0.46rem, 1.45vh, 0.62rem) 0.62rem;
     overflow-y: auto;
     overscroll-behavior: contain;
     -webkit-overflow-scrolling: touch;
@@ -3873,7 +3873,18 @@
   }
 
   :global(.mobile-support-row):where(:not(.moduleScope)) {
-    min-height: 2.36rem;
+    min-height: clamp(2.72rem, 6.8vh, 3rem);
+    padding-block: clamp(0.5rem, 1.35vh, 0.62rem);
+  }
+
+  :global(.mobile-support-row strong):where(:not(.moduleScope)) {
+    font-size: clamp(0.66rem, 2.74vw, 0.76rem);
+    letter-spacing: 0.12em;
+  }
+
+  :global(.mobile-support-row small):where(:not(.moduleScope)) {
+    font-size: clamp(0.76rem, 3.08vw, 0.86rem);
+    line-height: 1.12;
   }
 
   :global(.mobile-start-button):where(:not(.moduleScope)) {
