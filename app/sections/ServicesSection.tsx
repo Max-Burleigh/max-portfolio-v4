@@ -293,7 +293,7 @@ const ServicesSection = forwardRef<HTMLDivElement, object>((_, ref) => {
                           <span className="plan-price-suffix">one-time</span>
                         </div>
                         <span className="desktop-plan-state" aria-hidden="true">
-                          {isSelected ? <MdCheckCircle /> : "View"}
+                          {isSelected ? <MdCheckCircle /> : "Select"}
                         </span>
                       </div>
                       <div className="desktop-plan-details" aria-hidden={!isExpanded}>
