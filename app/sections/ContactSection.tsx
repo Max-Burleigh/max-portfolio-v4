@@ -48,12 +48,25 @@ const ContactSection = forwardRef<HTMLDivElement, object>(function ContactSectio
               <h3>Need support or a new build?</h3>
               <p>Tell me what&apos;s broken, what you want to launch, and your deadline. I&apos;ll give you the roadmap.</p>
               <div className="contact-promise-grid" aria-label="Working style">
-                {contactPromises.map(({ icon: Icon, label }) => (
-                  <div className="contact-promise" key={label}>
+                {contactPromises.map(({ icon: Icon, label }, index) => (
+                  <div
+                    className="contact-promise"
+                    key={label}
+                    style={{ "--promise-delay": `${index * -3}s` } as React.CSSProperties}
+                  >
                     <Icon aria-hidden="true" />
                     <span>{label}</span>
                   </div>
                 ))}
+                <div className="contact-promise-dots" aria-hidden="true">
+                  {contactPromises.map(({ label }, index) => (
+                    <span
+                      className="contact-promise-dot"
+                      key={`${label}-dot`}
+                      style={{ "--promise-delay": `${index * -3}s` } as React.CSSProperties}
+                    />
+                  ))}
+                </div>
               </div>
             </div>
 
