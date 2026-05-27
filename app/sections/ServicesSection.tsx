@@ -150,12 +150,12 @@ const ServicesSection = forwardRef<HTMLDivElement, object>((_, ref) => {
       : selectedPlan === "GROWTH"
         ? "Growth"
         : null;
-  const planPrice = selectedPlan === "ESSENTIAL" ? "$750" : selectedPlan === "GROWTH" ? "$3,000" : null;
+  const planPrice = selectedPlan === "ESSENTIAL" ? "$1,000" : selectedPlan === "GROWTH" ? "$3,000" : null;
   const hasSelection = Boolean(selectedPlan || hasSubscription);
   const activeDesktopPlan = selectedPlan ?? previewPlan;
   const mobileDisplayPlan = selectedPlan ?? "GROWTH";
   const mobileDisplayPlanLabel = mobileDisplayPlan === "ESSENTIAL" ? "Essential" : "Growth";
-  const mobileDisplayPrice = mobileDisplayPlan === "ESSENTIAL" ? "$750" : "$3,000";
+  const mobileDisplayPrice = mobileDisplayPlan === "ESSENTIAL" ? "$1,000" : "$3,000";
   const mobilePlanThemeClass = mobileDisplayPlan === "GROWTH" ? "is-growth" : "is-essential";
   const isMobilePlanPreview = !selectedPlan;
 
@@ -289,7 +289,7 @@ const ServicesSection = forwardRef<HTMLDivElement, object>((_, ref) => {
                           <p className="service-plan-copy">{planTaglines[plan]}</p>
                         </div>
                         <div className="plan-card-price-row">
-                          <span className="service-plan-price">{plan === "ESSENTIAL" ? "$750" : "$3,000"}</span>
+                          <span className="service-plan-price">{plan === "ESSENTIAL" ? "$1,000" : "$3,000"}</span>
                           <span className="plan-price-suffix">one-time</span>
                         </div>
                         <span className="desktop-plan-state" aria-hidden="true">
