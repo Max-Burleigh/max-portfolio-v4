@@ -173,7 +173,7 @@ const ServicesSection = forwardRef<HTMLDivElement, object>((_, ref) => {
             <h2 className="service-heading-mobile">Websites that win customers.</h2>
           </div>
           <p className="service-copy-desktop">
-            Choose from two web development and design packages: Essentials and Growth—plus
+            Choose from two web development and design packages: Essentials or Growth—plus
             an optional $150/month support plan for ongoing maintenance and operations.
           </p>
           <p className="service-copy-mobile">

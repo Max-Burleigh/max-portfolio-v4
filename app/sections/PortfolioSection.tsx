@@ -227,7 +227,7 @@ const PortfolioSection = React.memo(forwardRef<HTMLDivElement, PortfolioSectionP
             <h2>Projects that shipped.</h2>
           </div>
           <p>
-            Ecommerce. AI tools. Mobile apps. Local business sites. Real work, in production.
+            Ecommerce. Mobile apps. Local business sites. Real work, in production.
           </p>
         </div>
 
