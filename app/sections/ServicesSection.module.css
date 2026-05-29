@@ -2223,8 +2223,8 @@
     background: none;
     opacity: 0;
     transition:
-      grid-template-rows 320ms cubic-bezier(0.22, 1, 0.36, 1),
-      opacity 220ms ease;
+      grid-template-rows 420ms cubic-bezier(0.34, 1.42, 0.5, 1),
+      opacity 200ms ease;
   }
 
   :global(.selection-summary .selection-summary-collapsible.is-open):where(:not(.moduleScope)) {
@@ -2243,6 +2243,18 @@
 
   :global(.selection-summary-collapsible .selection-summary-row-support):where(:not(.moduleScope)) {
     margin-top: clamp(0.62rem, 1.2vh, 0.82rem);
+    transform: translateY(-12px) scale(0.94);
+    transform-origin: center top;
+    opacity: 0;
+    transition:
+      transform 460ms cubic-bezier(0.34, 1.7, 0.5, 1),
+      opacity 240ms ease;
+  }
+
+  :global(.selection-summary-collapsible.is-open .selection-summary-row-support):where(:not(.moduleScope)) {
+    transform: translateY(0) scale(1);
+    opacity: 1;
+    transition-delay: 70ms;
   }
 
   :global(.selection-summary .selection-summary-icon):where(:not(.moduleScope)) {
@@ -2498,6 +2510,15 @@
     :global(.desktop-plan-details):where(:not(.moduleScope)),
     :global(.service-plan-card):where(:not(.moduleScope)) {
       transition: none;
+      transform: none;
+    }
+
+    :global(.selection-summary .selection-summary-collapsible):where(:not(.moduleScope)),
+    :global(.selection-summary-collapsible .selection-summary-row-support):where(:not(.moduleScope)) {
+      transition: none;
+    }
+
+    :global(.selection-summary-collapsible .selection-summary-row-support):where(:not(.moduleScope)) {
       transform: none;
     }
   }
