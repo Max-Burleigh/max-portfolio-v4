@@ -16,10 +16,10 @@ import { CONTACT_EMAIL, LINKEDIN_URL } from "@lib/constants";
 import { useEntranceStagger } from "@lib/hooks";
 
 const contactPromises = [
-  { icon: MdChatBubbleOutline, label: "Clear communication" },
-  { icon: MdGpsFixed, label: "Focused solutions" },
-  { icon: MdCode, label: "Clean execution" },
-  { icon: MdRocketLaunch, label: "On-time delivery" },
+  { icon: MdChatBubbleOutline, label: "Team collaboration" },
+  { icon: MdGpsFixed, label: "Product thinking" },
+  { icon: MdCode, label: "Engineering craft" },
+  { icon: MdRocketLaunch, label: "Continuous learning" },
 ] as const;
 
 const ContactSection = forwardRef<HTMLDivElement, object>(function ContactSection(_, ref) {
@@ -32,9 +32,9 @@ const ContactSection = forwardRef<HTMLDivElement, object>(function ContactSectio
         <div className="cockpit-header contact-cockpit-header" data-entrance-item>
           <div className="contact-heading">
             <p className="hero-eyebrow">Contact</p>
-            <h2>Let&apos;s build something sharp.</h2>
+            <h2>Let&apos;s stay connected.</h2>
           </div>
-          <p>Have a project in mind, a half-formed idea, or just want to see if there&apos;s a fit? Start here.</p>
+          <p>I&apos;m focused on my full-time role and not taking on freelance or contract work, but I&apos;m always glad to connect with thoughtful people in tech.</p>
         </div>
 
         <div className="contact-panel" data-entrance-item>
@@ -45,9 +45,9 @@ const ContactSection = forwardRef<HTMLDivElement, object>(function ContactSectio
           >
             <div className="contact-pitch">
               <span aria-hidden="true" className="contact-pitch-rule" />
-              <h3>Need support or a new build?</h3>
-              <p>Tell me what&apos;s broken, what you want to launch, and your deadline. I&apos;ll give you the roadmap.</p>
-              <div className="contact-promise-grid" aria-label="Working style">
+              <h3>A quick note on availability</h3>
+              <p>I&apos;m not available for client services right now. For professional connections, industry conversation, or a simple hello, email or LinkedIn is the best way to reach me.</p>
+              <div className="contact-promise-grid" aria-label="Professional interests">
                 {contactPromises.map(({ icon: Icon, label }, index) => (
                   <div
                     className="contact-promise"

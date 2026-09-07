@@ -439,7 +439,7 @@ const AboutSection = forwardRef<HTMLDivElement, AboutSectionProps>(function Abou
             </h1>
             <div data-entrance-item className="hero-title-rule" aria-hidden="true" />
             <p data-entrance-item className="hero-subcopy">
-              Web developer, designer, and tech support specialist helping businesses grow in Oregon and across the nation.
+              Web developer, designer, and tech support specialist focused on thoughtful, reliable digital products.
             </p>
 
             <div className="hero-actions" data-entrance-item>
@@ -460,7 +460,7 @@ const AboutSection = forwardRef<HTMLDivElement, AboutSectionProps>(function Abou
                 whileHover={{ scale: 1.035, x: 2 }}
                 whileTap={{ scale: 0.96 }}
               >
-                <span>Let&apos;s Talk</span>
+                <span>Connect</span>
                 <MdOutlineMail aria-hidden="true" />
               </motion.button>
             </div>

@@ -27,9 +27,9 @@ const spaceGrotesk = Space_Grotesk({
 });
 
 export const metadata: Metadata = {
-  title: "Max Burleigh — Web Design & Development",
+  title: "Max Burleigh — Developer & Designer Portfolio",
   description:
-    "The official portfolio website of Max Burleigh – web developer, project manager, and solopreneur based in Medford, Oregon. Explore projects, skills, and contact information.",
+    "The portfolio of Max Burleigh, a web developer, designer, and project manager based in Medford, Oregon. Explore selected projects, skills, and professional contact information.",
 };
 
 export const viewport = {

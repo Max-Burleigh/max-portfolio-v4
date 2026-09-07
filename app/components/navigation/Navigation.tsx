@@ -13,13 +13,12 @@ type SectionKey = "about" | "portfolio" | "services" | "contact"; // Or import f
 
 const mobileMenuItems: Array<{
   section: SectionKey;
-  number: string;
   label: string;
 }> = [
-  { section: "about", number: "01", label: "About" },
-  { section: "services", number: "02", label: "Services" },
-  { section: "portfolio", number: "03", label: "Portfolio" },
-  { section: "contact", number: "04", label: "Contact" },
+  { section: "about", label: "About" },
+  { section: "services", label: "Services" },
+  { section: "portfolio", label: "Portfolio" },
+  { section: "contact", label: "Contact" },
 ];
 
 // --- Hamburger Component (Extracted) ---
@@ -185,8 +184,9 @@ const MobileMenu: React.FC<MobileMenuProps> = ({
           animate="visible"
           exit="hidden"
         >
-          {visibleMenuItems.map(({ section, number, label }) => {
+          {visibleMenuItems.map(({ section, label }, index) => {
             const isActive = section === activeSection;
+            const number = String(index + 1).padStart(2, "0");
 
             return (
               <motion.button

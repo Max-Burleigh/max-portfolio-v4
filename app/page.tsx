@@ -28,6 +28,8 @@ const SECTION_PRESSURE_ENABLE_PX = 24;
 const SECTION_PRESSURE_DISABLE_PX = 8;
 const SECTION_PRESSURE_RELEASE_GROWTH_PX = 32;
 const ABOUT_SECTION_MIN_BLOCK_GAP_PX = 16;
+// Keep the services experience available locally without publishing it.
+const SHOW_SERVICES = process.env.NODE_ENV !== "production";
 
 const getSectionScrollTop = (container: HTMLElement, target: HTMLElement) => {
   const containerRect = container.getBoundingClientRect();
@@ -154,7 +156,10 @@ const Portfolio = () => {
 
   type SectionKey = "about" | "services" | "portfolio" | "contact";
   const sectionKeys = useMemo<SectionKey[]>(
-    () => ["about", "services", "portfolio", "contact"],
+    () =>
+      SHOW_SERVICES
+        ? ["about", "services", "portfolio", "contact"]
+        : ["about", "portfolio", "contact"],
     []
   );
 
@@ -933,7 +938,7 @@ const Portfolio = () => {
                 onContact={() => scrollToSection("contact")}
               />
 
-              <ServicesSection ref={sectionRefs.services} />
+              {SHOW_SERVICES && <ServicesSection ref={sectionRefs.services} />}
 
               <PortfolioSection
                 ref={sectionRefs.portfolio}
