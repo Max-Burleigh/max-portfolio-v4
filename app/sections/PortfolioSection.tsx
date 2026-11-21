@@ -24,7 +24,7 @@ const PortfolioProjectCard = React.memo(function PortfolioProjectCard({
   const techStack = project.techStack ?? [];
 
   return (
-    <article className="portfolio-phone-card">
+    <article className={`portfolio-phone-card${project.id === "codeck" ? " portfolio-landscape-card" : ""}`}>
       <div className="portfolio-phone-copy">
         <span className="portfolio-index">{String(index + 1).padStart(2, "0")}</span>
         <h3>{project.title}</h3>

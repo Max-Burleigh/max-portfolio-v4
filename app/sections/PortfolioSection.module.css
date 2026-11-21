@@ -929,3 +929,16 @@
 }
 
 /* User callout: remove redundant top identity/social row from the card. */
+
+:global(.portfolio-landscape-card .portfolio-phone-preview):where(:not(.moduleScope)) {
+  align-items: center;
+  padding-inline: 0.75rem;
+}
+
+:global(.portfolio-landscape-card .portfolio-phone-preview > img):where(:not(.moduleScope)) {
+  width: 100% !important;
+  height: auto !important;
+  max-width: 100% !important;
+  object-position: center !important;
+  border-radius: 0.5rem !important;
+}
